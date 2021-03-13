@@ -11,12 +11,10 @@ provider:
   logs:
     restApi: true
 
-
 plugins:
   - serverless-offline
   - serverless-dotenv-plugin
   - serverless-plugin-typescript-express
-
 
 custom:
   serverless-offline:
@@ -28,7 +26,7 @@ package:
     - '!node_modules/**'
 
 functions:
-  getUsers:
+  generateFromHtml:
     handler: src/server.handler
     events:
       - http:
