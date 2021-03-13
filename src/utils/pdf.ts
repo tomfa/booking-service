@@ -16,11 +16,12 @@ export const convertHTMLtoPDF = async (html: string): Promise<Buffer> => {
 
     let page = await browser.newPage();
 
-    await page.goto('https://db.no');
-    return await page.pdf({path: './test.pdf', format: 'a4'});
+    await page.setContent(html);
+    return await page.pdf({format: 'a4'});
   } finally {
     if (!!browser) {
       await browser.close();
     }
   }
 };
+
