@@ -1,6 +1,36 @@
-app: express-starter
-component: express
-name: express-starter
+service: pdf-generator-api
 
 inputs:
   src: ./
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${env:STAGE, 'dev'}
+  region: eu-north-1
+  logs:
+    restApi: true
+
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
+  - serverless-plugin-typescript-express
+
+
+custom:
+  serverless-offline:
+    noPrependStageInUrl: true
+package:
+  exclude:
+    - ./**
+    - '!dist/**'
+    - '!node_modules/**'
+
+functions:
+  getUsers:
+    handler: src/server.handler
+    events:
+      - http:
+          path: generate/from_html
+          method: get
