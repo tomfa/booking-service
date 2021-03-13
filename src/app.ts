@@ -1,11 +1,11 @@
-import * as Express from 'express';
+import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import routes from './routes';
 
 class App {
-  public app: Express.Application;
+  public app: express.Application;
   constructor() {
-    this.app = Express();
+    this.app = express();
     this.config();
   }
   private config() {
