@@ -1,8 +1,10 @@
-import {Browser} from "puppeteer-core";
+import { Browser, Page } from 'puppeteer-core';
 
 const chromium = require('chrome-aws-lambda');
 
-export const convertHTMLtoPDF = async (html: string): Promise<Buffer> => {
+async function generatePdf(
+  loadData: (page: Page) => Promise<void>,
+): Promise<Buffer> {
   let browser: Browser;
 
   try {
@@ -16,12 +18,21 @@ export const convertHTMLtoPDF = async (html: string): Promise<Buffer> => {
 
     let page = await browser.newPage();
 
-    await page.setContent(html);
-    return await page.pdf({format: 'a4'});
+    await loadData(page);
+    return await page.pdf({ format: 'a4' });
   } finally {
     if (!!browser) {
       await browser.close();
     }
   }
+}
+
+export const convertHTMLtoPDF = async (html: string): Promise<Buffer> => {
+  return generatePdf((page) => page.setContent(html));
 };
 
+export const convertURLtoPDF = async (url: string): Promise<Buffer> => {
+  return generatePdf(async (page) => {
+    await page.goto(url);
+  });
+};
