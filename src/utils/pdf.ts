@@ -16,8 +16,8 @@ export const convertHTMLtoPDF = async (html: string): Promise<Buffer> => {
 
     let page = await browser.newPage();
 
-    await page.goto('https://vg.no');
-    return await page.pdf({path: './test.pdf'});
+    await page.goto('https://db.no');
+    return await page.pdf({path: './test.pdf', format: 'a4'});
   } finally {
     if (!!browser) {
       await browser.close();
