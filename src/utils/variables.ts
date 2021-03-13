@@ -10,3 +10,7 @@ export const insertVariables = (
   const template = Handlebars.compile(html, { strict: throwOnMissing });
   return template(variables);
 };
+
+export const cleanVariables = (variablesFromQuery: unknown): Variables =>  {
+  return variablesFromQuery as Variables;
+}

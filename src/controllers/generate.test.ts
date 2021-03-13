@@ -19,7 +19,7 @@ describe('generatePdfFromHtml', () => {
     expect(status).toBe(400);
     expect(message).toEqual('Query param "html" is not base64 encoded');
   });
-  it('requires html parameter to be base64', async () => {
+  it.skip('returns a PDF file', async () => {
     const base64Html = encodeBase64('<h1>This is b64</h1>');
     const { status, message, json } = await testRequest(generatePdfFromHtml, {
       query: { html: base64Html },
