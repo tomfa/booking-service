@@ -18,8 +18,16 @@ describe('isValidBase64', () => {
   describe('decodeBase64', () => {
     test('decodes base64 encoded string to utf-8', () => {
       expect(decodeBase64('Q2hlZXNl')).toBe('Cheese')
+    });
+
+    test('handles url cleaned base64', () => {
+      const urlUnsafeValue = 'PGJvZHk+PGgxPnt7IG5hbWUgfX08L2gxPjwvYm9keT4';
+      const urlSafeValue = urlUnsafeValue.replace('+', '_');
+      expect(decodeBase64(urlSafeValue)).toBe(decodeBase64(urlUnsafeValue));
+      expect(decodeBase64(urlSafeValue)).toBe('<body><h1>{{ name }}</h1></body>')
     })
   })
+
 
   describe('encodeBase64', () => {
     test('encodes utf-8 string to base64', () => {
