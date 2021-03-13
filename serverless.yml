@@ -28,6 +28,7 @@ package:
 functions:
   generateFromHtml:
     handler: src/server.handler
+    memorySize: 800
     events:
       - http:
           path: generate/from_html
