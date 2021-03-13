@@ -1,6 +1,6 @@
 import { generatePdfFromHtml } from './generate';
 import { encodeBase64 } from '../utils/encoding';
-import { testRequest } from '../../tests/controllers.utils';
+import { testRequest } from '../testUtils/controllers.utils';
 
 describe('generatePdfFromHtml', () => {
   it('requires html parameter', async () => {
