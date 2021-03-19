@@ -10,6 +10,12 @@ provider:
   region: eu-north-1
   logs:
     restApi: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:PutObjectAcl
+      Resource: "arn:aws:s3:::${self:custom.bucket}/*"
 
 plugins:
   - serverless-offline
@@ -17,6 +23,7 @@ plugins:
   - serverless-plugin-typescript-express
 
 custom:
+  bucket: pdfs.webutvikling.org
   serverless-offline:
     noPrependStageInUrl: true
 package:
