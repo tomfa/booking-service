@@ -35,7 +35,7 @@ export const generatePdfFromTemplate = async (
   }
   const cleanedVariables: Variables = cleanVariables(variables);
 
-  const htmlString = await retrieveTemplate(String(template) + '.html')
+  const htmlString = await retrieveTemplate(String(template))
   const { url } = await generatePdf(htmlString, cleanedVariables);
   return res.redirect(url);
 };
