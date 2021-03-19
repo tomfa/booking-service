@@ -8,3 +8,8 @@ dist/
 
 .terraform/
 *.tfstate
+
+.serverless
+
+
+yarn-error.log
