@@ -12,15 +12,16 @@ export const storeFile = async (
   acl: 'public-read' | 'private' = 'public-read'
 ): Promise<FileData> => {
   const fileName = generateFileName();
+  const prefix = 'files';
   await s3
     .putObject({
       Bucket: 'pdfs.webutvikling.org',
-      Key: fileName,
+      Key: `${prefix}/${fileName}`,
       Body: content,
       ContentType: mimeType,
       ACL: acl
     })
     .promise();
-  const url = `https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/${fileName}`
+  const url = `https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/${prefix}/${fileName}`
   return { url };
 };
