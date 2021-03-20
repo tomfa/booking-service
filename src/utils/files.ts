@@ -1,9 +1,9 @@
-import * as AWS from 'aws-sdk';
+import { S3 } from 'aws-sdk';
 import { v4 } from 'uuid';
 
 type FileData = { url: string };
 
-const s3 = new AWS.S3();
+const s3 = new S3();
 const generateFileName = (fileEnding = 'pdf') => `${v4()}.${fileEnding}`;
 
 export const retrieveTemplate = async ( templateName: string ): Promise<string> => {
