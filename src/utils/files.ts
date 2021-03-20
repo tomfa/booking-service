@@ -1,18 +1,27 @@
 import { S3 } from 'aws-sdk';
 import { v4 } from 'uuid';
+import { TemplateNotFound } from './errors/TemplateNotFound';
+import { APIError } from './errors/APIError';
 
 type FileData = { url: string };
 
 const s3 = new S3();
 const generateFileName = (fileEnding = 'pdf') => `${v4()}.${fileEnding}`;
 
-export const retrieveTemplate = async ( templateName: string ): Promise<string> => {
+export const retrieveTemplate = async ( templateName: string ): Promise<string | null> => {
   const prefix = 'templates';
-  const object = await s3.getObject({
-    Bucket: 'pdfs.webutvikling.org',
-    Key: `${prefix}/${templateName}`,
-  }).promise()
-  return object.Body.toString('utf-8');
+  try {
+    const object = await s3.getObject({
+      Bucket: 'pdfs.webutvikling.org',
+      Key: `${prefix}/${templateName}`,
+    }).promise()
+    return object.Body.toString('utf-8');
+  } catch (err) {
+    if (err.code === 'NoSuchKey') {
+      throw new TemplateNotFound(`Unable to find template.`, { templateName })
+    }
+    throw new APIError(err, { 'function': 'retrieveTemplate', templateName })
+  }
 }
 
 export const storeFile = async (

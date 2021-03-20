@@ -1,5 +1,6 @@
 import { retrieveTemplate } from './files';
 import { overrideNextS3GetObjectResponse } from '../../__mocks__/aws-sdk';
+import { TemplateNotFound } from './errors/TemplateNotFound';
 
 describe('retrieveTemplate', () => {
   test('retrieves template from S3', async () => {
@@ -10,5 +11,12 @@ describe('retrieveTemplate', () => {
 
     expect(template).toEqual(content);
   })
-
+  test('throws error if no file found', async () => {
+    try {
+      await retrieveTemplate('non-existing')
+      fail('Retrieving non-existing template should throw error')
+    } catch (err) {
+      expect(err).toBeInstanceOf(TemplateNotFound);
+    }
+  })
 });
