@@ -1,21 +1,29 @@
 service: pdf-generator-api
 
-inputs:
-  src: ./
+# Adopt behaviour in next version
+useDotenv: true
+variablesResolutionMode: "20210219"
 
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: ${env:STAGE, 'dev'}
   region: eu-north-1
+
+  # Adopt behaviour in next version
+  lambdaHashingVersion: "20201221"
+  apiGateway:
+    shouldStartNameWithService: true
+
   logs:
     restApi: true
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - s3:PutObject
-        - s3:PutObjectAcl
-      Resource: "arn:aws:s3:::${self:custom.bucket}/*"
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:PutObjectAcl
+          Resource: "arn:aws:s3:::${self:custom.bucket}/*"
 
 plugins:
   - serverless-offline
