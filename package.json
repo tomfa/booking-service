@@ -33,7 +33,8 @@
     "build": "tsc -pretty -p .",
     "start": "serverless offline start",
     "deploy": "serverless deploy",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch"
   },
   "author": "",
   "license": "ISC"
