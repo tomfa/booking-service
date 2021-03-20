@@ -1,8 +1,6 @@
 import * as Express from 'express';
-import {
-  generatePdfFromHtml,
-  generatePdfFromTemplate,
-} from './controllers/generate';
+import { generatePdfFromHtml } from './endpoints/generate/fromHtml';
+import { generatePdfFromTemplate } from './endpoints/generate/fromTemplate';
 
 const router = Express.Router();
 
