@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import routes from './routes';
+import { errorMiddleware } from './utils/errorHandler';
 
 class App {
   public app: express.Application;
@@ -11,6 +12,7 @@ class App {
   private config() {
     this.app.use(bodyParser.json());
     this.app.use(routes);
+    this.app.use(errorMiddleware)
   }
 }
 

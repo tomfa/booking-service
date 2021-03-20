@@ -4,8 +4,8 @@ export class APIError implements IAPIError {
   name = 'GenericError';
   displayMessage = 'Something odd happened, sorry. We will look into it!';
   httpCode = 500;
-
   message: string;
+  errors: string[];
   debugContext: ErrorContext;
 
   constructor(message: string | Error, context?: ErrorContext) {
@@ -14,6 +14,7 @@ export class APIError implements IAPIError {
     } else {
       this.message = message.message
     }
+    this.errors = [this.displayMessage]
     this.debugContext = context
   }
 }

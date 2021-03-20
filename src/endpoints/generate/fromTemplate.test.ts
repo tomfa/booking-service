@@ -7,10 +7,12 @@ describe('generatePdfFromTemplate', () => {
   const bucketUrl = 'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org';
 
   it('returns 400 if template is not specified', async () => {
-    const { status, message } = await testRequest(generatePdfFromTemplate);
+    const { status, message,errors } = await testRequest(generatePdfFromTemplate);
 
     expect(status).toBe(400);
-    expect(message).toBe("Query param 'template' is missing");
+    expect(message).toBe("Seems you passed on something wrong.");
+    expect(errors.length).toBe(1);
+    expect(errors[0]).toContain('field is missing')
   });
   it('returns 404 if template is not found', async () => {
     const { status, message } = await testRequest(generatePdfFromTemplate, {
