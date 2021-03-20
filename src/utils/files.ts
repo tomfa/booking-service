@@ -1,4 +1,8 @@
-import { S3 } from 'aws-sdk';
+import {
+  S3Client,
+  GetObjectCommand,
+  PutObjectCommand,
+} from '@aws-sdk/client-s3';
 import { v4 } from 'uuid';
 import { TemplateNotFound } from './errors/TemplateNotFound';
 import { APIError } from './errors/APIError';
@@ -6,7 +10,7 @@ import config from '../config';
 
 type FileData = { url: string };
 
-const s3 = new S3();
+const s3 = new S3Client({ region: 'eu-north-1'});
 const generateFileName = (fileEnding = 'pdf') => `${v4()}.${fileEnding}`;
 
 const getAbsoluteUrl = (fileKey: string) =>
@@ -17,13 +21,13 @@ export const retrieveTemplate = async (
 ): Promise<string | null> => {
   const prefix = 'templates';
   try {
-    const object = await s3
-      .getObject({
+    const object = await s3.send(
+      new GetObjectCommand({
         Bucket: config.services.s3.bucketName,
         Key: `${prefix}/${templateName}`,
-      })
-      .promise();
-    return object.Body.toString('utf-8');
+      }),
+    );
+    return object.Body.toString();
   } catch (err) {
     if (err.code === 'NoSuchKey') {
       throw new TemplateNotFound(`Unable to find template.`, { templateName });
@@ -39,15 +43,15 @@ export const storeFile = async (
 ): Promise<FileData> => {
   const fileName = generateFileName();
   const prefix = 'files';
-  await s3
-    .putObject({
+  await s3.send(
+    new PutObjectCommand({
       Bucket: config.services.s3.bucketName,
       Key: `${prefix}/${fileName}`,
       Body: content,
       ContentType: mimeType,
       ACL: acl,
-    })
-    .promise();
+    }),
+  );
   const url = getAbsoluteUrl(`${prefix}/${fileName}`);
   return { url };
 };
@@ -64,15 +68,15 @@ export const storeTemplate = async ({
   acl: 'public-read' | 'private';
 }) => {
   const prefix = 'templates';
-  await s3
-    .putObject({
+  await s3.send(
+    new PutObjectCommand({
       Bucket: config.services.s3.bucketName,
       Key: `${prefix}/${templateName}`,
       Body: content,
       ContentType: mimeType,
       ACL: acl,
-    })
-    .promise();
+    }),
+  );
   const url = getAbsoluteUrl(`${prefix}/${templateName}`);
   return { url };
 };

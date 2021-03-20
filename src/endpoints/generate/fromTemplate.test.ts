@@ -1,6 +1,6 @@
 import { testRequest } from '../../testUtils/controllers.utils';
 import { generatePdfFromTemplate } from './fromTemplate';
-import { getLastS3PutObjectArgs, templates } from '../../../__mocks__/aws-sdk';
+import { getLastPutActionArgs, templates } from '../../../__mocks__/@aws-sdk/client-s3';
 import config from '../../config';
 
 describe('generatePdfFromTemplate', () => {
@@ -36,7 +36,7 @@ describe('generatePdfFromTemplate', () => {
       query: { template: templates.htmlTemplate.name },
     });
 
-    const { ACL, Key } = getLastS3PutObjectArgs();
+    const { ACL, Key } = getLastPutActionArgs();
     expect(ACL).toBe('public-read')
     expect(Key.startsWith('files/')).toBe(true)
     expect(Key.endsWith('.pdf')).toBe(true)

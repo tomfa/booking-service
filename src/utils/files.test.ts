@@ -1,5 +1,5 @@
 import { retrieveTemplate } from './files';
-import { overrideNextS3GetObjectResponse } from '../../__mocks__/aws-sdk';
+import { overrideNextS3GetObjectResponse } from '../../__mocks__/@aws-sdk/client-s3';
 import { TemplateNotFound } from './errors/TemplateNotFound';
 
 describe('retrieveTemplate', () => {
