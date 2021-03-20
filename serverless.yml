@@ -23,7 +23,7 @@ plugins:
   - serverless-plugin-typescript-express
 
 custom:
-  bucket: pdfs.webutvikling.org
+  bucket: ${env:S3_BUCKET_NAME}
   serverless-offline:
     noPrependStageInUrl: true
 package:

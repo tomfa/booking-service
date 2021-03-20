@@ -1,10 +1,10 @@
 import { generatePdfFromHtml } from './fromHtml';
 import { encodeBase64 } from '../../utils/encoding';
 import { testRequest } from '../../testUtils/controllers.utils';
+import config from '../../config';
 
 describe('generatePdfFromHtml', () => {
-  // TODO: Replace with env var
-  const bucketUrl = 'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org';
+  const bucketUrl = config.services.s3.endpointUrl;
 
   it('requires html parameter', async () => {
     const { status, message } = await testRequest(generatePdfFromHtml, {

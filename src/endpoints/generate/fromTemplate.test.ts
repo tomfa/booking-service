@@ -1,10 +1,10 @@
 import { testRequest } from '../../testUtils/controllers.utils';
 import { generatePdfFromTemplate } from './fromTemplate';
 import { getLastS3PutObjectArgs, templates } from '../../../__mocks__/aws-sdk';
+import config from '../../config';
 
 describe('generatePdfFromTemplate', () => {
-  // TODO: Replace with env var
-  const bucketUrl = 'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org';
+  const bucketUrl = config.services.s3.endpointUrl;
 
   it('returns 400 if template is not specified', async () => {
     const { status, message,errors } = await testRequest(generatePdfFromTemplate);
