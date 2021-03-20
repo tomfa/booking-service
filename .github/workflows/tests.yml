@@ -7,11 +7,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [12.x]
-        
+
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -24,4 +24,6 @@ jobs:
     - name: Unit tests
       run: |
         yarn test
-    
+    - name: Eslint
+      run: |
+        yarn lint:ignore-warnings

@@ -4,9 +4,9 @@ import {
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
 import { v4 } from 'uuid';
+import config from '../config';
 import { TemplateNotFound } from './errors/TemplateNotFound';
 import { APIError } from './errors/APIError';
-import config from '../config';
 
 type FileData = { url: string };
 
