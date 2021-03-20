@@ -10,7 +10,7 @@ import config from '../config';
 
 type FileData = { url: string };
 
-const s3 = new S3Client({ region: 'eu-north-1'});
+const s3 = new S3Client({ region: config.services.s3.region });
 const generateFileName = (fileEnding = 'pdf') => `${v4()}.${fileEnding}`;
 
 const getAbsoluteUrl = (fileKey: string) =>
