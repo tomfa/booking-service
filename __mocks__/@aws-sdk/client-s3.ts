@@ -1,7 +1,12 @@
+/* eslint-disable max-classes-per-file */
+
 export class AWSError extends Error {
   message: string;
+
   code: string;
+
   name: string;
+
   time: Date;
 
   constructor({ message, code, name, time }) {
@@ -72,21 +77,25 @@ const sendFn = jest.fn().mockImplementation(
       throw NoSuchKeyError();
     } else if (command instanceof PutObjectCommand) {
       putMock(command.input);
-      return
+
     }
   },
 );
 
 export class GetObjectCommand {
   name = 'GetObjectCommand';
+
   input: Record<string, any>;
+
   constructor(input: Record<string, any>) {
     this.input = input;
   }
 }
 export class PutObjectCommand {
   name = 'PutObjectCommand';
+
   input: Record<string, any>;
+
   constructor(input: Record<string, any>) {
     this.input = input;
   }

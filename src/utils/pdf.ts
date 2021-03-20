@@ -16,12 +16,12 @@ async function generatePdf(
       ignoreHTTPSErrors: true,
     });
 
-    let page = await browser.newPage();
+    const page = await browser.newPage();
 
     await loadData(page);
     return await page.pdf({ format: 'a4' });
   } finally {
-    if (!!browser) {
+    if (browser) {
       await browser.close();
     }
   }

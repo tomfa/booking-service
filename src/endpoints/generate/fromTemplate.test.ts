@@ -1,7 +1,7 @@
 import { testRequest } from '../../testUtils/controllers.utils';
-import { generatePdfFromTemplate } from './fromTemplate';
 import { getLastPutActionArgs, templates } from '../../../__mocks__/@aws-sdk/client-s3';
 import config from '../../config';
+import { generatePdfFromTemplate } from './fromTemplate';
 
 describe('generatePdfFromTemplate', () => {
   const bucketUrl = config.services.s3.endpointUrl;

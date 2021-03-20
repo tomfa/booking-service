@@ -1,7 +1,7 @@
-import { generatePdfFromHtml } from './fromHtml';
 import { encodeBase64 } from '../../utils/encoding';
 import { testRequest } from '../../testUtils/controllers.utils';
 import config from '../../config';
+import { generatePdfFromHtml } from './fromHtml';
 
 describe('generatePdfFromHtml', () => {
   const bucketUrl = config.services.s3.endpointUrl;
