@@ -36,7 +36,9 @@
     "start": "serverless offline start",
     "deploy": "serverless deploy",
     "test": "jest --passWithNoTests",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "logs": "sls logs --function generateFromHtml",
+    "logs:watch": "sls logs --function generateFromHtml --tail"
   },
   "author": "",
   "license": "ISC"
