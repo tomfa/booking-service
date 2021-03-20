@@ -1,4 +1,6 @@
 import { AWSError as OriginalAWSError } from 'aws-sdk/lib/error';
+import { PutObjectRequest } from 'aws-sdk/clients/s3';
+
 export class AWSError implements OriginalAWSError {
   message: string;
   code: string;
@@ -33,6 +35,24 @@ export const overrideNextS3GetObjectResponse = (content: string) => {
   nextGetResponse = createMock(content);
 };
 
+export const templates = {
+  htmlTemplate: {
+    name: 'cheese',
+    key: 'templates/cheese',
+    content: `<body><h1>{{ name }}</h1></body>`,
+    mock: createMock(`<body><h1>{{ name }}</h1></body>`),
+  },
+};
+
+const putFn = jest
+  .fn()
+  .mockImplementation(() => ({ promise: () => Promise.resolve(undefined) }));
+
+export const getLastS3PutObjectArgs = (): PutObjectRequest => {
+  const args = putFn.mock.calls?.[0]?.[0];
+  return args
+}
+
 const getFn = jest
   .fn()
   .mockImplementation((x: { Bucket: string; Key: string }) => {
@@ -41,9 +61,16 @@ const getFn = jest
       nextGetResponse = null;
       return response;
     }
+    const matchingTemplate = Object.values(templates).find(
+      (t) => t.key === x.Key,
+    );
+    if (matchingTemplate) {
+      return { promise: matchingTemplate.mock };
+    }
     throw NoSuchKeyError();
   });
 
 export class S3 {
   getObject = getFn;
+  putObject = putFn;
 }
