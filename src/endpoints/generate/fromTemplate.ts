@@ -11,7 +11,7 @@ export const generatePdfFromTemplate = async (
 ) => {
   const { template, ...variables } = req.query;
   if (!template) {
-    throw new BadRequestError({ field: 'template', error: 'field is missing' });
+    throw new BadRequestError({ field: 'template', error: 'query param is missing' });
   }
   const cleanedVariables: Variables = cleanVariables(variables);
 

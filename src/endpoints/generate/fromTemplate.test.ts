@@ -12,7 +12,7 @@ describe('generatePdfFromTemplate', () => {
     expect(status).toBe(400);
     expect(message).toBe("Seems you passed on something wrong.");
     expect(errors.length).toBe(1);
-    expect(errors[0]).toContain('field is missing')
+    expect(errors[0]).toContain('query param is missing')
   });
   it('returns 404 if template is not found', async () => {
     const { status, message } = await testRequest(generatePdfFromTemplate, {

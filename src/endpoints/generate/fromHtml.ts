@@ -4,6 +4,7 @@ import { decodeBase64, isValidBase64 } from '../../utils/encoding';
 import { cleanVariables, insertVariables } from '../../utils/variables';
 import { Variables } from '../../types';
 import { storeFile } from '../../utils/files';
+import { BadRequestError } from '../../utils/errors/BadRequestError';
 
 export const generatePdfFromHtml = async (
   req: Express.Request,
@@ -11,12 +12,10 @@ export const generatePdfFromHtml = async (
 ) => {
   const { html: base64Html, ...variables } = req.query;
   if (!base64Html) {
-    return res.status(400).json({ message: 'Query param "html" is missing' });
+    throw new BadRequestError({ field: 'html', error: 'query param missing'})
   }
   if (!isValidBase64(base64Html)) {
-    return res
-      .status(400)
-      .json({ message: 'Query param "html" is not base64 encoded' });
+    throw new BadRequestError({ field: 'html', error: 'value is not base 64 encoded'})
   }
   const cleanedVariables: Variables = cleanVariables(variables);
 
