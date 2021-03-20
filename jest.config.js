@@ -8,6 +8,7 @@ module.exports = {
       },
     },
   },
+  setupFilesAfterEnv: ['./src/testUtils/testSetup.ts'],
   collectCoverageFrom: [
     '**/*.{js,ts}',
     '!**/node_modules/**',
