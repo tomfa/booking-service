@@ -11,9 +11,9 @@ type APIResponse = {
 };
 export const testRequest = async (
   controller: (req: Express.Request, res: Express.Request) => unknown,
-  options?: MockRequest,
+  { method = 'GET', ...options }: MockRequest = {},
 ): Promise<APIResponse> => {
-  const req = getMockReq(options);
+  const req = getMockReq({ method, ...options});
   const { res } = getMockRes();
   try {
     await controller(req, res);

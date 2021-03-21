@@ -2,15 +2,22 @@ import * as Express from 'express';
 import { convertHTMLtoPDF } from '../../utils/pdf';
 import { decodeBase64, isValidBase64 } from '../../utils/encoding';
 import { cleanVariables, insertVariables } from '../../utils/variables';
-import { Variables } from '../../types';
+import { JSONObject, Variables } from '../../types';
 import { storeFile } from '../../utils/files';
 import { BadRequestError } from '../../utils/errors/BadRequestError';
+
+const getData = (req: Express.Request) => {
+  if (req.method === 'GET') {
+    return req.query as Record<string, string | string[]>
+  }
+  return (req.body || {}) as JSONObject;
+}
 
 export const generatePdfFromHtml = async (
   req: Express.Request,
   res: Express.Response,
 ) => {
-  const { html: base64Html, ...variables } = req.query;
+  const { html: base64Html, ...variables } = getData(req);
   if (!base64Html) {
     throw new BadRequestError({ field: 'html', error: 'query param missing'})
   }
@@ -23,5 +30,8 @@ export const generatePdfFromHtml = async (
   const htmlWithVariables = insertVariables(htmlString, cleanedVariables);
   const pdfContent = await convertHTMLtoPDF(htmlWithVariables);
   const { url } = await storeFile(pdfContent);
-  return res.redirect(url);
+  if (req.method === 'GET') {
+    return res.redirect(url);
+  }
+  return res.json({ url, message: 'OK' })
 };

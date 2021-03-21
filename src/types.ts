@@ -1,8 +1,11 @@
 import { Request, Response } from 'express';
 
-type AnyJson = boolean | number | string | null | Variables | Variables[];
+type JSONValue = boolean | number | string | null | Variables | Variables[];
+export type JSONObject = {
+  [key: string]: JSONValue;
+};
 export interface Variables {
-  [key: string]: AnyJson;
+  [key: string]: JSONValue;
 }
 
-export type ControllerFunction = (req: Request, res: Response) => Promise<void>
+export type ControllerFunction = (req: Request, res: Response) => Promise<unknown>;

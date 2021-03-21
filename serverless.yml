@@ -49,5 +49,8 @@ functions:
           path: generate/from_html
           method: get
       - http:
+          path: generate/from_html
+          method: post
+      - http:
           path: generate/from_template
           method: get
