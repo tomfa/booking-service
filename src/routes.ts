@@ -5,6 +5,7 @@ import { errorWrapper } from './utils/errorHandler';
 import { ControllerFunction } from './types';
 import { listTemplates } from './endpoints/template/listTemplates';
 import { listFiles } from './endpoints/files/listFiles';
+import { listFonts } from './endpoints/font/listFonts';
 
 const router = Router();
 
@@ -19,5 +20,6 @@ get('/generate/from_template', generatePdfFromTemplate);
 post('/generate/from_template', generatePdfFromTemplate);
 get('/template', listTemplates);
 get('/file', listFiles);
+get('/font', listFonts);
 
 export default router;

@@ -63,4 +63,7 @@ functions:
       - http:
           path: file
           method: get
+      - http:
+          path: font
+          method: get
 

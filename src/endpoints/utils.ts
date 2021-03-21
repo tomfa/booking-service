@@ -1,5 +1,5 @@
 import * as Express from 'express';
-import { JSONObject } from '../types';
+import { FileData, FileDataDTO, JSONObject } from '../types';
 
 export const getData = (req: Express.Request): JSONObject => {
   if (req.method === 'GET') {
@@ -7,3 +7,9 @@ export const getData = (req: Express.Request): JSONObject => {
   }
   return (req.body || {}) as JSONObject;
 };
+
+export const mapToFileDataDTO = (file: FileData): FileDataDTO => ({
+  filename: file.filename,
+  modified: file.modified.toISOString(),
+  url: file.url,
+});

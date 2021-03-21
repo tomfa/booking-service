@@ -2,37 +2,37 @@ import { testRequest } from '../../testUtils/controllers.utils';
 
 import { overrideNextS3ListObjectResponse } from '../../../__mocks__/@aws-sdk/client-s3';
 import config from '../../config';
-import { listTemplates } from './listTemplates';
+import { listFonts } from './listFonts';
 
-describe('listTemplates', () => {
+describe('listFonts', () => {
   describe('GET request', () => {
     it('returns list of template filenames', async () => {
-      const filename = 'test.html';
-      const url = `${config.services.s3.endpointUrl}/templates/${filename}`
+      const filename = 'testFont.otf';
+      const url = `${config.services.s3.endpointUrl}/fonts/${filename}`
       const modified = new Date();
       overrideNextS3ListObjectResponse([
         {
           filename: '',
           eTag: 'folderEtag',
           modified,
-          key: `templates/`,
-          url: `${config.services.s3.endpointUrl}/templates/`,
+          key: `fonts/`,
+          url: `${config.services.s3.endpointUrl}/fonts/`,
         },
         {
           filename,
           eTag: 'anEtag',
           modified,
-          key: `templates/${filename}`,
+          key: `fonts/${filename}`,
           url,
         },
       ]);
 
-      const { status, message, json } = await testRequest(listTemplates);
+      const { status, message, json } = await testRequest(listFonts);
 
       expect(status).toBe(200);
       expect(message).toBe('OK');
-      expect(json.templates.length).toBe(1);
-      expect(json.templates[0]).toEqual({ filename, modified: modified.toISOString(), url });
+      expect(json.fonts.length).toBe(1);
+      expect(json.fonts[0]).toEqual({ filename, modified: modified.toISOString(), url });
     });
   });
 });

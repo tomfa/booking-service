@@ -18,3 +18,9 @@ export type FileData = {
   eTag?: string;
   modified?: Date;
 }
+
+export type FileDataDTO = {
+  filename: string;
+  url: string;
+  modified: string;
+}
