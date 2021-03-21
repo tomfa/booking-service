@@ -3,7 +3,7 @@ import { Browser, Page } from 'puppeteer-core';
 const chromium = require('chrome-aws-lambda');
 
 async function generatePdf(
-  loadData: (page: Page) => Promise<void>,
+  loadData: (page: Page) => Promise<void>
 ): Promise<Buffer> {
   let browser: Browser;
 

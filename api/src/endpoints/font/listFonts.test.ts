@@ -8,7 +8,7 @@ describe('listFonts', () => {
   describe('GET request', () => {
     it('returns list of template filenames', async () => {
       const filename = 'testFont.otf';
-      const url = `${config.services.s3.endpointUrl}/fonts/${filename}`
+      const url = `${config.services.s3.endpointUrl}/fonts/${filename}`;
       const modified = new Date();
       overrideNextS3ListObjectResponse([
         {
@@ -32,7 +32,11 @@ describe('listFonts', () => {
       expect(status).toBe(200);
       expect(message).toBe('OK');
       expect(json.fonts.length).toBe(1);
-      expect(json.fonts[0]).toEqual({ filename, modified: modified.toISOString(), url });
+      expect(json.fonts[0]).toEqual({
+        filename,
+        modified: modified.toISOString(),
+        url,
+      });
     });
   });
 });

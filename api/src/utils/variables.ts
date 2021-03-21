@@ -11,6 +11,6 @@ export const insertVariables = (
   return template(variables);
 };
 
-export const cleanVariables = (variablesFromQuery: unknown): Variables =>  {
+export const cleanVariables = (variablesFromQuery: unknown): Variables => {
   return variablesFromQuery as Variables;
-}
+};

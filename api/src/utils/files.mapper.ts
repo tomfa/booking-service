@@ -12,7 +12,7 @@ const getFileName = (fileKey: string) => fileKey.split('/').reverse()[0];
 
 export const mapGetFilesResponse = (
   output: ListObjectsCommandOutput,
-  includeFolder: boolean = false,
+  includeFolder: boolean = false
 ): FileData[] => {
   if (!output.Contents) {
     return [];
@@ -34,7 +34,7 @@ export const mapGetFilesResponse = (
 
 export const mapPutFileResponse = (
   uploadKey: string,
-  output: PutObjectCommandOutput,
+  output: PutObjectCommandOutput
 ): FileData => {
   return {
     key: uploadKey,

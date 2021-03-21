@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.test' });
 
-jest.setTimeout(10000);  // We are dealing with PDFs and buffer things
+jest.setTimeout(10000); // We are dealing with PDFs and buffer things
 
 const disableHttpRequests = () => {
   nock.disableNetConnect();

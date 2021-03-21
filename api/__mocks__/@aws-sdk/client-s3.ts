@@ -31,7 +31,7 @@ const createGetObjectMock = (content: string) =>
   jest.fn().mockReturnValue(
     Promise.resolve({
       Body: Buffer.from(content),
-    }),
+    })
   );
 
 let nextGetResponse;
@@ -42,8 +42,12 @@ export const overrideNextS3GetObjectResponse = (content: string) => {
 const createListObjectMock = (files: FileData[]) =>
   jest.fn().mockReturnValue(
     Promise.resolve({
-      Contents: files.map(f => ({ Key: f.key, LastModified: f.modified, Etag: f.eTag })),
-    }),
+      Contents: files.map((f) => ({
+        Key: f.key,
+        LastModified: f.modified,
+        Etag: f.eTag,
+      })),
+    })
   );
 
 let nextListResponse;
@@ -79,37 +83,42 @@ export const getLastPutActionArgs = (): Record<string, any> | undefined => {
 
 const sendFn = jest
   .fn()
-  .mockImplementation((command: GetObjectCommand | PutObjectCommand | ListObjectsCommand) => {
-    if (command instanceof GetObjectCommand) {
-      getMock(command.input);
-      if (nextGetResponse) {
-        const response = nextGetResponse;
-        nextGetResponse = null;
-        return response();
+  .mockImplementation(
+    (command: GetObjectCommand | PutObjectCommand | ListObjectsCommand) => {
+      if (command instanceof GetObjectCommand) {
+        getMock(command.input);
+        if (nextGetResponse) {
+          const response = nextGetResponse;
+          nextGetResponse = null;
+          return response();
+        }
+        const key = command.input.Key;
+        const matchingTemplate = Object.values(templates).find(
+          (t) => t.key === key
+        );
+        if (matchingTemplate) {
+          return matchingTemplate.mock();
+        }
+        throw NoSuchKeyError();
+      } else if (command instanceof PutObjectCommand) {
+        return putMock(command.input);
+      } else if (command instanceof ListObjectsCommand) {
+        if (nextListResponse) {
+          listMock(command.input);
+          const response = nextListResponse;
+          nextListResponse = null;
+          return response();
+        }
+        return listMock(command.input);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(
+          `Command not handled in aws-sdk mock`,
+          JSON.stringify(command)
+        );
       }
-      const key = command.input.Key;
-      const matchingTemplate = Object.values(templates).find(
-        (t) => t.key === key,
-      );
-      if (matchingTemplate) {
-        return matchingTemplate.mock();
-      }
-      throw NoSuchKeyError();
-    } else if (command instanceof PutObjectCommand) {
-      return putMock(command.input);
-    } else if (command instanceof ListObjectsCommand) {
-      if (nextListResponse) {
-        listMock(command.input)
-        const response = nextListResponse;
-        nextListResponse = null;
-        return response();
-      }
-      return listMock(command.input)
-    } else {
-      // eslint-disable-next-line no-console
-      console.log(`Command not handled in aws-sdk mock`, JSON.stringify(command))
     }
-  });
+  );
 
 export class GetObjectCommand {
   name = 'GetObjectCommand';

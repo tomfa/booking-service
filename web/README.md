@@ -23,4 +23,3 @@ yarn deploy
 ```
 
 _Deploys app to Github Pages_
-

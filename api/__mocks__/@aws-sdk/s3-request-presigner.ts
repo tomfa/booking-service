@@ -1,6 +1,6 @@
 const getSignedUrltMock = jest.fn().mockImplementation((s3, command) => {
   return Promise.resolve(
-    `https://s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${process.env.S3_BUCKET_NAME}/${command.input.Key}?X-Amz-Algorithm=THISISJUSTFAKE`,
+    `https://s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${process.env.S3_BUCKET_NAME}/${command.input.Key}?X-Amz-Algorithm=THISISJUSTFAKE`
   );
 });
 export const lastGetSignedUrlArgs = (): Record<string, any> | undefined => {

@@ -16,7 +16,7 @@ const s3 = new S3Client({ region: config.services.s3.region });
 const generateFileName = (fileEnding = 'pdf') => `${v4()}.${fileEnding}`;
 
 export const retrieveTemplate = async (
-  templateName: string,
+  templateName: string
 ): Promise<string | null> => {
   const prefix = 'templates';
   try {
@@ -24,7 +24,7 @@ export const retrieveTemplate = async (
       new GetObjectCommand({
         Bucket: config.services.s3.bucketName,
         Key: `${prefix}/${templateName}`,
-      }),
+      })
     );
     return object.Body.toString();
   } catch (err) {
@@ -53,7 +53,7 @@ const uploadFile = async ({
       Body: content,
       ContentType: mimeType,
       ACL: acl,
-    }),
+    })
   );
   return mapPutFileResponse(key, object);
 };
@@ -61,7 +61,7 @@ const uploadFile = async ({
 export const storeFile = async (
   content: Buffer,
   mimeType = 'application/pdf',
-  acl: 'public-read' | 'private' = 'public-read',
+  acl: 'public-read' | 'private' = 'public-read'
 ): Promise<FileData> => {
   const fileName = generateFileName();
   const prefix = 'files';
@@ -78,7 +78,7 @@ export const getFiles = async ({
     new ListObjectsCommand({
       Bucket: config.services.s3.bucketName,
       Prefix: keyPrefix,
-    }),
+    })
   );
   return mapGetFilesResponse(response);
 };
@@ -86,7 +86,7 @@ export const getFiles = async ({
 export const getUploadUrl = async (
   key: string,
   acl: 'public-read' | 'private' = 'public-read',
-  { expiresIn = 15 * 60 }: { expiresIn?: number } = {},
+  { expiresIn = 15 * 60 }: { expiresIn?: number } = {}
 ): Promise<string> => {
   const command = new PutObjectCommand({
     Bucket: config.services.s3.bucketName,

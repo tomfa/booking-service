@@ -17,9 +17,9 @@ export class APIError implements IAPIError {
     if (typeof message === 'string') {
       this.message = message;
     } else {
-      this.message = message.message
+      this.message = message.message;
     }
-    this.errors = [this.displayMessage]
-    this.debugContext = context
+    this.errors = [this.displayMessage];
+    this.debugContext = context;
   }
 }

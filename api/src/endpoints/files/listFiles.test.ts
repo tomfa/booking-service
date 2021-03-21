@@ -9,7 +9,7 @@ describe('listFiles', () => {
     it('returns list of generated filename', async () => {
       const filename = 'test.html';
       const url = `${config.services.s3.endpointUrl}/files/${filename}`;
-      const createdDate = new Date()
+      const createdDate = new Date();
       overrideNextS3ListObjectResponse([
         {
           filename,
@@ -24,7 +24,9 @@ describe('listFiles', () => {
 
       expect(status).toBe(200);
       expect(message).toBe('OK');
-      expect(json.files).toEqual([{ filename, url, modified: createdDate.toISOString() }]);
+      expect(json.files).toEqual([
+        { filename, url, modified: createdDate.toISOString() },
+      ]);
     });
   });
 });

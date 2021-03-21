@@ -9,7 +9,10 @@ export interface Variables {
   [key: string]: JSONValue;
 }
 
-export type ControllerFunction = (req: Request, res: Response) => Promise<unknown>;
+export type ControllerFunction = (
+  req: Request,
+  res: Response
+) => Promise<unknown>;
 
 export type FileData = {
   key: string;
@@ -17,10 +20,10 @@ export type FileData = {
   url: string;
   eTag?: string;
   modified?: Date;
-}
+};
 
 export type FileDataDTO = {
   filename: string;
   url: string;
   modified: string;
-}
+};

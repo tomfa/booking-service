@@ -17,7 +17,7 @@ function lastCommitId(dir) {
       if (stdout) return resolve(String(stdout).trim());
 
       return reject(
-        new Error(`No output from command: git ${gitArgs.join(' ')}`),
+        new Error(`No output from command: git ${gitArgs.join(' ')}`)
       );
     });
   });

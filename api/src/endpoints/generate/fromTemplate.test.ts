@@ -12,7 +12,7 @@ describe('generatePdfFromTemplate', () => {
   describe('GET request', () => {
     it('returns 400 if template is not specified', async () => {
       const { status, message, errors } = await testRequest(
-        generatePdfFromTemplate,
+        generatePdfFromTemplate
       );
 
       expect(status).toBe(400);
@@ -50,10 +50,13 @@ describe('generatePdfFromTemplate', () => {
   });
   describe('POST request', () => {
     it('returns JSON containing PDF url', async () => {
-      const { status, message, json } = await testRequest(generatePdfFromTemplate, {
-        method: 'POST',
-        body: { template: templates.htmlTemplate.name },
-      });
+      const { status, message, json } = await testRequest(
+        generatePdfFromTemplate,
+        {
+          method: 'POST',
+          body: { template: templates.htmlTemplate.name },
+        }
+      );
 
       expect(status).toBe(200);
       expect(message).toBe('OK');

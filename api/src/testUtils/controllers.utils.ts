@@ -6,26 +6,26 @@ type APIResponse = {
   status: number;
   json?: Record<string, any>;
   message?: string;
-  headers: Record<string, any>
-  errors?: string[]
+  headers: Record<string, any>;
+  errors?: string[];
 };
 export const testRequest = async (
   controller: (req: Express.Request, res: Express.Request) => unknown,
-  { method = 'GET', ...options }: MockRequest = {},
+  { method = 'GET', ...options }: MockRequest = {}
 ): Promise<APIResponse> => {
-  const req = getMockReq({ method, ...options});
+  const req = getMockReq({ method, ...options });
   const { res } = getMockRes();
   try {
     await controller(req, res);
   } catch (err) {
     // Consider setting up app completely instead of this hack
-    errorMiddleware(err, req, res, () => {})
+    errorMiddleware(err, req, res, () => {});
   }
 
   // @ts-ignore
   const redirectUrl = res.redirect.mock.calls?.[0]?.[0];
   if (redirectUrl) {
-    return { status: 302, headers: { location: redirectUrl }, message: null}
+    return { status: 302, headers: { location: redirectUrl }, message: null };
   }
   // @ts-ignore
   const status = res.status.mock.calls?.[0]?.[0] || 200;

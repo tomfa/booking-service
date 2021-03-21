@@ -4,7 +4,7 @@ import { mapToFileDataDTO } from '../utils';
 
 export const listFonts = async (
   req: Express.Request,
-  res: Express.Response,
+  res: Express.Response
 ) => {
   const files = await getFiles({ keyPrefix: 'fonts/' });
   const fonts = files.map(mapToFileDataDTO);

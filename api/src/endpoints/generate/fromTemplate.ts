@@ -8,11 +8,14 @@ import { getData } from '../utils';
 
 export const generatePdfFromTemplate = async (
   req: Express.Request,
-  res: Express.Response,
+  res: Express.Response
 ) => {
   const { template, ...variables } = getData(req);
   if (!template) {
-    throw new BadRequestError({ field: 'template', error: 'query param is missing' });
+    throw new BadRequestError({
+      field: 'template',
+      error: 'query param is missing',
+    });
   }
   const cleanedVariables: Variables = cleanVariables(variables);
 

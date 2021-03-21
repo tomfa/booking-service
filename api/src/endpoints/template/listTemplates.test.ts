@@ -8,7 +8,7 @@ describe('listTemplates', () => {
   describe('GET request', () => {
     it('returns list of template filenames', async () => {
       const filename = 'test.html';
-      const url = `${config.services.s3.endpointUrl}/templates/${filename}`
+      const url = `${config.services.s3.endpointUrl}/templates/${filename}`;
       const modified = new Date();
       overrideNextS3ListObjectResponse([
         {
@@ -32,7 +32,11 @@ describe('listTemplates', () => {
       expect(status).toBe(200);
       expect(message).toBe('OK');
       expect(json.templates.length).toBe(1);
-      expect(json.templates[0]).toEqual({ filename, modified: modified.toISOString(), url });
+      expect(json.templates[0]).toEqual({
+        filename,
+        modified: modified.toISOString(),
+        url,
+      });
     });
   });
 });

@@ -14,8 +14,8 @@ describe('getUploadURL', () => {
     expect(message).toBe('OK');
     expect(
       json.url.startsWith(
-        'https://s3.eu-north-1.amazonaws.com/test.mybucket.com/templates/Cheese',
-      ),
+        'https://s3.eu-north-1.amazonaws.com/test.mybucket.com/templates/Cheese'
+      )
     ).toBe(true);
   });
 });

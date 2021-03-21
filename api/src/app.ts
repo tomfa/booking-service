@@ -6,8 +6,7 @@ import routes from './routes';
 import { errorMiddleware } from './utils/errorHandler';
 import config, { Config } from './config';
 
-dotenv.config()
-
+dotenv.config();
 
 class App {
   public app: express.Application;
@@ -23,7 +22,7 @@ class App {
   private setup() {
     this.app.use(bodyParser.json());
     this.app.use(routes);
-    this.app.use(errorMiddleware)
+    this.app.use(errorMiddleware);
   }
 }
 

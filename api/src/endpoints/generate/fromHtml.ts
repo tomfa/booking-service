@@ -9,7 +9,7 @@ import { BadRequestError } from '../../utils/errors/BadRequestError';
 
 export const generatePdfFromHtml = async (
   req: Express.Request,
-  res: Express.Response,
+  res: Express.Response
 ) => {
   const { html: base64Html, ...variables } = getData(req);
   if (!base64Html) {

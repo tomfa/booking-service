@@ -4,7 +4,7 @@ import { mapToFileDataDTO } from '../utils';
 
 export const listFiles = async (
   req: Express.Request,
-  res: Express.Response,
+  res: Express.Response
 ) => {
   const filesObjects = await getFiles({ keyPrefix: 'files/' });
   const files = filesObjects.map(mapToFileDataDTO);

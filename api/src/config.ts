@@ -6,9 +6,9 @@ export const config = {
       region: process.env.AWS_BUCKET_REGION as string,
       bucketName: process.env.S3_BUCKET_NAME as string,
       endpointUrl: process.env.FILE_ENDPOINT_URL as string,
-    }
-  }
-}
+    },
+  },
+};
 
 const checkHasKeyValues = (conf: Record<string, unknown>, prefix?: string) => {
   const ignoreableKeys = [];
@@ -25,14 +25,17 @@ const checkHasKeyValues = (conf: Record<string, unknown>, prefix?: string) => {
       return;
     }
     if (typeof value === 'object') {
-      return checkHasKeyValues(value as Record<string, unknown>, identifiableKey);
+      return checkHasKeyValues(
+        value as Record<string, unknown>,
+        identifiableKey
+      );
     }
     throw new Error(
       `config.${identifiableKey} has unexpected value ${value}. ` +
-      `Likely missing an environment variable.`
+        `Likely missing an environment variable.`
     );
   });
 };
-checkHasKeyValues(config)
+checkHasKeyValues(config);
 export type Config = typeof config;
 export default config;

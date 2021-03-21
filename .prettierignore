@@ -1,0 +1,11 @@
+node_modules
+coverage
+
+# Infrastructure
+.serverless/
+.terraform/
+
+# Build folders
+dist
+build
+public

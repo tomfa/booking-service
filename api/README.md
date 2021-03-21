@@ -15,9 +15,9 @@
 | `POST` | `/generate/from_template` | Generates PDF from template                              | [fromTemplate.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/generate/fromTemplate.test.ts)   |
 | `GET`  | `/file`                   | Lists existing files                                     | [listFiles.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/file/listFiles.test.ts)             |
 | `GET`  | `/template`               | Lists existing templates                                 | [listTemplates.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/template/listTemplates.test.ts) |
-| `GET`  | `/template/upload_url`    | Returns presigned upload URL for templates                             | [listTemplates.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/controller.helper.test.ts)      |
+| `GET`  | `/template/upload_url`    | Returns presigned upload URL for templates               | [listTemplates.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/controller.helper.test.ts)      |
 | `GET`  | `/font`                   | Lists existing fonts                                     | [listFonts.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/font/listFonts.test.ts)             |
-| `GET`  | `/font/upload_url`        | Returns presigned upload URL for fonts                             | [listTemplates.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/controller.helper.test.ts)      |
+| `GET`  | `/font/upload_url`        | Returns presigned upload URL for fonts                   | [listTemplates.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/controller.helper.test.ts)      |
 
 ## Development
 
