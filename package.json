@@ -29,16 +29,29 @@
     "eslint-plugin-react": "^7.14.2",
     "eslint-plugin-react-hooks": "^4.0.8",
     "eslint-plugin-unused-imports": "^1.1.0",
+    "husky": "^5.1.3",
+    "lint-staged": "^10.5.4",
     "prettier": "^2.0.5",
     "typescript": "^4.2.3"
   },
   "scripts": {
     "start": "concurrently \"yarn workspace pdf-generator-web start\" \"yarn workspace pdf-generator-api start\"",
-    "test:all": "yarn workspaces run test --ci --coverage",
+    "test": "yarn workspace pdf-generator-api test",
+    "test:watch": "yarn workspace pdf-generator-api test:watch",
     "lint": "eslint .",
     "lint:ignore-warnings": "eslint . --quiet",
     "lint:prettier-check": "prettier --check \"**/*.{js,jsx,ts,tsx,json}\"",
-    "lint:prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,mdx,md}\""
+    "lint:prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,mdx,md}\"",
+    "postinstall": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json, md}": [
+      "prettier --write"
+    ]
   },
   "author": "",
   "license": "ISC"

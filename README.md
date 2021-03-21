@@ -22,9 +22,19 @@ _Starts all packages concurrently_
 
 ### Test
 ```
-# Runs unit tests
-yarn test:all
+yarn test
 
+# In watch mode
+yarn test:watch
+```
+
+#### Linting
+
+This repository uses ESLint and Prettier.
+
+[`husky`](https://typicode.github.io/husky/#/) is used to check and fix linting errors on commit. They can also be run with the scripts below.
+
+```
 # Runs eslint check
 yarn lint
 
