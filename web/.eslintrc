@@ -1,0 +1,36 @@
+{
+  "env": { "browser": true, "es2021": true, "node": true },
+  "extends": ["@askeladden/eslint-config-askeladden"],
+  "rules": {
+    // Avoid unnecessary imports
+    "unused-imports/no-unused-imports-ts": 2,
+
+    // Next handles React in scope for us
+    "react/react-in-jsx-scope": 0
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "overrides": [
+    {
+      "files": ["*.test.ts"],
+
+      "rules": {
+        // Tests often want to catch errors (and ignore them)
+        "no-empty": 0
+      }
+    }
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
+  "plugins": ["unused-imports"]
+}
