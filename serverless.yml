@@ -61,9 +61,15 @@ functions:
           path: template
           method: get
       - http:
+          path: template/upload_url
+          method: get
+      - http:
           path: file
           method: get
       - http:
           path: font
+          method: get
+      - http:
+          path: font/upload_url
           method: get
 

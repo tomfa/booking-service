@@ -5,6 +5,7 @@ import {
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
 import { v4 } from 'uuid';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import config from '../config';
 import { FileData } from '../types';
 import { TemplateNotFound } from './errors/TemplateNotFound';
@@ -68,22 +69,6 @@ export const storeFile = async (
   return uploadFile({ key, mimeType, acl, content });
 };
 
-export const storeTemplate = async ({
-  content,
-  templateName,
-  mimeType = 'text/html',
-  acl = 'public-read',
-}: {
-  content: Buffer;
-  templateName: string;
-  mimeType: string;
-  acl: 'public-read' | 'private';
-}): Promise<FileData> => {
-  const prefix = 'templates';
-  const key = `${prefix}/${templateName}`;
-  return uploadFile({ key, mimeType, acl, content });
-};
-
 export const getFiles = async ({
   keyPrefix,
 }: {
@@ -96,4 +81,18 @@ export const getFiles = async ({
     }),
   );
   return mapGetFilesResponse(response);
+};
+
+export const getUploadUrl = async (
+  key: string,
+  acl: 'public-read' | 'private' = 'public-read',
+  { expiresIn = 15 * 60 }: { expiresIn?: number } = {},
+): Promise<string> => {
+  const command = new PutObjectCommand({
+    Bucket: config.services.s3.bucketName,
+    Key: key,
+    ACL: acl,
+  });
+  const url = await getSignedUrl(s3, command, { expiresIn });
+  return url;
 };
