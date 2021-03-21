@@ -1,7 +1,7 @@
 export const config = {
   services: {
     s3: {
-      region: process.env.AWS_REGION as string,
+      region: process.env.AWS_BUCKET_REGION as string,
       bucketName: process.env.S3_BUCKET_NAME as string,
       endpointUrl: process.env.FILE_ENDPOINT_URL as string,
     }
