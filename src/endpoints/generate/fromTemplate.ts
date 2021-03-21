@@ -4,12 +4,13 @@ import { cleanVariables, insertVariables } from '../../utils/variables';
 import { Variables } from '../../types';
 import { retrieveTemplate, storeFile } from '../../utils/files';
 import { BadRequestError } from '../../utils/errors/BadRequestError';
+import { getData } from '../utils';
 
 export const generatePdfFromTemplate = async (
   req: Express.Request,
   res: Express.Response,
 ) => {
-  const { template, ...variables } = req.query;
+  const { template, ...variables } = getData(req);
   if (!template) {
     throw new BadRequestError({ field: 'template', error: 'query param is missing' });
   }
@@ -19,5 +20,8 @@ export const generatePdfFromTemplate = async (
   const htmlWithVariables = insertVariables(html, cleanedVariables);
   const pdfContent = await convertHTMLtoPDF(htmlWithVariables);
   const { url } = await storeFile(pdfContent);
-  return res.redirect(url);
+  if (req.method === 'GET') {
+    return res.redirect(url);
+  }
+  return res.json({ url, message: 'OK' });
 };

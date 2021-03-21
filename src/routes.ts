@@ -13,5 +13,6 @@ const post = (url: string, fun: ControllerFunction) => router.post(url, errorWra
 get('/generate/from_html', generatePdfFromHtml);
 post('/generate/from_html', generatePdfFromHtml);
 get('/generate/from_template', generatePdfFromTemplate);
+post('/generate/from_template', generatePdfFromTemplate);
 
 export default router;

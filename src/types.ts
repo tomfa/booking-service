@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
-type JSONValue = boolean | number | string | null | Variables | Variables[];
+type JSONValue = boolean | number | string | null | JSONValue[];
+
 export type JSONObject = {
   [key: string]: JSONValue;
 };
