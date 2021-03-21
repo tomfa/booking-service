@@ -7,14 +7,15 @@
 
 ## API
 
-| method | url                       | docs                                                                                                                       |
-| ------ | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `GET`  | `/generate/from_html`     | [fromHtml.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/generate/fromHtml.test.ts)         |
-| `POST` | `/generate/from_html`     | [fromHtml.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/generate/fromHtml.test.ts)         |
-| `GET`  | `/generate/from_template` | [fromTemplate.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/generate/fromTemplate.test.ts) |
-| `POST` | `/generate/from_template` | [fromTemplate.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/generate/fromTemplate.test.ts) |
-| `GET` | `/templates` | [templates.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/templates/listTemplates.test.ts) |
-| `GET` | `/files` | [files.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/files/files.test.ts) |
+| method | url                       | description | docs                                                                                                                         |
+| ------ | ------------------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `GET`  | `/generate/from_html`     | Generates PDF from passed base64 encoded template string | [fromHtml.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/generate/fromHtml.test.ts)           |
+| `POST` | `/generate/from_html`     | Generates PDF from passed base64 encoded template string |[fromHtml.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/generate/fromHtml.test.ts)           |
+| `GET`  | `/generate/from_template` | Generates PDF from template |[fromTemplate.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/generate/fromTemplate.test.ts)   |
+| `POST` | `/generate/from_template` | Generates PDF from template  |[fromTemplate.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/generate/fromTemplate.test.ts)   |
+| `GET`  | `/template`               | Lists existing templates |[listTemplates.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/template/listTemplates.test.ts) |
+| `GET`  | `/file`                   | Lists existing files |[listFiles.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/file/listFiles.test.ts)             |
+| `GET`  | `/font`                   | Lists existing fonts |[listFonts.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/font/listFonts.test.ts)            |
 
 ## Development
 
