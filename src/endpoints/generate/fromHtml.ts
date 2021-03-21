@@ -15,7 +15,7 @@ export const generatePdfFromHtml = async (
     throw new BadRequestError({ field: 'html', error: 'query param missing'})
   }
   if (!isValidBase64(base64Html)) {
-    throw new BadRequestError({ field: 'html', error: 'value is not base 64 encoded'})
+    throw new BadRequestError({ field: 'html', error: 'query param is not base64 encoded'})
   }
   const cleanedVariables: Variables = cleanVariables(variables);
 

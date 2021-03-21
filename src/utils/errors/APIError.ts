@@ -1,7 +1,7 @@
 import { IAPIError, ErrorContext } from './types';
 
 export class APIError implements IAPIError {
-  name = 'GenericError';
+  name = 'Internal Server Error';
 
   displayMessage = 'Something odd happened, sorry. We will look into it!';
 

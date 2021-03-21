@@ -9,7 +9,7 @@ export type FieldError = {
 export class BadRequestError extends APIError {
   displayMessage = 'Seems you passed on something wrong.'
 
-  name = 'BadRequestError';
+  name = 'Bad Request';
 
   httpCode = 400;
 

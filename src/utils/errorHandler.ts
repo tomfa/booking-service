@@ -26,9 +26,21 @@ export const errorMiddleware = (
   if (err instanceof APIError) {
     res
       .status(err.httpCode)
-      .json({ errors: err.errors, message: err.displayMessage });
+      .json({
+        errors: err.errors,
+        message: err.displayMessage,
+        error: err.name,
+        status: err.httpCode,
+      });
   } else {
     // TODO: Hide error message outside dev and test
-    res.status(500).json({ errors: [err.message], message: err.message });
+    res
+      .status(500)
+      .json({
+        errors: [],
+        message: err.message,
+        error: 'Internal Server Error',
+        status: 500,
+      });
   }
 };
