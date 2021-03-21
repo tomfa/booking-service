@@ -9,7 +9,7 @@ api/.env
 !api/.env.test
 
 .terraform/
-*.tfstate
+*.tfstate*
 
 api/.serverless/*
 
