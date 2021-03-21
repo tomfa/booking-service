@@ -5,16 +5,13 @@ import {
 } from '@aws-sdk/client-s3';
 import { v4 } from 'uuid';
 import config from '../config';
+import { FileData } from '../types';
 import { TemplateNotFound } from './errors/TemplateNotFound';
 import { APIError } from './errors/APIError';
-
-type FileData = { url: string };
+import { mapPutFileResponse } from './files.mapper';
 
 const s3 = new S3Client({ region: config.services.s3.region });
 const generateFileName = (fileEnding = 'pdf') => `${v4()}.${fileEnding}`;
-
-const getAbsoluteUrl = (fileKey: string) =>
-  `${config.services.s3.endpointUrl}/${fileKey}`;
 
 export const retrieveTemplate = async (
   templateName: string,
@@ -36,6 +33,29 @@ export const retrieveTemplate = async (
   }
 };
 
+const uploadFile = async ({
+  content,
+  key,
+  mimeType,
+  acl,
+}: {
+  content: Buffer;
+  key: string;
+  mimeType: string;
+  acl: 'public-read' | 'private';
+}): Promise<FileData> => {
+  const object = await s3.send(
+    new PutObjectCommand({
+      Bucket: config.services.s3.bucketName,
+      Key: key,
+      Body: content,
+      ContentType: mimeType,
+      ACL: acl,
+    }),
+  );
+  return mapPutFileResponse(key, object);
+};
+
 export const storeFile = async (
   content: Buffer,
   mimeType = 'application/pdf',
@@ -43,17 +63,8 @@ export const storeFile = async (
 ): Promise<FileData> => {
   const fileName = generateFileName();
   const prefix = 'files';
-  await s3.send(
-    new PutObjectCommand({
-      Bucket: config.services.s3.bucketName,
-      Key: `${prefix}/${fileName}`,
-      Body: content,
-      ContentType: mimeType,
-      ACL: acl,
-    }),
-  );
-  const url = getAbsoluteUrl(`${prefix}/${fileName}`);
-  return { url };
+  const key = `${prefix}/${fileName}`;
+  return uploadFile({ key, mimeType, acl, content });
 };
 
 export const storeTemplate = async ({
@@ -66,17 +77,8 @@ export const storeTemplate = async ({
   templateName: string;
   mimeType: string;
   acl: 'public-read' | 'private';
-}) => {
+}): Promise<FileData> => {
   const prefix = 'templates';
-  await s3.send(
-    new PutObjectCommand({
-      Bucket: config.services.s3.bucketName,
-      Key: `${prefix}/${templateName}`,
-      Body: content,
-      ContentType: mimeType,
-      ACL: acl,
-    }),
-  );
-  const url = getAbsoluteUrl(`${prefix}/${templateName}`);
-  return { url };
+  const key = `${prefix}/${templateName}`;
+  return uploadFile({ key, mimeType, acl, content });
 };

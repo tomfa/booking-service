@@ -47,21 +47,26 @@ export const templates = {
 };
 
 const getMock = jest.fn().mockImplementation(() => Promise.resolve({}));
-const putMock = jest.fn().mockImplementation(() => Promise.resolve({}));
+const putMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve({ ETag: 'Test-Etag' });
+});
 
 export const getLastPutActionArgs = (): Record<string, any> | undefined => {
   const callLength = putMock.mock.calls?.[0].length;
-  const args = putMock.mock.calls?.[0]?.[callLength-1] as Record<string, any> | undefined;
+  const args = putMock.mock.calls?.[0]?.[callLength - 1] as
+    | Record<string, any>
+    | undefined;
   if (!args) {
     return undefined;
   }
   return args;
 };
 
-const sendFn = jest.fn().mockImplementation(
-  (command: GetObjectCommand | PutObjectCommand) => {
+const sendFn = jest
+  .fn()
+  .mockImplementation((command: GetObjectCommand | PutObjectCommand) => {
     if (command instanceof GetObjectCommand) {
-      getMock(command.input)
+      getMock(command.input);
       if (nextGetResponse) {
         const response = nextGetResponse;
         nextGetResponse = null;
@@ -76,11 +81,9 @@ const sendFn = jest.fn().mockImplementation(
       }
       throw NoSuchKeyError();
     } else if (command instanceof PutObjectCommand) {
-      putMock(command.input);
-
+      return putMock(command.input);
     }
-  },
-);
+  });
 
 export class GetObjectCommand {
   name = 'GetObjectCommand';
