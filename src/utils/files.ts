@@ -84,7 +84,7 @@ export const storeTemplate = async ({
   return uploadFile({ key, mimeType, acl, content });
 };
 
-export const listFiles = async ({
+export const getFiles = async ({
   keyPrefix,
 }: {
   keyPrefix: string;

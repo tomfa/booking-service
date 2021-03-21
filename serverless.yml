@@ -60,4 +60,7 @@ functions:
       - http:
           path: template
           method: get
+      - http:
+          path: file
+          method: get
 
