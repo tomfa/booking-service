@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { ControllerFunction } from '../types';
+import config from '../config';
 import { APIError } from './errors/APIError';
 
 export const errorWrapper = (fun: ControllerFunction) => async (
@@ -33,12 +34,18 @@ export const errorMiddleware = (
         status: err.httpCode,
       });
   } else {
-    // TODO: Hide error message outside dev and test
+    if (config.isDevelopment) {
+      // eslint-disable-next-line no-console
+      console.log(err)
+    }
+    const safeErrorMessage = 'Internal Server Error';
+    const displayOriginalError = config.isDevelopment || config.isTest;
+    const message = displayOriginalError && err.message || safeErrorMessage;
     res
       .status(500)
       .json({
         errors: [],
-        message: err.message,
+        message,
         error: 'Internal Server Error',
         status: 500,
       });
