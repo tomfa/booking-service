@@ -1,4 +1,4 @@
-name: Unit Tests
+name: ESLint
 on:
   pull_request:
   push:
@@ -21,6 +21,6 @@ jobs:
     - name: Yarn Install
       run: |
         yarn install
-    - name: Unit tests
+    - name: Eslint
       run: |
-        yarn test
+        yarn lint:ignore-warnings
