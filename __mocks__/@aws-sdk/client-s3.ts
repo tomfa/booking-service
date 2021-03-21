@@ -1,5 +1,7 @@
 /* eslint-disable max-classes-per-file */
 
+import { FileData } from '../../src/types';
+
 export class AWSError extends Error {
   message: string;
 
@@ -25,7 +27,7 @@ const NoSuchKeyError = () =>
     time: new Date(),
   });
 
-const createMock = (content: string) =>
+const createGetObjectMock = (content: string) =>
   jest.fn().mockReturnValue(
     Promise.resolve({
       Body: Buffer.from(content),
@@ -34,7 +36,19 @@ const createMock = (content: string) =>
 
 let nextGetResponse;
 export const overrideNextS3GetObjectResponse = (content: string) => {
-  nextGetResponse = createMock(content);
+  nextGetResponse = createGetObjectMock(content);
+};
+
+const createListObjectMock = (files: FileData[]) =>
+  jest.fn().mockReturnValue(
+    Promise.resolve({
+      Contents: files.map(f => ({ Key: f.key, LastModified: f.modified, Etag: f.eTag })),
+    }),
+  );
+
+let nextListResponse;
+export const overrideNextS3ListObjectResponse = (files: FileData[]) => {
+  nextListResponse = createListObjectMock(files);
 };
 
 export const templates = {
@@ -42,7 +56,7 @@ export const templates = {
     name: 'cheese',
     key: 'templates/cheese',
     content: `<body><h1>{{ name }}</h1></body>`,
-    mock: createMock(`<body><h1>{{ name }}</h1></body>`),
+    mock: createGetObjectMock(`<body><h1>{{ name }}</h1></body>`),
   },
 };
 
@@ -50,6 +64,7 @@ const getMock = jest.fn().mockImplementation(() => Promise.resolve({}));
 const putMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({ ETag: 'Test-Etag' });
 });
+const listMock = createListObjectMock([]);
 
 export const getLastPutActionArgs = (): Record<string, any> | undefined => {
   const callLength = putMock.mock.calls?.[0].length;
@@ -64,7 +79,7 @@ export const getLastPutActionArgs = (): Record<string, any> | undefined => {
 
 const sendFn = jest
   .fn()
-  .mockImplementation((command: GetObjectCommand | PutObjectCommand) => {
+  .mockImplementation((command: GetObjectCommand | PutObjectCommand | ListObjectsCommand) => {
     if (command instanceof GetObjectCommand) {
       getMock(command.input);
       if (nextGetResponse) {
@@ -82,6 +97,17 @@ const sendFn = jest
       throw NoSuchKeyError();
     } else if (command instanceof PutObjectCommand) {
       return putMock(command.input);
+    } else if (command instanceof ListObjectsCommand) {
+      if (nextListResponse) {
+        listMock(command.input)
+        const response = nextListResponse;
+        nextListResponse = null;
+        return response();
+      }
+      return listMock(command.input)
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(`Command not handled in aws-sdk mock`, JSON.stringify(command))
     }
   });
 
@@ -96,6 +122,16 @@ export class GetObjectCommand {
 }
 export class PutObjectCommand {
   name = 'PutObjectCommand';
+
+  input: Record<string, any>;
+
+  constructor(input: Record<string, any>) {
+    this.input = input;
+  }
+}
+
+export class ListObjectsCommand {
+  name = 'ListObjectsCommand';
 
   input: Record<string, any>;
 

@@ -1,6 +1,7 @@
 import {
   S3Client,
   GetObjectCommand,
+  ListObjectsCommand,
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
 import { v4 } from 'uuid';
@@ -8,7 +9,7 @@ import config from '../config';
 import { FileData } from '../types';
 import { TemplateNotFound } from './errors/TemplateNotFound';
 import { APIError } from './errors/APIError';
-import { mapPutFileResponse } from './files.mapper';
+import { mapGetFilesResponse, mapPutFileResponse } from './files.mapper';
 
 const s3 = new S3Client({ region: config.services.s3.region });
 const generateFileName = (fileEnding = 'pdf') => `${v4()}.${fileEnding}`;
@@ -81,4 +82,18 @@ export const storeTemplate = async ({
   const prefix = 'templates';
   const key = `${prefix}/${templateName}`;
   return uploadFile({ key, mimeType, acl, content });
+};
+
+export const listFiles = async ({
+  keyPrefix,
+}: {
+  keyPrefix: string;
+}): Promise<FileData[]> => {
+  const response = await s3.send(
+    new ListObjectsCommand({
+      Bucket: config.services.s3.bucketName,
+      Prefix: keyPrefix,
+    }),
+  );
+  return mapGetFilesResponse(response);
 };

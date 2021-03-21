@@ -13,6 +13,7 @@
 | `POST` | `/generate/from_html`     | [fromHtml.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/generate/fromHtml.test.ts)         |
 | `GET`  | `/generate/from_template` | [fromTemplate.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/generate/fromTemplate.test.ts) |
 | `POST` | `/generate/from_template` | [fromTemplate.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/generate/fromTemplate.test.ts) |
+| `GET` | `/templates` | [templates.test.ts](https://github.com/tomfa/pdf-generator-api/blob/master/src/endpoints/templates/listTemplates.test.ts) |
 
 ## Development
 

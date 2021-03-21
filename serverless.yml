@@ -57,4 +57,7 @@ functions:
       - http:
           path: generate/from_template
           method: post
+      - http:
+          path: template
+          method: get
 

@@ -3,6 +3,7 @@ import { generatePdfFromHtml } from './endpoints/generate/fromHtml';
 import { generatePdfFromTemplate } from './endpoints/generate/fromTemplate';
 import { errorWrapper } from './utils/errorHandler';
 import { ControllerFunction } from './types';
+import { listTemplates } from './endpoints/template/listTemplates';
 
 
 const router = Router();
@@ -14,5 +15,6 @@ get('/generate/from_html', generatePdfFromHtml);
 post('/generate/from_html', generatePdfFromHtml);
 get('/generate/from_template', generatePdfFromTemplate);
 post('/generate/from_template', generatePdfFromTemplate);
+get('/template', listTemplates);
 
 export default router;
