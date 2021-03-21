@@ -10,6 +10,13 @@ describe('listTemplates', () => {
       const filename = 'test.html';
       overrideNextS3ListObjectResponse([
         {
+          filename: '',
+          eTag: 'folderEtag',
+          modified: new Date(),
+          key: `templates/`,
+          url: `${config.services.s3.endpointUrl}/templates/`,
+        },
+        {
           filename,
           eTag: 'anEtag',
           modified: new Date(),

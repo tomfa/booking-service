@@ -12,11 +12,12 @@ const getFileName = (fileKey: string) => fileKey.split('/').reverse()[0];
 
 export const mapGetFilesResponse = (
   output: ListObjectsCommandOutput,
+  includeFolder: boolean = false,
 ): FileData[] => {
   if (!output.Contents) {
     return [];
   }
-  return output.Contents.filter((f) => f.Key).map((file) => {
+  const files = output.Contents.map((file) => {
     return {
       key: file.Key,
       filename: getFileName(file.Key),
@@ -25,6 +26,10 @@ export const mapGetFilesResponse = (
       url: getAbsoluteUrl(file.Key),
     };
   });
+  if (includeFolder) {
+    return files;
+  }
+  return files.filter((file) => !!file.filename);
 };
 
 export const mapPutFileResponse = (
