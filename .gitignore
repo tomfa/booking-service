@@ -4,6 +4,7 @@ coverage
 node_modules
 build/
 dist/
+out/
 api/.env
 !api/.env.test
 

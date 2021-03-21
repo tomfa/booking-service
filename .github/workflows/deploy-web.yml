@@ -1,0 +1,27 @@
+name: Deploy Web
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Yarn Install
+      run: |
+        yarn install
+      working-directory: web
+    - name: Deploy Web
+      run: |
+        yarn deploy
+      working-directory: web
