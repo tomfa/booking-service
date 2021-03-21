@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { FileDrop } from '../components/FileDrop';
 
 export default function Home() {
   return (
@@ -16,6 +17,8 @@ export default function Home() {
         <p className="description">
           Get started by editing <code>pages/index.js</code>
         </p>
+
+        <FileDrop />
 
         <div className="grid">
           <a href="https://nextjs.org/docs" className="card">
