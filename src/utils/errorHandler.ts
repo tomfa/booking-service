@@ -1,5 +1,18 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import { ControllerFunction } from '../types';
 import { APIError } from './errors/APIError';
+
+export const errorWrapper = (fun: ControllerFunction) => async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    await fun(req, res);
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const errorMiddleware = (
   err: Error,
