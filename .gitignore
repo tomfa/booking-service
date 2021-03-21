@@ -4,12 +4,12 @@ coverage
 node_modules
 build/
 dist/
-.env
-!.env.test
+api/.env
+!api/.env.test
 
 .terraform/
 *.tfstate
 
-.serverless
+api/.serverless/*
 
 yarn-error.log
