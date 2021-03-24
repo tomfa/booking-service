@@ -1,17 +1,13 @@
 import { Request, Response } from 'express';
+import { JSONValue } from '@pdf-generator/shared';
 
-type JSONValue = boolean | number | string | null | JSONValue[];
-
-export type JSONObject = {
-  [key: string]: JSONValue;
-};
 export interface Variables {
   [key: string]: JSONValue;
 }
 
 export type ControllerFunction = (
   req: Request,
-  res: Response
+  res: Response,
 ) => Promise<unknown>;
 
 export type FileData = {
@@ -20,10 +16,4 @@ export type FileData = {
   url: string;
   eTag?: string;
   modified?: Date;
-};
-
-export type FileDataDTO = {
-  filename: string;
-  url: string;
-  modified: string;
 };

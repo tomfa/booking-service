@@ -1,11 +1,12 @@
 {
-  "name": "pdf-generator-web",
+  "name": "@pdf-generator/web",
   "version": "1.0.0",
   "description": "NextJS app demonstrating use of PDF API",
   "engines": {
     "node": ">=12.18.0"
   },
   "dependencies": {
+    "@pdf-generator/shared": "1.0.0",
     "next": "9.3.5",
     "react": "16.13.1",
     "react-dom": "16.13.1",

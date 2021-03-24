@@ -1,9 +1,10 @@
 {
-  "name": "pdf-generator-api",
+  "name": "@pdf-generator/api",
   "version": "1.0.0",
   "description": "Serverless API for generating PDFs",
   "main": "dist/app.js",
   "dependencies": {
+    "@pdf-generator/shared": "1.0.0",
     "@aws-sdk/client-s3": "^3.9.0",
     "@aws-sdk/s3-request-presigner": "^3.9.0",
     "body-parser": "^1.19.0",

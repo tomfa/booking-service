@@ -1,9 +1,10 @@
 # pdf-generator
 
-Mono repo containing 2 packages:
+Mono repo containing 3 packages:
 
-- [pdf-generator-api](https://github.com/tomfa/pdf-generator-api/tree/master/api): Serverless API
-- [pdf-generator-web](https://github.com/tomfa/pdf-generator-api/tree/master/web): NextJS application
+- [@pdf-generator/api](https://github.com/tomfa/pdf-generator-api/tree/master/api): Serverless API
+- [@pdf-generator/web](https://github.com/tomfa/pdf-generator-api/tree/master/web): NextJS application
+- [@pdf-generator/shared](https://github.com/tomfa/pdf-generator-api/tree/master/shared): Shared utils and types
 
 ### Setup
 

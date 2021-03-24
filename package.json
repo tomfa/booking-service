@@ -6,7 +6,8 @@
   "workspaces": {
     "packages": [
       "api",
-      "web"
+      "web",
+      "shared"
     ],
     "nohoist": [
       "**/api/**"
@@ -35,7 +36,9 @@
     "typescript": "^4.2.3"
   },
   "scripts": {
-    "start": "concurrently \"yarn workspace pdf-generator-web start\" \"yarn workspace pdf-generator-api start\"",
+    "web": "yarn workspace @pdf-generator/web",
+    "api": "yarn workspace @pdf-generator/api",
+    "start": "concurrently \"yarn web start\" \"yarn api start\"",
     "test": "yarn workspace pdf-generator-api test",
     "test:watch": "yarn workspace pdf-generator-api test:watch",
     "lint": "eslint .",

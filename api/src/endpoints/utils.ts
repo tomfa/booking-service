@@ -1,5 +1,6 @@
 import * as Express from 'express';
-import { FileData, FileDataDTO, JSONObject } from '../types';
+import { JSONObject, FileDataDTO } from '@pdf-generator/shared';
+import { FileData } from '../types';
 
 export const getData = (req: Express.Request): JSONObject => {
   if (req.method === 'GET') {
