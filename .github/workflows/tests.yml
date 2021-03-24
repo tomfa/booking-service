@@ -21,6 +21,9 @@ jobs:
     - name: Yarn Install
       run: |
         yarn install
+    - name: Typescript check
+      run: |
+        yarn test:compile
     - name: Unit tests
       run: |
         yarn test
