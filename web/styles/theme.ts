@@ -9,12 +9,12 @@ export const theme = {
     secondary: "'Barlow Condensed', sans-serif",
   },
   colors: {
-    primary: '#fd9228',
+    primary: '#e3c346',
     secondary: '',
-    bgPrimary: '#ffffff',
-    bgSecondary: '#111111',
-    textPrimary: '#000000',
-    textSecondary: '#fafafa',
+    bgPrimary: '#3a3a3a',
+    bgSecondary: '#white',
+    textPrimary: '#FFFFFF',
+    textSecondary: '#3a3a3a',
     links: '#0070f3',
   },
   layout: {

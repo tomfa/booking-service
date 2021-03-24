@@ -1,66 +1,73 @@
 import Head from 'next/head';
+import { FileList } from '../components/FileList/FileList';
 import { FileDrop } from '../components/FileDrop';
+import { useTheme } from '../styles/theme';
 
 export default function Home() {
+  const theme = useTheme();
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>PDF Generator</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <FileDrop />
+        <h1 className="title">PDF generator</h1>
 
         <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
+          <span className="card">
+            <h2>Templates</h2>
+            <FileDrop title={'Upload new template'} />
+
+            <FileList
+              files={[
+                { filename: 'vg', url: 'https://vg.no', modified: 'yesterday' },
+              ]}
+            />
+          </span>
+
+          <span className="card">
+            <h2>Fonts</h2>
+            <FileDrop title={'Upload new fonts'}/>
+
+            <FileList
+              files={[
+                { filename: 'vg', url: 'https://vg.no', modified: 'yesterday' },
+              ]}
+            />
+          </span>
+
+          <a href="https://nextjs.org/learn" className="card wide">
+            <h2>Create &rarr;</h2>
+            <p>Select a template</p>
           </a>
 
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
 
-          <a
-            href="https://github.com/zeit/next.js/tree/master/examples"
-            className="card">
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+          <span className="card wide">
+            <h2>Generated PDFs</h2>
+            <FileList
+              files={[
+                { filename: 'vg', url: 'https://vg.no', modified: 'yesterday' },
+              ]}
+            />
+          </span>
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card">
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+
         </div>
       </main>
 
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer">
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
-      </footer>
-
-      <style jsx>
+      <style>
         {`
+          h1 {
+            color: ${theme.colors.primary};
+          }
+        
+          h2 {
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid ${theme.colors.primary};
+          }
+        
           .container {
             min-height: 100vh;
             padding: 0 0.5rem;
@@ -156,16 +163,11 @@ export default function Home() {
             text-align: left;
             color: inherit;
             text-decoration: none;
-            border: 1px solid #eaeaea;
-            border-radius: 10px;
             transition: color 0.15s ease, border-color 0.15s ease;
           }
-
-          .card:hover,
-          .card:focus,
-          .card:active {
-            color: #0070f3;
-            border-color: #0070f3;
+          
+          .card.wide {
+            flex-basis: 95%;
           }
 
           .card h3 {
@@ -192,22 +194,6 @@ export default function Home() {
         `}
       </style>
 
-      <style jsx global>
-        {`
-          html,
-          body {
-            padding: 0;
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-              Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-              sans-serif;
-          }
-
-          * {
-            box-sizing: border-box;
-          }
-        `}
-      </style>
     </div>
   );
 }
