@@ -21,9 +21,15 @@ provider:
       statements:
         - Effect: Allow
           Action:
+            - s3:GetObject
+            - s3:GetObjectAcl
             - s3:PutObject
             - s3:PutObjectAcl
           Resource: "arn:aws:s3:::${self:custom.bucket}/*"
+        - Effect: Allow
+          Action:
+            - s3:ListBucket
+          Resource: "arn:aws:s3:::${self:custom.bucket}"
 
 plugins:
   - serverless-offline
