@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z "$CI" ] && exit 0
+[ -z "$CI" ] || (echo "Husky will not run on CI" && exit 0)
 
 . "$(dirname "$0")/_/husky.sh"
 
