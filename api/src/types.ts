@@ -7,7 +7,7 @@ export interface Variables {
 
 export type ControllerFunction = (
   req: Request,
-  res: Response,
+  res: Response
 ) => Promise<unknown>;
 
 export type FileData = {

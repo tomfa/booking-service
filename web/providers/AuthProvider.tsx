@@ -45,7 +45,7 @@ export const useAuth = (): UseAuthData => {
 
       return true;
     },
-    [context],
+    [context]
   );
   const logout = useCallback(async () => {
     context.isLoading = true;

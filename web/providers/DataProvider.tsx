@@ -44,7 +44,7 @@ export const useData = (): UseDataValues => {
       // TODO: return FileDataDTO?
       return true;
     },
-    [context],
+    [context]
   );
 
   const uploadTemplates = useCallback(
@@ -55,7 +55,7 @@ export const useData = (): UseDataValues => {
       // TODO: return FileDataDTO?
       return true;
     },
-    [context],
+    [context]
   );
 
   return {
