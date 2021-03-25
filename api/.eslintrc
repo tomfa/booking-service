@@ -3,7 +3,10 @@
   "extends": ["@askeladden/eslint-config-askeladden/typescript-recommended"],
   "rules": {
     // Avoid unnecessary imports
-    "unused-imports/no-unused-imports-ts": 2
+    "unused-imports/no-unused-imports-ts": 2,
+
+    // Typescript handles this
+    "import/no-unresolved": 0
   },
   "overrides": [
     {
@@ -16,6 +19,7 @@
     }
   ],
   "settings": {
+    "import/ignore": ["@pdf-generator/shared"],
     "import/resolver": {
       "node": {
         "extensions": [".js", ".jsx", ".ts", ".tsx"]
