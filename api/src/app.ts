@@ -2,7 +2,6 @@ import express from 'express';
 import * as bodyParser from 'body-parser';
 import * as dotenv from 'dotenv';
 
-import routes from './routes';
 import { errorMiddleware } from './utils/errorHandler';
 import config, { Config } from './config';
 
@@ -13,17 +12,17 @@ class App {
 
   private config: Config;
 
-  constructor() {
+  constructor(router: express.Router) {
     this.app = express();
-    this.setup();
+    this.setup(router);
     this.config = config;
   }
 
-  private setup() {
+  private setup(router: express.Router) {
     this.app.use(bodyParser.json());
-    this.app.use(routes);
+    this.app.use(router);
     this.app.use(errorMiddleware);
   }
 }
 
-export default new App().app;
+export default App;

@@ -47,8 +47,8 @@ package:
     - '!node_modules/**'
 
 functions:
-  generateFromHtml:
-    handler: src/server.handler
+  generator:
+    handler: src/generator.handler
     memorySize: 800
     events:
       - http:
@@ -63,6 +63,10 @@ functions:
       - http:
           path: generate/from_template
           method: post
+  api:
+    handler: src/server.handler
+    memorySize: 256
+    events:
       - http:
           path: template
           method: get

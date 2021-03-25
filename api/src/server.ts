@@ -1,4 +1,5 @@
 import serverless from 'serverless-http';
-import app from './app';
+import App from './app';
+import router from './routes';
 
-module.exports.handler = serverless(app);
+module.exports.handler = serverless(new App(router).app);
