@@ -31,8 +31,8 @@ describe('listTemplates', () => {
 
       expect(status).toBe(200);
       expect(message).toBe('OK');
-      expect(json.templates.length).toBe(1);
-      expect(json.templates[0]).toEqual({
+      expect(json.data.length).toBe(1);
+      expect(json.data[0]).toEqual({
         filename,
         modified: modified.toISOString(),
         url,
