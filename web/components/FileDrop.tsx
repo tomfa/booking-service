@@ -1,13 +1,15 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useDropzone } from 'react-dropzone';
-import uploadFile from '../api/upload';
 import { Wrapper } from './FileDrop.styles';
 
-export const FileDrop = ({ title = 'Click or Drag and drop files here'}) => {
-  const onDrop = useCallback(
-    (droppedFiles: File[]) => droppedFiles.map(uploadFile),
-    [],
-  );
+type Props = {
+  title: string;
+  onDrop: (files: File[]) => void;
+};
+export const FileDrop = ({
+  title = 'Click or Drag and drop files here',
+  onDrop,
+}: Props) => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   return (
     // @ts-ignore

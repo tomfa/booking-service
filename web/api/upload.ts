@@ -16,10 +16,10 @@ const performUpload = ({ file, url }: { file: File; url: string }) =>
     xhr.send(file);
   });
 
-const uploadFile = async (file: File) => {
+const uploadFile = async (file: File, type: 'template' | 'font') => {
   const fileName = file.name;
   const response = await fetch(
-    `${API_URL}/template/upload_url?name=${fileName}`,
+    `${API_URL}/${type}/upload_url?name=${fileName}`,
   );
   const { url } = await response.json();
   await performUpload({ file, url });

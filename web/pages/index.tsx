@@ -22,15 +22,14 @@ export default function Home() {
         <div className="grid">
           <span className="card">
             <h2>Templates</h2>
-            <FileDrop title={'Upload new template'} />
+            <FileDrop title={'Upload new template'} onDrop={data.uploadFonts}/>
 
             <FileList files={data.templates} />
           </span>
 
           <span className="card">
             <h2>Fonts</h2>
-            <FileDrop title={'Upload new fonts'} />
-
+            <FileDrop title={'Upload new fonts'} onDrop={data.uploadTemplates}/>
             <FileList files={data.fonts} />
           </span>
 
