@@ -1,15 +1,17 @@
 import { AppProps } from 'next/app';
 import { ThemeProvider } from 'styled-components';
+import { AuthProvider } from '../providers/AuthProvider';
+import { DataProvider } from '../providers/DataProvider';
 
 // Global base styles
 import theme from '../styles/theme';
-import { AuthProvider } from '../providers/AuthProvider';
 
 const App = ({ Component, pageProps }: AppProps) => (
   <AuthProvider>
-    <ThemeProvider theme={theme}>
-      <style>
-        {`
+    <DataProvider>
+      <ThemeProvider theme={theme}>
+        <style>
+          {`
         html,
         body {
           padding: 0;
@@ -22,9 +24,10 @@ const App = ({ Component, pageProps }: AppProps) => (
           box-sizing: border-box;
         }
       `}
-      </style>
-      <Component {...pageProps} />
-    </ThemeProvider>
+        </style>
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </DataProvider>
   </AuthProvider>
 );
 
