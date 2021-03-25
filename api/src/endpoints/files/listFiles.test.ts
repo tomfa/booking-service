@@ -24,7 +24,7 @@ describe('listFiles', () => {
 
       expect(status).toBe(200);
       expect(message).toBe('OK');
-      expect(json.files).toEqual([
+      expect(json.data).toEqual([
         { filename, url, modified: createdDate.toISOString() },
       ]);
     });

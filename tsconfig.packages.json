@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    "importHelpers": true,
+    "composite": true,
+    "target": "es5",
+
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  },
+  "exclude": [
+    "**/node_modules/**",
+    "*/**/*.test.ts",
+    "**/testUtils/**",
+    "**/__mocks__/**",
+    "**/dist/**"
+  ]
+}

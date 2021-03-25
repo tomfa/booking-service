@@ -21,14 +21,16 @@ const performUpload = ({ file, url }: { file: File; url: string }) =>
 export const uploadFile = async (file: File, type: 'template' | 'font') => {
   const fileName = file.name;
   const response = await fetch(
-    `${API_URL}/${type}/upload_url?name=${fileName}`,
+    `${API_URL}/${type}/upload_url?name=${fileName}`
   );
   const { url } = await response.json();
   await performUpload({ file, url });
 };
 
-export const listFiles = async (type: 'file'| 'template' | 'font'): Promise<FileDataDTO[]> => {
-  const response = await fetch(`${API_URL}/${type}`)
+export const listFiles = async (
+  type: 'file' | 'template' | 'font'
+): Promise<FileDataDTO[]> => {
+  const response = await fetch(`${API_URL}/${type}`);
   const json = await response.json();
-  return json.data
-}
+  return json.data;
+};

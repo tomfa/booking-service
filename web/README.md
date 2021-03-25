@@ -18,8 +18,6 @@ yarn start
 yarn start:production
 ```
 
-
-
 ### Deploy
 
 ```

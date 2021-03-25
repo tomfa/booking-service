@@ -9,7 +9,10 @@
     "react/react-in-jsx-scope": 0,
 
     // I know when I shouldn't, thank you
-    "react/jsx-props-no-spreading": 0
+    "react/jsx-props-no-spreading": 0,
+
+    // Typescript handles this
+    "import/no-unresolved": 0
   },
   "parserOptions": {
     "ecmaFeatures": {
