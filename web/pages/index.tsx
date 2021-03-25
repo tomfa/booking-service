@@ -9,7 +9,14 @@ import { useData } from '../providers/DataProvider';
 export default function Home() {
   const theme = useTheme();
   const auth = useAuth();
-  const { fetchData, templates, files, fonts, uploadTemplates, uploadFonts } = useData();
+  const {
+    fetchData,
+    templates,
+    files,
+    fonts,
+    uploadTemplates,
+    uploadFonts,
+  } = useData();
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -140,7 +147,7 @@ export default function Home() {
 
           .grid {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             flex-wrap: wrap;
 
