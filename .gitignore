@@ -11,6 +11,8 @@ api/.env
 .terraform/
 *.tfstate*
 
+tsconfig.tsbuildinfo
+
 api/.serverless/*
 
 yarn-error.log

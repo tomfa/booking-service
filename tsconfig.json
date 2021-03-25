@@ -1,0 +1,15 @@
+{
+  "references": [
+    { "path": "./shared" },
+    { "path": "./api" },
+    { "path": "./web" }
+  ],
+  "files": [],
+  "include": [],
+  "exclude": [
+    "**/node_modules/**",
+    "*/**/*.test.ts",
+    "**/testUtils/**",
+    "**/__mocks__/**"
+  ]
+}
