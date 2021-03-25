@@ -6,7 +6,10 @@
     "unused-imports/no-unused-imports-ts": 2,
 
     // Next handles React in scope for us
-    "react/react-in-jsx-scope": 0
+    "react/react-in-jsx-scope": 0,
+
+    // I know when I shouldn't, thank you
+    "react/jsx-props-no-spreading": 0
   },
   "parserOptions": {
     "ecmaFeatures": {
