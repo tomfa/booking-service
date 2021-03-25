@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useEffect } from 'react';
 import { FileList } from '../components/FileList/FileList';
 import { FileDrop } from '../components/FileDrop';
 import { useTheme } from '../styles/theme';
@@ -8,7 +9,10 @@ import { useData } from '../providers/DataProvider';
 export default function Home() {
   const theme = useTheme();
   const auth = useAuth();
-  const data = useData();
+  const { fetchData, templates, files, fonts, uploadTemplates, uploadFonts } = useData();
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
   return (
     <div className="container">
       <Head>
@@ -22,18 +26,15 @@ export default function Home() {
         <div className="grid">
           <span className="card">
             <h2>Templates</h2>
-            <FileDrop title={'Upload new template'} onDrop={data.uploadFonts} />
+            <FileDrop title={'Upload new template'} onDrop={uploadFonts} />
 
-            <FileList files={data.templates} />
+            <FileList files={templates} />
           </span>
 
           <span className="card">
             <h2>Fonts</h2>
-            <FileDrop
-              title={'Upload new fonts'}
-              onDrop={data.uploadTemplates}
-            />
-            <FileList files={data.fonts} />
+            <FileDrop title={'Upload new fonts'} onDrop={uploadTemplates} />
+            <FileList files={fonts} />
           </span>
 
           <a href="https://nextjs.org/learn" className="card wide">
@@ -43,7 +44,7 @@ export default function Home() {
 
           <span className="card wide">
             <h2>Generated PDFs</h2>
-            <FileList files={data.files} />
+            <FileList files={files} />
           </span>
         </div>
       </main>

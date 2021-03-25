@@ -8,5 +8,5 @@ export const listFonts = async (
 ) => {
   const files = await getFiles({ keyPrefix: 'fonts/' });
   const fonts = files.map(mapToFileDataDTO);
-  return res.json({ fonts, message: 'OK' });
+  return res.json({ data: fonts, message: 'OK' });
 };

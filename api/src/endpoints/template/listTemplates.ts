@@ -8,5 +8,5 @@ export const listTemplates = async (
 ) => {
   const files = await getFiles({ keyPrefix: 'templates/' });
   const templates = files.map(mapToFileDataDTO);
-  return res.json({ templates, message: 'OK' });
+  return res.json({ data: templates, message: 'OK' });
 };

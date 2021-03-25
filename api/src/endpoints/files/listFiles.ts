@@ -8,5 +8,5 @@ export const listFiles = async (
 ) => {
   const filesObjects = await getFiles({ keyPrefix: 'files/' });
   const files = filesObjects.map(mapToFileDataDTO);
-  return res.json({ files, message: 'OK' });
+  return res.json({ data: files, message: 'OK' });
 };

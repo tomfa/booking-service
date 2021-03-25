@@ -1,70 +1,74 @@
-import { createContext, useCallback, useContext } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
 import { FileDataDTO } from '@pdf-generator/shared';
-import uploadFile from '../api/upload';
+import { uploadFile, listFiles } from '../api';
 
-type DataValues = {
+export type DataValues = {
+  fetchData: () => Promise<void>;
+  uploadFonts: (files: File[]) => Promise<void>;
+  uploadTemplates: (files: File[]) => Promise<void>;
   fonts: FileDataDTO[];
   templates: FileDataDTO[];
   files: FileDataDTO[];
   isLoading: boolean;
   error: null | string;
 };
-export type UseDataValues = {
-  uploadFonts: (files: File[]) => Promise<boolean>;
-  uploadTemplates: (files: File[]) => Promise<boolean>;
-  fonts: FileDataDTO[];
-  templates: FileDataDTO[];
-  files: FileDataDTO[];
-  isLoading: boolean;
-  error: null | string;
-};
-const defaultValues: DataValues = {
-  fonts: [],
-  templates: [],
-  files: [],
-  isLoading: false,
-  error: null,
-};
 
-export const DataContext = createContext<DataValues>(defaultValues);
+export const DataContext = createContext<DataValues>(null);
 export const DataProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [files, setFiles] = useState<FileDataDTO[]>([]);
+  const [templates, setTemplates] = useState<FileDataDTO[]>([]);
+  const [fonts, setFonts] = useState<FileDataDTO[]>([]);
+
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    // TODO: Check if authenticated, handle errors
+    const filesList = await listFiles('file');
+    const fontsList = await listFiles('font');
+    const templateList = await listFiles('template');
+    setFiles(filesList);
+    setTemplates(templateList);
+    setFonts(fontsList);
+    setIsLoading(false);
+  }, [setFiles, setIsLoading]);
+
+  const uploadFonts = useCallback(
+    async (toUpload: File[]) => {
+      setIsLoading(true);
+      await Promise.all(toUpload.map((file) => uploadFile(file, 'font')));
+      setIsLoading(false);
+      // TODO: update folders
+    },
+    [setIsLoading],
+  );
+
+  const uploadTemplates = useCallback(
+    async (toUpload: File[]) => {
+      setIsLoading(true);
+      await Promise.all(toUpload.map((file) => uploadFile(file, 'template')));
+      setIsLoading(false);
+      // TODO: update folders
+    },
+    [setIsLoading],
+  );
+
   return (
-    <DataContext.Provider value={defaultValues}>
+    <DataContext.Provider
+      value={{
+        fetchData,
+        fonts,
+        files,
+        templates,
+        uploadFonts,
+        uploadTemplates,
+        error,
+        isLoading,
+      }}>
       {children}
     </DataContext.Provider>
   );
 };
-export const useData = (): UseDataValues => {
-  const context = useContext(DataContext);
-  const uploadFonts = useCallback(
-    async (files: File[]) => {
-      context.isLoading = true;
-      await Promise.all(files.map((file) => uploadFile(file, 'font')));
-      context.isLoading = false;
-      // TODO: return FileDataDTO?
-      return true;
-    },
-    [context]
-  );
-
-  const uploadTemplates = useCallback(
-    async (files: File[]) => {
-      context.isLoading = true;
-      await Promise.all(files.map((file) => uploadFile(file, 'template')));
-      context.isLoading = false;
-      // TODO: return FileDataDTO?
-      return true;
-    },
-    [context]
-  );
-
-  return {
-    fonts: context.fonts,
-    files: context.files,
-    templates: context.templates,
-    uploadFonts,
-    uploadTemplates,
-    error: context.error,
-    isLoading: context.isLoading,
-  };
+export const useData = (): DataValues => {
+  return useContext(DataContext);
 };
