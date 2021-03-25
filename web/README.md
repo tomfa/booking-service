@@ -11,10 +11,14 @@ yarn
 ### Run
 
 ```
+// dev mode, starts on localhost:8000
 yarn start
+
+// production, starts on localhost:8000
+yarn start:production
 ```
 
-_Web application will run at [localhost:3001](http://localhost:3001)_
+
 
 ### Deploy
 

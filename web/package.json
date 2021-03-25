@@ -21,12 +21,12 @@
     "typescript": "^4.0.2"
   },
   "scripts": {
-    "start": "next dev -p 3001",
+    "start": "next dev -p 8000",
     "build": "next build",
     "export": "next export",
     "predeploy": "npm run build && npm run export && touch ./out/.nojekyll && chmod -R 755 out",
     "deploy": "gh-pages -d out -t true",
-    "start:production": "next start"
+    "start:production": "next start -p 5000"
   },
   "author": "",
   "license": "ISC"

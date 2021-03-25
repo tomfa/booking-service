@@ -44,10 +44,10 @@ export default function Home() {
             <FileList files={fonts} />
           </span>
 
-          <a href="https://nextjs.org/learn" className="card wide">
+          <span className="card wide">
             <h2>Create &rarr;</h2>
             <p>Select a template</p>
-          </a>
+          </span>
 
           <span className="card wide">
             <h2>Generated PDFs</h2>
@@ -157,7 +157,7 @@ export default function Home() {
 
           .card {
             margin: 1rem;
-            flex-basis: 45%;
+            flex-basis: 95%;
             padding: 1.5rem;
             text-align: left;
             color: inherit;
