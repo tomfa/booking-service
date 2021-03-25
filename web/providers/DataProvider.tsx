@@ -16,7 +16,7 @@ export type DataValues = {
 export const DataContext = createContext<DataValues>(null);
 export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const [error] = useState<string>('');
   const [files, setFiles] = useState<FileDataDTO[]>([]);
   const [templates, setTemplates] = useState<FileDataDTO[]>([]);
   const [fonts, setFonts] = useState<FileDataDTO[]>([]);
@@ -40,7 +40,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       setIsLoading(false);
       // TODO: update folders
     },
-    [setIsLoading],
+    [setIsLoading]
   );
 
   const uploadTemplates = useCallback(
@@ -50,7 +50,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       setIsLoading(false);
       // TODO: update folders
     },
-    [setIsLoading],
+    [setIsLoading]
   );
 
   return (
