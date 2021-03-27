@@ -1,5 +1,6 @@
 import { FileDataDTO } from '@pdf-generator/shared';
 
+// TODO: Get from config
 const API_URL = 'http://localhost:3000';
 
 const performUpload = ({ file, url }: { file: File; url: string }) =>
@@ -18,13 +19,20 @@ const performUpload = ({ file, url }: { file: File; url: string }) =>
     xhr.send(file);
   });
 
-export const uploadFile = async (file: File, type: 'template' | 'font') => {
+export const uploadFile = async (
+  file: File,
+  type: 'template' | 'font'
+): Promise<{ success: boolean; data: FileDataDTO }> => {
   const fileName = file.name;
   const response = await fetch(
     `${API_URL}/${type}/upload_url?name=${fileName}`
   );
   const { url } = await response.json();
   await performUpload({ file, url });
+  return {
+    success: true,
+    data: { url: url.split('?')[0], filename: file.name, modified: 'Just now' },
+  };
 };
 
 export const listFiles = async (
