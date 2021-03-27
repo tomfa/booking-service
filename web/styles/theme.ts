@@ -1,6 +1,3 @@
-import { useContext } from 'react';
-import { ThemeContext } from 'styled-components';
-
 export const theme = {
   fonts: {
     primary:
@@ -22,9 +19,6 @@ export const theme = {
   },
 };
 
-export const useTheme = (): typeof theme => {
-  const themeContext = useContext(ThemeContext);
-  return (themeContext as unknown) as typeof theme;
-};
+export type Theme = typeof theme;
 
 export default theme;

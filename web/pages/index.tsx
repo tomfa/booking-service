@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import { useEffect } from 'react';
+import { useTheme } from 'styled-components';
 import { FileList } from '../components/FileList/FileList';
 import { FileDrop } from '../components/FileDrop';
-import { useTheme } from '../styles/theme';
 import { useAuth } from '../providers/AuthProvider';
 import { useData } from '../providers/DataProvider';
 
