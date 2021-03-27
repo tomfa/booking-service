@@ -10,10 +10,10 @@ export const FileDrop = ({
   title = 'Click or Drag and drop files here',
   onDrop,
 }: Props) => {
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   return (
     // @ts-ignore
-    <Wrapper {...getRootProps()}>
+    <Wrapper {...getRootProps()} highlighted={isDragActive}>
       <input {...getInputProps()} />
       <span>{title}</span>
     </Wrapper>

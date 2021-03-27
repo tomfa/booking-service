@@ -1,11 +1,19 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ highlighted?: boolean }>`
   padding: 3rem 2rem;
   cursor: pointer;
   border: 1px dashed #8e8e8e;
   opacity: 0.5;
   text-align: center;
+
+  ${(p) =>
+    p.highlighted &&
+    `
+    opacity: 1;
+    border: 1px solid #8e8e8e;
+    background-color: ${p.theme.colors.primary};
+  `}
 
   &:hover {
     opacity: 1;
