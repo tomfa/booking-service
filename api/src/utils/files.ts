@@ -8,6 +8,7 @@ import { v4 } from 'uuid';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import config from '../config';
 import { FileData } from '../types';
+import { FOLDER } from '../endpoints/enums';
 import { TemplateNotFound } from './errors/TemplateNotFound';
 import { APIError } from './errors/APIError';
 import { mapGetFilesResponse, mapPutFileResponse } from './files.mapper';
@@ -70,27 +71,28 @@ export const storeFile = async (
 };
 
 export const getFiles = async ({
-  keyPrefix,
+  folder,
 }: {
-  keyPrefix: string;
+  folder: FOLDER;
 }): Promise<FileData[]> => {
   const response = await s3.send(
     new ListObjectsCommand({
       Bucket: config.services.s3.bucketName,
-      Prefix: keyPrefix,
+      Prefix: `${folder}/`,
     })
   );
   return mapGetFilesResponse(response);
 };
 
 export const getUploadUrl = async (
-  key: string,
+  folder: FOLDER,
+  fileKey: string,
   acl: 'public-read' | 'private' = 'public-read',
   { expiresIn = 15 * 60 }: { expiresIn?: number } = {}
 ): Promise<string> => {
   const command = new PutObjectCommand({
     Bucket: config.services.s3.bucketName,
-    Key: key,
+    Key: `${folder}/${fileKey}`,
     ACL: acl,
   });
   const url = await getSignedUrl(s3, command, { expiresIn });

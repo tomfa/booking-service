@@ -2,8 +2,9 @@ import * as Express from 'express';
 import { getUploadUrl } from '../utils/files';
 import { BadRequestError } from '../utils/errors/BadRequestError';
 import { getData } from './utils';
+import { FOLDER } from './enums';
 
-export const getUploadURL = (prefix: string) => async (
+export const getUploadURL = (prefix: FOLDER) => async (
   req: Express.Request,
   res: Express.Response
 ) => {
@@ -11,7 +12,6 @@ export const getUploadURL = (prefix: string) => async (
   if (!name) {
     throw new BadRequestError({ field: 'name', error: 'query param missing' });
   }
-  const key = `${prefix}/${name}`;
-  const url = await getUploadUrl(key);
+  const url = await getUploadUrl(prefix, String(name));
   return res.json({ message: 'OK', url });
 };
