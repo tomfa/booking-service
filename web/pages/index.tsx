@@ -16,6 +16,7 @@ export default function Home() {
     fonts,
     uploadTemplates,
     uploadFonts,
+    isLoading,
   } = useData();
   useEffect(() => {
     fetchData();
@@ -35,13 +36,13 @@ export default function Home() {
             <h2>Templates</h2>
             <FileDrop title={'Upload new template'} onDrop={uploadFonts} />
 
-            <FileList files={templates} />
+            <FileList files={templates} isLoading={isLoading} />
           </span>
 
           <span className="card">
             <h2>Fonts</h2>
             <FileDrop title={'Upload new fonts'} onDrop={uploadTemplates} />
-            <FileList files={fonts} />
+            <FileList files={fonts} isLoading={isLoading} />
           </span>
 
           <span className="card wide">
@@ -51,7 +52,7 @@ export default function Home() {
 
           <span className="card wide">
             <h2>Generated PDFs</h2>
-            <FileList files={files} />
+            <FileList files={files} isLoading={isLoading} />
           </span>
         </div>
       </main>

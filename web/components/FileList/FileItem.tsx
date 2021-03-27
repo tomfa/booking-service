@@ -1,5 +1,6 @@
 import { FileDataDTO } from '@pdf-generator/shared';
 import { DateStamp, ListItem } from './FileItem.styles';
+import { formatISOstring } from './date.utils';
 
 type Props = { file: FileDataDTO };
 export const FileItem = ({ file }: Props) => {
@@ -11,8 +12,4 @@ export const FileItem = ({ file }: Props) => {
       </ListItem>
     </a>
   );
-};
-
-const formatISOstring = (date: string) => {
-  return date.substring(0, 16).replace('T', ' ');
 };
