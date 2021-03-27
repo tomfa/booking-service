@@ -7,12 +7,15 @@ export const theme = {
   },
   colors: {
     primary: '#e3c346',
-    secondary: '',
+    secondary: '#52A5E3',
     bgPrimary: '#3a3a3a',
     bgSecondary: '#white',
     textPrimary: '#FFFFFF',
     textSecondary: '#3a3a3a',
     links: '#0070f3',
+
+    success: '#139113',
+    danger: '#ca082a',
   },
   layout: {
     maxWidth: '800',

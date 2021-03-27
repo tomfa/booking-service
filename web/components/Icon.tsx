@@ -42,52 +42,50 @@ const IconSVG = ({ icon, ...props }: ComponentProps) => {
 
 type IconProps = {
   icon: IconType;
-  $secondary?: boolean;
-  $hover?: boolean;
+  secondary?: boolean;
+  color?: string;
+  hoverColor?: string;
+  hoverable?: boolean;
 };
-export const Icon = ({ $secondary, $hover, icon }: IconProps) => {
+type IconLinkProps = Omit<IconProps, 'hoverable'> & { href: string };
+
+export const Icon = ({
+  secondary,
+  hoverable,
+  color,
+  hoverColor,
+  icon,
+}: IconProps) => {
   return (
-    <IconWrapper $secondary={$secondary} $hover={$hover}>
+    <IconWrapper
+      $secondary={secondary}
+      $hover={hoverable}
+      $color={color}
+      $hoverColor={hoverColor}>
       <IconSVG icon={icon} weight={'bold'} />
     </IconWrapper>
   );
 };
-
-export const IconLink = ({
-  icon,
-  href,
-  secondary = false,
-}: {
-  icon: IconType;
-  secondary?: boolean;
-  href: string;
-}) => {
+export const IconLink = ({ href, ...props }: IconLinkProps) => {
   if (href.startsWith('http')) {
     return (
       <a href={href}>
-        <Icon $secondary={secondary} icon={icon} $hover />
+        <Icon {...props} hoverable />
       </a>
     );
   }
   return (
     <Link href={href}>
-      <Icon $secondary={secondary} icon={icon} $hover />
+      <Icon {...props} hoverable />
     </Link>
   );
 };
 
-export const IconButton = ({
-  icon,
-  onClick,
-  secondary = false,
-}: {
-  icon: IconType;
+type IconButtonProps = Omit<IconProps, 'hoverable'> & {
   onClick: MouseEventHandler<HTMLButtonElement>;
-  secondary?: boolean;
-}) => {
-  return (
-    <Button $blank onClick={onClick}>
-      <Icon $secondary={secondary} icon={icon} $hover />
-    </Button>
-  );
 };
+export const IconButton = ({ onClick, ...props }: IconButtonProps) => (
+  <Button $blank onClick={onClick}>
+    <Icon {...props} hoverable />
+  </Button>
+);

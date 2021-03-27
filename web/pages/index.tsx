@@ -46,6 +46,11 @@ export default function Home() {
             <FileList files={templates} isLoading={isFetching} />
           </span>
 
+          <span className="card wide">
+            <h2>Create &rarr;</h2>
+            <p>Select a template</p>
+          </span>
+
           <span className="card">
             <h2>Fonts</h2>
             <FileDrop
@@ -55,11 +60,6 @@ export default function Home() {
               mimeTypes={['.otf', 'application/vnd.ms-opentype']}
             />
             <FileList files={fonts} isLoading={isFetching} />
-          </span>
-
-          <span className="card wide">
-            <h2>Create &rarr;</h2>
-            <p>Select a template</p>
           </span>
 
           <span className="card wide">

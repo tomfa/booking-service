@@ -1,11 +1,13 @@
 import { FileDataDTO } from '@pdf-generator/shared';
 import { useCallback, useState } from 'react';
+import { useTheme } from 'styled-components';
 import { IconButton, IconLink, IconType } from '../Icon';
 import { copyToClipBoard } from '../utils/clipboard.utils';
 import { ActionWrapper } from './FileActions.styles';
 
 type Props = { file: FileDataDTO };
 export const FileActions = ({ file }: Props) => {
+  const theme = useTheme();
   const [hasCopied, setCopied] = useState<boolean>(false);
   const onCopy = useCallback(() => {
     // Display something?
@@ -24,8 +26,14 @@ export const FileActions = ({ file }: Props) => {
         icon={(hasCopied && IconType.CHECK) || IconType.LINK}
         onClick={onCopy}
         secondary
+        hoverColor={(hasCopied && theme.colors.success) || theme.colors.links}
       />
-      <IconButton icon={IconType.REMOVE} onClick={onDelete} secondary />
+      <IconButton
+        icon={IconType.REMOVE}
+        onClick={onDelete}
+        secondary
+        hoverColor={theme.colors.danger}
+      />
     </ActionWrapper>
   );
 };
