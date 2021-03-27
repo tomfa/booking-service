@@ -1,6 +1,6 @@
 import { keyframes } from 'styled-components';
 
-export const fadeOut = keyframes`
+export const dimDown = keyframes`
   from {
     opacity: 1;
   }

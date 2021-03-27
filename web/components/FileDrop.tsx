@@ -17,7 +17,10 @@ export const FileDrop = ({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   return (
     // @ts-ignore
-    <Wrapper {...getRootProps()} highlighted={isDragActive} loading={isLoading}>
+    <Wrapper
+      {...getRootProps()}
+      $highlighted={isDragActive}
+      $loading={isLoading}>
       <input {...getInputProps()} accept={mimeTypes.join(',')} />
       <span>{isLoading ? 'Uploading...' : title}</span>
     </Wrapper>
