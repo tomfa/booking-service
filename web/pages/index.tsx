@@ -40,6 +40,7 @@ export default function Home() {
               title={'Upload new template'}
               onDrop={uploadTemplates}
               isLoading={isUploadingTemplates}
+              mimeTypes={['.svg', '.html', 'image/svg', 'text/html']}
             />
 
             <FileList files={templates} isLoading={isFetching} />
@@ -51,6 +52,7 @@ export default function Home() {
               title={'Upload new fonts'}
               onDrop={uploadFonts}
               isLoading={isUploadingFonts}
+              mimeTypes={['.otf', 'application/vnd.ms-opentype']}
             />
             <FileList files={fonts} isLoading={isFetching} />
           </span>
