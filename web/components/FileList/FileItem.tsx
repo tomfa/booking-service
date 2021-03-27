@@ -1,15 +1,15 @@
 import { FileDataDTO } from '@pdf-generator/shared';
-import { DateStamp, ListItem } from './FileItem.styles';
-import { formatISOstring } from './date.utils';
+import { IsoToDisplayDateTime } from '../utils/date.utils';
+import { DateStamp, ListItem, ListItemText } from './FileItem.styles';
+import { FileActions } from './FileActions';
 
 type Props = { file: FileDataDTO };
 export const FileItem = ({ file }: Props) => {
   return (
-    <a href={file.url}>
-      <ListItem>
-        <span>{file.filename}</span>
-        <DateStamp>{formatISOstring(file.modified)}</DateStamp>
-      </ListItem>
-    </a>
+    <ListItem>
+      <ListItemText>{file.filename}</ListItemText>
+      <FileActions file={file} />
+      <DateStamp>{IsoToDisplayDateTime(file.modified)}</DateStamp>
+    </ListItem>
   );
 };
