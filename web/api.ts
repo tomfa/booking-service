@@ -1,7 +1,5 @@
 import { FileDataDTO } from '@pdf-generator/shared';
-
-// TODO: Get from config
-const API_URL = 'http://localhost:3000';
+import { config } from './config';
 
 const performUpload = ({ file, url }: { file: File; url: string }) =>
   new Promise<void>((resolve, reject) => {
@@ -25,7 +23,7 @@ export const uploadFile = async (
 ): Promise<{ success: boolean; data: FileDataDTO }> => {
   const fileName = file.name;
   const response = await fetch(
-    `${API_URL}/${type}/upload_url?name=${fileName}`
+    `${config.API_URL}/${type}/upload_url?name=${fileName}`
   );
   const { url } = await response.json();
   await performUpload({ file, url });
@@ -34,10 +32,31 @@ export const uploadFile = async (
     data: { url: url.split('?')[0], filename: file.name, modified: 'Just now' },
   };
 };
-
 export const listFiles = async (
   type: 'file' | 'template' | 'font'
 ): Promise<FileDataDTO[]> => {
+  if (config.MOCK_API) {
+    return [
+      {
+        filename: 'da18cc94-c5b7-4dab-b7d5-9130f9e145b2.pdf',
+        modified: '2021-03-21T08:18:50.000Z',
+        url:
+          'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b2.pdf',
+      },
+      {
+        filename: 'b8057175-e743-47f4-b79b-e152b5d3dadc.pdf',
+        modified: '2021-03-20T18:16:22.000Z',
+        url:
+          'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/files/b8057175-e743-47f4-b79b-e152b5d3dadc.pdf',
+      },
+      {
+        filename: '98a22657-b72c-4856-bb7d-1fa660732853.pdf',
+        modified: '2021-03-20T17:59:04.000Z',
+        url:
+          'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/files/98a22657-b72c-4856-bb7d-1fa660732853.pdf',
+      },
+    ];
+  }
   const response = await fetch(`${API_URL}/${type}`);
   const json = await response.json();
   return json.data.sort(
