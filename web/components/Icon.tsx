@@ -1,9 +1,10 @@
 import {
   Link as LinkIcon,
   IconProps as PhoshopProps,
-  Download,
+  DownloadSimple as Download,
   Check,
-  Trash,
+  CopySimple as Copy,
+  TrashSimple as Trash,
 } from 'phosphor-react';
 import { MouseEventHandler } from 'react';
 import Link from 'next/link';
@@ -23,7 +24,7 @@ interface ComponentProps extends PhoshopProps {
 }
 const IconSVG = ({ icon, ...props }: ComponentProps) => {
   if (icon === IconType.COPY) {
-    return <LinkIcon {...props} />;
+    return <Copy {...props} />;
   }
   if (icon === IconType.LINK) {
     return <LinkIcon {...props} />;

@@ -23,7 +23,7 @@ export const FileActions = ({ file }: Props) => {
     <ActionWrapper>
       <IconLink icon={IconType.DOWNLOAD} href={file.url} secondary />
       <IconButton
-        icon={(hasCopied && IconType.CHECK) || IconType.LINK}
+        icon={(hasCopied && IconType.CHECK) || IconType.COPY}
         onClick={onCopy}
         secondary
         hoverColor={(hasCopied && theme.colors.success) || theme.colors.links}
