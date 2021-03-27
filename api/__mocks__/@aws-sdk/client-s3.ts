@@ -42,7 +42,7 @@ export const overrideNextS3GetObjectResponse = (content: string) => {
 const createListObjectMock = (files: FileData[]) =>
   jest.fn().mockReturnValue(
     Promise.resolve({
-      Contents: files.map((f) => ({
+      Contents: files.map(f => ({
         Key: f.key,
         LastModified: f.modified,
         Etag: f.eTag,
@@ -94,7 +94,7 @@ const sendFn = jest
         }
         const key = command.input.Key;
         const matchingTemplate = Object.values(templates).find(
-          (t) => t.key === key
+          t => t.key === key
         );
         if (matchingTemplate) {
           return matchingTemplate.mock();

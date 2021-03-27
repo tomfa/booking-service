@@ -5,7 +5,7 @@ const { findLastCommitSha } = require('./gitBuildId');
 const PRODUCTION_DOMAIN_ROOT = '/pdf-generator-api';
 const DEVELOPMENT_DOMAIN_ROOT = undefined; // = root of domain
 
-module.exports = (phase) => ({
+module.exports = phase => ({
   distDir: 'build',
 
   basePath:

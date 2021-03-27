@@ -9,7 +9,7 @@ export const ListItem = styled.li`
   align-items: center;
 
   &:hover {
-    background-color: ${(p) => p.theme.colors.primary};
+    background-color: ${p => p.theme.colors.primary};
     color: black;
   }
 `;

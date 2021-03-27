@@ -10,7 +10,7 @@ export const FileList = ({ files, isLoading }: Props) => {
   if (isLoading) {
     return (
       <List>
-        {blurArray.map((i) => (
+        {blurArray.map(i => (
           <LoadingFileItem key={i} />
         ))}
       </List>
@@ -18,7 +18,7 @@ export const FileList = ({ files, isLoading }: Props) => {
   }
   return (
     <List>
-      {files.map((file) => (
+      {files.map(file => (
         <FileItem key={file.url} file={file} />
       ))}
     </List>

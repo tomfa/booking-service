@@ -22,7 +22,7 @@ export class BadRequestError extends APIError {
     errors: FieldError | FieldError[]
   ): string[] {
     if (errors instanceof Array) {
-      return errors.map((err) => `${err.field}: ${err.error}`);
+      return errors.map(err => `${err.field}: ${err.error}`);
     }
     return [`${errors.field}: ${errors.error}`];
   }

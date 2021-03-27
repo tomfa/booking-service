@@ -17,7 +17,7 @@ export const mapGetFilesResponse = (
   if (!output.Contents) {
     return [];
   }
-  const files = output.Contents.map((file) => {
+  const files = output.Contents.map(file => {
     return {
       key: file.Key,
       filename: getFileName(file.Key),
@@ -29,7 +29,7 @@ export const mapGetFilesResponse = (
   if (includeFolder) {
     return files;
   }
-  return files.filter((file) => !!file.filename);
+  return files.filter(file => !!file.filename);
 };
 
 export const mapPutFileResponse = (

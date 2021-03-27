@@ -35,7 +35,7 @@ export const useAuth = (): UseAuthData => {
     async ({ username, password }: LoginData) => {
       // TODO: implement verification and storage of token in localstorage
       context.isLoading = true;
-      await new Promise((r) => setTimeout(r, 2000));
+      await new Promise(r => setTimeout(r, 2000));
 
       // eslint-disable-next-line no-console
       console.log(`Logging in with ${username}:${password}`);

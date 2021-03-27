@@ -28,11 +28,11 @@ async function generatePdf(
 }
 
 export const convertHTMLtoPDF = async (html: string): Promise<Buffer> => {
-  return generatePdf((page) => page.setContent(html));
+  return generatePdf(page => page.setContent(html));
 };
 
 export const convertURLtoPDF = async (url: string): Promise<Buffer> => {
-  return generatePdf(async (page) => {
+  return generatePdf(async page => {
     await page.goto(url);
   });
 };
