@@ -2,9 +2,6 @@
 
 > Generate PDFs from HTML with S3 + Serverless.
 
-![Unit tests status](https://github.com/tomfa/pdf-generator-api/actions/workflows/tests.yml/badge.svg)
-![ESLint status](https://github.com/tomfa/pdf-generator-api/actions/workflows/lint.yml/badge.svg)
-
 ## API
 
 | method | url                       | description                                              | docs                                                                                                                         |
