@@ -40,5 +40,7 @@ export const listFiles = async (
 ): Promise<FileDataDTO[]> => {
   const response = await fetch(`${API_URL}/${type}`);
   const json = await response.json();
-  return json.data;
+  return json.data.sort(
+    (a, b) => new Date(b.modified).getTime() - new Date(a.modified).getTime()
+  );
 };
