@@ -12,7 +12,7 @@ import {
 import { MouseEventHandler } from 'react';
 import Link from 'next/link';
 import { IconWrapper } from './Icon.styles';
-import { Button } from './Button.style';
+import { BlankButton } from './Button.style';
 
 export enum IconType {
   LINK,
@@ -106,7 +106,7 @@ type IconButtonProps = Omit<IconProps, 'hoverable'> & {
   onClick: MouseEventHandler<HTMLButtonElement>;
 };
 export const IconButton = ({ onClick, ...props }: IconButtonProps) => (
-  <Button $blank onClick={onClick}>
+  <BlankButton onClick={onClick}>
     <Icon {...props} hoverable withPadding />
-  </Button>
+  </BlankButton>
 );
