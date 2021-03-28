@@ -30,8 +30,12 @@ export const PDFProvider = ({ children }: { children: React.ReactNode }) => {
   const [error] = useState<string>('');
 
   const updateVariable = useCallback(
-    (name: string, value: string | number) => {
-      setVariables(existing => ({ ...existing, [name]: String(value) }));
+    (name: string, value: string | number | null) => {
+      if (value !== null) {
+        setVariables(existing => ({ ...existing, [name]: String(value) }));
+      } else {
+        setVariables(existing => Object.fromEntries(Object.entries(existing).filter(([key]) => key !== name)))
+      }
     },
     [setVariables]
   );

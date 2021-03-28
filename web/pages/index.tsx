@@ -1,11 +1,12 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useTheme } from 'styled-components';
-import { FileDataDTO } from '@pdf-generator/shared';
 import { FileList } from '../components/FileList/FileList';
 import { FileDrop } from '../components/FileDrop';
 import { useAuth } from '../providers/AuthProvider';
 import { useData } from '../providers/DataProvider';
+import { usePDFGenerator } from '../providers/PDFProvider';
+import { Generator } from '../containers/Generator';
 
 export default function Home() {
   const theme = useTheme();
@@ -21,7 +22,7 @@ export default function Home() {
     isUploadingTemplates,
     isUploadingFonts,
   } = useData();
-  const [selectedFile, setSelectedFile] = useState<FileDataDTO | null>(null);
+  const { selectedTemplate, setSelectedTemplate } = usePDFGenerator();
 
   useEffect(() => {
     fetchData();
@@ -49,15 +50,12 @@ export default function Home() {
             <FileList
               files={templates}
               isLoading={isFetching}
-              onSelect={setSelectedFile}
-              selectedFile={selectedFile}
+              onSelect={setSelectedTemplate}
+              selectedFile={selectedTemplate}
             />
           </span>
 
-          <span className="card wide">
-            <h2>Create &rarr;</h2>
-            <p>Select a template</p>
-          </span>
+          <Generator />
 
           <span className="card">
             <h2>Fonts</h2>
