@@ -16,7 +16,7 @@ export const IconWrapper = styled.span<{
   ${p =>
     p.$hover &&
     `
-      &:hover {
+      &:hover, &:focus {
         color: ${
           p.$hoverColor ||
           (!p.$secondary

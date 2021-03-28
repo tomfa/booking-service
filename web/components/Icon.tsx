@@ -106,7 +106,10 @@ type IconButtonProps = Omit<IconProps, 'hoverable'> & {
   onClick: MouseEventHandler<HTMLButtonElement>;
 };
 export const IconButton = ({ onClick, ...props }: IconButtonProps) => (
-  <BlankButton onClick={onClick}>
-    <Icon {...props} hoverable withPadding />
+  <BlankButton
+    onClick={onClick}
+    hoverColor={props.hoverColor}
+    color={props.color}>
+    <Icon {...props} hoverable withPadding color={'inherit'} />
   </BlankButton>
 );

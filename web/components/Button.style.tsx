@@ -1,8 +1,16 @@
 import styled from 'styled-components';
 
-export const BlankButton = styled.button`
+export const BlankButton = styled.button<{
+  color?: string;
+  hoverColor?: string;
+}>`
   all: unset;
   cursor: pointer;
+  ${p => p.color && `color: ${p.color}}`}
+
+  &:focus, &:hover {
+    ${p => p.hoverColor && `color: ${p.hoverColor}}`}
+  }
 `;
 
 export const BaseButton = styled.button`

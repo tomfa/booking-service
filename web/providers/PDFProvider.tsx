@@ -8,13 +8,25 @@ import {
 import { FileDataDTO } from '@pdf-generator/shared';
 import { config } from '../config';
 
+export type KeyedVariable = {
+  key: number;
+  label: string;
+  value: string | number;
+};
+export type AddVariableFunc = (label: string, value: string) => void;
+export type UpdateVariableFunc = (
+  key: number,
+  opt: { label: string; value: string | number | null }
+) => void;
 export type PDFValues = {
   generatedUrl: string;
   selectedTemplate: null | FileDataDTO;
   setSelectedTemplate: (file: FileDataDTO | null) => void;
   clearVariables: () => void;
-  updateVariable: (name: string, value: string) => void;
-  variables: Record<string, string>;
+  addVariable: AddVariableFunc;
+  updateVariable: UpdateVariableFunc;
+  setVariables: React.Dispatch<React.SetStateAction<KeyedVariable[]>>;
+  variables: KeyedVariable[];
   isLoading: boolean;
   error: null | string;
 };
@@ -25,21 +37,38 @@ export const PDFProvider = ({ children }: { children: React.ReactNode }) => {
     null
   );
   const [generatedUrl, setGeneratedUrl] = useState<string>('');
-  const [variables, setVariables] = useState<Record<string, string>>({});
+  const [variables, setVariables] = useState<KeyedVariable[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error] = useState<string>('');
 
+  const addVariable = useCallback(
+    (label: string, value: string) => {
+      setVariables(existing => {
+        const maxKey = existing.length
+          ? Math.max(...existing.map(i => i.key))
+          : 0;
+        return [{ key: maxKey + 1, label, value }, ...existing];
+      });
+    },
+    [setVariables]
+  );
   const updateVariable = useCallback(
-    (name: string, value: string | number | null) => {
+    (
+      key: number,
+      { label, value }: { label: string; value: string | number | null }
+    ) => {
       if (value !== null) {
-        setVariables(existing => ({ ...existing, [name]: String(value) }));
+        setVariables(existing => [
+          { key, label, value },
+          ...existing.filter(item => key !== item.key),
+        ]);
       } else {
-        setVariables(existing => Object.fromEntries(Object.entries(existing).filter(([key]) => key !== name)))
+        setVariables(existing => existing.filter(item => key !== item.key));
       }
     },
     [setVariables]
   );
-  const clearVariables = useCallback(() => setVariables({}), [setVariables]);
+  const clearVariables = useCallback(() => setVariables([]), [setVariables]);
 
   useEffect(() => {
     if (!selectedTemplate) {
@@ -48,8 +77,8 @@ export const PDFProvider = ({ children }: { children: React.ReactNode }) => {
     }
     setIsLoading(true);
     // TODO: This is probably not very URL safe
-    const urlVariables = Object.entries(variables)
-      .map(([key, val]) => `${key}=${val}`)
+    const urlVariables = variables
+      .map(({ label, value }) => `${label}=${value}`)
       .join('&');
     const url = `${config.API_URL}/generate/from_template?name=${selectedTemplate.filename}`;
     setGeneratedUrl(urlVariables ? `${url}&${urlVariables}` : url);
@@ -62,7 +91,9 @@ export const PDFProvider = ({ children }: { children: React.ReactNode }) => {
         variables,
         error,
         generatedUrl,
+        addVariable,
         updateVariable,
+        setVariables,
         clearVariables,
         isLoading,
         selectedTemplate,
