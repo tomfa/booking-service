@@ -24,6 +24,9 @@ const App = ({ Component, pageProps }: AppProps) => (
           background-color: ${theme.colors.bgPrimary};
           color: ${theme.colors.textPrimary};
         }
+        a {
+          color: ${theme.colors.links};
+        }
         * {
           box-sizing: border-box;
         }

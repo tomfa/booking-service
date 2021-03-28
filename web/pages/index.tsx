@@ -125,11 +125,6 @@ export default function Home() {
             align-items: center;
           }
 
-          a {
-            color: inherit;
-            text-decoration: none;
-          }
-
           .title a {
             color: #0070f3;
             text-decoration: none;

@@ -9,8 +9,9 @@ export const theme = {
     primary: '#e3c346',
     secondary: '#52A5E3',
     bgPrimary: '#3a3a3a',
+    bgSecondary: '#FAFAFA',
     textPrimary: '#FFFFFF',
-    textSecondary: '#3a3a3a',
+    textSecondary: '#000000',
     links: '#0070f3',
 
     success: '#139113',
