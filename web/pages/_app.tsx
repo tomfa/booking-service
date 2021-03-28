@@ -6,14 +6,16 @@ import { DataProvider } from '../providers/DataProvider';
 // Global base styles
 import theme from '../styles/theme';
 import { MessageProvider } from '../providers/MessageProvider';
+import { PDFProvider } from '../providers/PDFProvider';
 
 const App = ({ Component, pageProps }: AppProps) => (
   <ThemeProvider theme={theme}>
     <MessageProvider>
       <AuthProvider>
         <DataProvider>
-          <style>
-            {`
+          <PDFProvider>
+            <style>
+              {`
         html,
         body {
           padding: 0;
@@ -26,8 +28,9 @@ const App = ({ Component, pageProps }: AppProps) => (
           box-sizing: border-box;
         }
       `}
-          </style>
-          <Component {...pageProps} />
+            </style>
+            <Component {...pageProps} />
+          </PDFProvider>
         </DataProvider>
       </AuthProvider>
     </MessageProvider>
