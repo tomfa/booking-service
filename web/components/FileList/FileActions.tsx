@@ -3,17 +3,23 @@ import { useCallback, useState } from 'react';
 import { useTheme } from 'styled-components';
 import { IconButton, IconLink, IconType } from '../Icon';
 import { copyToClipBoard } from '../utils/clipboard.utils';
+import { MessageType, useMessage } from '../../providers/MessageProvider';
 import { ActionWrapper } from './FileActions.styles';
 
 type Props = { file: FileDataDTO };
 export const FileActions = ({ file }: Props) => {
   const theme = useTheme();
+  const { addMessage } = useMessage();
   const [hasCopied, setCopied] = useState<boolean>(false);
   const onCopy = useCallback(() => {
-    // Display something?
     copyToClipBoard([file.url]);
+    addMessage({
+      title: `File URL copied to clipboard`,
+      type: MessageType.SUCCESS,
+    });
     setCopied(true);
-  }, [file.url]);
+    setTimeout(() => setCopied(false), 5000);
+  }, [file.url, addMessage]);
   const onDelete = useCallback(() => {
     // TODO: actually remove
     // eslint-disable-next-line no-console
