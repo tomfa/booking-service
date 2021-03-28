@@ -3,10 +3,17 @@ import { IsoToDisplayDateTime } from '../utils/date.utils';
 import { DateStamp, ListItem, ListItemText } from './FileItem.styles';
 import { FileActions } from './FileActions';
 
-type Props = { file: FileDataDTO };
-export const FileItem = ({ file }: Props) => {
+type Props = {
+  file: FileDataDTO;
+  isSelected?: boolean;
+  onSelect?: (file: FileDataDTO) => void;
+};
+export const FileItem = ({ file, isSelected, onSelect }: Props) => {
   return (
-    <ListItem>
+    <ListItem
+      onClick={() => onSelect && onSelect(file)}
+      $selected={isSelected}
+      $selectable={!!onSelect}>
       <ListItemText>{file.filename}</ListItemText>
       <FileActions file={file} />
       <DateStamp>{IsoToDisplayDateTime(file.modified)}</DateStamp>

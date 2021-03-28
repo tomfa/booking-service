@@ -1,27 +1,15 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTheme } from 'styled-components';
+import { FileDataDTO } from '@pdf-generator/shared';
 import { FileList } from '../components/FileList/FileList';
 import { FileDrop } from '../components/FileDrop';
 import { useAuth } from '../providers/AuthProvider';
 import { useData } from '../providers/DataProvider';
-import { MessageType, useMessage } from '../providers/MessageProvider';
 
 export default function Home() {
   const theme = useTheme();
   const auth = useAuth();
-  const { addMessage, clearMessages } = useMessage();
-  useEffect(() => {
-    addMessage({
-      title: 'Heisann du',
-      description:
-        'Det er mye jeg gjerne ville ha sagt, men jeg ikke får plass til',
-      type: MessageType.INFO,
-    });
-    addMessage({ title: 'Opps', type: MessageType.DANGER });
-    addMessage({ title: 'HeisannYeah', type: MessageType.SUCCESS });
-    return clearMessages;
-  }, [addMessage, clearMessages]);
   const {
     fetchData,
     templates,
@@ -33,6 +21,8 @@ export default function Home() {
     isUploadingTemplates,
     isUploadingFonts,
   } = useData();
+  const [selectedFile, setSelectedFile] = useState<FileDataDTO | null>(null);
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -56,7 +46,12 @@ export default function Home() {
               mimeTypes={['.svg', '.html', 'image/svg', 'text/html']}
             />
 
-            <FileList files={templates} isLoading={isFetching} />
+            <FileList
+              files={templates}
+              isLoading={isFetching}
+              onSelect={setSelectedFile}
+              selectedFile={selectedFile}
+            />
           </span>
 
           <span className="card wide">
