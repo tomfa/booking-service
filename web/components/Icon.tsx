@@ -5,6 +5,9 @@ import {
   Check,
   CopySimple as Copy,
   TrashSimple as Trash,
+  X,
+  Warning,
+  Info,
 } from 'phosphor-react';
 import { MouseEventHandler } from 'react';
 import Link from 'next/link';
@@ -17,6 +20,9 @@ export enum IconType {
   COPY,
   CHECK,
   REMOVE,
+  CLOSE,
+  WARN,
+  INFO,
 }
 
 interface ComponentProps extends PhoshopProps {
@@ -38,32 +44,46 @@ const IconSVG = ({ icon, ...props }: ComponentProps) => {
   if (icon === IconType.REMOVE) {
     return <Trash {...props} />;
   }
+  if (icon === IconType.WARN) {
+    return <Warning {...props} />;
+  }
+  if (icon === IconType.CLOSE) {
+    return <X {...props} />;
+  }
+  if (icon === IconType.INFO) {
+    return <Info {...props} />;
+  }
   throw new Error(`Icon type ${icon} not supported`);
 };
 
 type IconProps = {
   icon: IconType;
-  secondary?: boolean;
   color?: string;
   hoverColor?: string;
+  secondary?: boolean;
   hoverable?: boolean;
+  withPadding?: boolean;
+  size?: number;
 };
 type IconLinkProps = Omit<IconProps, 'hoverable'> & { href: string };
 
 export const Icon = ({
-  secondary,
-  hoverable,
   color,
   hoverColor,
   icon,
+  secondary = false,
+  hoverable = false,
+  withPadding = false,
+  size = 11,
 }: IconProps) => {
   return (
     <IconWrapper
       $secondary={secondary}
       $hover={hoverable}
       $color={color}
-      $hoverColor={hoverColor}>
-      <IconSVG icon={icon} weight={'bold'} />
+      $hoverColor={hoverColor}
+      $withPadding={withPadding}>
+      <IconSVG icon={icon} weight={'bold'} size={size} />
     </IconWrapper>
   );
 };
@@ -71,13 +91,13 @@ export const IconLink = ({ href, ...props }: IconLinkProps) => {
   if (href.startsWith('http')) {
     return (
       <a href={href}>
-        <Icon {...props} hoverable />
+        <Icon {...props} hoverable withPadding />
       </a>
     );
   }
   return (
     <Link href={href}>
-      <Icon {...props} hoverable />
+      <Icon {...props} hoverable withPadding />
     </Link>
   );
 };
@@ -87,6 +107,6 @@ type IconButtonProps = Omit<IconProps, 'hoverable'> & {
 };
 export const IconButton = ({ onClick, ...props }: IconButtonProps) => (
   <Button $blank onClick={onClick}>
-    <Icon {...props} hoverable />
+    <Icon {...props} hoverable withPadding />
   </Button>
 );

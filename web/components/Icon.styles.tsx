@@ -5,9 +5,10 @@ export const IconWrapper = styled.span<{
   $color?: string;
   $hoverColor?: string;
   $hover?: boolean;
+  $withPadding?: boolean;
 }>`
   display: flex;
-  padding: 0.5rem;
+  padding: ${p => (p.$withPadding ? '0.5rem' : '0')};
   color: ${p =>
     p.$color ||
     (p.$secondary ? p.theme.colors.textSecondary : p.theme.colors.textPrimary)};

@@ -9,13 +9,14 @@ export const theme = {
     primary: '#e3c346',
     secondary: '#52A5E3',
     bgPrimary: '#3a3a3a',
-    bgSecondary: '#white',
     textPrimary: '#FFFFFF',
     textSecondary: '#3a3a3a',
     links: '#0070f3',
 
     success: '#139113',
+    bgSuccess: '#016201',
     danger: '#ca082a',
+    bgDanger: '#9d041f',
   },
   layout: {
     maxWidth: '800',

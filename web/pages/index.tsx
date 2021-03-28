@@ -5,10 +5,23 @@ import { FileList } from '../components/FileList/FileList';
 import { FileDrop } from '../components/FileDrop';
 import { useAuth } from '../providers/AuthProvider';
 import { useData } from '../providers/DataProvider';
+import { MessageType, useMessage } from '../providers/MessageProvider';
 
 export default function Home() {
   const theme = useTheme();
   const auth = useAuth();
+  const { addMessage, clearMessages } = useMessage();
+  useEffect(() => {
+    addMessage({
+      title: 'Heisann du',
+      description:
+        'Det er mye jeg gjerne ville ha sagt, men jeg ikke får plass til',
+      type: MessageType.INFO,
+    });
+    addMessage({ title: 'Opps', type: MessageType.DANGER });
+    addMessage({ title: 'HeisannYeah', type: MessageType.SUCCESS });
+    return clearMessages;
+  }, [addMessage, clearMessages]);
   const {
     fetchData,
     templates,

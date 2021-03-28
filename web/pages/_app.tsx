@@ -5,13 +5,15 @@ import { DataProvider } from '../providers/DataProvider';
 
 // Global base styles
 import theme from '../styles/theme';
+import { MessageProvider } from '../providers/MessageProvider';
 
 const App = ({ Component, pageProps }: AppProps) => (
-  <AuthProvider>
-    <DataProvider>
-      <ThemeProvider theme={theme}>
-        <style>
-          {`
+  <ThemeProvider theme={theme}>
+    <MessageProvider>
+      <AuthProvider>
+        <DataProvider>
+          <style>
+            {`
         html,
         body {
           padding: 0;
@@ -24,11 +26,12 @@ const App = ({ Component, pageProps }: AppProps) => (
           box-sizing: border-box;
         }
       `}
-        </style>
-        <Component {...pageProps} />
-      </ThemeProvider>
-    </DataProvider>
-  </AuthProvider>
+          </style>
+          <Component {...pageProps} />
+        </DataProvider>
+      </AuthProvider>
+    </MessageProvider>
+  </ThemeProvider>
 );
 
 export default App;
