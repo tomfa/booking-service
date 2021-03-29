@@ -36,7 +36,7 @@ export const retrieveTemplate = async (
   }
 };
 
-const uploadFile = async ({
+const upload = async ({
   content,
   key,
   mimeType,
@@ -59,7 +59,7 @@ const uploadFile = async ({
   return mapPutFileResponse(key, object);
 };
 
-export const storeFile = async (
+export const store = async (
   content: Buffer,
   mimeType = 'application/pdf',
   acl: 'public-read' | 'private' = 'public-read'
@@ -67,10 +67,10 @@ export const storeFile = async (
   const fileName = generateFileName();
   const prefix = 'files';
   const key = `${prefix}/${fileName}`;
-  return uploadFile({ key, mimeType, acl, content });
+  return upload({ key, mimeType, acl, content });
 };
 
-export const getFiles = async ({
+export const list = async ({
   folder,
 }: {
   folder: FOLDER;

@@ -4,7 +4,7 @@ import { getData } from '../utils';
 import { decodeBase64, isValidBase64 } from '../../utils/encoding';
 import { cleanVariables, insertVariables } from '../../utils/variables';
 import { Variables } from '../../types';
-import { storeFile } from '../../utils/files';
+import { store } from '../../utils/files';
 import { BadRequestError } from '../../utils/errors/BadRequestError';
 
 export const generatePdfFromHtml = async (
@@ -26,7 +26,7 @@ export const generatePdfFromHtml = async (
   const htmlString = decodeBase64(String(base64Html));
   const htmlWithVariables = insertVariables(htmlString, cleanedVariables);
   const pdfContent = await convertHTMLtoPDF(htmlWithVariables);
-  const { url } = await storeFile(pdfContent);
+  const { url } = await store(pdfContent);
   if (req.method === 'GET') {
     return res.redirect(url);
   }
