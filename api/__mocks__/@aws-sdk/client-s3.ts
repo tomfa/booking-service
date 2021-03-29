@@ -37,18 +37,20 @@ export const overrideNextS3GetObjectResponse = (content: string) => {
   nextGetResponse = createGetObjectMock(content);
 };
 
-const createListObjectMock = (files: unknown) =>
+const createListObjectMock = (files: unknown, prefix?: string) =>
   jest.fn().mockReturnValue(
     Promise.resolve({
+      Prefix: prefix,
       Contents: files,
     })
   );
 
 let nextListResponse;
 export const overrideNextS3ListObjectResponse = (
-  files: { Key: string; LastModified: Date; Etag: string }[]
+  files: { Key: string; LastModified: Date; Etag: string }[],
+  prefix?: string
 ) => {
-  nextListResponse = createListObjectMock(files);
+  nextListResponse = createListObjectMock(files, prefix);
 };
 
 export const templates = {

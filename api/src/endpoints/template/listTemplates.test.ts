@@ -1,27 +1,34 @@
+import * as uuid from 'uuid';
 import { testRequest } from '../../testUtils/controllers.utils';
 
 import { overrideNextS3ListObjectResponse } from '../../../__mocks__/@aws-sdk/client-s3';
 import config from '../../config';
+import { FOLDER } from '../enums';
 import { listTemplates } from './listTemplates';
 
 describe('listTemplates', () => {
+  const username = `undefined`;
   describe('GET request', () => {
     it('returns list of template filenames', async () => {
       const filename = 'test.html';
-      const url = `${config.services.s3.endpointUrl}/templates/${filename}`;
+      const id = uuid.v4();
+      const url = `${config.services.s3.endpointUrl}/${username}/${FOLDER.templates}/${id}/${filename}`;
       const modified = new Date();
-      overrideNextS3ListObjectResponse([
-        {
-          Etag: 'folderEtag',
-          LastModified: modified,
-          Key: `templates/`,
-        },
-        {
-          Etag: 'anEtag',
-          LastModified: modified,
-          Key: `templates/${filename}`,
-        },
-      ]);
+      overrideNextS3ListObjectResponse(
+        [
+          {
+            Etag: 'folderEtag',
+            LastModified: modified,
+            Key: `${username}/${FOLDER.templates}/`,
+          },
+          {
+            Etag: 'anEtag',
+            LastModified: modified,
+            Key: `${username}/${FOLDER.templates}/${id}/${filename}`,
+          },
+        ],
+        `${username}/${FOLDER.templates}/`
+      );
 
       const { status, message, json } = await testRequest(listTemplates);
 
@@ -32,6 +39,10 @@ describe('listTemplates', () => {
         filename,
         modified: modified.toISOString(),
         url,
+        archived: false,
+        owner: username,
+        id,
+        folder: FOLDER.templates,
       });
     });
   });

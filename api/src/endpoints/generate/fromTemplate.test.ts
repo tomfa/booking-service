@@ -8,6 +8,7 @@ import { generatePdfFromTemplate } from './fromTemplate';
 
 describe('generatePdfFromTemplate', () => {
   const bucketUrl = config.services.s3.endpointUrl;
+  const owner = 'kroloftet';
 
   describe('GET request', () => {
     it('returns 400 if template is not specified', async () => {
@@ -35,7 +36,7 @@ describe('generatePdfFromTemplate', () => {
 
       expect(status).toBe(302);
       const { location } = headers;
-      expect(location).toContain(`${bucketUrl}/files/`);
+      expect(location).toContain(`${bucketUrl}/${owner}/files/`);
     });
     it('stores generated pdf file as public in files folder', async () => {
       await testRequest(generatePdfFromTemplate, {
@@ -44,7 +45,7 @@ describe('generatePdfFromTemplate', () => {
 
       const { ACL, Key } = getLastPutActionArgs();
       expect(ACL).toBe('public-read');
-      expect(Key.startsWith('files/')).toBe(true);
+      expect(Key.startsWith(`${owner}/files/`)).toBe(true);
       expect(Key.endsWith('.pdf')).toBe(true);
     });
   });

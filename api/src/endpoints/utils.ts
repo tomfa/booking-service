@@ -18,10 +18,12 @@ export const getFileDataFromUrl = (url: string, modified = ''): FileDataDTO => {
     .split('/')
     .filter(l => !!l);
   if (parts.length < 4) {
-    throw new Error(`Can not construct FileDataDTO from unknown URL ${url}`);
+    throw new Error(
+      `Can not construct FileDataDTO from unknown URL ${url}. Missing parts.`
+    );
   }
-  const folder = parts[0];
-  const owner = parts[1];
+  const owner = parts[0];
+  const folder = parts[1];
   const id = parts[2];
   let filename = parts[3];
   const archived = filename.endsWith('.archived');
@@ -42,11 +44,11 @@ export const getFileDataFromUrl = (url: string, modified = ''): FileDataDTO => {
 
 export const getFileDataFromKey = (
   key: string,
-  modified?: string,
+  modified?: string
 ): FileDataDTO => getFileDataFromUrl(getAbsoluteUrlFromKey(key), modified);
 
 export const getKeyFromData = (file: Omit<FileDataDTO, 'url'>): string => {
-  const key = `${file.folder}/${file.owner}/${file.id}/${file.filename}`;
+  const key = `${file.owner}/${file.folder}/${file.id}/${file.filename}`;
   if (!file.archived) {
     return key;
   }

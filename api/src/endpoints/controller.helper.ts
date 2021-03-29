@@ -27,15 +27,32 @@ export const deleteFiles = (prefix: FOLDER) => async (
   req: Express.Request,
   res: Express.Response
 ) => {
-  const { files } = getData(req);
+  const { files, permanent } = getData(req);
   if (!files) {
     throw new BadRequestError({ field: 'files', error: 'query param missing' });
   }
-  // eslint-disable-next-line no-console
-  console.log('deleting files', typeof files, files);
+  const allowedPermanantValues = ['1', '0', 'true', 'false'];
+  if (!!permanent && !allowedPermanantValues.includes(permanent as string)) {
+    throw new BadRequestError({
+      field: 'permanent',
+      error: `query param must be unset or one of ${allowedPermanantValues}`,
+    });
+  }
 
   const keys = mapDataInputToStringArray(files).map(key => `${prefix}/${key}`);
 
-  await remove({ keys });
+  if (['1', 'true'].includes(permanent as string)) {
+    await remove({ keys });
+  } else {
+    await remove({ keys });
+    // TODO FIX
+    // await Promise.all(
+    //   keys.map(key => {
+    //     // TODO: Fix
+    //     const archiveKey = '';
+    //     return move(key, archiveKey);
+    //   }),
+    // );
+  }
   return res.json({ data: keys, message: 'OK' });
 };

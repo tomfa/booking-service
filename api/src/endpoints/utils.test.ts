@@ -14,10 +14,11 @@ describe('getFileDataFromUrl', () => {
       modified: '', // Note blank modified
       owner: 'darth',
       id: uuid.v4(),
+      archived: false,
     };
     const url = getAbsoluteUrlFromKey(getKeyFromData(originalData));
     expect(url).toBe(
-      `${config.services.s3.endpointUrl}/folder/darth/${originalData.id}/I love aspargus.html`,
+      `${config.services.s3.endpointUrl}/darth/folder/${originalData.id}/I love aspargus.html`
     );
 
     const parsedData = getFileDataFromUrl(url);
@@ -25,11 +26,11 @@ describe('getFileDataFromUrl', () => {
   });
   it('parses archived urls', () => {
     const id = uuid.v4();
-    const badUrl = `${config.services.s3.endpointUrl}/folder/darth/${id}/I love aspargus.html.archived`;
+    const badUrl = `${config.services.s3.endpointUrl}/darth/folder/${id}/I love aspargus.html.archived`;
 
     const data = getFileDataFromUrl(badUrl);
 
-    expect(data.filename).toBe(`I love aspargus.html`)
+    expect(data.filename).toBe(`I love aspargus.html`);
     expect(data.archived).toBe(true);
   });
   it('throws an error if URL comes from a different domain', () => {
@@ -44,7 +45,7 @@ describe('getFileDataFromUrl', () => {
     const url = getAbsoluteUrlFromKey(getKeyFromData(originalData));
     const urlFromDifferentDomain = url.replace(
       config.services.s3.endpointUrl,
-      'https://example.com',
+      'https://example.com'
     );
 
     try {
@@ -53,8 +54,8 @@ describe('getFileDataFromUrl', () => {
     } catch (err) {}
   });
   it('throws an error when URL is missing expected parts', () => {
-    const missingId = ''
-    const badUrl = `${config.services.s3.endpointUrl}/folder/darth/${missingId}/I love aspargus.html`;
+    const missingId = '';
+    const badUrl = `${config.services.s3.endpointUrl}/darth/folder/${missingId}/I love aspargus.html`;
 
     try {
       getFileDataFromUrl(badUrl);
@@ -71,13 +72,14 @@ describe('getKeyFromData', () => {
       modified: 'today',
       owner: 'darth',
       id: uuid.v4(),
+      archived: false,
     };
     const archivedFile = { ...fileData, archived: true };
 
     const fileKey = getKeyFromData(fileData);
     const archivedKey = getKeyFromData(archivedFile);
 
-    expect(fileKey).toBe(`folder/darth/${fileData.id}/I love aspargus.html`);
+    expect(fileKey).toBe(`darth/folder/${fileData.id}/I love aspargus.html`);
     expect(archivedKey).toBe(`${fileKey}.archived`);
   });
 });

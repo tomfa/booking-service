@@ -3,17 +3,13 @@ import { FileDataDTO } from '@pdf-generator/shared';
 import { getFileDataFromKey } from '../endpoints/utils';
 
 export const mapGetFilesResponse = (
-  output: ListObjectsCommandOutput,
-  includeFolder: boolean = false
+  output: ListObjectsCommandOutput
 ): FileDataDTO[] => {
   if (!output.Contents) {
     return [];
   }
-  const files = output.Contents.map(file =>
+  const filesWithoutFolder = output.Contents.filter(o => !o.Key.endsWith('/'));
+  return filesWithoutFolder.map(file =>
     getFileDataFromKey(file.Key, file.LastModified.toISOString())
   );
-  if (includeFolder) {
-    return files;
-  }
-  return files.filter(file => !!file.filename);
 };

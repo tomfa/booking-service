@@ -2,24 +2,27 @@ import { testRequest } from '../../testUtils/controllers.utils';
 
 import { overrideNextS3ListObjectResponse } from '../../../__mocks__/@aws-sdk/client-s3';
 import config from '../../config';
+import { FOLDER } from '../enums';
 import { listFonts } from './listFonts';
 
 describe('listFonts', () => {
+  const owner = `undefined`;
   describe('GET request', () => {
     it('returns list of template filenames', async () => {
       const filename = 'testFont.otf';
-      const url = `${config.services.s3.endpointUrl}/fonts/${filename}`;
+      const id = '1441';
+      const url = `${config.services.s3.endpointUrl}/${owner}/${FOLDER.fonts}/${id}/${filename}`;
       const modified = new Date();
       overrideNextS3ListObjectResponse([
         {
           Etag: 'folderEtag',
           LastModified: modified,
-          Key: `fonts/`,
+          Key: `${owner}/${FOLDER.fonts}/`,
         },
         {
           Etag: 'anEtag',
           LastModified: modified,
-          Key: `fonts/${filename}`,
+          Key: `${owner}/${FOLDER.fonts}/${id}/${filename}`,
         },
       ]);
 
@@ -32,6 +35,10 @@ describe('listFonts', () => {
         filename,
         modified: modified.toISOString(),
         url,
+        archived: false,
+        folder: FOLDER.fonts,
+        id,
+        owner,
       });
     });
   });
