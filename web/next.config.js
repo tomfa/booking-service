@@ -17,4 +17,26 @@ module.exports = phase => ({
     const commitSha = await findLastCommitSha();
     return commitSha.substr(0, 7);
   },
+
+  webpack: config => {
+    fixEnums(config);
+    return config;
+  },
 });
+
+// Due to us exporting enums from shared
+// https://github.com/vercel/next.js/issues/13045
+function fixEnums(config) {
+  config.module.rules.forEach(({ use }, i) => {
+    if (!use) return;
+    const isBabelLoader = Array.isArray(use)
+      ? use.findIndex(
+          item => item && item.loader && item.loader === 'next-babel-loader'
+        ) !== -1
+      : use.loader === 'next-babel-loader';
+    if (isBabelLoader) {
+      // eslint-disable-next-line no-param-reassign
+      delete config.module.rules[i].include;
+    }
+  });
+}
