@@ -57,3 +57,16 @@ export const getKeyFromData = (file: Omit<FileDataDTO, 'url'>): string => {
 
 export const getAbsoluteUrlFromKey = (key: string) =>
   `${config.services.s3.endpointUrl}/${key}`;
+
+export const getFileNameFromVariables = (
+  variables: JSONObject,
+  defaultName = 'file.pdf'
+): string => {
+  const filename = String(
+    variables.filename || variables.title || variables.name || defaultName
+  );
+  if (filename.endsWith('.pdf')) {
+    return filename;
+  }
+  return `${filename}.pdf`;
+};

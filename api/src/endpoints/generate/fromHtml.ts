@@ -1,6 +1,6 @@
 import * as Express from 'express';
 import { convertHTMLtoPDF } from '../../utils/pdf';
-import { getData } from '../utils';
+import { getData, getFileNameFromVariables } from '../utils';
 import { decodeBase64, isValidBase64 } from '../../utils/encoding';
 import { cleanVariables, insertVariables } from '../../utils/variables';
 import { Variables } from '../../types';
@@ -17,10 +17,7 @@ export const generatePdfFromHtml = async (
   if (!base64Html) {
     throw new BadRequestError({ field: 'html', error: 'query param missing' });
   }
-  const filename = (variables.filename ||
-    variables.title ||
-    variables.name ||
-    'File.pdf') as string;
+  const filename = getFileNameFromVariables(variables);
   if (!isValidBase64(base64Html)) {
     throw new BadRequestError({
       field: 'html',
