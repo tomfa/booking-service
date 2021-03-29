@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 
 import { errorMiddleware } from './utils/errorHandler';
 import config, { Config } from './config';
+import { authMiddleware } from './utils/auth/utils';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ class App {
     this.app.use(bodyParser.json());
     this.app.use(router);
     this.app.use(errorMiddleware);
+    this.app.use(authMiddleware);
   }
 }
 
