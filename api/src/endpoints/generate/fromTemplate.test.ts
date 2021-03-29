@@ -1,3 +1,5 @@
+import * as uuid from 'uuid';
+import { FOLDER } from '@pdf-generator/shared';
 import { testRequest } from '../../testUtils/controllers.utils';
 import {
   getLastPutActionArgs,
@@ -9,6 +11,7 @@ import { generatePdfFromTemplate } from './fromTemplate';
 describe('generatePdfFromTemplate', () => {
   const bucketUrl = config.services.s3.endpointUrl;
   const owner = 'kroloftet';
+  const randomId = uuid.v4();
 
   describe('GET request', () => {
     it('returns 400 if template is not specified', async () => {
@@ -23,7 +26,7 @@ describe('generatePdfFromTemplate', () => {
     });
     it('returns 404 if template is not found', async () => {
       const { status, message } = await testRequest(generatePdfFromTemplate, {
-        query: { template: 'non-existing' },
+        query: { template: 'non-existing', _id: randomId },
       });
 
       expect(status).toBe(404);
@@ -31,21 +34,21 @@ describe('generatePdfFromTemplate', () => {
     });
     it('returns 302 redirect to new PDF if successful', async () => {
       const { status, headers } = await testRequest(generatePdfFromTemplate, {
-        query: { template: templates.htmlTemplate.name },
+        query: { template: templates.htmlTemplate.name, _id: randomId },
       });
 
       expect(status).toBe(302);
       const { location } = headers;
-      expect(location).toContain(`${bucketUrl}/${owner}/files/`);
+      expect(location).toContain(`${bucketUrl}/${owner}/${FOLDER.files}/`);
     });
     it('stores generated pdf file as public in files folder', async () => {
       await testRequest(generatePdfFromTemplate, {
-        query: { template: templates.htmlTemplate.name },
+        query: { template: templates.htmlTemplate.name, _id: randomId },
       });
 
       const { ACL, Key } = getLastPutActionArgs();
       expect(ACL).toBe('public-read');
-      expect(Key.startsWith(`${owner}/files/`)).toBe(true);
+      expect(Key.startsWith(`${owner}/${FOLDER.files}`)).toBe(true);
       expect(Key.endsWith('.pdf')).toBe(true);
     });
   });
@@ -55,7 +58,7 @@ describe('generatePdfFromTemplate', () => {
         generatePdfFromTemplate,
         {
           method: 'POST',
-          body: { template: templates.htmlTemplate.name },
+          body: { template: templates.htmlTemplate.name, _id: randomId },
         }
       );
 

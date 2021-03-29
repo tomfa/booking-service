@@ -1,4 +1,5 @@
 import * as uuid from 'uuid';
+import { FOLDER } from '@pdf-generator/shared';
 import config from '../config';
 import {
   getAbsoluteUrlFromKey,
@@ -9,7 +10,7 @@ import {
 describe('getFileDataFromUrl', () => {
   it('returns fileData from URL', () => {
     const originalData = {
-      folder: 'folder',
+      folder: FOLDER.templates,
       filename: 'I love aspargus.html',
       modified: '', // Note blank modified
       owner: 'darth',
@@ -18,7 +19,7 @@ describe('getFileDataFromUrl', () => {
     };
     const url = getAbsoluteUrlFromKey(getKeyFromData(originalData));
     expect(url).toBe(
-      `${config.services.s3.endpointUrl}/darth/folder/${originalData.id}/I love aspargus.html`
+      `${config.services.s3.endpointUrl}/darth/${FOLDER.templates}/${originalData.id}/I love aspargus.html`
     );
 
     const parsedData = getFileDataFromUrl(url);
@@ -26,7 +27,7 @@ describe('getFileDataFromUrl', () => {
   });
   it('parses archived urls', () => {
     const id = uuid.v4();
-    const badUrl = `${config.services.s3.endpointUrl}/darth/folder/${id}/I love aspargus.html.archived`;
+    const badUrl = `${config.services.s3.endpointUrl}/darth/${FOLDER.templates}/${id}/I love aspargus.html.archived`;
 
     const data = getFileDataFromUrl(badUrl);
 
@@ -35,7 +36,7 @@ describe('getFileDataFromUrl', () => {
   });
   it('throws an error if URL comes from a different domain', () => {
     const originalData = {
-      folder: 'folder',
+      folder: FOLDER.templates,
       filename: 'I love aspargus.html',
       modified: '', // Note blank modified
       owner: 'darth',
@@ -67,7 +68,7 @@ describe('getFileDataFromUrl', () => {
 describe('getKeyFromData', () => {
   it('returns fileKey based on FileData', () => {
     const fileData = {
-      folder: 'folder',
+      folder: FOLDER.fonts,
       filename: 'I love aspargus.html',
       modified: 'today',
       owner: 'darth',
@@ -79,7 +80,9 @@ describe('getKeyFromData', () => {
     const fileKey = getKeyFromData(fileData);
     const archivedKey = getKeyFromData(archivedFile);
 
-    expect(fileKey).toBe(`darth/folder/${fileData.id}/I love aspargus.html`);
+    expect(fileKey).toBe(
+      `darth/${FOLDER.fonts}/${fileData.id}/I love aspargus.html`
+    );
     expect(archivedKey).toBe(`${fileKey}.archived`);
   });
 });

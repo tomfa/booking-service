@@ -11,16 +11,28 @@ export const generatePdfFromTemplate = async (
   req: Express.Request,
   res: Express.Response
 ) => {
-  const { template, ...variables } = getData(req);
+  const { template, _id, ...variables } = getData(req);
+  const user = getUser(req);
   if (!template) {
     throw new BadRequestError({
       field: 'template',
       error: 'query param is missing',
     });
   }
+  if (!_id) {
+    throw new BadRequestError({
+      field: '_id',
+      error: 'query param is missing',
+    });
+  }
+
   const cleanedVariables: Variables = cleanVariables(variables);
 
-  const html = await retrieveTemplate(String(template));
+  const html = await retrieveTemplate({
+    templateName: String(template),
+    id: String(_id),
+    owner: user.username,
+  });
   const htmlWithVariables = insertVariables(html, cleanedVariables);
   const pdfContent = await convertHTMLtoPDF(htmlWithVariables);
   const filename = (variables.filename ||

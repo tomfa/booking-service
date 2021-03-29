@@ -1,5 +1,5 @@
 import * as Express from 'express';
-import { JSONObject, FileDataDTO } from '@pdf-generator/shared';
+import { JSONObject, FileDataDTO, FOLDER } from '@pdf-generator/shared';
 import config from '../config';
 
 export const getData = (req: Express.Request): JSONObject => {
@@ -23,7 +23,7 @@ export const getFileDataFromUrl = (url: string, modified = ''): FileDataDTO => {
     );
   }
   const owner = parts[0];
-  const folder = parts[1];
+  const folder = FOLDER[parts[1]];
   const id = parts[2];
   let filename = parts[3];
   const archived = filename.endsWith('.archived');

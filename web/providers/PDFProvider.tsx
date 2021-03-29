@@ -80,7 +80,7 @@ export const PDFProvider = ({ children }: { children: React.ReactNode }) => {
     const urlVariables = variables
       .map(({ label, value }) => `${label}=${value}`)
       .join('&');
-    const url = `${config.API_URL}/generate/from_template?name=${selectedTemplate.filename}`;
+    const url = `${config.API_URL}/generate/from_template?template=${selectedTemplate.filename}&_id=${selectedTemplate.id}`;
     setGeneratedUrl(urlVariables ? `${url}&${urlVariables}` : url);
     setIsLoading(false);
   }, [selectedTemplate, variables, setGeneratedUrl]);

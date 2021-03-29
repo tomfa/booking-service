@@ -19,11 +19,11 @@ const performUpload = ({ file, url }: { file: File; url: string }) =>
 
 export const uploadFile = async (
   file: File,
-  type: 'template' | 'font'
+  folder: FOLDER.templates | FOLDER.fonts
 ): Promise<{ success: boolean; data: FileDataDTO }> => {
   const fileName = file.name;
   const response = await fetch(
-    `${config.API_URL}/${type}/upload_url?name=${fileName}`
+    `${config.API_URL}/${folder}/upload_url?name=${fileName}`
   );
   const { url } = await response.json();
   await performUpload({ file, url });
@@ -36,7 +36,7 @@ export const uploadFile = async (
       filename: file.name,
       modified: 'Just now',
       archived: false,
-      folder: type,
+      folder,
       owner: '',
       id: 'TODO',
     },
@@ -92,7 +92,7 @@ export const listFiles = async (folder: FOLDER): Promise<FileDataDTO[]> => {
       },
     ];
   }
-  const response = await fetch(`${config.API_URL}/${type}`);
+  const response = await fetch(`${config.API_URL}/${folder}`);
   const json = await response.json();
   return json.data.sort(
     (a, b) => new Date(b.modified).getTime() - new Date(a.modified).getTime()

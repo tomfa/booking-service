@@ -14,13 +14,15 @@ const get = (url: string, fun: ControllerFunction) =>
 const del = (url: string, fun: ControllerFunction) =>
   router.delete(url, errorWrapper(fun));
 
-get('/template', listTemplates);
-del('/template', deleteFiles(FOLDER.templates));
-get('/template/upload_url', getUploadURL(FOLDER.templates));
-get('/file', listFiles);
-del('/file', deleteFiles(FOLDER.files));
-get('/font', listFonts);
-del('/font', deleteFiles(FOLDER.fonts));
-get('/font/upload_url', getUploadURL(FOLDER.fonts));
+get(`/${FOLDER.templates}`, listTemplates);
+del(`/${FOLDER.templates}`, deleteFiles(FOLDER.templates));
+get(`/${FOLDER.templates}/upload_url`, getUploadURL(FOLDER.templates));
+
+get(`/${FOLDER.fonts}`, listFonts);
+del(`/${FOLDER.fonts}`, deleteFiles(FOLDER.fonts));
+get(`/${FOLDER.fonts}/upload_url`, getUploadURL(FOLDER.fonts));
+
+get(`/${FOLDER.files}`, listFiles);
+del(`/${FOLDER.files}`, deleteFiles(FOLDER.files));
 
 export default router;

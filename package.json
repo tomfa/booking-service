@@ -39,10 +39,12 @@
   "scripts": {
     "web": "yarn workspace @pdf-generator/web",
     "api": "yarn workspace @pdf-generator/api",
+    "shared": "yarn workspace @pdf-generator/shared",
+    "build": "tsc -v && tsc -b",
     "start": "concurrently \"yarn web start\" \"yarn api start\"",
     "test": "yarn api test",
     "test:api": "yarn api test",
-    "test:compile": "yarn tsc --noEmit",
+    "test:compile": "tsc -v && tsc --noEmit",
     "test:watch": "yarn api test:watch",
     "lint": "eslint .",
     "lint:ignore-warnings": "eslint . --quiet",

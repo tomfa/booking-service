@@ -7,16 +7,19 @@ describe('getUploadURL', () => {
 
   it('returns a signed url', async () => {
     const { status, message, json } = await testRequest(controller, {
-      query: { name: 'Cheese' },
+      query: { name: 'Cheese.jpg' },
     });
 
     expect(status).toBe(200);
     expect(message).toBe('OK');
+    const [key, signing] = json.url.split('?');
     expect(
-      json.url.startsWith(
-        'https://s3.eu-north-1.amazonaws.com/test.mybucket.com/templates/Cheese'
+      key.startsWith(
+        'https://s3.eu-north-1.amazonaws.com/test.mybucket.com/kroloftet/templates/'
       )
     ).toBe(true);
+    expect(key.endsWith('Cheese.jpg')).toBe(true);
+    expect(signing).toContain('X-Amz-Algorithm');
   });
 });
 

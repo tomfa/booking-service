@@ -2,18 +2,24 @@ import * as Express from 'express';
 import { FOLDER } from '@pdf-generator/shared';
 import { getUploadUrl, remove } from '../utils/files';
 import { BadRequestError } from '../utils/errors/BadRequestError';
+import { getUser } from '../utils/auth/utils';
 import { getData } from './utils';
 
-export const getUploadURL = (prefix: FOLDER) => async (
+export const getUploadURL = (folder: FOLDER) => async (
   req: Express.Request,
   res: Express.Response
 ) => {
   const { name } = getData(req);
+  const owner = getUser(req);
   if (!name) {
     throw new BadRequestError({ field: 'name', error: 'query param missing' });
   }
-  const url = await getUploadUrl(prefix, String(name));
-  return res.json({ message: 'OK', url });
+  const data = await getUploadUrl({
+    folder,
+    owner: owner.username,
+    filename: String(name),
+  });
+  return res.json({ message: 'OK', url: data.url });
 };
 
 const mapDataInputToStringArray = (value: unknown): string[] => {

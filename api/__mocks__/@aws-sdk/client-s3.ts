@@ -56,7 +56,7 @@ export const overrideNextS3ListObjectResponse = (
 export const templates = {
   htmlTemplate: {
     name: 'cheese',
-    key: 'templates/cheese',
+    key: 'kroloftet/templates/cheese',
     content: `<body><h1>{{ name }}</h1></body>`,
     mock: createGetObjectMock(`<body><h1>{{ name }}</h1></body>`),
   },
@@ -115,8 +115,8 @@ const sendFn = jest
           return response();
         }
         const key = command.input.Key;
-        const matchingTemplate = Object.values(templates).find(
-          t => t.key === key
+        const matchingTemplate = Object.values(templates).find(t =>
+          key.endsWith(t.name)
         );
         if (matchingTemplate) {
           return matchingTemplate.mock();

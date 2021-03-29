@@ -31,9 +31,9 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchData = useCallback(async () => {
     setIsFetching(true);
     // TODO: Check if authenticated, handle errors
-    const filesList = await api.listFiles('file');
-    const fontsList = await api.listFiles('font');
-    const templateList = await api.listFiles('template');
+    const filesList = await api.listFiles(FOLDER.files);
+    const fontsList = await api.listFiles(FOLDER.fonts);
+    const templateList = await api.listFiles(FOLDER.templates);
     setFiles(filesList);
     setTemplates(templateList);
     setFonts(fontsList);
@@ -61,7 +61,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     async (toUpload: File[]) => {
       setIsUploadingFonts(true);
       const uploads = await Promise.all(
-        toUpload.map(file => api.uploadFile(file, 'font'))
+        toUpload.map(file => api.uploadFile(file, FOLDER.fonts))
       );
       const newFiles = uploads.map(u => u.data);
       const wasNotUpdated = (file: FileDataDTO) =>
@@ -76,7 +76,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     async (toUpload: File[]) => {
       setIsUploadingTemplates(true);
       const uploads = await Promise.all(
-        toUpload.map(file => api.uploadFile(file, 'template'))
+        toUpload.map(file => api.uploadFile(file, FOLDER.templates))
       );
       const newFiles = uploads.map(u => u.data);
       const wasNotUpdated = (file: FileDataDTO) =>

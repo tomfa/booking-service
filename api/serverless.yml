@@ -68,27 +68,27 @@ functions:
     memorySize: 256
     events:
       - http:
-          path: template
+          path: templates
           method: get
       - http:
-          path: template
+          path: templates
           method: delete
       - http:
-          path: template/upload_url
+          path: templates/upload_url
           method: get
       - http:
-          path: file
+          path: files
           method: get
       - http:
-          path: file
+          path: files
           method: delete
       - http:
-          path: font
+          path: fonts
           method: get
       - http:
-          path: font
+          path: fonts
           method: delete
       - http:
-          path: font/upload_url
+          path: fonts/upload_url
           method: get
 

@@ -1,3 +1,4 @@
+import { Readable } from 'stream';
 import {
   S3Client,
   GetObjectCommand,
@@ -5,7 +6,7 @@ import {
   PutObjectCommand,
   DeleteObjectsCommand,
 } from '@aws-sdk/client-s3';
-import { v4 } from 'uuid';
+import * as uuid from 'uuid';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { FileDataDTO, FOLDER } from '@pdf-generator/shared';
 import config from '../config';
@@ -14,21 +15,37 @@ import { TemplateNotFound } from './errors/TemplateNotFound';
 import { APIError } from './errors/APIError';
 import { mapGetFilesResponse } from './files.mapper';
 
-const s3 = new S3Client({ region: config.services.s3.region });
-const generateId = v4;
+async function readableToString(readable: Readable): Promise<string> {
+  let result = '';
+  // eslint-disable-next-line no-restricted-syntax
+  for await (const chunk of readable) {
+    result += chunk;
+  }
+  return result;
+}
 
-export const retrieveTemplate = async (
-  templateName: string
-): Promise<string | null> => {
-  const prefix = 'templates';
+const s3 = new S3Client({ region: config.services.s3.region });
+
+type RetrieveTemplateProps = {
+  owner: string;
+  id: string;
+  templateName: string;
+};
+export const retrieveTemplate = async ({
+  owner,
+  id,
+  templateName,
+}: RetrieveTemplateProps): Promise<string | null> => {
+  const folder = FOLDER.templates;
+  const key = `${owner}/${folder}/${id}/${templateName}`;
   try {
     const object = await s3.send(
       new GetObjectCommand({
         Bucket: config.services.s3.bucketName,
-        Key: `${prefix}/${templateName}`,
+        Key: key,
       })
     );
-    return object.Body.toString();
+    return readableToString(object.Body as Readable);
   } catch (err) {
     if (err.code === 'NoSuchKey') {
       throw new TemplateNotFound(`Unable to find template.`, { templateName });
@@ -75,7 +92,7 @@ export const store = async ({
   mimeType?: 'application/pdf' | string;
   acl?: 'public-read' | 'private';
 }): Promise<FileDataDTO> => {
-  const id = generateId();
+  const id = uuid.v4();
   const key = getKeyFromData({
     owner,
     folder,
@@ -89,13 +106,15 @@ export const store = async ({
 
 export const list = async ({
   folder,
+  owner,
 }: {
   folder: FOLDER;
+  owner: string;
 }): Promise<FileDataDTO[]> => {
   const response = await s3.send(
     new ListObjectsCommand({
       Bucket: config.services.s3.bucketName,
-      Prefix: `${folder}/`,
+      Prefix: `${owner}/${folder}/`,
     })
   );
   return mapGetFilesResponse(response);
@@ -112,17 +131,35 @@ export const remove = async ({ keys }: { keys: string[] }): Promise<void> => {
   );
 };
 
-export const getUploadUrl = async (
-  folder: FOLDER,
-  fileKey: string,
-  acl: 'public-read' | 'private' = 'public-read',
-  { expiresIn = 15 * 60 }: { expiresIn?: number } = {}
-): Promise<string> => {
+type GetUploadUrlProps = {
+  owner: string;
+  folder: FOLDER;
+  filename: string;
+  id?: string;
+  acl?: 'public-read' | 'private';
+  options?: { expiresIn?: number };
+};
+export const getUploadUrl = async ({
+  owner,
+  folder,
+  filename,
+  id = uuid.v4(),
+  acl = 'public-read',
+  options: { expiresIn = 15 * 60 } = {},
+}: GetUploadUrlProps): Promise<FileDataDTO> => {
   const command = new PutObjectCommand({
     Bucket: config.services.s3.bucketName,
-    Key: `${folder}/${fileKey}`,
+    Key: `${owner}/${folder}/${id}/${filename}`,
     ACL: acl,
   });
   const url = await getSignedUrl(s3, command, { expiresIn });
-  return url;
+  return {
+    url,
+    owner,
+    folder,
+    filename,
+    id,
+    archived: false,
+    modified: 'Just now',
+  };
 };
