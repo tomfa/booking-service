@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useState } from 'react';
-import { FileDataDTO } from '@pdf-generator/shared';
+import { FileDataDTO, FOLDER } from '@pdf-generator/shared';
 import * as api from '../api';
 
 export type DataValues = {
@@ -44,13 +44,13 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     async (file: FileDataDTO) => {
       const type = file.folder;
       await api.deleteFile(file);
-      if (type === 'file') {
+      if (type === FOLDER.files) {
         setFiles(existing => existing.filter(f => f !== file));
       }
-      if (type === 'template') {
+      if (type === FOLDER.templates) {
         setTemplates(existing => existing.filter(f => f !== file));
       }
-      if (type === 'font') {
+      if (type === FOLDER.fonts) {
         setFonts(existing => existing.filter(f => f !== file));
       }
     },

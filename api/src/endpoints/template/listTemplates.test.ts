@@ -1,9 +1,9 @@
 import * as uuid from 'uuid';
+import { FOLDER } from '@pdf-generator/shared';
 import { testRequest } from '../../testUtils/controllers.utils';
 
 import { overrideNextS3ListObjectResponse } from '../../../__mocks__/@aws-sdk/client-s3';
 import config from '../../config';
-import { FOLDER } from '../enums';
 import { listTemplates } from './listTemplates';
 
 describe('listTemplates', () => {

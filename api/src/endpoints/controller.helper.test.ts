@@ -1,6 +1,6 @@
+import { FOLDER } from '@pdf-generator/shared';
 import { testRequest } from '../testUtils/controllers.utils';
 import { deleteFiles, getUploadURL } from './controller.helper';
-import { FOLDER } from './enums';
 
 describe('getUploadURL', () => {
   const controller = getUploadURL(FOLDER.templates);

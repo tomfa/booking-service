@@ -1,4 +1,4 @@
-import { FileDataDTO } from '@pdf-generator/shared';
+import { FileDataDTO, FOLDER } from '@pdf-generator/shared';
 import { config } from './config';
 
 const performUpload = ({ file, url }: { file: File; url: string }) =>
@@ -57,9 +57,7 @@ export const deleteFile = async (file: FileDataDTO): Promise<void> => {
   }
 };
 
-export const listFiles = async (
-  type: 'file' | 'template' | 'font'
-): Promise<FileDataDTO[]> => {
+export const listFiles = async (folder: FOLDER): Promise<FileDataDTO[]> => {
   if (config.MOCK_API) {
     return [
       {
@@ -70,7 +68,7 @@ export const listFiles = async (
           'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/testuser/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b1/dummy-file1.pdf',
         archived: false,
         owner: 'testuser',
-        folder: `${type}s`,
+        folder,
       },
       {
         id: 'da18cc94-c5b7-4dab-b7d5-9130f9e145b2',
@@ -80,7 +78,7 @@ export const listFiles = async (
           'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/testuser/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b2/dummy-file1.pdf',
         archived: false,
         owner: 'testuser',
-        folder: `${type}s`,
+        folder,
       },
       {
         id: 'da18cc94-c5b7-4dab-b7d5-9130f9e145b3',
@@ -90,7 +88,7 @@ export const listFiles = async (
           'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/testuser/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b3/dummy-file3.pdf.archived',
         archived: true,
         owner: 'testuser',
-        folder: `${type}s`,
+        folder,
       },
     ];
   }

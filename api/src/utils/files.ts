@@ -7,9 +7,8 @@ import {
 } from '@aws-sdk/client-s3';
 import { v4 } from 'uuid';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { FileDataDTO } from '@pdf-generator/shared';
+import { FileDataDTO, FOLDER } from '@pdf-generator/shared';
 import config from '../config';
-import { FOLDER } from '../endpoints/enums';
 import { getFileDataFromKey, getKeyFromData } from '../endpoints/utils';
 import { TemplateNotFound } from './errors/TemplateNotFound';
 import { APIError } from './errors/APIError';

@@ -1,8 +1,8 @@
 import * as Express from 'express';
+import { FOLDER } from '@pdf-generator/shared';
 import { getUploadUrl, remove } from '../utils/files';
 import { BadRequestError } from '../utils/errors/BadRequestError';
 import { getData } from './utils';
-import { FOLDER } from './enums';
 
 export const getUploadURL = (prefix: FOLDER) => async (
   req: Express.Request,

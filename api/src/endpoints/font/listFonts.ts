@@ -1,6 +1,6 @@
 import * as Express from 'express';
+import { FOLDER } from '@pdf-generator/shared';
 import { list } from '../../utils/files';
-import { FOLDER } from '../enums';
 
 export const listFonts = async (
   req: Express.Request,

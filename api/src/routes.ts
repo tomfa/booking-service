@@ -1,11 +1,11 @@
 import { Router } from 'express';
+import { FOLDER } from '@pdf-generator/shared';
 import { errorWrapper } from './utils/errorHandler';
 import { ControllerFunction } from './types';
 import { listTemplates } from './endpoints/template/listTemplates';
 import { listFiles } from './endpoints/files/listFiles';
 import { listFonts } from './endpoints/font/listFonts';
 import { deleteFiles, getUploadURL } from './endpoints/controller.helper';
-import { FOLDER } from './endpoints/enums';
 
 const router = Router();
 
