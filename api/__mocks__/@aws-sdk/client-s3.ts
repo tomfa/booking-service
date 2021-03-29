@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+import { Readable } from 'stream';
 
 export class AWSError extends Error {
   message: string;
@@ -28,7 +29,7 @@ const NoSuchKeyError = () =>
 const createGetObjectMock = (content: string) =>
   jest.fn().mockReturnValue(
     Promise.resolve({
-      Body: Buffer.from(content),
+      Body: Readable.from(content, { encoding: 'utf-8' }),
     })
   );
 

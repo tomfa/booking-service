@@ -7,13 +7,21 @@ describe('retrieveTemplate', () => {
     const content = '<h1>{{ name }}</h1>';
     overrideNextS3GetObjectResponse(content);
 
-    const template = await retrieveTemplate('my-template');
+    const template = await retrieveTemplate({
+      templateName: 'my-template',
+      owner: '',
+      id: '',
+    });
 
     expect(template).toEqual(content);
   });
   test('throws error if no file found', async () => {
     try {
-      await retrieveTemplate('non-existing');
+      await retrieveTemplate({
+        templateName: 'non-existing',
+        owner: '',
+        id: '',
+      });
       fail('Retrieving non-existing template should throw error');
     } catch (err) {
       expect(err).toBeInstanceOf(TemplateNotFound);
