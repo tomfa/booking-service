@@ -4,9 +4,9 @@
   "description": "Serverless API for generating PDFs",
   "main": "dist/app",
   "dependencies": {
-    "@pdf-generator/shared": "1.0.0",
     "@aws-sdk/client-s3": "^3.9.0",
     "@aws-sdk/s3-request-presigner": "^3.9.0",
+    "@pdf-generator/shared": "1.0.0",
     "body-parser": "^1.19.0",
     "chrome-aws-lambda": "^8.0.0",
     "dotenv": "^8.2.0",
@@ -22,6 +22,7 @@
     "@jest-mock/express": "^1.4.0",
     "@types/express": "^4.17.11",
     "@types/jest": "^26.0.20",
+    "@types/uuid": "^8.3.0",
     "jest": "^26.6.3",
     "nock": "^13.0.11",
     "puppeteer": "^8.0.0",
