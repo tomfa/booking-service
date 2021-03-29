@@ -64,6 +64,30 @@ export const templates = {
   },
 };
 
+const deleteMock = jest
+  .fn()
+  .mockImplementation(
+    ({ Delete }: { Bucket: string; Delete: { Objects: Array<{ Key }> } }) =>
+      Promise.resolve({
+        $metadata: {
+          httpStatusCode: 200,
+          requestId: undefined,
+          extendedRequestId:
+            'atFlggEKhoDPyvZ+Rt+DOHtT32rTTQeqc7vTdz4GTlaIJLmTfEODVyObIA/fWX20tbhP7E7rljk=',
+          cfId: undefined,
+          attempts: 1,
+          totalRetryDelay: 0,
+        },
+        Deleted: Delete.Objects?.map(({ Key }) => ({
+          Key,
+          VersionId: undefined,
+          DeleteMarker: undefined,
+          DeleteMarkerVersionId: undefined,
+        })),
+        Errors: undefined,
+        RequestCharged: undefined,
+      })
+  );
 const getMock = jest.fn().mockImplementation(() => Promise.resolve({}));
 const putMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({ ETag: 'Test-Etag' });
@@ -102,6 +126,8 @@ const sendFn = jest
         throw NoSuchKeyError();
       } else if (command instanceof PutObjectCommand) {
         return putMock(command.input);
+      } else if (command instanceof DeleteObjectsCommand) {
+        return deleteMock(command.input);
       } else if (command instanceof ListObjectsCommand) {
         if (nextListResponse) {
           listMock(command.input);
@@ -141,6 +167,16 @@ export class PutObjectCommand {
 
 export class ListObjectsCommand {
   name = 'ListObjectsCommand';
+
+  input: Record<string, any>;
+
+  constructor(input: Record<string, any>) {
+    this.input = input;
+  }
+}
+
+export class DeleteObjectsCommand {
+  name = 'DeleteObjectsCommand';
 
   input: Record<string, any>;
 

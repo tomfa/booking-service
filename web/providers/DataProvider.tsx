@@ -1,10 +1,11 @@
 import { createContext, useCallback, useContext, useState } from 'react';
 import { FileDataDTO } from '@pdf-generator/shared';
-import { uploadFile, listFiles } from '../api';
+import * as api from '../api';
 
 export type DataValues = {
   fetchData: () => Promise<void>;
   uploadFonts: (files: File[]) => Promise<void>;
+  deleteFile: (file: FileDataDTO) => Promise<void>;
   uploadTemplates: (files: File[]) => Promise<void>;
   fonts: FileDataDTO[];
   templates: FileDataDTO[];
@@ -30,20 +31,37 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchData = useCallback(async () => {
     setIsFetching(true);
     // TODO: Check if authenticated, handle errors
-    const filesList = await listFiles('file');
-    const fontsList = await listFiles('font');
-    const templateList = await listFiles('template');
+    const filesList = await api.listFiles('file');
+    const fontsList = await api.listFiles('font');
+    const templateList = await api.listFiles('template');
     setFiles(filesList);
     setTemplates(templateList);
     setFonts(fontsList);
     setIsFetching(false);
   }, [setFiles, setIsFetching]);
 
+  const deleteFile = useCallback(
+    async (file: FileDataDTO) => {
+      const type = api.getFileType(file);
+      await api.deleteFile(file);
+      if (type === 'file') {
+        setFiles(existing => existing.filter(f => f !== file));
+      }
+      if (type === 'template') {
+        setTemplates(existing => existing.filter(f => f !== file));
+      }
+      if (type === 'font') {
+        setFonts(existing => existing.filter(f => f !== file));
+      }
+    },
+    [setFonts, setFiles, setTemplates]
+  );
+
   const uploadFonts = useCallback(
     async (toUpload: File[]) => {
       setIsUploadingFonts(true);
       const uploads = await Promise.all(
-        toUpload.map(file => uploadFile(file, 'font'))
+        toUpload.map(file => api.uploadFile(file, 'font'))
       );
       const newFiles = uploads.map(u => u.data);
       const wasNotUpdated = (file: FileDataDTO) =>
@@ -58,7 +76,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     async (toUpload: File[]) => {
       setIsUploadingTemplates(true);
       const uploads = await Promise.all(
-        toUpload.map(file => uploadFile(file, 'template'))
+        toUpload.map(file => api.uploadFile(file, 'template'))
       );
       const newFiles = uploads.map(u => u.data);
       const wasNotUpdated = (file: FileDataDTO) =>
@@ -85,6 +103,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         isFetching,
         isUploadingFonts,
         isUploadingTemplates,
+        deleteFile,
       }}>
       {children}
     </DataContext.Provider>

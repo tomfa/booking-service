@@ -1,5 +1,7 @@
 import { FileDataDTO } from '@pdf-generator/shared';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import { MessageType, useMessage } from '../../providers/MessageProvider';
+import { useData } from '../../providers/DataProvider';
 import { FileItem } from './FileItem';
 import { List } from './FileList.styles';
 import { LoadingFileItem } from './LoadingFileItem';
@@ -17,6 +19,19 @@ export const FileList = ({
   onSelect,
 }: Props) => {
   const blurArray = useMemo(() => Array.from(Array(3).keys()), []);
+  const { addMessage } = useMessage();
+  const { deleteFile } = useData();
+  const onDelete = useCallback(
+    async (file: FileDataDTO) => {
+      await deleteFile(file);
+      addMessage({
+        title: `${file.filename} was deleted`,
+        type: MessageType.INFO,
+      });
+    },
+    [deleteFile, addMessage]
+  );
+
   if (isLoading) {
     return (
       <List>
@@ -34,6 +49,7 @@ export const FileList = ({
           file={file}
           onSelect={onSelect}
           isSelected={file === selectedFile}
+          onDelete={onDelete}
         />
       ))}
     </List>

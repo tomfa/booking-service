@@ -3,6 +3,7 @@ import {
   GetObjectCommand,
   ListObjectsCommand,
   PutObjectCommand,
+  DeleteObjectsCommand,
 } from '@aws-sdk/client-s3';
 import { v4 } from 'uuid';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -82,6 +83,17 @@ export const list = async ({
     })
   );
   return mapGetFilesResponse(response);
+};
+
+export const remove = async ({ keys }: { keys: string[] }): Promise<void> => {
+  await s3.send(
+    new DeleteObjectsCommand({
+      Bucket: config.services.s3.bucketName,
+      Delete: {
+        Objects: keys.map(key => ({ Key: key })),
+      },
+    })
+  );
 };
 
 export const getUploadUrl = async (

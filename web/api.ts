@@ -32,6 +32,30 @@ export const uploadFile = async (
     data: { url: url.split('?')[0], filename: file.name, modified: 'Just now' },
   };
 };
+
+export const getFileType = ({
+  filename,
+  url,
+}: FileDataDTO): 'file' | 'font' | 'template' => {
+  // TODO: ... Add type to FileDataDTO?
+  const type = url.split(filename)[0].split('/').reverse()[1];
+  return type.substr(0, type.length - 1) as 'file' | 'font' | 'template';
+};
+
+export const deleteFile = async (file: FileDataDTO): Promise<void> => {
+  const response = await fetch(
+    `${config.API_URL}/${getFileType(file)}/?files=${file.filename}`,
+    {
+      method: 'DELETE',
+    }
+  );
+  const json = await response.json();
+  if (json.message !== 'OK') {
+    // TODO: Better error handling
+    throw new Error(`Deleting ${file.filename} failed`);
+  }
+};
+
 export const listFiles = async (
   type: 'file' | 'template' | 'font'
 ): Promise<FileDataDTO[]> => {
@@ -57,7 +81,7 @@ export const listFiles = async (
       },
     ];
   }
-  const response = await fetch(`${API_URL}/${type}`);
+  const response = await fetch(`${config.API_URL}/${type}`);
   const json = await response.json();
   return json.data.sort(
     (a, b) => new Date(b.modified).getTime() - new Date(a.modified).getTime()
