@@ -9,11 +9,3 @@ export type ControllerFunction = (
   req: Request,
   res: Response
 ) => Promise<unknown>;
-
-export type FileData = {
-  key: string;
-  filename: string;
-  url: string;
-  eTag?: string;
-  modified?: Date;
-};
