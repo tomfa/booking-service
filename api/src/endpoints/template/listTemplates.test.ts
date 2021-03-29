@@ -12,18 +12,14 @@ describe('listTemplates', () => {
       const modified = new Date();
       overrideNextS3ListObjectResponse([
         {
-          filename: '',
-          eTag: 'folderEtag',
-          modified,
-          key: `templates/`,
-          url: `${config.services.s3.endpointUrl}/templates/`,
+          Etag: 'folderEtag',
+          LastModified: modified,
+          Key: `templates/`,
         },
         {
-          filename,
-          eTag: 'anEtag',
-          modified,
-          key: `templates/${filename}`,
-          url,
+          Etag: 'anEtag',
+          LastModified: modified,
+          Key: `templates/${filename}`,
         },
       ]);
 

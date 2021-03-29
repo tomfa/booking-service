@@ -42,7 +42,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
   const deleteFile = useCallback(
     async (file: FileDataDTO) => {
-      const type = api.getFileType(file);
+      const type = file.folder;
       await api.deleteFile(file);
       if (type === 'file') {
         setFiles(existing => existing.filter(f => f !== file));

@@ -12,18 +12,14 @@ describe('listFonts', () => {
       const modified = new Date();
       overrideNextS3ListObjectResponse([
         {
-          filename: '',
-          eTag: 'folderEtag',
-          modified,
-          key: `fonts/`,
-          url: `${config.services.s3.endpointUrl}/fonts/`,
+          Etag: 'folderEtag',
+          LastModified: modified,
+          Key: `fonts/`,
         },
         {
-          filename,
-          eTag: 'anEtag',
-          modified,
-          key: `fonts/${filename}`,
-          url,
+          Etag: 'anEtag',
+          LastModified: modified,
+          Key: `fonts/${filename}`,
         },
       ]);
 

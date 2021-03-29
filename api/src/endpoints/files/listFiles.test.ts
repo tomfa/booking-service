@@ -12,11 +12,9 @@ describe('listFiles', () => {
       const createdDate = new Date();
       overrideNextS3ListObjectResponse([
         {
-          filename,
-          eTag: 'anEtag',
-          modified: createdDate,
-          key: `files/${filename}`,
-          url,
+          Etag: 'anEtag',
+          LastModified: createdDate,
+          Key: `files/${filename}`,
         },
       ]);
 

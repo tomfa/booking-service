@@ -1,3 +1,4 @@
+// TODO: move to shared and use in FIledataDTO, and remove plural form
 export enum FOLDER {
   files = 'files',
   fonts = 'fonts',

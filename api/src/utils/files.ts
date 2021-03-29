@@ -7,12 +7,13 @@ import {
 } from '@aws-sdk/client-s3';
 import { v4 } from 'uuid';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { FileDataDTO } from '@pdf-generator/shared';
 import config from '../config';
-import { FileData } from '../types';
 import { FOLDER } from '../endpoints/enums';
+import { getFileDataFromKey } from '../endpoints/utils';
 import { TemplateNotFound } from './errors/TemplateNotFound';
 import { APIError } from './errors/APIError';
-import { mapGetFilesResponse, mapPutFileResponse } from './files.mapper';
+import { mapGetFilesResponse } from './files.mapper';
 
 const s3 = new S3Client({ region: config.services.s3.region });
 const generateFileName = (fileEnding = 'pdf') => `${v4()}.${fileEnding}`;
@@ -47,8 +48,8 @@ const upload = async ({
   key: string;
   mimeType: string;
   acl: 'public-read' | 'private';
-}): Promise<FileData> => {
-  const object = await s3.send(
+}): Promise<FileDataDTO> => {
+  await s3.send(
     new PutObjectCommand({
       Bucket: config.services.s3.bucketName,
       Key: key,
@@ -57,14 +58,14 @@ const upload = async ({
       ACL: acl,
     })
   );
-  return mapPutFileResponse(key, object);
+  return getFileDataFromKey(key, new Date().toISOString());
 };
 
 export const store = async (
   content: Buffer,
   mimeType = 'application/pdf',
   acl: 'public-read' | 'private' = 'public-read'
-): Promise<FileData> => {
+): Promise<FileDataDTO> => {
   const fileName = generateFileName();
   const prefix = 'files';
   const key = `${prefix}/${fileName}`;
@@ -75,7 +76,7 @@ export const list = async ({
   folder,
 }: {
   folder: FOLDER;
-}): Promise<FileData[]> => {
+}): Promise<FileDataDTO[]> => {
   const response = await s3.send(
     new ListObjectsCommand({
       Bucket: config.services.s3.bucketName,

@@ -1,7 +1,5 @@
 /* eslint-disable max-classes-per-file */
 
-import { FileData } from '../../src/types';
-
 export class AWSError extends Error {
   message: string;
 
@@ -39,19 +37,17 @@ export const overrideNextS3GetObjectResponse = (content: string) => {
   nextGetResponse = createGetObjectMock(content);
 };
 
-const createListObjectMock = (files: FileData[]) =>
+const createListObjectMock = (files: unknown) =>
   jest.fn().mockReturnValue(
     Promise.resolve({
-      Contents: files.map(f => ({
-        Key: f.key,
-        LastModified: f.modified,
-        Etag: f.eTag,
-      })),
+      Contents: files,
     })
   );
 
 let nextListResponse;
-export const overrideNextS3ListObjectResponse = (files: FileData[]) => {
+export const overrideNextS3ListObjectResponse = (
+  files: { Key: string; LastModified: Date; Etag: string }[]
+) => {
   nextListResponse = createListObjectMock(files);
 };
 

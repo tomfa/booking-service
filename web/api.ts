@@ -27,24 +27,25 @@ export const uploadFile = async (
   );
   const { url } = await response.json();
   await performUpload({ file, url });
+
+  // TODO: Return generated DTO from api or extract utils functions to shared
   return {
     success: true,
-    data: { url: url.split('?')[0], filename: file.name, modified: 'Just now' },
+    data: {
+      url: url.split('?')[0],
+      filename: file.name,
+      modified: 'Just now',
+      archived: false,
+      folder: type,
+      owner: '',
+      id: 'TODO',
+    },
   };
-};
-
-export const getFileType = ({
-  filename,
-  url,
-}: FileDataDTO): 'file' | 'font' | 'template' => {
-  // TODO: ... Add type to FileDataDTO?
-  const type = url.split(filename)[0].split('/').reverse()[1];
-  return type.substr(0, type.length - 1) as 'file' | 'font' | 'template';
 };
 
 export const deleteFile = async (file: FileDataDTO): Promise<void> => {
   const response = await fetch(
-    `${config.API_URL}/${getFileType(file)}/?files=${file.filename}`,
+    `${config.API_URL}/${file.folder}/?files=${file.filename}`,
     {
       method: 'DELETE',
     }
@@ -62,22 +63,34 @@ export const listFiles = async (
   if (config.MOCK_API) {
     return [
       {
-        filename: 'da18cc94-c5b7-4dab-b7d5-9130f9e145b2.pdf',
+        id: 'da18cc94-c5b7-4dab-b7d5-9130f9e145b1',
+        filename: 'dummy-file1.pdf',
         modified: '2021-03-21T08:18:50.000Z',
         url:
-          'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b2.pdf',
+          'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/testuser/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b1/dummy-file1.pdf',
+        archived: false,
+        owner: 'testuser',
+        folder: `${type}s`,
       },
       {
-        filename: 'b8057175-e743-47f4-b79b-e152b5d3dadc.pdf',
-        modified: '2021-03-20T18:16:22.000Z',
+        id: 'da18cc94-c5b7-4dab-b7d5-9130f9e145b2',
+        filename: 'dummy-file2.pdf',
+        modified: '2021-03-21T08:19:30.000Z',
         url:
-          'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/files/b8057175-e743-47f4-b79b-e152b5d3dadc.pdf',
+          'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/testuser/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b2/dummy-file1.pdf',
+        archived: false,
+        owner: 'testuser',
+        folder: `${type}s`,
       },
       {
-        filename: '98a22657-b72c-4856-bb7d-1fa660732853.pdf',
-        modified: '2021-03-20T17:59:04.000Z',
+        id: 'da18cc94-c5b7-4dab-b7d5-9130f9e145b3',
+        filename: 'dummy-file3.pdf',
+        modified: '2021-03-21T08:20:51.000Z',
         url:
-          'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/files/98a22657-b72c-4856-bb7d-1fa660732853.pdf',
+          'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/testuser/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b3/dummy-file3.pdf.archived',
+        archived: true,
+        owner: 'testuser',
+        folder: `${type}s`,
       },
     ];
   }
