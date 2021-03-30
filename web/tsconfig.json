@@ -10,10 +10,5 @@
     "module": "esnext",
     "isolatedModules": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "references": [
-    {
-      "path": "../shared"
-    }
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

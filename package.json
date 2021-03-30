@@ -40,7 +40,7 @@
     "web": "yarn workspace @pdf-generator/web",
     "api": "yarn workspace @pdf-generator/api",
     "shared": "yarn workspace @pdf-generator/shared",
-    "build": "tsc -v && tsc -b",
+    "build": "yarn workspaces run build",
     "start": "concurrently \"yarn web start\" \"yarn api start\"",
     "test": "yarn api test",
     "test:api": "yarn api test",
