@@ -1,9 +1,18 @@
 import * as Express from 'express';
 import { FOLDER } from '@pdf-generator/shared';
-import { getUploadUrl, move, remove } from '../utils/files';
+import { getUploadUrl, list, move, remove } from '../utils/files';
 import { BadRequestError } from '../utils/errors/BadRequestError';
 import { getUser } from '../utils/auth/utils';
 import { getData, getFileDataFromKey } from './utils';
+
+export const listFiles = (folder: FOLDER) => async (
+  req: Express.Request,
+  res: Express.Response
+) => {
+  const owner = getUser(req).username;
+  const files = await list({ folder, owner });
+  return res.json({ data: files, message: 'OK' });
+};
 
 export const getUploadURL = (folder: FOLDER) => async (
   req: Express.Request,
