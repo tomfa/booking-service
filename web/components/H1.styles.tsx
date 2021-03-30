@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const H1 = styled.h1`
-  color: ${p => p.theme.colors.secondary};
+  color: ${p => p.theme.colors.primary};
   text-align: center;
   margin: 0;
   line-height: 1.15;

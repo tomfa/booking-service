@@ -6,9 +6,9 @@ export const theme = {
     secondary: "'Barlow Condensed', sans-serif",
   },
   colors: {
-    primary: '#e3c346',
-    secondary: '#52A5E3',
-    bgPrimary: '#3a3a3a',
+    primary: '#8BA02A',
+    secondary: '#C6A666',
+    bgPrimary: '#232828',
     bgSecondary: '#FAFAFA',
     textPrimary: '#FFFFFF',
     textSecondary: '#000000',

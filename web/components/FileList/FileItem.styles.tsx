@@ -24,7 +24,7 @@ export const ListItem = styled.li<{
   color: ${p => p.theme.colors.textPrimary};
   margin-bottom: 0.5rem;
   border: none;
-  background-color: #2a2a2a;
+  background-color: transparent;
   display: flex;
   justify-content: space-between;
   align-items: center;
