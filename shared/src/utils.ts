@@ -21,29 +21,29 @@ export const getKeyFromData = (file: Omit<FileDataDTO, 'url'>): string => {
   return `${key}.archived`;
 };
 
-export const getFileDataFromUrl = (
-  url: string,
+export const getFileDataFromKey = (
+  key: string,
   setModified = ''
-): FileDataDTO => {
-  const parts = removeQueryFromUrl(removeDomainFromUrl(url))
+): Omit<FileDataDTO, 'url'> => {
+  const parts = key
     .split('/')
-    .filter(l => !!l);
+    .filter(l => !!l)
+    .reverse();
   if (parts.length < 4) {
     throw new Error(
-      `Can not construct FileDataDTO from unknown URL ${url}. Missing parts.`
+      `Can not construct FileDataDTO from unknown key ${key}. Missing parts.`
     );
   }
-  const owner = parts[0];
-  const folder = FOLDER[parts[1]];
-  const id = parts[2];
-  let filename = parts[3];
+  const owner = parts[3];
+  const folder = FOLDER[parts[2]];
+  const id = parts[1];
+  let filename = parts[0];
   const archived = filename.endsWith('.archived');
   if (archived) {
     filename = filename.substring(0, filename.length - '.archived'.length);
   }
 
   return {
-    url,
     owner,
     id,
     folder,
@@ -51,4 +51,12 @@ export const getFileDataFromUrl = (
     modified: setModified,
     archived,
   };
+};
+
+export const getFileDataFromUrl = (
+  url: string,
+  setModified = ''
+): FileDataDTO => {
+  const key = removeQueryFromUrl(removeDomainFromUrl(url));
+  return { ...getFileDataFromKey(key, setModified), url };
 };

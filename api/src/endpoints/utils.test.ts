@@ -19,7 +19,7 @@ describe('getFileDataFromUrl', () => {
     );
 
     const parsedData = getFileDataFromUrl(url);
-    expect(parsedData).toEqual({ ...originalData, url, archived: false });
+    expect(parsedData).toEqual({ ...originalData, url });
   });
   it('parses archived urls', () => {
     const id = uuid.v4();
@@ -39,7 +39,7 @@ describe('getFileDataFromUrl', () => {
       id: uuid.v4(),
       archived: true,
     };
-    const url = getAbsoluteUrlFromKey(getKeyFromData(originalData));
+    const url = getAbsoluteUrlFromKey(utils.getKeyFromData(originalData));
     const urlFromDifferentDomain = url.replace(
       config.services.s3.endpointUrl,
       'https://example.com'
@@ -58,27 +58,5 @@ describe('getFileDataFromUrl', () => {
       getFileDataFromUrl(badUrl);
       fail('getFileDataFromUrl should throw error when missing id');
     } catch (err) {}
-  });
-});
-
-describe('getKeyFromData', () => {
-  it('returns fileKey based on FileData', () => {
-    const fileData = {
-      folder: FOLDER.fonts,
-      filename: 'I love aspargus.html',
-      modified: 'today',
-      owner: 'darth',
-      id: uuid.v4(),
-      archived: false,
-    };
-    const archivedFile = { ...fileData, archived: true };
-
-    const fileKey = getKeyFromData(fileData);
-    const archivedKey = getKeyFromData(archivedFile);
-
-    expect(fileKey).toBe(
-      `darth/${FOLDER.fonts}/${fileData.id}/I love aspargus.html`
-    );
-    expect(archivedKey).toBe(`${fileKey}.archived`);
   });
 });

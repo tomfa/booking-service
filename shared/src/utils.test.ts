@@ -17,13 +17,10 @@ describe('getFileDataFromUrl', () => {
       id: 'random-uuid-key',
       archived: false,
     };
-    const url = endpoint + `/` + getKeyFromData(originalData);
-    expect(url).toBe(
-      `${endpoint}/darth/${FOLDER.templates}/${originalData.id}/I love aspargus.html`
-    );
+    const url = `https://s3.eu-north-1.amazonaws.com/test.mybucket.com/${originalData.owner}/${originalData.folder}/${originalData.id}/${originalData.filename}`;
 
     const parsedData = getFileDataFromUrl(url);
-    expect(parsedData).toEqual({ ...originalData, url, archived: false });
+    expect(parsedData).toEqual({ ...originalData, url });
   });
   it('parses archived urls', () => {
     const id = 'random-uuid-key';

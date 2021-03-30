@@ -9,9 +9,9 @@ import {
 } from '@aws-sdk/client-s3';
 import * as uuid from 'uuid';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { FileDataDTO, FOLDER } from '@pdf-generator/shared';
+import { FileDataDTO, FOLDER, utils } from '@pdf-generator/shared';
 import config from '../config';
-import { getFileDataFromKey, getKeyFromData } from '../endpoints/utils';
+import { getFileDataFromKey } from '../endpoints/utils';
 import { TemplateNotFound } from './errors/TemplateNotFound';
 import { APIError } from './errors/APIError';
 import { mapGetFilesResponse } from './files.mapper';
@@ -94,7 +94,7 @@ export const store = async ({
   acl?: 'public-read' | 'private';
 }): Promise<FileDataDTO> => {
   const id = uuid.v4();
-  const key = getKeyFromData({
+  const key = utils.getKeyFromData({
     owner,
     folder,
     id,

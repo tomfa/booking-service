@@ -87,6 +87,7 @@ const deleteMock = jest
         RequestCharged: undefined,
       })
   );
+const copyMock = jest.fn().mockImplementation(() => Promise.resolve({}));
 const getMock = jest.fn().mockImplementation(() => Promise.resolve({}));
 const putMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({ ETag: 'Test-Etag' });
@@ -107,7 +108,14 @@ export const getLastPutActionArgs = (): Record<string, any> | undefined => {
 const sendFn = jest
   .fn()
   .mockImplementation(
-    (command: GetObjectCommand | PutObjectCommand | ListObjectsCommand) => {
+    (
+      command:
+        | GetObjectCommand
+        | PutObjectCommand
+        | ListObjectsCommand
+        | DeleteObjectsCommand
+        | CopyObjectCommand
+    ) => {
       if (command instanceof GetObjectCommand) {
         getMock(command.input);
         if (nextGetResponse) {
@@ -135,6 +143,8 @@ const sendFn = jest
           return response();
         }
         return listMock(command.input);
+      } else if (command instanceof CopyObjectCommand) {
+        return copyMock(command.input);
       } else {
         // eslint-disable-next-line no-console
         console.log(
@@ -176,6 +186,16 @@ export class ListObjectsCommand {
 
 export class DeleteObjectsCommand {
   name = 'DeleteObjectsCommand';
+
+  input: Record<string, any>;
+
+  constructor(input: Record<string, any>) {
+    this.input = input;
+  }
+}
+
+export class CopyObjectCommand {
+  name = 'CopyObjectCommand';
 
   input: Record<string, any>;
 

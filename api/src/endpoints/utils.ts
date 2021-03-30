@@ -13,7 +13,8 @@ export const getFileDataFromUrl = (url: string, modified = ''): FileDataDTO => {
   if (!url.includes(`${config.services.s3.endpointUrl}/`)) {
     throw new Error(`Can not construct FileDataDTO from unknown URL ${url}`);
   }
-  return utils.getFileDataFromUrl(url, modified);
+  const key = url.split(config.services.s3.endpointUrl).reverse()[0];
+  return { ...utils.getFileDataFromKey(key, modified), url };
 };
 
 export const getFileDataFromKey = (
