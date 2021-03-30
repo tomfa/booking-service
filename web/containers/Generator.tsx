@@ -7,7 +7,7 @@ import { usePDFGenerator } from '../providers/PDFProvider';
 import { Button } from '../components/Button';
 import { getFileNameFromVariables } from '../utils/files';
 import { Card } from '../components/Card.styles';
-import { H2 } from '../components/H2.styles';
+import { LineHeader } from '../components/LineHeader';
 import { VariableEditor } from './VariableEditor';
 
 export const Generator = () => {
@@ -31,7 +31,7 @@ export const Generator = () => {
 
   return (
     <Card>
-      <H2>Create PDF</H2>
+      <LineHeader icon={IconType.COGWHEEL} header={'Create PDF'} hideButton />
       {!selectedTemplate && <p>Select a template to start</p>}
       {selectedTemplate && (
         <>

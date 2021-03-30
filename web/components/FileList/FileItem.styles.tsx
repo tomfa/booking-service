@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { ActionWrapper } from './FileActions.styles';
 
 export const DateStamp = styled.span`
+  text-align: right;
   margin: 0.5rem 1rem;
   font-size: 0.7em;
   opacity: 0.7;
@@ -9,6 +10,7 @@ export const DateStamp = styled.span`
 `;
 
 export const ListItemText = styled.span`
+  text-align: left;
   margin: 0.5rem 1rem;
 `;
 
@@ -16,8 +18,13 @@ export const ListItem = styled.li<{
   $selected?: boolean;
   $selectable?: boolean;
 }>`
-  background-color: #2a2a2a;
+  font-size: 1rem;
+  width: 100%;
+  padding: 0;
+  color: ${p => p.theme.colors.textPrimary};
   margin-bottom: 0.5rem;
+  border: none;
+  background-color: #2a2a2a;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -41,6 +48,10 @@ export const ListItem = styled.li<{
         display: flex;
       }
   `}
+
+  &:focus {
+    outline: 2px solid ${p => p.theme.colors.primary};
+  }
 
   &:hover {
     background-color: ${p => p.theme.colors.primary};

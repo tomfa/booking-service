@@ -11,13 +11,16 @@ type Props = {
 };
 export const FileItem = ({ file, isSelected, onSelect, onDelete }: Props) => {
   return (
-    <ListItem
-      onClickCapture={() => onSelect && onSelect(file)}
-      $selected={isSelected}
-      $selectable={!!onSelect}>
-      <ListItemText>{file.filename}</ListItemText>
-      <FileActions file={file} onDelete={onDelete} />
-      <DateStamp>{IsoToDisplayDateTime(file.modified)}</DateStamp>
-    </ListItem>
+    <li>
+      <ListItem
+        as={'button'}
+        onClickCapture={() => onSelect && onSelect(file)}
+        $selected={isSelected}
+        $selectable={!!onSelect}>
+        <ListItemText>{file.filename}</ListItemText>
+        <FileActions file={file} onDelete={onDelete} />
+        <DateStamp>{IsoToDisplayDateTime(file.modified)}</DateStamp>
+      </ListItem>
+    </li>
   );
 };

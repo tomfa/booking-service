@@ -13,13 +13,14 @@ export const NameInput = styled.input`
   margin-bottom: 0.2rem;
   font-size: 0.8rem;
   padding: 0.5rem;
+  border: none;
 
   @media (min-width: 701px) {
     margin-right: 0.2rem;
   }
 
   &:focus {
-    outline: 2px solid ${p => p.theme.colors.secondary};
+    outline: 3px solid ${p => p.theme.colors.primary};
   }
 `;
 

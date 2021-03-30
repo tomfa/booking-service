@@ -9,11 +9,16 @@ import {
   Warning,
   Info,
   Archive,
+  TextT,
+  FileArrowDown,
+  File,
+  Gear,
 } from 'phosphor-react';
 import { MouseEventHandler } from 'react';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import { IconWrapper } from './Icon.styles';
 import { BlankButton } from './Button.style';
+import { Link } from './Link.styles';
 
 export enum IconType {
   LINK,
@@ -25,6 +30,10 @@ export enum IconType {
   CLOSE,
   WARN,
   INFO,
+  DOCUMENT,
+  DOWNLOAD_DOCUMENT,
+  COGWHEEL,
+  FONT,
 }
 
 interface ComponentProps extends PhoshopProps {
@@ -57,6 +66,18 @@ const IconSVG = ({ icon, ...props }: ComponentProps) => {
   }
   if (icon === IconType.ARCHIVE) {
     return <Archive {...props} />;
+  }
+  if (icon === IconType.DOCUMENT) {
+    return <File {...props} />;
+  }
+  if (icon === IconType.DOWNLOAD_DOCUMENT) {
+    return <FileArrowDown {...props} />;
+  }
+  if (icon === IconType.COGWHEEL) {
+    return <Gear {...props} />;
+  }
+  if (icon === IconType.FONT) {
+    return <TextT {...props} />;
   }
   throw new Error(`Icon type ${icon} not supported`);
 };
@@ -96,15 +117,9 @@ export const Icon = ({
   );
 };
 export const IconLink = ({ href, ...props }: IconLinkProps) => {
-  if (href.startsWith('http')) {
-    return (
-      <a href={href}>
-        <Icon {...props} hoverable withPadding />
-      </a>
-    );
-  }
+  const useNextLink = !href.startsWith('http');
   return (
-    <Link href={href}>
+    <Link href={href} as={useNextLink ? NextLink : 'a'}>
       <Icon {...props} hoverable withPadding />
     </Link>
   );
@@ -118,6 +133,12 @@ export const IconButton = ({ onClick, ...props }: IconButtonProps) => (
     onClick={onClick}
     hoverColor={props.hoverColor}
     color={props.color}>
-    <Icon hoverable withPadding color={props.color} {...props} />
+    <Icon
+      hoverable
+      withPadding
+      color={props.color}
+      hoverColor={props.hoverColor}
+      {...props}
+    />
   </BlankButton>
 );

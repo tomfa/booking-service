@@ -5,6 +5,7 @@ import { FileList } from '../components/FileList/FileList';
 import { useData } from '../providers/DataProvider';
 import { LineHeader } from '../components/LineHeader';
 import { Card } from '../components/Card.styles';
+import { IconType } from '../components/Icon';
 
 export const Templates = ({
   onArchive,
@@ -34,6 +35,7 @@ export const Templates = ({
   return (
     <Card>
       <LineHeader
+        icon={IconType.DOCUMENT}
         header={'Templates'}
         onClick={() => setShowArchive(k => !k)}
         buttonLabel={(showArchive && 'Hide archived') || 'Show archived'}

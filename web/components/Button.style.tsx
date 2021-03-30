@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { IconWrapper } from './Icon.styles';
 
 export const BlankButton = styled.button<{
   color?: string;
@@ -10,8 +11,12 @@ export const BlankButton = styled.button<{
   word-wrap: break-word;
 
   &:focus,
+  &:focus-within,
   &:hover {
     color: ${p => p.hoverColor || p.theme.colors.textPrimary};
+    & > ${IconWrapper} {
+      box-shadow: inset -1px 1px 3px 0px rgba(0, 0, 0, 0.75);
+    }
   }
 `;
 

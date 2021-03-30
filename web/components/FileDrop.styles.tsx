@@ -1,15 +1,19 @@
 import styled from 'styled-components';
 import { dimDown } from './keyframes';
 
-export const Wrapper = styled.div<{
+export const Wrapper = styled.button<{
   $highlighted?: boolean;
   $loading?: boolean;
 }>`
+  background: none;
   padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-size: 1rem;
   cursor: pointer;
   border: 1px dashed #fff;
   opacity: 0.5;
-  text-align: center;
 
   ${p =>
     p.$highlighted &&
@@ -24,8 +28,11 @@ export const Wrapper = styled.div<{
   animation-duration: ${p => (p.$loading ? '1.2s' : 'unset')};
   color: ${p => (p.$loading ? p.theme.colors.primary : 'unset')};
 
-  &:hover {
+  &:hover,
+  &:focus {
     opacity: 1;
     border-style: solid;
+    border-color: ${p => p.theme.colors.primary};
+    outline: 1px solid ${p => p.theme.colors.primary};
   }
 `;

@@ -4,6 +4,7 @@ import { FileList } from '../components/FileList/FileList';
 import { useData } from '../providers/DataProvider';
 import { LineHeader } from '../components/LineHeader';
 import { Card } from '../components/Card.styles';
+import { IconType } from '../components/Icon';
 
 export const Files = ({
   onArchive,
@@ -24,6 +25,7 @@ export const Files = ({
   return (
     <Card>
       <LineHeader
+        icon={IconType.DOWNLOAD_DOCUMENT}
         header={'PDFs'}
         onClick={() => setShowArchive(k => !k)}
         buttonLabel={(showArchive && 'Hide archived') || 'Show archived'}

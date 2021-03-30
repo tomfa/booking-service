@@ -5,6 +5,7 @@ import { FileList } from '../components/FileList/FileList';
 import { useData } from '../providers/DataProvider';
 import { LineHeader } from '../components/LineHeader';
 import { Card } from '../components/Card.styles';
+import { IconType } from '../components/Icon';
 
 export const Fonts = ({
   onArchive,
@@ -30,6 +31,7 @@ export const Fonts = ({
   return (
     <Card>
       <LineHeader
+        icon={IconType.FONT}
         header={'Fonts'}
         onClick={() => setShowArchive(k => !k)}
         buttonLabel={(showArchive && 'Hide archived') || 'Show archived'}

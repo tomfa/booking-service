@@ -16,6 +16,7 @@ export const IconWrapper = styled.span<{
   ${p =>
     p.$hoverable &&
     `
+      
       @media (max-width: 700px) {
         border: 1px dashed ${
           p.$color ||
@@ -26,6 +27,7 @@ export const IconWrapper = styled.span<{
       }
       
       &:hover, &:focus {
+        box-shadow: inset -1px 1px 3px 0px rgba(0, 0, 0, 0.75);
         color: ${
           p.$hoverColor ||
           (!p.$secondary
