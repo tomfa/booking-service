@@ -132,12 +132,17 @@ export const remove = async ({ keys }: { keys: string[] }): Promise<void> => {
   );
 };
 
-export const move = async (key: string, newKey: string): Promise<void> => {
+export const move = async (
+  key: string,
+  newKey: string,
+  acl = 'public-read'
+): Promise<void> => {
   await s3.send(
     new CopyObjectCommand({
       Bucket: config.services.s3.bucketName,
       Key: newKey,
       CopySource: `${config.services.s3.bucketName}/${key}`,
+      ACL: acl, // This is not copied by default
     })
   );
   await s3.send(
