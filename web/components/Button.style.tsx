@@ -6,14 +6,16 @@ export const BlankButton = styled.button<{
 }>`
   all: unset;
   cursor: pointer;
-  ${p => p.color && `color: ${p.color}}`}
+  color: ${p => p.color || p.theme.colors.textSecondary};
 
-  &:focus, &:hover {
-    ${p => p.hoverColor && `color: ${p.hoverColor}}`}
+  &:focus,
+  &:hover {
+    color: ${p => p.hoverColor || p.theme.colors.textPrimary};
   }
 `;
 
 export const BaseButton = styled.button`
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
   border: none;

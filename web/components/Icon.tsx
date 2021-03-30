@@ -8,6 +8,7 @@ import {
   X,
   Warning,
   Info,
+  Archive,
 } from 'phosphor-react';
 import { MouseEventHandler } from 'react';
 import Link from 'next/link';
@@ -20,6 +21,7 @@ export enum IconType {
   COPY,
   CHECK,
   REMOVE,
+  ARCHIVE,
   CLOSE,
   WARN,
   INFO,
@@ -52,6 +54,9 @@ const IconSVG = ({ icon, ...props }: ComponentProps) => {
   }
   if (icon === IconType.INFO) {
     return <Info {...props} />;
+  }
+  if (icon === IconType.ARCHIVE) {
+    return <Archive {...props} />;
   }
   throw new Error(`Icon type ${icon} not supported`);
 };

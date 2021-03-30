@@ -1,28 +1,45 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTheme } from 'styled-components';
-import { FileList } from '../components/FileList/FileList';
-import { FileDrop } from '../components/FileDrop';
+import { FileDataDTO } from '@pdf-generator/shared';
 import { useAuth } from '../providers/AuthProvider';
 import { useData } from '../providers/DataProvider';
 import { usePDFGenerator } from '../providers/PDFProvider';
 import { Generator } from '../containers/Generator';
+import { MessageType, useMessage } from '../providers/MessageProvider';
+import { Templates } from '../containers/Templates';
+import { Fonts } from '../containers/Fonts';
+import { Files } from '../containers/Files';
 
 export default function Home() {
   const theme = useTheme();
   const auth = useAuth();
-  const {
-    fetchData,
-    templates,
-    files,
-    fonts,
-    uploadTemplates,
-    uploadFonts,
-    isFetching,
-    isUploadingTemplates,
-    isUploadingFonts,
-  } = useData();
+  const { fetchData } = useData();
   const { selectedTemplate, setSelectedTemplate } = usePDFGenerator();
+  const { addMessage } = useMessage();
+  const { deleteFile } = useData();
+  const onArchive = useCallback(
+    async (file: FileDataDTO) => {
+      const deleted = await deleteFile(file, false);
+      deleted &&
+        addMessage({
+          title: `${file.filename} was archived.`,
+          type: MessageType.INFO,
+        });
+    },
+    [deleteFile, addMessage]
+  );
+  const onDelete = useCallback(
+    async (file: FileDataDTO) => {
+      const deleted = await deleteFile(file, true);
+      deleted &&
+        addMessage({
+          title: `${file.filename} was deleted`,
+          type: MessageType.INFO,
+        });
+    },
+    [deleteFile, addMessage]
+  );
 
   useEffect(() => {
     fetchData();
@@ -38,40 +55,17 @@ export default function Home() {
         <h1 className="title">PDF generator {auth.username}</h1>
 
         <div className="grid">
-          <span className="card">
-            <h2>Templates</h2>
-            <FileDrop
-              title={'Upload new template'}
-              onDrop={uploadTemplates}
-              isLoading={isUploadingTemplates}
-              mimeTypes={['.svg', '.html', 'image/svg', 'text/html']}
-            />
-
-            <FileList
-              files={templates}
-              isLoading={isFetching}
-              onSelect={setSelectedTemplate}
-              selectedFile={selectedTemplate}
-            />
-          </span>
+          <Templates
+            onDelete={onDelete}
+            onArchive={onArchive}
+            onSelect={setSelectedTemplate}
+            selected={selectedTemplate}
+          />
 
           <Generator />
 
-          <span className="card">
-            <h2>Fonts</h2>
-            <FileDrop
-              title={'Upload new fonts'}
-              onDrop={uploadFonts}
-              isLoading={isUploadingFonts}
-              mimeTypes={['.otf', 'application/vnd.ms-opentype']}
-            />
-            <FileList files={fonts} isLoading={isFetching} />
-          </span>
-
-          <span className="card wide">
-            <h2>Generated PDFs</h2>
-            <FileList files={files} isLoading={isFetching} />
-          </span>
+          <Fonts onArchive={onArchive} onDelete={onDelete} />
+          <Files onArchive={onArchive} onDelete={onDelete} />
         </div>
       </main>
 
@@ -82,6 +76,7 @@ export default function Home() {
           }
         
           h2 {
+            font-size: 2rem;
             padding-bottom: 0.5rem;
             border-bottom: 1px solid ${theme.colors.primary};
           }

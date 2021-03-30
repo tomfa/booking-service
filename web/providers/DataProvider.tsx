@@ -11,7 +11,7 @@ import * as api from '../api';
 export type DataValues = {
   fetchData: () => Promise<void>;
   uploadFonts: (files: File[]) => Promise<void>;
-  deleteFile: (file: FileDataDTO, permenant?: boolean) => Promise<void>;
+  deleteFile: (file: FileDataDTO, permenant?: boolean) => Promise<boolean>;
   uploadTemplates: (files: File[]) => Promise<void>;
   fonts: FileDataDTO[];
   templates: FileDataDTO[];
@@ -67,37 +67,42 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const deleteFile = useCallback(
     async (file: FileDataDTO, permanent = false) => {
       const type = file.folder;
+      if (!permanent && file.archived) {
+        // File is already archived
+        return false;
+      }
       await api.deleteFile(file, permanent);
       if (type === FOLDER.files) {
         if (permanent) {
-          setAllFiles(existing => existing.filter(f => f !== file));
-        } else {
+          setAllFiles(existing => existing.filter(f => f.id !== file.id));
+        } else if (!file.archived) {
           setAllFiles(existing => [
-            ...existing.filter(f => f !== file),
-            { ...file, archived: true },
+            ...existing.filter(f => f.id !== file.id),
+            { ...file, filename: `${file.filename}.archived`, archived: true },
           ]);
         }
       }
       if (type === FOLDER.templates) {
         if (permanent) {
-          setAllTemplates(existing => existing.filter(f => f !== file));
-        } else {
+          setAllTemplates(existing => existing.filter(f => f.id !== file.id));
+        } else if (!file.archived) {
           setAllTemplates(existing => [
-            ...existing.filter(f => f !== file),
-            { ...file, archived: true },
+            ...existing.filter(f => f.id !== file.id),
+            { ...file, filename: `${file.filename}.archived`, archived: true },
           ]);
         }
       }
       if (type === FOLDER.fonts) {
         if (permanent) {
-          setAllFonts(existing => existing.filter(f => f !== file));
-        } else {
+          setAllFonts(existing => existing.filter(f => f.id !== file.id));
+        } else if (!file.archived) {
           setAllFonts(existing => [
-            ...existing.filter(f => f !== file),
-            { ...file, archived: true },
+            ...existing.filter(f => f.id !== file.id),
+            { ...file, filename: `${file.filename}.archived`, archived: true },
           ]);
         }
       }
+      return true;
     },
     [setAllFonts, setAllFiles, setAllTemplates]
   );

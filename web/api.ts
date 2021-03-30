@@ -1,4 +1,4 @@
-import { FileDataDTO, FOLDER } from '@pdf-generator/shared';
+import { FileDataDTO, FOLDER, utils } from '@pdf-generator/shared';
 import { config } from './config';
 
 const performUpload = ({ file, url }: { file: File; url: string }) =>
@@ -28,28 +28,26 @@ export const uploadFile = async (
   const { url } = await response.json();
   await performUpload({ file, url });
 
-  // TODO: Return generated DTO from api or extract utils functions to shared
+  const data = utils.getFileDataFromUrl(url);
+
   return {
     success: true,
-    data: {
-      url: url.split('?')[0],
-      filename: file.name,
-      modified: 'Just now',
-      archived: false,
-      folder,
-      owner: '',
-      id: 'TODO',
-    },
+    data,
   };
 };
 
-export const deleteFile = async (file: FileDataDTO): Promise<void> => {
+export const deleteFile = async (
+  file: FileDataDTO,
+  permanent: boolean
+): Promise<void> => {
   if (config.MOCK_API) {
     return;
   }
-  const fileKey = encodeURIComponent(`${file.id}/${file.filename}`);
+  const fileKey = encodeURIComponent(
+    `${file.id}/${file.filename}${file.archived ? '.archived' : ''}`
+  );
   const response = await fetch(
-    `${config.API_URL}/${file.folder}/?files=${fileKey}`,
+    `${config.API_URL}/${file.folder}/?files=${fileKey}&permanent=${permanent}`,
     {
       method: 'DELETE',
     }

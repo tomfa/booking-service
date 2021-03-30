@@ -76,9 +76,11 @@ export const PDFProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
     setIsLoading(true);
-    // TODO: This is probably not very URL safe
     const urlVariables = variables
-      .map(({ label, value }) => `${label}=${value}`)
+      .map(
+        ({ label, value }) =>
+          `${encodeURIComponent(label)}=${encodeURIComponent(value)}`
+      )
       .join('&');
     const url = `${config.API_URL}/generate/from_template?template=${selectedTemplate.filename}&_id=${selectedTemplate.id}`;
     setGeneratedUrl(urlVariables ? `${url}&${urlVariables}` : url);
