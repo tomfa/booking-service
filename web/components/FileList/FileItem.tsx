@@ -12,7 +12,7 @@ type Props = {
 export const FileItem = ({ file, isSelected, onSelect, onDelete }: Props) => {
   return (
     <ListItem
-      onClick={() => onSelect && onSelect(file)}
+      onClickCapture={() => onSelect && onSelect(file)}
       $selected={isSelected}
       $selectable={!!onSelect}>
       <ListItemText>{file.filename}</ListItemText>

@@ -34,11 +34,12 @@ export const VariableRow = ({
         }
       />
       <IconButton
-        icon={IconType.REMOVE}
+        icon={IconType.CHECK}
         onClick={() =>
           updateVariable(variable.key, { value: null, label: variable.label })
         }
-        hoverColor={theme.colors.danger}
+        color={theme.colors.textPrimary}
+        hoverColor={theme.colors.success}
       />
     </Row>
   );

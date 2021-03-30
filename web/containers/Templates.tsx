@@ -4,6 +4,7 @@ import { FileDrop } from '../components/FileDrop';
 import { FileList } from '../components/FileList/FileList';
 import { useData } from '../providers/DataProvider';
 import { LineHeader } from '../components/LineHeader';
+import { Card } from '../components/Card.styles';
 
 export const Templates = ({
   onArchive,
@@ -31,7 +32,7 @@ export const Templates = ({
     }
   }, [setShowArchive, archivedTemplates]);
   return (
-    <span className="card">
+    <Card>
       <LineHeader
         header={'Templates'}
         onClick={() => setShowArchive(k => !k)}
@@ -59,8 +60,10 @@ export const Templates = ({
           files={archivedTemplates}
           isLoading={isFetching}
           onDelete={onDelete}
+          onSelect={onSelect}
+          selectedFile={selected}
         />
       )}
-    </span>
+    </Card>
   );
 };

@@ -1,4 +1,5 @@
-import { Header, Button } from './LineHeader.styles';
+import { Button } from './LineHeader.styles';
+import { H2 } from './H2.styles';
 
 export const LineHeader = ({
   header,
@@ -12,9 +13,9 @@ export const LineHeader = ({
   buttonLabel?: string;
 }) => {
   return (
-    <Header>
+    <H2 style={{ justifyContent: 'space-between' }}>
       {header}
       {!hideButton && <Button onClick={onClick}>{buttonLabel}</Button>}
-    </Header>
+    </H2>
   );
 };

@@ -10,6 +10,9 @@ export const isYesterday = (date: Date) => {
 };
 
 export const IsoToDisplayDateTime = (isoDate: string) => {
+  if (isoDate === '') {
+    return 'Just now';
+  }
   const date = new Date(isoDate);
   const timeString = date.toLocaleTimeString().substr(0, 5);
   if (isToday(date)) {

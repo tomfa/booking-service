@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { useCallback, useEffect } from 'react';
-import { useTheme } from 'styled-components';
 import { FileDataDTO } from '@pdf-generator/shared';
 import { useAuth } from '../providers/AuthProvider';
 import { useData } from '../providers/DataProvider';
@@ -10,14 +9,15 @@ import { MessageType, useMessage } from '../providers/MessageProvider';
 import { Templates } from '../containers/Templates';
 import { Fonts } from '../containers/Fonts';
 import { Files } from '../containers/Files';
+import { H1 } from '../components/H1.styles';
+import { PageWrapper } from '../components/PageWrapper.styles';
+import { Main } from '../components/Main.styles';
 
 export default function Home() {
-  const theme = useTheme();
   const auth = useAuth();
-  const { fetchData } = useData();
+  const { fetchData, deleteFile } = useData();
   const { selectedTemplate, setSelectedTemplate } = usePDFGenerator();
   const { addMessage } = useMessage();
-  const { deleteFile } = useData();
   const onArchive = useCallback(
     async (file: FileDataDTO) => {
       const deleted = await deleteFile(file, false);
@@ -45,162 +45,28 @@ export default function Home() {
     fetchData();
   }, [fetchData]);
   return (
-    <div className="container">
+    <>
       <Head>
         <title>PDF Generator</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1 className="title">PDF generator {auth.username}</h1>
+      <PageWrapper>
+        <Main>
+          <H1>PDF generator {auth.username}</H1>
 
-        <div className="grid">
           <Templates
             onDelete={onDelete}
             onArchive={onArchive}
             onSelect={setSelectedTemplate}
             selected={selectedTemplate}
           />
-
           <Generator />
 
           <Fonts onArchive={onArchive} onDelete={onDelete} />
           <Files onArchive={onArchive} onDelete={onDelete} />
-        </div>
-      </main>
-
-      <style>
-        {`
-          h1 {
-            color: ${theme.colors.primary};
-          }
-        
-          h2 {
-            font-size: 2rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid ${theme.colors.primary};
-          }
-        
-          .container {
-            min-height: 100vh;
-            padding: 0 0.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-          }
-
-          main {
-            padding: 5rem 0;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-          }
-
-          footer {
-            width: 100%;
-            height: 100px;
-            border-top: 1px solid #eaeaea;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-
-          footer img {
-            margin-left: 0.5rem;
-          }
-
-          footer a {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-
-          .title a {
-            color: #0070f3;
-            text-decoration: none;
-          }
-
-          .title a:hover,
-          .title a:focus,
-          .title a:active {
-            text-decoration: underline;
-          }
-
-          .title {
-            margin: 0;
-            line-height: 1.15;
-            font-size: 4rem;
-          }
-
-          .title,
-          .description {
-            text-align: center;
-          }
-
-          .description {
-            line-height: 1.5;
-            font-size: 1.5rem;
-          }
-
-          code {
-            background: #fafafa;
-            border-radius: 5px;
-            padding: 0.75rem;
-            font-size: 1.1rem;
-            font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-              DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-          }
-
-          .grid {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            flex-wrap: wrap;
-
-            max-width: 800px;
-            margin-top: 3rem;
-          }
-
-          .card {
-            margin: 1rem;
-            flex-basis: 95%;
-            padding: 1.5rem;
-            text-align: left;
-            color: inherit;
-            text-decoration: none;
-            transition: color 0.15s ease, border-color 0.15s ease;
-          }
-          
-          .card.wide {
-            flex-basis: 95%;
-          }
-
-          .card h3 {
-            margin: 0 0 1rem 0;
-            font-size: 1.5rem;
-          }
-
-          .card p {
-            margin: 0;
-            font-size: 1.25rem;
-            line-height: 1.5;
-          }
-
-          .logo {
-            height: 1em;
-          }
-
-          @media (max-width: 600px) {
-            .grid {
-              width: 100%;
-              flex-direction: column;
-            }
-          }
-        `}
-      </style>
-    </div>
+        </Main>
+      </PageWrapper>
+    </>
   );
 }

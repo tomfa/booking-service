@@ -4,6 +4,7 @@ import { FileDrop } from '../components/FileDrop';
 import { FileList } from '../components/FileList/FileList';
 import { useData } from '../providers/DataProvider';
 import { LineHeader } from '../components/LineHeader';
+import { Card } from '../components/Card.styles';
 
 export const Fonts = ({
   onArchive,
@@ -12,6 +13,7 @@ export const Fonts = ({
   onArchive: (file: FileDataDTO) => Promise<void>;
   onDelete: (file: FileDataDTO) => Promise<void>;
 }) => {
+  const [selected, setSelected] = useState<null | FileDataDTO>(null);
   const [showArchive, setShowArchive] = useState(false);
   const {
     uploadFonts,
@@ -26,7 +28,7 @@ export const Fonts = ({
     }
   }, [setShowArchive, archivedFonts]);
   return (
-    <span className="card">
+    <Card>
       <LineHeader
         header={'Fonts'}
         onClick={() => setShowArchive(k => !k)}
@@ -42,15 +44,23 @@ export const Fonts = ({
       />
 
       {!showArchive && (
-        <FileList files={fonts} isLoading={isFetching} onDelete={onArchive} />
+        <FileList
+          files={fonts}
+          isLoading={isFetching}
+          onDelete={onArchive}
+          onSelect={setSelected}
+          selectedFile={selected}
+        />
       )}
       {showArchive && (
         <FileList
           files={archivedFonts}
           isLoading={isFetching}
           onDelete={onDelete}
+          onSelect={setSelected}
+          selectedFile={selected}
         />
       )}
-    </span>
+    </Card>
   );
 };

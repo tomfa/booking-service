@@ -32,6 +32,14 @@ export const ListItem = styled.li<{
     `
       background-color: ${p.theme.colors.primary};
       color: black;
+      
+      & > ${DateStamp} {
+        display: none;
+      }
+  
+      & > ${ActionWrapper} {
+        display: flex;
+      }
   `}
 
   &:hover {

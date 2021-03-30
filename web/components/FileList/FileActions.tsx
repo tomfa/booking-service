@@ -6,7 +6,10 @@ import { copyToClipBoard } from '../utils/clipboard.utils';
 import { MessageType, useMessage } from '../../providers/MessageProvider';
 import { ActionWrapper } from './FileActions.styles';
 
-type Props = { file: FileDataDTO; onDelete?: (file: FileDataDTO) => void };
+type Props = {
+  file: FileDataDTO;
+  onDelete?: (file: FileDataDTO) => void;
+};
 export const FileActions = ({ file, onDelete }: Props) => {
   const theme = useTheme();
   const { addMessage } = useMessage();

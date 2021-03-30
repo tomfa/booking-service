@@ -6,6 +6,8 @@ import { copyToClipBoard } from '../components/utils/clipboard.utils';
 import { usePDFGenerator } from '../providers/PDFProvider';
 import { Button } from '../components/Button';
 import { getFileNameFromVariables } from '../utils/files';
+import { Card } from '../components/Card.styles';
+import { H2 } from '../components/H2.styles';
 import { VariableEditor } from './VariableEditor';
 
 export const Generator = () => {
@@ -28,30 +30,26 @@ export const Generator = () => {
   ]);
 
   return (
-    <span className="card wide">
-      <h2>Create PDF &rarr;</h2>
+    <Card>
+      <H2>Create PDF</H2>
       {!selectedTemplate && <p>Select a template to start</p>}
       {selectedTemplate && (
         <>
-          <Code>
-            <a href={generatedUrl}>{generatedUrl}</a>
-            <Button
-              onClick={onCopy}
-              style={{ alignSelf: 'flex-start' }}
-              secondary
-              icon={hasCopied ? IconType.CHECK : IconType.COPY}
-              label={hasCopied ? 'Copied' : 'Copy'}
-            />
-          </Code>
-          <p style={{ padding: '1rem 0' }}>
-            Set variables to populate {`{{ placeholder }}`} text in file.
+          <p style={{ padding: '0 0 0.5rem' }}>
+            Set variables to populate <small>{`{{ placeholder }}`}</small> text
+            in file.
           </p>
           <VariableEditor
             variables={variables}
             onAddVariable={addVariable}
             updateVariable={updateVariable}
           />
-          <small style={{ display: 'block', paddingTop: '0.5rem' }}>
+          <small
+            style={{
+              display: 'block',
+              paddingTop: '0.5rem',
+              paddingBottom: '1rem',
+            }}>
             Filename will be set to{' '}
             <strong style={{ color: theme.colors.primary }}>
               {fileName || 'file.pdf'}
@@ -66,8 +64,18 @@ export const Generator = () => {
               </>
             )}
           </small>
+          <Code>
+            <a href={generatedUrl}>{generatedUrl}</a>
+            <Button
+              onClick={onCopy}
+              style={{ alignSelf: 'flex-start', marginTop: '1rem' }}
+              secondary
+              icon={hasCopied ? IconType.CHECK : IconType.COPY}
+              label={hasCopied ? 'Copied' : 'Copy'}
+            />
+          </Code>
         </>
       )}
-    </span>
+    </Card>
   );
 };

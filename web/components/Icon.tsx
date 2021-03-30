@@ -69,6 +69,7 @@ type IconProps = {
   hoverable?: boolean;
   withPadding?: boolean;
   size?: number;
+  style?: React.CSSProperties;
 };
 type IconLinkProps = Omit<IconProps, 'hoverable'> & { href: string };
 
@@ -80,6 +81,7 @@ export const Icon = ({
   hoverable = false,
   withPadding = false,
   size = 11,
+  style,
 }: IconProps) => {
   return (
     <IconWrapper
@@ -87,7 +89,8 @@ export const Icon = ({
       $hover={hoverable}
       $color={color}
       $hoverColor={hoverColor}
-      $withPadding={withPadding}>
+      $withPadding={withPadding}
+      style={style}>
       <IconSVG icon={icon} weight={'bold'} size={size} />
     </IconWrapper>
   );
@@ -115,6 +118,6 @@ export const IconButton = ({ onClick, ...props }: IconButtonProps) => (
     onClick={onClick}
     hoverColor={props.hoverColor}
     color={props.color}>
-    <Icon {...props} hoverable withPadding color={'inherit'} />
+    <Icon hoverable withPadding color={props.color} {...props} />
   </BlankButton>
 );

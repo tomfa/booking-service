@@ -7,6 +7,7 @@ export const BlankButton = styled.button<{
   all: unset;
   cursor: pointer;
   color: ${p => p.color || p.theme.colors.textSecondary};
+  word-wrap: break-word;
 
   &:focus,
   &:hover {
@@ -17,6 +18,7 @@ export const BlankButton = styled.button<{
 export const BaseButton = styled.button`
   font-size: 0.75rem;
   display: flex;
+  word-wrap: break-word;
   align-items: center;
   border: none;
   border-radius: 5px;

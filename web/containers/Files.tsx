@@ -3,6 +3,7 @@ import { FileDataDTO } from '@pdf-generator/shared';
 import { FileList } from '../components/FileList/FileList';
 import { useData } from '../providers/DataProvider';
 import { LineHeader } from '../components/LineHeader';
+import { Card } from '../components/Card.styles';
 
 export const Files = ({
   onArchive,
@@ -12,6 +13,7 @@ export const Files = ({
   onDelete: (file: FileDataDTO) => Promise<void>;
 }) => {
   const [showArchive, setShowArchive] = useState(false);
+  const [selected, setSelected] = useState<null | FileDataDTO>(null);
 
   const { isFetching, files, archivedFiles } = useData();
   useEffect(() => {
@@ -20,23 +22,31 @@ export const Files = ({
     }
   }, [setShowArchive, archivedFiles]);
   return (
-    <span className="card">
+    <Card>
       <LineHeader
-        header={'Generated PDFs'}
+        header={'PDFs'}
         onClick={() => setShowArchive(k => !k)}
         buttonLabel={(showArchive && 'Hide archived') || 'Show archived'}
         hideButton={archivedFiles.length === 0}
       />
       {!showArchive && (
-        <FileList files={files} isLoading={isFetching} onDelete={onArchive} />
+        <FileList
+          files={files}
+          isLoading={isFetching}
+          onDelete={onArchive}
+          selectedFile={selected}
+          onSelect={setSelected}
+        />
       )}
       {showArchive && (
         <FileList
           files={archivedFiles}
           isLoading={isFetching}
           onDelete={onDelete}
+          selectedFile={selected}
+          onSelect={setSelected}
         />
       )}
-    </span>
+    </Card>
   );
 };
