@@ -34,6 +34,7 @@ export const deleteFiles = (prefix: FOLDER) => async (
   res: Express.Response
 ) => {
   const { files, permanent } = getData(req);
+  const owner = getUser(req);
   if (!files) {
     throw new BadRequestError({ field: 'files', error: 'query param missing' });
   }
@@ -45,7 +46,9 @@ export const deleteFiles = (prefix: FOLDER) => async (
     });
   }
 
-  const keys = mapDataInputToStringArray(files).map(key => `${prefix}/${key}`);
+  const keys = mapDataInputToStringArray(files).map(
+    key => `${owner.username}/${prefix}/${key}`
+  );
 
   if (['1', 'true'].includes(permanent as string)) {
     await remove({ keys });

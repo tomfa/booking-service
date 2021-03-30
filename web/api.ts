@@ -44,8 +44,12 @@ export const uploadFile = async (
 };
 
 export const deleteFile = async (file: FileDataDTO): Promise<void> => {
+  if (config.MOCK_API) {
+    return;
+  }
+  const fileKey = encodeURIComponent(`${file.id}/${file.filename}`);
   const response = await fetch(
-    `${config.API_URL}/${file.folder}/?files=${file.filename}`,
+    `${config.API_URL}/${file.folder}/?files=${fileKey}`,
     {
       method: 'DELETE',
     }
