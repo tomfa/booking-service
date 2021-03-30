@@ -28,7 +28,7 @@ describe('deleteFiles', () => {
 
   it('deletes a file', async () => {
     const { status, message } = await testRequest(controller, {
-      query: { files: 'Cheese' },
+      query: { files: 'Cheese', permanent: '1' },
     });
 
     expect(status).toBe(200);

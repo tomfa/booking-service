@@ -1,9 +1,9 @@
 import * as Express from 'express';
 import { FOLDER } from '@pdf-generator/shared';
-import { getUploadUrl, remove } from '../utils/files';
+import { getUploadUrl, move, remove } from '../utils/files';
 import { BadRequestError } from '../utils/errors/BadRequestError';
 import { getUser } from '../utils/auth/utils';
-import { getData } from './utils';
+import { getData, getFileDataFromKey } from './utils';
 
 export const getUploadURL = (folder: FOLDER) => async (
   req: Express.Request,
@@ -50,18 +50,20 @@ export const deleteFiles = (prefix: FOLDER) => async (
     key => `${owner.username}/${prefix}/${key}`
   );
 
+  let data = [];
   if (['1', 'true'].includes(permanent as string)) {
     await remove({ keys });
   } else {
-    await remove({ keys });
-    // TODO FIX
-    // await Promise.all(
-    //   keys.map(key => {
-    //     // TODO: Fix
-    //     const archiveKey = '';
-    //     return move(key, archiveKey);
-    //   }),
-    // );
+    await Promise.all(
+      keys.map(key => {
+        if (key.endsWith('.archived')) {
+          return;
+        }
+        const archiveKey = `${key}.archived`;
+        return move(key, archiveKey);
+      })
+    );
+    data = keys.map(k => ({ ...getFileDataFromKey(k), archived: true }));
   }
-  return res.json({ data: keys, message: 'OK' });
+  return res.json({ data, message: 'OK' });
 };
