@@ -86,7 +86,7 @@ export const Icon = ({
   return (
     <IconWrapper
       $secondary={secondary}
-      $hover={hoverable}
+      $hoverable={hoverable}
       $color={color}
       $hoverColor={hoverColor}
       $withPadding={withPadding}

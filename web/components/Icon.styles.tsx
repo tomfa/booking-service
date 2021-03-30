@@ -4,7 +4,7 @@ export const IconWrapper = styled.span<{
   $secondary?: boolean;
   $color?: string;
   $hoverColor?: string;
-  $hover?: boolean;
+  $hoverable?: boolean;
   $withPadding?: boolean;
 }>`
   display: flex;
@@ -14,8 +14,17 @@ export const IconWrapper = styled.span<{
     (p.$secondary ? p.theme.colors.textSecondary : p.theme.colors.textPrimary)};
 
   ${p =>
-    p.$hover &&
+    p.$hoverable &&
     `
+      @media (max-width: 700px) {
+        border: 1px dashed ${
+          p.$color ||
+          (p.$secondary
+            ? p.theme.colors.textSecondary
+            : p.theme.colors.textPrimary)
+        };
+      }
+      
       &:hover, &:focus {
         color: ${
           p.$hoverColor ||
