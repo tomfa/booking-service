@@ -1,58 +1,43 @@
-import * as uuid from 'uuid';
-import { FOLDER, utils } from '@pdf-generator/shared';
-import config from '../config';
-import { getAbsoluteUrlFromKey, getFileDataFromUrl } from './utils';
+import {
+  getFileDataFromUrl,
+  getKeyFromData,
+  removeDomainFromUrl,
+  removeQueryFromUrl,
+} from './utils';
+import { FOLDER } from './types';
 
 describe('getFileDataFromUrl', () => {
+  const endpoint = 'https://example.com';
   it('returns fileData from URL', () => {
     const originalData = {
       folder: FOLDER.templates,
       filename: 'I love aspargus.html',
       modified: '', // Note blank modified
       owner: 'darth',
-      id: uuid.v4(),
+      id: 'random-uuid-key',
       archived: false,
     };
-    const url = getAbsoluteUrlFromKey(utils.getKeyFromData(originalData));
+    const url = endpoint + `/` + getKeyFromData(originalData);
     expect(url).toBe(
-      `${config.services.s3.endpointUrl}/darth/${FOLDER.templates}/${originalData.id}/I love aspargus.html`
+      `${endpoint}/darth/${FOLDER.templates}/${originalData.id}/I love aspargus.html`
     );
 
     const parsedData = getFileDataFromUrl(url);
     expect(parsedData).toEqual({ ...originalData, url, archived: false });
   });
   it('parses archived urls', () => {
-    const id = uuid.v4();
-    const badUrl = `${config.services.s3.endpointUrl}/darth/${FOLDER.templates}/${id}/I love aspargus.html.archived`;
+    const id = 'random-uuid-key';
+    const badUrl = `${endpoint}/darth/${FOLDER.templates}/${id}/I love aspargus.html.archived`;
 
     const data = getFileDataFromUrl(badUrl);
 
     expect(data.filename).toBe(`I love aspargus.html`);
     expect(data.archived).toBe(true);
   });
-  it('throws an error if URL comes from a different domain', () => {
-    const originalData = {
-      folder: FOLDER.templates,
-      filename: 'I love aspargus.html',
-      modified: '', // Note blank modified
-      owner: 'darth',
-      id: uuid.v4(),
-      archived: true,
-    };
-    const url = getAbsoluteUrlFromKey(getKeyFromData(originalData));
-    const urlFromDifferentDomain = url.replace(
-      config.services.s3.endpointUrl,
-      'https://example.com'
-    );
 
-    try {
-      getFileDataFromUrl(urlFromDifferentDomain);
-      fail('getFileDataFromUrl should throw error when from unknown domain');
-    } catch (err) {}
-  });
   it('throws an error when URL is missing expected parts', () => {
     const missingId = '';
-    const badUrl = `${config.services.s3.endpointUrl}/darth/folder/${missingId}/I love aspargus.html`;
+    const badUrl = `${endpoint}/darth/folder/${missingId}/I love aspargus.html`;
 
     try {
       getFileDataFromUrl(badUrl);
@@ -68,7 +53,7 @@ describe('getKeyFromData', () => {
       filename: 'I love aspargus.html',
       modified: 'today',
       owner: 'darth',
-      id: uuid.v4(),
+      id: 'random-uuid-key',
       archived: false,
     };
     const archivedFile = { ...fileData, archived: true };
@@ -80,5 +65,20 @@ describe('getKeyFromData', () => {
       `darth/${FOLDER.fonts}/${fileData.id}/I love aspargus.html`
     );
     expect(archivedKey).toBe(`${fileKey}.archived`);
+  });
+});
+
+describe('removeDomainFromUrl', () => {
+  describe('removes domain and protocol ?', () => {
+    expect(removeDomainFromUrl('https://vg.no')).toBe('');
+    expect(removeDomainFromUrl('https://vg.no/')).toBe('');
+    expect(removeDomainFromUrl('vg.no/ost/kake?fem')).toBe('ost/kake?fem');
+  });
+});
+describe('removeQueryFromUrl', () => {
+  describe('returns nothing after ?', () => {
+    expect(removeQueryFromUrl('https://vg.no')).toBe('https://vg.no');
+    expect(removeQueryFromUrl('https://vg.no/ost')).toBe('https://vg.no/ost');
+    expect(removeQueryFromUrl('vg.no/ost/kake?fem')).toBe('vg.no/ost/kake');
   });
 });
