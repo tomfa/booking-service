@@ -3,7 +3,7 @@ import { JSONObject, FileDataDTO, utils } from '@pdf-generator/shared';
 import config from '../config';
 
 export const getData = (req: Express.Request): JSONObject => {
-  if (req.method === 'POST') {
+  if (req.method.toUpperCase() === 'POST') {
     return (req.body || {}) as JSONObject;
   }
   return req.query as Record<string, string | string[]>;

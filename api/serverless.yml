@@ -68,6 +68,9 @@ functions:
     memorySize: 256
     events:
       - http:
+          path: auth/login
+          method: post
+      - http:
           path: templates
           method: get
       - http:
