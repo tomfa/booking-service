@@ -1,6 +1,9 @@
+import { getUsersFromEnv } from './utils/auth/env.utils';
+
 export const config = {
   isDevelopment: process.env.ENVIRONMENT === 'development',
   isTest: process.env.NODE_ENV === 'test',
+  users: getUsersFromEnv(process.env.USER_DATA),
   services: {
     s3: {
       region: process.env.AWS_BUCKET_REGION as string,

@@ -2,14 +2,14 @@ import * as Express from 'express';
 import { FOLDER } from '@pdf-generator/shared';
 import { getUploadUrl, list, move, remove } from '../utils/files';
 import { BadRequestError } from '../utils/errors/BadRequestError';
-import { getUser } from '../utils/auth/utils';
+import { getUserOrThrow } from '../utils/auth/request.utils';
 import { getData, getFileDataFromKey } from './utils';
 
 export const listFiles = (folder: FOLDER) => async (
   req: Express.Request,
   res: Express.Response
 ) => {
-  const owner = getUser(req).username;
+  const owner = getUserOrThrow(req).username;
   const files = await list({ folder, owner });
   return res.json({ data: files, message: 'OK' });
 };
@@ -19,7 +19,7 @@ export const getUploadURL = (folder: FOLDER) => async (
   res: Express.Response
 ) => {
   const { name } = getData(req);
-  const owner = getUser(req);
+  const owner = getUserOrThrow(req);
   if (!name) {
     throw new BadRequestError({ field: 'name', error: 'query param missing' });
   }
@@ -43,7 +43,7 @@ export const deleteFiles = (prefix: FOLDER) => async (
   res: Express.Response
 ) => {
   const { files, permanent } = getData(req);
-  const owner = getUser(req);
+  const owner = getUserOrThrow(req);
   if (!files) {
     throw new BadRequestError({ field: 'files', error: 'query param missing' });
   }

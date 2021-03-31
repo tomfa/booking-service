@@ -5,14 +5,14 @@ import { Variables } from '../../types';
 import { retrieveTemplate, store } from '../../utils/files';
 import { BadRequestError } from '../../utils/errors/BadRequestError';
 import { getData, getFileNameFromVariables } from '../utils';
-import { getUser } from '../../utils/auth/utils';
+import { getUserOrThrow } from '../../utils/auth/request.utils';
 
 export const generatePdfFromTemplate = async (
   req: Express.Request,
   res: Express.Response
 ) => {
   const { template, _id, ...variables } = getData(req);
-  const user = getUser(req);
+  const user = getUserOrThrow(req);
   if (!template) {
     throw new BadRequestError({
       field: 'template',
@@ -38,7 +38,7 @@ export const generatePdfFromTemplate = async (
   const filename = getFileNameFromVariables(variables);
   const { url } = await store({
     content: pdfContent,
-    owner: getUser(req).username,
+    owner: getUserOrThrow(req).username,
     filename,
   });
   if (req.method === 'GET') {

@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 
 import { errorMiddleware } from './utils/errorHandler';
 import config, { Config } from './config';
-import { authMiddleware } from './utils/auth/utils';
+import { authMiddleware } from './utils/auth/middleware';
 
 dotenv.config();
 

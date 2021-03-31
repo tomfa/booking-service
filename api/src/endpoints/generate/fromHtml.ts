@@ -6,14 +6,14 @@ import { cleanVariables, insertVariables } from '../../utils/variables';
 import { Variables } from '../../types';
 import { store } from '../../utils/files';
 import { BadRequestError } from '../../utils/errors/BadRequestError';
-import { getUser } from '../../utils/auth/utils';
+import { getUserOrThrow } from '../../utils/auth/request.utils';
 
 export const generatePdfFromHtml = async (
   req: Express.Request,
   res: Express.Response
 ) => {
   const { html: base64Html, ...variables } = getData(req);
-  const user = getUser(req);
+  const user = getUserOrThrow(req);
   if (!base64Html) {
     throw new BadRequestError({ field: 'html', error: 'query param missing' });
   }
