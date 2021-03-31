@@ -4,9 +4,11 @@ import {
   useCallback,
   useContext,
   useState,
+  useEffect,
 } from 'react';
 
 import * as api from '../api';
+import * as storage from '../utils/localStorage';
 
 export type LoginData = { username: string; password: string };
 type AuthData = {
@@ -18,16 +20,29 @@ type AuthData = {
   login: (data: LoginData) => Promise<void>;
   logout: () => Promise<void>;
 };
-
+const LOCALSTORAGE_API_KEY = 'pdf-api-key';
+const LOCALSTORAGE_USER_KEY = 'pdf-user';
 export const AuthContext = createContext<AuthData>(null);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [apiKey, setApiKey] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState<string | null>(
+    storage.getItem(LOCALSTORAGE_API_KEY)
+  );
 
   // TODO: Use common User type
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<string | null>(
+    storage.getItem(LOCALSTORAGE_USER_KEY)
+  );
   const isLoggedIn = useMemo(() => !!user, [user]);
+
+  useEffect(() => {
+    storage.setItem(LOCALSTORAGE_API_KEY, apiKey);
+  }, [apiKey]);
+
+  useEffect(() => {
+    storage.setItem(LOCALSTORAGE_USER_KEY, user);
+  }, [user]);
 
   const login = useCallback(
     async ({ username, password }: LoginData) => {
