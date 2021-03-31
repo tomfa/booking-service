@@ -5,6 +5,7 @@ import {
   Check,
   CopySimple as Copy,
   TrashSimple as Trash,
+  HourglassMedium,
   X,
   Warning,
   Info,
@@ -36,6 +37,7 @@ export enum IconType {
   COGWHEEL,
   FONT,
   AUTH,
+  LOADING,
 }
 
 interface ComponentProps extends PhoshopProps {
@@ -83,6 +85,9 @@ const IconSVG = ({ icon, ...props }: ComponentProps) => {
   }
   if (icon === IconType.AUTH) {
     return <Key {...props} />;
+  }
+  if (icon === IconType.LOADING) {
+    return <HourglassMedium {...props} />;
   }
   throw new Error(`Icon type ${icon} not supported`);
 };

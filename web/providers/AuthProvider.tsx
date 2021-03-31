@@ -18,10 +18,11 @@ type AuthData = {
   error: string | null;
   isLoading: boolean;
   login: (data: LoginData) => Promise<void>;
-  logout: () => Promise<void>;
+  logout: () => void;
 };
 const LOCALSTORAGE_API_KEY = 'pdf-api-key';
 const LOCALSTORAGE_USER_KEY = 'pdf-user';
+
 export const AuthContext = createContext<AuthData>(null);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -63,7 +64,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     },
     [setError, setLoading, setUser]
   );
-  const logout = useCallback(async () => {
+  const logout = useCallback(() => {
     setLoading(true);
     setUser(null);
     setError('');
