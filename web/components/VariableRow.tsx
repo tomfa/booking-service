@@ -1,6 +1,6 @@
 import { useTheme } from 'styled-components';
-import { IconButton, IconType } from '../components/Icon';
 import { KeyedVariable, UpdateVariableFunc } from '../providers/PDFProvider';
+import { IconButton, IconType } from './Icon';
 import { NameInput, Row, ValueInput } from './VariableRow.styles';
 
 export const VariableRow = ({

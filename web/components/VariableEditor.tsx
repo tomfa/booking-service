@@ -1,11 +1,11 @@
 import { useCallback, useRef, useState } from 'react';
 import { useTheme } from 'styled-components';
-import { IconButton, IconType } from '../components/Icon';
 import {
   AddVariableFunc,
   KeyedVariable,
   UpdateVariableFunc,
 } from '../providers/PDFProvider';
+import { IconButton, IconType } from './Icon';
 import { VariableRow } from './VariableRow';
 import { NameInput, Row, ValueInput } from './VariableRow.styles';
 
