@@ -1,65 +1,71 @@
-import { createContext, useCallback, useContext } from 'react';
+import {
+  useMemo,
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+} from 'react';
+
+import * as api from '../api';
 
 type LoginData = { username: string; password: string };
 type AuthData = {
   isLoggedIn: boolean;
   username: string | null;
+  apiKey: string | null;
   error: string | null;
   isLoading: boolean;
-};
-export type UseAuthData = {
-  login: (props: LoginData) => Promise<boolean>;
-  logout: () => Promise<boolean>;
-  username: string | null;
-  isLoggedIn: boolean;
-  isLoading: boolean;
-};
-const defaultValues: AuthData = {
-  isLoggedIn: false,
-  username: null,
-  error: null,
-  isLoading: false,
+  login: (data: LoginData) => Promise<void>;
+  logout: () => Promise<void>;
 };
 
-export const AuthContext = createContext<AuthData>(defaultValues);
+export const AuthContext = createContext<AuthData>(null);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [apiKey, setApiKey] = useState<string | null>(null);
+
+  // TODO: Use common User type
+  const [user, setUser] = useState<string | null>(null);
+  const isLoggedIn = useMemo(() => !!user, [user]);
+
+  const login = useCallback(
+    async ({ username, password }: LoginData) => {
+      setError('');
+      setLoading(true);
+      const result = await api.login({ username, password });
+      if (!result) {
+        setError('Wrong username or password');
+      } else {
+        setApiKey(result.apiKey);
+        setUser(result.username);
+      }
+      setLoading(false);
+    },
+    [setError, setLoading, setUser]
+  );
+  const logout = useCallback(async () => {
+    setLoading(true);
+    setUser(null);
+    setError('');
+    setLoading(false);
+  }, [setError, setLoading, setUser]);
+
   return (
-    <AuthContext.Provider value={defaultValues}>
+    <AuthContext.Provider
+      value={{
+        login,
+        logout,
+        username: user,
+        isLoggedIn,
+        isLoading,
+        error,
+        apiKey,
+      }}>
       {children}
     </AuthContext.Provider>
   );
 };
-export const useAuth = (): UseAuthData => {
-  const context = useContext(AuthContext);
-  const login = useCallback(
-    async ({ username, password }: LoginData) => {
-      // TODO: implement verification and storage of token in localstorage
-      context.isLoading = true;
-      await new Promise(r => setTimeout(r, 2000));
-
-      // eslint-disable-next-line no-console
-      console.log(`Logging in with ${username}:${password}`);
-      context.username = username;
-      context.isLoggedIn = true;
-      context.isLoading = false;
-
-      return true;
-    },
-    [context]
-  );
-  const logout = useCallback(async () => {
-    context.isLoading = true;
-    context.username = null;
-    context.error = null;
-    context.isLoggedIn = false;
-    context.isLoading = false;
-    return true;
-  }, [context]);
-  return {
-    login,
-    logout,
-    username: context.username,
-    isLoggedIn: context.isLoggedIn,
-    isLoading: context.isLoading,
-  };
+export const useAuth = (): AuthData => {
+  return useContext(AuthContext);
 };

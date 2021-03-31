@@ -17,6 +17,37 @@ const performUpload = ({ file, url }: { file: File; url: string }) =>
     xhr.send(file);
   });
 
+export const login = async ({
+  username,
+  password,
+}: {
+  username: string;
+  password: string;
+}): Promise<{ username: string; apiKey: string } | null> => {
+  if (config.MOCK_API) {
+    return {
+      username,
+      apiKey: password,
+    };
+  }
+  const response = await fetch(`${config.API_URL}/auth/login`, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username, password }),
+  });
+  if (response.status === 401) {
+    return null;
+  }
+  const json = await response.json();
+  if (json.message !== 'OK') {
+    // TODO: Better error handling
+    throw new Error(`Logging in ${username} failed`);
+  }
+  return json.data as { username: string; apiKey: string };
+};
+
 export const uploadFile = async (
   file: File,
   folder: FOLDER.templates | FOLDER.fonts
