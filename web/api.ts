@@ -23,11 +23,17 @@ export const login = async ({
 }: {
   username: string;
   password: string;
-}): Promise<{ username: string; apiKey: string } | null> => {
+}): Promise<{
+  username?: string;
+  apiKey?: string;
+  message: string;
+  error?: string;
+}> => {
   if (config.MOCK_API) {
     return {
       username,
       apiKey: password,
+      message: 'Logged in',
     };
   }
   const response = await fetch(`${config.API_URL}/auth/login`, {
@@ -37,15 +43,15 @@ export const login = async ({
     },
     body: JSON.stringify({ username, password }),
   });
-  if (response.status === 401) {
-    return null;
-  }
   const json = await response.json();
+  if (json.error) {
+    return { message: json.message, error: json.error };
+  }
   if (json.message !== 'OK') {
     // TODO: Better error handling
-    throw new Error(`Logging in ${username} failed`);
+    throw new Error(`Logging in ${username} failed: ${JSON.stringify(json)}`);
   }
-  return json.data as { username: string; apiKey: string };
+  return json.data;
 };
 
 export const uploadFile = async (

@@ -8,18 +8,17 @@ export const Button = ({
   secondary,
   blank,
   onClick,
-  style,
+  ...props
 }: {
   label: string;
   icon?: IconType;
   secondary?: boolean;
   blank?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
-  style?: React.CSSProperties;
-}) => {
+} & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   const ButtonComponent = blank ? BlankButton : BaseButton;
   return (
-    <ButtonComponent onClick={onClick} style={style}>
+    <ButtonComponent onClick={onClick} {...props}>
       {icon && <Icon icon={icon} secondary={secondary} />}
       <span style={icon && { marginLeft: '0.3rem' }}>{label}</span>
     </ButtonComponent>

@@ -13,6 +13,7 @@ import {
   FileArrowDown,
   File,
   Gear,
+  Key,
 } from 'phosphor-react';
 import { MouseEventHandler } from 'react';
 import NextLink from 'next/link';
@@ -34,6 +35,7 @@ export enum IconType {
   DOWNLOAD_DOCUMENT,
   COGWHEEL,
   FONT,
+  AUTH,
 }
 
 interface ComponentProps extends PhoshopProps {
@@ -78,6 +80,9 @@ const IconSVG = ({ icon, ...props }: ComponentProps) => {
   }
   if (icon === IconType.FONT) {
     return <TextT {...props} />;
+  }
+  if (icon === IconType.AUTH) {
+    return <Key {...props} />;
   }
   throw new Error(`Icon type ${icon} not supported`);
 };

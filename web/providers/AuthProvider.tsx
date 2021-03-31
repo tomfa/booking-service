@@ -8,7 +8,7 @@ import {
 
 import * as api from '../api';
 
-type LoginData = { username: string; password: string };
+export type LoginData = { username: string; password: string };
 type AuthData = {
   isLoggedIn: boolean;
   username: string | null;
@@ -31,11 +31,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = useCallback(
     async ({ username, password }: LoginData) => {
+      if (!username || !password) {
+        setError('Fill in username and password');
+        return;
+      }
       setError('');
       setLoading(true);
       const result = await api.login({ username, password });
-      if (!result) {
-        setError('Wrong username or password');
+      if (result.error) {
+        setError(result.message);
       } else {
         setApiKey(result.apiKey);
         setUser(result.username);
