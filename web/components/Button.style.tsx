@@ -8,6 +8,7 @@ export const BlankButton = styled.button<{
   all: unset;
   cursor: pointer;
   color: ${p => p.color || p.theme.colors.textSecondary};
+  display: flex;
   word-wrap: break-word;
 
   &:focus,

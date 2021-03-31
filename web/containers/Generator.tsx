@@ -8,7 +8,7 @@ import { Button } from '../components/Button';
 import { getFileNameFromVariables } from '../utils/files';
 import { Card } from '../components/Card.styles';
 import { LineHeader } from '../components/LineHeader';
-import { VariableEditor } from './VariableEditor';
+import { VariableEditor } from '../components/VariableEditor';
 
 export const Generator = () => {
   const theme = useTheme();

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../providers/AuthProvider';
 import { PageWrapper } from '../components/PageWrapper.styles';
 import { Icon, IconType } from '../components/Icon';
+import { Header } from '../containers/Header';
 
 export default function LoginPage() {
   const { isLoggedIn, logout } = useAuth();
@@ -23,7 +24,8 @@ export default function LoginPage() {
       </Head>
 
       <PageWrapper>
-        <h1>Logging you out...</h1>
+        <Header />
+        <h1 style={{ paddingTop: '3rem' }}>Logging out...</h1>
         <Icon icon={IconType.LOADING} size={100} />
       </PageWrapper>
     </>

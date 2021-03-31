@@ -5,7 +5,7 @@ export const Code = styled.code`
   padding: 1rem;
   font-size: 1rem;
   background: black;
-  word-wrap: anywhere;
+  word-break: break-word;
 
   flex-direction: column;
 

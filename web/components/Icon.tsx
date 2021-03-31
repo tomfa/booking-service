@@ -15,6 +15,7 @@ import {
   File,
   Gear,
   Key,
+  User,
 } from 'phosphor-react';
 import { MouseEventHandler } from 'react';
 import NextLink from 'next/link';
@@ -26,6 +27,7 @@ export enum IconType {
   LINK,
   DOWNLOAD,
   COPY,
+  USER,
   CHECK,
   REMOVE,
   ARCHIVE,
@@ -88,6 +90,9 @@ const IconSVG = ({ icon, ...props }: ComponentProps) => {
   }
   if (icon === IconType.LOADING) {
     return <HourglassMedium {...props} />;
+  }
+  if (icon === IconType.USER) {
+    return <User {...props} />;
   }
   throw new Error(`Icon type ${icon} not supported`);
 };

@@ -20,7 +20,7 @@ export const Button = ({
   return (
     <ButtonComponent onClick={onClick} {...props}>
       {icon && <Icon icon={icon} secondary={secondary} />}
-      <span style={icon && { marginLeft: '0.3rem' }}>{label}</span>
+      <span style={{ marginLeft: '0.3rem' }}>{label}</span>
     </ButtonComponent>
   );
 };

@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../providers/AuthProvider';
 import { PageWrapper } from '../components/PageWrapper.styles';
+import { Header } from '../containers/Header';
 import { Login } from '../components/Login';
 
 export default function LoginPage() {
@@ -22,6 +23,7 @@ export default function LoginPage() {
       </Head>
 
       <PageWrapper>
+        <Header />
         <Login onSubmit={login} error={error} />
       </PageWrapper>
     </>
