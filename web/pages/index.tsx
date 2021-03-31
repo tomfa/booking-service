@@ -18,23 +18,16 @@ export default function Home() {
   const { fetchData, deleteFile } = useData();
   const { selectedTemplate, setSelectedTemplate } = usePDFGenerator();
   const { addMessage } = useMessage();
-  const onArchive = useCallback(
-    async (file: FileDataDTO) => {
-      const deleted = await deleteFile(file, false);
-      deleted &&
-        addMessage({
-          title: `${file.filename} was archived.`,
-          type: MessageType.INFO,
-        });
-    },
-    [deleteFile, addMessage]
-  );
+
   const onDelete = useCallback(
     async (file: FileDataDTO) => {
-      const deleted = await deleteFile(file, true);
+      const permanentDelete = file.archived;
+      const deleted = await deleteFile(file, permanentDelete);
       deleted &&
         addMessage({
-          title: `${file.filename} was deleted`,
+          title: `${file.filename} was ${
+            permanentDelete ? 'deleted' : 'archived'
+          }`,
           type: MessageType.INFO,
         });
     },
@@ -57,14 +50,13 @@ export default function Home() {
 
           <Templates
             onDelete={onDelete}
-            onArchive={onArchive}
             onSelect={setSelectedTemplate}
             selected={selectedTemplate}
           />
           <Generator />
 
-          <Fonts onArchive={onArchive} onDelete={onDelete} />
-          <Files onArchive={onArchive} onDelete={onDelete} />
+          <Fonts onDelete={onDelete} />
+          <Files onDelete={onDelete} />
         </Main>
       </PageWrapper>
     </>

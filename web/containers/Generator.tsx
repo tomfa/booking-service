@@ -33,7 +33,10 @@ export const Generator = () => {
     <Card>
       <LineHeader icon={IconType.COGWHEEL} header={'Create PDF'} hideButton />
       {!selectedTemplate && <p>Select a template to start</p>}
-      {selectedTemplate && (
+      {selectedTemplate && selectedTemplate.archived && (
+        <p>Restore template to use it.</p>
+      )}
+      {selectedTemplate && !selectedTemplate.archived && (
         <>
           <p style={{ padding: '0 0 0.5rem' }}>
             Set variables to populate <small>{`{{ placeholder }}`}</small> text

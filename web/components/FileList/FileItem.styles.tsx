@@ -4,8 +4,8 @@ import { ActionWrapper } from './FileActions.styles';
 export const DateStamp = styled.span`
   text-align: right;
   margin: 0.5rem 1rem;
+  opactiy: 0.7em;
   font-size: 0.7em;
-  opacity: 0.7;
   margin-left: 1rem;
 `;
 
@@ -17,6 +17,7 @@ export const ListItemText = styled.span`
 export const ListItem = styled.li<{
   $selected?: boolean;
   $selectable?: boolean;
+  $archived?: boolean;
 }>`
   font-size: 1rem;
   width: 100%;
@@ -65,4 +66,23 @@ export const ListItem = styled.li<{
       display: flex;
     }
   }
+
+  ${p =>
+    p.$archived &&
+    `
+    &> ${DateStamp}, &> ${ListItemText} {
+      text-decoration: line-through;
+      color: ${
+        (p.$selected && p.theme.colors.textSecondary) ||
+        p.theme.colors.secondary
+      };
+    }
+    
+    
+    &:hover {
+      &> ${ListItemText} {
+        color: ${p.theme.colors.textSecondary};
+      }
+    }  
+  `}
 `;

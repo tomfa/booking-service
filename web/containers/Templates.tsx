@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FileDataDTO } from '@pdf-generator/shared';
 import { FileDrop } from '../components/FileDrop';
 import { FileList } from '../components/FileList/FileList';
@@ -8,12 +8,10 @@ import { Card } from '../components/Card.styles';
 import { IconType } from '../components/Icon';
 
 export const Templates = ({
-  onArchive,
   onDelete,
   onSelect,
   selected,
 }: {
-  onArchive: (file: FileDataDTO) => Promise<void>;
   onDelete: (file: FileDataDTO) => Promise<void>;
   onSelect: (file: FileDataDTO) => void;
   selected: FileDataDTO | null;
@@ -25,13 +23,17 @@ export const Templates = ({
     isFetching,
     isUploadingTemplates,
     templates,
-    archivedTemplates,
   } = useData();
+  const nonArchivedFiles = useMemo(() => templates.filter(f => !f.archived), [
+    templates,
+  ]);
+  const hasArchivedFiles = nonArchivedFiles.length < templates.length;
+
   useEffect(() => {
-    if (archivedTemplates.length === 0) {
+    if (!hasArchivedFiles) {
       setShowArchive(false);
     }
-  }, [setShowArchive, archivedTemplates]);
+  }, [setShowArchive, hasArchivedFiles]);
   return (
     <Card>
       <LineHeader
@@ -39,7 +41,7 @@ export const Templates = ({
         header={'Templates'}
         onClick={() => setShowArchive(k => !k)}
         buttonLabel={(showArchive && 'Hide archived') || 'Show archived'}
-        hideButton={archivedTemplates.length === 0}
+        hideButton={!hasArchivedFiles}
       />
 
       <FileDrop
@@ -48,24 +50,13 @@ export const Templates = ({
         isLoading={isUploadingTemplates}
         mimeTypes={['.svg', '.html', 'image/svg', 'text/html']}
       />
-      {!showArchive && (
-        <FileList
-          files={templates}
-          isLoading={isFetching}
-          onSelect={onSelect}
-          selectedFile={selected}
-          onDelete={onArchive}
-        />
-      )}
-      {showArchive && (
-        <FileList
-          files={archivedTemplates}
-          isLoading={isFetching}
-          onDelete={onDelete}
-          onSelect={onSelect}
-          selectedFile={selected}
-        />
-      )}
+      <FileList
+        files={showArchive ? templates : nonArchivedFiles}
+        isLoading={isFetching}
+        onSelect={onSelect}
+        selectedFile={selected}
+        onDelete={onDelete}
+      />
     </Card>
   );
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FileDataDTO } from '@pdf-generator/shared';
 import { FileList } from '../components/FileList/FileList';
 import { useData } from '../providers/DataProvider';
@@ -7,21 +7,24 @@ import { Card } from '../components/Card.styles';
 import { IconType } from '../components/Icon';
 
 export const Files = ({
-  onArchive,
   onDelete,
 }: {
-  onArchive: (file: FileDataDTO) => Promise<void>;
   onDelete: (file: FileDataDTO) => Promise<void>;
 }) => {
   const [showArchive, setShowArchive] = useState(false);
   const [selected, setSelected] = useState<null | FileDataDTO>(null);
 
-  const { isFetching, files, archivedFiles } = useData();
+  const { isFetching, files } = useData();
+  const nonArchivedFiles = useMemo(() => files.filter(f => !f.archived), [
+    files,
+  ]);
+  const hasArchivedFiles = nonArchivedFiles.length < files.length;
+
   useEffect(() => {
-    if (archivedFiles.length === 0) {
+    if (!hasArchivedFiles) {
       setShowArchive(false);
     }
-  }, [setShowArchive, archivedFiles]);
+  }, [setShowArchive, hasArchivedFiles]);
   return (
     <Card>
       <LineHeader
@@ -29,26 +32,15 @@ export const Files = ({
         header={'PDFs'}
         onClick={() => setShowArchive(k => !k)}
         buttonLabel={(showArchive && 'Hide archived') || 'Show archived'}
-        hideButton={archivedFiles.length === 0}
+        hideButton={!hasArchivedFiles}
       />
-      {!showArchive && (
-        <FileList
-          files={files}
-          isLoading={isFetching}
-          onDelete={onArchive}
-          selectedFile={selected}
-          onSelect={setSelected}
-        />
-      )}
-      {showArchive && (
-        <FileList
-          files={archivedFiles}
-          isLoading={isFetching}
-          onDelete={onDelete}
-          selectedFile={selected}
-          onSelect={setSelected}
-        />
-      )}
+      <FileList
+        files={showArchive ? files : nonArchivedFiles}
+        isLoading={isFetching}
+        onDelete={onDelete}
+        selectedFile={selected}
+        onSelect={setSelected}
+      />
     </Card>
   );
 };

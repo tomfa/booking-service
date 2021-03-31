@@ -8,8 +8,8 @@ type Props = {
   files: FileDataDTO[];
   isLoading: boolean;
   selectedFile?: FileDataDTO | null;
-  onSelect?: (file: FileDataDTO | null) => void;
-  onDelete?: (file: FileDataDTO) => void;
+  onSelect: (file: FileDataDTO | null) => void;
+  onDelete: (file: FileDataDTO) => void;
 };
 export const FileList = ({
   files,

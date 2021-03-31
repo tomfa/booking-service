@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
 import { FileDataDTO, FOLDER } from '@pdf-generator/shared';
 import * as api from '../api';
 
@@ -16,9 +10,6 @@ export type DataValues = {
   fonts: FileDataDTO[];
   templates: FileDataDTO[];
   files: FileDataDTO[];
-  archivedFonts: FileDataDTO[];
-  archivedTemplates: FileDataDTO[];
-  archivedFiles: FileDataDTO[];
   isFetching: boolean;
   isUploadingTemplates: boolean;
   isUploadingFonts: boolean;
@@ -33,24 +24,9 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [isUploadingFonts, setIsUploadingFonts] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [error] = useState<string>('');
-  const [allFiles, setAllFiles] = useState<FileDataDTO[]>([]);
-  const [allTemplates, setAllTemplates] = useState<FileDataDTO[]>([]);
-  const [allFonts, setAllFonts] = useState<FileDataDTO[]>([]);
-  const fonts = useMemo(() => allFonts.filter(f => !f.archived), [allFonts]);
-  const archivedFonts = useMemo(() => allFonts.filter(f => f.archived), [
-    allFonts,
-  ]);
-  const files = useMemo(() => allFiles.filter(f => !f.archived), [allFiles]);
-  const archivedFiles = useMemo(() => allFiles.filter(f => f.archived), [
-    allFiles,
-  ]);
-  const templates = useMemo(() => allTemplates.filter(f => !f.archived), [
-    allTemplates,
-  ]);
-  const archivedTemplates = useMemo(
-    () => allTemplates.filter(f => f.archived),
-    [allTemplates]
-  );
+  const [files, setFiles] = useState<FileDataDTO[]>([]);
+  const [templates, setTemplates] = useState<FileDataDTO[]>([]);
+  const [fonts, setFonts] = useState<FileDataDTO[]>([]);
 
   const fetchData = useCallback(async () => {
     setIsFetching(true);
@@ -58,11 +34,11 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     const filesList = await api.listFiles(FOLDER.files);
     const fontsList = await api.listFiles(FOLDER.fonts);
     const templateList = await api.listFiles(FOLDER.templates);
-    setAllFiles(filesList);
-    setAllTemplates(templateList);
-    setAllFonts(fontsList);
+    setFiles(filesList);
+    setTemplates(templateList);
+    setFonts(fontsList);
     setIsFetching(false);
-  }, [setAllFiles, setIsFetching]);
+  }, [setFiles, setIsFetching]);
 
   const deleteFile = useCallback(
     async (file: FileDataDTO, permanent = false) => {
@@ -74,37 +50,37 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       await api.deleteFile(file, permanent);
       if (type === FOLDER.files) {
         if (permanent) {
-          setAllFiles(existing => existing.filter(f => f.id !== file.id));
+          setFiles(existing => existing.filter(f => f.id !== file.id));
         } else if (!file.archived) {
-          setAllFiles(existing => [
+          setFiles(existing => [
             ...existing.filter(f => f.id !== file.id),
-            { ...file, filename: `${file.filename}.archived`, archived: true },
+            { ...file, filename: file.filename, archived: true },
           ]);
         }
       }
       if (type === FOLDER.templates) {
         if (permanent) {
-          setAllTemplates(existing => existing.filter(f => f.id !== file.id));
+          setTemplates(existing => existing.filter(f => f.id !== file.id));
         } else if (!file.archived) {
-          setAllTemplates(existing => [
+          setTemplates(existing => [
             ...existing.filter(f => f.id !== file.id),
-            { ...file, filename: `${file.filename}.archived`, archived: true },
+            { ...file, filename: file.filename, archived: true },
           ]);
         }
       }
       if (type === FOLDER.fonts) {
         if (permanent) {
-          setAllFonts(existing => existing.filter(f => f.id !== file.id));
+          setFonts(existing => existing.filter(f => f.id !== file.id));
         } else if (!file.archived) {
-          setAllFonts(existing => [
+          setFonts(existing => [
             ...existing.filter(f => f.id !== file.id),
-            { ...file, filename: `${file.filename}.archived`, archived: true },
+            { ...file, filename: file.filename, archived: true },
           ]);
         }
       }
       return true;
     },
-    [setAllFonts, setAllFiles, setAllTemplates]
+    [setFonts, setFiles, setTemplates]
   );
 
   const uploadFonts = useCallback(
@@ -116,7 +92,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       const newFiles = uploads.map(u => u.data);
       const wasNotUpdated = (file: FileDataDTO) =>
         !newFiles.find(f => f.url === file.url);
-      setAllFonts(existing => [...newFiles, ...existing.filter(wasNotUpdated)]);
+      setFonts(existing => [...newFiles, ...existing.filter(wasNotUpdated)]);
       setIsUploadingFonts(false);
     },
     [setIsUploadingFonts]
@@ -131,7 +107,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       const newFiles = uploads.map(u => u.data);
       const wasNotUpdated = (file: FileDataDTO) =>
         !newFiles.find(f => f.url === file.url);
-      setAllTemplates(existing => [
+      setTemplates(existing => [
         ...newFiles,
         ...existing.filter(wasNotUpdated),
       ]);
@@ -147,9 +123,6 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         fonts,
         files,
         templates,
-        archivedFonts,
-        archivedFiles,
-        archivedTemplates,
         uploadFonts,
         uploadTemplates,
         error,

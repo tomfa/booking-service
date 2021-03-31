@@ -15,6 +15,7 @@ export const FileItem = ({ file, isSelected, onSelect, onDelete }: Props) => {
       <ListItem
         as={'button'}
         onClickCapture={() => onSelect && onSelect(file)}
+        $archived={file.archived}
         $selected={isSelected}
         $selectable={!!onSelect}>
         <ListItemText>{file.filename}</ListItemText>

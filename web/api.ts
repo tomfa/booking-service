@@ -43,6 +43,7 @@ export const deleteFile = async (
   if (config.MOCK_API) {
     return;
   }
+  // TODO: Is this a bug? Should we avoid encoding the "/" there?
   const fileKey = encodeURIComponent(
     `${file.id}/${file.filename}${file.archived ? '.archived' : ''}`
   );
