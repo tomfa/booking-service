@@ -105,7 +105,7 @@ export const listFiles = async (folder: FOLDER): Promise<FileDataDTO[]> => {
         filename: 'dummy-file1.pdf',
         modified: '2021-03-21T08:18:50.000Z',
         url:
-          'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/testuser/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b1/dummy-file1.pdf',
+          'https://example.com/testuser/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b1/dummy-file1.pdf',
         archived: false,
         owner: 'testuser',
         folder,
@@ -115,7 +115,7 @@ export const listFiles = async (folder: FOLDER): Promise<FileDataDTO[]> => {
         filename: 'dummy-file2.pdf',
         modified: '2021-03-21T08:19:30.000Z',
         url:
-          'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/testuser/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b2/dummy-file1.pdf',
+          'https://example.com/testuser/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b2/dummy-file1.pdf',
         archived: false,
         owner: 'testuser',
         folder,
@@ -125,7 +125,7 @@ export const listFiles = async (folder: FOLDER): Promise<FileDataDTO[]> => {
         filename: 'dummy-file3.pdf',
         modified: '2021-03-21T08:20:51.000Z',
         url:
-          'https://s3.eu-north-1.amazonaws.com/pdfs.webutvikling.org/testuser/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b3/dummy-file3.pdf.archived',
+          'https://example.com/testuser/files/da18cc94-c5b7-4dab-b7d5-9130f9e145b3/dummy-file3.pdf.archived',
         archived: true,
         owner: 'testuser',
         folder,
