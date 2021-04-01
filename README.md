@@ -17,6 +17,15 @@ Mono repo containing 3 packages:
 yarn
 ```
 
+#### Infrastructure
+The infrastructure is set up initially using terraform.
+
+```
+yarn infrastructure:deploy
+ ```
+
+_This assumes you have terraform >= 0.12 installed, and AWS credentials set on your machine._
+
 ### Run
 
 ```

@@ -49,7 +49,8 @@
     "lint:ignore-warnings": "eslint . --quiet",
     "lint:prettier-check": "prettier --check \"**/*.{js,jsx,ts,tsx,json}\"",
     "lint:prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,mdx,md}\"",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "infrastructure:deploy": "cd infrastructure && terraform get --update && terraform apply && cd .."
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css}": [
