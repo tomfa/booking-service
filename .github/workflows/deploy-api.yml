@@ -1,0 +1,32 @@
+name: Deploy API
+
+on:
+  push:
+    paths-ignore:
+      - 'web/**'
+      - 'infrastructure/**'
+      - '.github/**'
+      - '!.github/workflows/deploy-api.yml'
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Yarn Install
+        run: |
+          yarn install
+        working-directory: api
+      - name: serverless deploy
+        run: |
+          yarn api deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_MASTER_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_MASTER_SECRET_ACCESS_KEY }}
+
