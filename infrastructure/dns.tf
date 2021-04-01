@@ -11,6 +11,14 @@ module "bucket_record" {
   target_zone_id = module.web-app.CLOUDFRONT_ZONE_ID
 }
 
+module "files_record" {
+  source = "git::https://github.com/tomfa/terraform.git//alias_record"
+  dns_zone_id = module.domain.DOMAIN_ZONE_ID
+  domain = var.file_domain
+  target_name = aws_cloudfront_distribution.distribution.domain_name
+  target_zone_id = aws_cloudfront_distribution.distribution.hosted_zone_id
+}
+
 module "redirect_record" {
   source = "git::https://github.com/tomfa/terraform.git//alias_record"
   dns_zone_id = module.domain.DOMAIN_ZONE_ID
