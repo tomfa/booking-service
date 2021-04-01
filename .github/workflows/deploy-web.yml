@@ -1,10 +1,11 @@
 name: Deploy Web
 on:
   push:
-    paths:
-      - 'web/**'
-      - '.github/workflows/deploy-web.yml'
-      - '!web/*.md'
+    paths-ignore:
+      - 'api/**'
+      - 'infrastructure/**'
+      - '.github/**'
+      - '!.github/workflows/deploy-web.yml'
     branches:
       - master
 

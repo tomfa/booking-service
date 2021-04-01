@@ -2,6 +2,10 @@ name: Linting
 on:
   pull_request:
   push:
+    paths-ignore:
+      - 'infrastructure/**'
+      - '.github/**'
+      - '!.github/workflows/lint.yml'
     branches:
       - master
 jobs:

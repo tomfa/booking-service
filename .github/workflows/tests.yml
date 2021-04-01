@@ -2,6 +2,10 @@ name: API Unit Tests
 on:
   pull_request:
   push:
+    paths-ignore:
+      - 'infrastructure/**'
+      - '.github/**'
+      - '!.github/workflows/tests.yml'
     branches:
       - master
 jobs:
