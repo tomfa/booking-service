@@ -2837,6 +2837,21 @@ aws-sdk@^2.624.0, aws-sdk@^2.865.0:
     uuid "3.3.2"
     xml2js "0.4.19"
 
+aws-sdk@^2.756.0:
+  version "2.877.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.877.0.tgz#e580c08aeba8cb148d1dc0ee16348a410bf6852e"
+  integrity sha512-cNp526SUmJ0WZs40R4Zyk19FYWyVpyidJHOLf+6a+Uv0zG0PvH5257iAWMp81Qz3Sjb11y+wMSOwzCIp7SAZig==
+  dependencies:
+    buffer "4.9.2"
+    events "1.1.1"
+    ieee754 "1.1.13"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.3.2"
+    xml2js "0.4.19"
+
 aws-sign2@~0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.7.0.tgz#b46e890934a9591f2d2f6f86d7e6a9f1b3fe76a8"
@@ -9818,6 +9833,14 @@ serve-static@1.14.1:
     escape-html "~1.0.3"
     parseurl "~1.3.3"
     send "0.17.1"
+
+serverless-domain-manager@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/serverless-domain-manager/-/serverless-domain-manager-5.1.0.tgz#44c975b4adeac6b32507c92313ee001735d56c55"
+  integrity sha512-uGLGr9nWTupimWxVwz/2S/fK+YULsg8hQ0ZddS1DNerzctIVQBXVbLMGUJv34a9a5HV0YPvVqCA/JBNI7VOSvA==
+  dependencies:
+    aws-sdk "^2.756.0"
+    chalk "^4.1.0"
 
 serverless-dotenv-plugin@^3.8.1:
   version "3.8.2"

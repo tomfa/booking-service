@@ -27,6 +27,7 @@
     "nock": "^13.0.11",
     "puppeteer": "^8.0.0",
     "serverless": "^2.29.0",
+    "serverless-domain-manager": "^5.1.0",
     "serverless-offline": "^6.8.0",
     "serverless-plugin-scripts": "^1.0.2",
     "serverless-plugin-typescript-express": "^1.0.8",
@@ -36,7 +37,7 @@
   "scripts": {
     "build": "tsc -pretty -p .",
     "start": "serverless offline start",
-    "deploy": "serverless deploy",
+    "deploy": "serverless deploy --stage prod",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "logs": "sls logs --function generateFromHtml",

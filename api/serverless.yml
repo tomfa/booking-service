@@ -8,6 +8,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: ${env:AWS_BUCKET_REGION}
+  stage: ${opt.stage,'dev'}
 
   # Adopt behaviour in next version
   lambdaHashingVersion: "20201221"
@@ -35,11 +36,20 @@ plugins:
   - serverless-offline
   - serverless-dotenv-plugin
   - serverless-plugin-typescript-express
+  - serverless-domain-manager
 
 custom:
   bucket: ${env:S3_BUCKET_NAME}
   serverless-offline:
     noPrependStageInUrl: true
+  customDomain:
+    domainName: api.docforest.eu
+    basePath: ''
+    stage: 'prod'
+    createRoute53Record: true
+    certificateName: 'docforest.eu'
+    autoDomain: true
+
 package:
   exclude:
     - ./**
