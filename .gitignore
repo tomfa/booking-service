@@ -5,7 +5,7 @@ node_modules
 build/
 dist/
 out/
-api/.env
+api/.env.local*
 !api/.env.test
 
 .terraform/
