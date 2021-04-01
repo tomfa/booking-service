@@ -64,15 +64,19 @@ functions:
       - http:
           path: generate/from_html
           method: get
+          cors: true
       - http:
           path: generate/from_html
           method: post
+          cors: true
       - http:
           path: generate/from_template
           method: get
+          cors: true
       - http:
           path: generate/from_template
           method: post
+          cors: true
   api:
     handler: src/server.handler
     memorySize: 256
@@ -80,28 +84,37 @@ functions:
       - http:
           path: auth/login
           method: post
+          cors: true
       - http:
           path: templates
           method: get
+          cors: true
       - http:
           path: templates
           method: delete
+          cors: true
       - http:
           path: templates/upload_url
           method: get
+          cors: true
       - http:
           path: files
           method: get
+          cors: true
       - http:
           path: files
           method: delete
+          cors: true
       - http:
           path: fonts
           method: get
+          cors: true
       - http:
           path: fonts
           method: delete
+          cors: true
       - http:
           path: fonts/upload_url
           method: get
+          cors: true
 

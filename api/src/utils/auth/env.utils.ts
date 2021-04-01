@@ -16,3 +16,10 @@ export const getUsersFromEnv = (
   };
   return envString.split(';').map(toUser);
 };
+
+export const getOriginsFromEnv = (envString: string | undefined): string[] => {
+  if (!envString) {
+    return [];
+  }
+  return envString.split(',').map(domain => domain.trim());
+};
