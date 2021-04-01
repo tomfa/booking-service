@@ -39,7 +39,7 @@
   "scripts": {
     "build": "tsc -pretty -p .",
     "start": "serverless offline start",
-    "deploy": "serverless deploy --stage prod",
+    "deploy": "NODE_ENV=production serverless deploy --stage prod",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "logs:generator": "sls logs --function generator --stage prod",
