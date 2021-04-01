@@ -42,8 +42,10 @@
     "deploy": "serverless deploy --stage prod",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
-    "logs": "sls logs --function generateFromHtml",
-    "logs:watch": "sls logs --function generateFromHtml --tail"
+    "logs:generator": "sls logs --function generator --stage prod",
+    "logs:generator:watch": "sls logs --function generator --tail --stage prod",
+    "logs:api": "sls logs --function api --stage prod",
+    "logs:api:watch": "sls logs --function api --tail --stage prod"
   },
   "author": "",
   "license": "ISC"
