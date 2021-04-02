@@ -1,4 +1,4 @@
-import { UserAuthData } from './types';
+import { UserAuthData } from './auth/types';
 import { getUsersFromEnv } from './env.utils';
 
 describe('getUsersFromEnv', () => {

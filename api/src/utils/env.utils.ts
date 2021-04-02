@@ -1,4 +1,4 @@
-import { UserAuthData } from './types';
+import { UserAuthData } from './auth/types';
 
 // TODO: Make an actual user system
 export const getUsersFromEnv = (
