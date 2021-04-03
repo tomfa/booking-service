@@ -1,6 +1,8 @@
 import { MockRequest } from '@jest-mock/express/dist/src/request';
 import { getMockReq, getMockRes } from '@jest-mock/express';
 import { errorMiddleware } from '../utils/errorHandler';
+import { createJWTtoken } from '../utils/auth/token';
+import { User } from '../utils/auth/types';
 
 type APIResponse = {
   status: number;
@@ -9,6 +11,18 @@ type APIResponse = {
   headers: Record<string, any>;
   errors?: string[];
 };
+export const authedTestRequest = async (
+  controller: (req: Express.Request, res: Express.Request) => unknown,
+  user: User,
+  { headers = {}, ...options }: MockRequest = {}
+) => {
+  const token = createJWTtoken(user.username);
+  return testRequest(controller, {
+    ...options,
+    headers: { ...headers, Authorization: `Bearer ${token}` },
+  });
+};
+
 export const testRequest = async (
   controller: (req: Express.Request, res: Express.Request) => unknown,
   { method = 'GET', ...options }: MockRequest = {}
@@ -31,9 +45,12 @@ export const testRequest = async (
   const status = res.status.mock.calls?.[0]?.[0] || 200;
   // @ts-ignore
   const json = res.json.mock.calls?.[0]?.[0];
-  const message = json?.message;
-  const errors = json?.errors;
-  const headers = res.getHeaders();
 
-  return { status, json, message, errors, headers };
+  return {
+    status,
+    json,
+    message: json?.message,
+    errors: json?.errors,
+    headers: res.getHeaders(),
+  };
 };

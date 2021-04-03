@@ -17,8 +17,11 @@ export const createJWTtoken = (
   });
 };
 
-export const createApiKey = (username: string): string => {
-  const token = createJWTtoken(username, ['api:generate:from_template']);
+export const createApiKey = (
+  username: string,
+  permissions: string[] = ['api:generate:from_template']
+): string => {
+  const token = createJWTtoken(username, permissions);
   const apiKey = encodeUrlSafeBase64(token);
   return apiKey;
 };
