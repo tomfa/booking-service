@@ -12,18 +12,10 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { FileDataDTO, FOLDER, utils } from '@pdf-generator/shared';
 import config from '../config';
 import { getFileDataFromKey } from '../endpoints/utils';
-import { TemplateNotFound } from './errors/TemplateNotFound';
-import { APIError } from './errors/APIError';
-import { mapGetFilesResponse } from './files.mapper';
-
-async function readableToString(readable: Readable): Promise<string> {
-  let result = '';
-  // eslint-disable-next-line no-restricted-syntax
-  for await (const chunk of readable) {
-    result += chunk;
-  }
-  return result;
-}
+import { TemplateNotFound } from '../utils/errors/TemplateNotFound';
+import { APIError } from '../utils/errors/APIError';
+import { mapGetFilesResponse } from './fileStorage.mapper';
+import { readableToString } from './utils';
 
 const s3 = new S3Client({ region: config.services.s3.region });
 

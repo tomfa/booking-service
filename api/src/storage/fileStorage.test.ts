@@ -1,6 +1,6 @@
 import { overrideNextS3GetObjectResponse } from '../../__mocks__/@aws-sdk/client-s3';
-import { retrieveTemplate } from './files';
-import { TemplateNotFound } from './errors/TemplateNotFound';
+import { TemplateNotFound } from '../utils/errors/TemplateNotFound';
+import { retrieveTemplate } from './fileStorage';
 
 describe('retrieveTemplate', () => {
   test('retrieves template from S3', async () => {

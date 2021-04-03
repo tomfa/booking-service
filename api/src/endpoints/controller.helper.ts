@@ -1,6 +1,6 @@
 import * as Express from 'express';
 import { FOLDER } from '@pdf-generator/shared';
-import { getUploadUrl, list, move, remove } from '../utils/files';
+import { getUploadUrl, list, move, remove } from '../storage/fileStorage';
 import { BadRequestError } from '../utils/errors/BadRequestError';
 import { getUserOrThrow } from '../utils/auth/request.utils';
 import { getData, getFileDataFromKey } from './utils';

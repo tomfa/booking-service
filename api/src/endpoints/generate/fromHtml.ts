@@ -4,7 +4,7 @@ import { getData, getFileNameFromVariables } from '../utils';
 import { decodeUrlSafeBase64, isValidUrlSafeBase64 } from '../../utils/base64';
 import { cleanVariables, insertVariables } from '../../utils/variables';
 import { Variables } from '../../types';
-import { store } from '../../utils/files';
+import { store } from '../../storage/fileStorage';
 import { BadRequestError } from '../../utils/errors/BadRequestError';
 import { getUserOrThrow } from '../../utils/auth/request.utils';
 

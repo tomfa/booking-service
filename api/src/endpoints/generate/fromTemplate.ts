@@ -2,7 +2,7 @@ import * as Express from 'express';
 import { convertHTMLtoPDF } from '../../utils/pdf';
 import { cleanVariables, insertVariables } from '../../utils/variables';
 import { Variables } from '../../types';
-import { retrieveTemplate, store } from '../../utils/files';
+import { retrieveTemplate, store } from '../../storage/fileStorage';
 import { BadRequestError } from '../../utils/errors/BadRequestError';
 import { getData, getFileNameFromVariables } from '../utils';
 import { getUserOrThrow } from '../../utils/auth/request.utils';
