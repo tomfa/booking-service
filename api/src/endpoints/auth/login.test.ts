@@ -2,7 +2,7 @@ import config from '../../config';
 import { testRequest } from '../../testUtils/controllers.utils';
 import { UserWithTokenData } from '../../utils/auth/types';
 import { getAuth } from '../../utils/auth/token';
-import { decodeBase64 } from '../../utils/encoding';
+import { decodeUrlSafeBase64 } from '../../utils/base64';
 import { login } from './login';
 
 describe('login', () => {
@@ -24,7 +24,7 @@ describe('login', () => {
         username: user.username,
       })
     );
-    expect(getAuth(decodeBase64(apiKey))).toEqual(
+    expect(getAuth(decodeUrlSafeBase64(apiKey))).toEqual(
       expect.objectContaining({
         isExpired: false,
         permissions: ['api:generate:from_template'],

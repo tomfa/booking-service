@@ -1,4 +1,4 @@
-import { encodeBase64 } from '../../utils/encoding';
+import { encodeUrlSafeBase64 } from '../../utils/base64';
 import { testRequest } from '../../testUtils/controllers.utils';
 import config from '../../config';
 import { generatePdfFromHtml } from './fromHtml';
@@ -26,7 +26,7 @@ describe('generatePdfFromHtml', () => {
       expect(errors[0]).toBe('html: query param is not base64 encoded');
     });
     it('redirects to url for generated pdf', async () => {
-      const base64Html = encodeBase64('<h1>This is b64</h1>');
+      const base64Html = encodeUrlSafeBase64('<h1>This is b64</h1>');
       const { status, headers } = await testRequest(generatePdfFromHtml, {
         query: { html: base64Html },
       });
@@ -38,7 +38,7 @@ describe('generatePdfFromHtml', () => {
   });
   describe('POST request', () => {
     it('returns JSON containing PDF url', async () => {
-      const base64Html = encodeBase64('<h1>This is b64</h1>');
+      const base64Html = encodeUrlSafeBase64('<h1>This is b64</h1>');
       const { status, json, message } = await testRequest(generatePdfFromHtml, {
         method: 'POST',
         body: { html: base64Html },

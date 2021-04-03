@@ -1,4 +1,4 @@
-import { encodeBase64 } from '../encoding';
+import { encodeUrlSafeBase64 } from '../base64';
 import { BadAuthenticationError } from '../errors/BadAuthenticatedError';
 import config from '../../config';
 import { sign, verify } from './jwt';
@@ -19,7 +19,7 @@ export const createJWTtoken = (
 
 export const createApiKey = (username: string): string => {
   const token = createJWTtoken(username, ['api:generate:from_template']);
-  const apiKey = encodeBase64(token);
+  const apiKey = encodeUrlSafeBase64(token);
   return apiKey;
 };
 

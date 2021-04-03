@@ -1,7 +1,7 @@
 import * as Express from 'express';
 import { convertHTMLtoPDF } from '../../utils/pdf';
 import { getData, getFileNameFromVariables } from '../utils';
-import { decodeBase64, isValidBase64 } from '../../utils/encoding';
+import { decodeUrlSafeBase64, isValidUrlSafeBase64 } from '../../utils/base64';
 import { cleanVariables, insertVariables } from '../../utils/variables';
 import { Variables } from '../../types';
 import { store } from '../../utils/files';
@@ -18,7 +18,7 @@ export const generatePdfFromHtml = async (
     throw new BadRequestError({ field: 'html', error: 'query param missing' });
   }
   const filename = getFileNameFromVariables(variables);
-  if (!isValidBase64(base64Html)) {
+  if (!isValidUrlSafeBase64(base64Html)) {
     throw new BadRequestError({
       field: 'html',
       error: 'query param is not base64 encoded',
@@ -26,7 +26,7 @@ export const generatePdfFromHtml = async (
   }
   const cleanedVariables: Variables = cleanVariables(variables);
 
-  const htmlString = decodeBase64(String(base64Html));
+  const htmlString = decodeUrlSafeBase64(String(base64Html));
   const htmlWithVariables = insertVariables(htmlString, cleanedVariables);
   const pdfContent = await convertHTMLtoPDF(htmlWithVariables);
   const { url } = await store({
