@@ -5,6 +5,7 @@ export const config = {
   isTest: process.env.NODE_ENV === 'test',
   users: getUsersFromEnv(process.env.USER_DATA),
   allowedOrigins: getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
+  uuidNameSpace: process.env.UUID_NAMESPACE,
   jwt: {
     secret: process.env.JWT_SECRET,
     audience: getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
