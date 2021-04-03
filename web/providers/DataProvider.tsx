@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useState } from 'react';
 import { FileDataDTO, FOLDER } from '@pdf-generator/shared';
 import * as api from '../api';
+import { useAuth } from './AuthProvider';
 
 export type DataValues = {
   fetchData: () => Promise<void>;
@@ -27,18 +28,22 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [files, setFiles] = useState<FileDataDTO[]>([]);
   const [templates, setTemplates] = useState<FileDataDTO[]>([]);
   const [fonts, setFonts] = useState<FileDataDTO[]>([]);
+  const auth = useAuth();
 
   const fetchData = useCallback(async () => {
+    if (!auth.jwtToken) {
+      return;
+    }
     setIsFetching(true);
     // TODO: Check if authenticated, handle errors
-    const filesList = await api.listFiles(FOLDER.files);
-    const fontsList = await api.listFiles(FOLDER.fonts);
-    const templateList = await api.listFiles(FOLDER.templates);
+    const filesList = await api.listFiles(FOLDER.files, auth.jwtToken);
+    const fontsList = await api.listFiles(FOLDER.fonts, auth.jwtToken);
+    const templateList = await api.listFiles(FOLDER.templates, auth.jwtToken);
     setFiles(filesList);
     setTemplates(templateList);
     setFonts(fontsList);
     setIsFetching(false);
-  }, [setFiles, setIsFetching]);
+  }, [setFiles, setIsFetching, auth.jwtToken]);
 
   const deleteFile = useCallback(
     async (file: FileDataDTO, permanent = false) => {
@@ -47,7 +52,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         // File is already archived
         return false;
       }
-      await api.deleteFile(file, permanent);
+      await api.deleteFile(file, permanent, auth.jwtToken);
       if (type === FOLDER.files) {
         if (permanent) {
           setFiles(existing => existing.filter(f => f.id !== file.id));
@@ -80,14 +85,14 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       }
       return true;
     },
-    [setFonts, setFiles, setTemplates]
+    [setFonts, setFiles, setTemplates, auth.jwtToken]
   );
 
   const uploadFonts = useCallback(
     async (toUpload: File[]) => {
       setIsUploadingFonts(true);
       const uploads = await Promise.all(
-        toUpload.map(file => api.uploadFile(file, FOLDER.fonts))
+        toUpload.map(file => api.uploadFile(file, FOLDER.fonts, auth.jwtToken))
       );
       const newFiles = uploads.map(u => u.data);
       const wasNotUpdated = (file: FileDataDTO) =>
@@ -95,14 +100,16 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       setFonts(existing => [...newFiles, ...existing.filter(wasNotUpdated)]);
       setIsUploadingFonts(false);
     },
-    [setIsUploadingFonts]
+    [setIsUploadingFonts, auth.jwtToken]
   );
 
   const uploadTemplates = useCallback(
     async (toUpload: File[]) => {
       setIsUploadingTemplates(true);
       const uploads = await Promise.all(
-        toUpload.map(file => api.uploadFile(file, FOLDER.templates))
+        toUpload.map(file =>
+          api.uploadFile(file, FOLDER.templates, auth.jwtToken)
+        )
       );
       const newFiles = uploads.map(u => u.data);
       const wasNotUpdated = (file: FileDataDTO) =>
@@ -113,7 +120,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       ]);
       setIsUploadingTemplates(false);
     },
-    [setIsUploadingTemplates]
+    [setIsUploadingTemplates, auth.jwtToken]
   );
 
   return (

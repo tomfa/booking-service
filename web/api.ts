@@ -28,6 +28,7 @@ export const login = async ({
   apiKey?: string;
   message: string;
   error?: string;
+  jwt?: string;
 }> => {
   if (config.MOCK_API) {
     return {
@@ -56,11 +57,13 @@ export const login = async ({
 
 export const uploadFile = async (
   file: File,
-  folder: FOLDER.templates | FOLDER.fonts
+  folder: FOLDER.templates | FOLDER.fonts,
+  token: string
 ): Promise<{ success: boolean; data: FileDataDTO }> => {
   const fileName = file.name;
   const response = await fetch(
-    `${config.API_URL}/${folder}/upload_url?name=${fileName}`
+    `${config.API_URL}/${folder}/upload_url?name=${fileName}`,
+    { headers: { Authorization: `Bearer ${token}` } }
   );
   const { url } = await response.json();
   await performUpload({ file, url });
@@ -75,7 +78,8 @@ export const uploadFile = async (
 
 export const deleteFile = async (
   file: FileDataDTO,
-  permanent: boolean
+  permanent: boolean,
+  token: string
 ): Promise<void> => {
   if (config.MOCK_API) {
     return;
@@ -88,6 +92,7 @@ export const deleteFile = async (
     `${config.API_URL}/${file.folder}/?files=${fileKey}&permanent=${permanent}`,
     {
       method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
     }
   );
   const json = await response.json();
@@ -97,7 +102,10 @@ export const deleteFile = async (
   }
 };
 
-export const listFiles = async (folder: FOLDER): Promise<FileDataDTO[]> => {
+export const listFiles = async (
+  folder: FOLDER,
+  token: string
+): Promise<FileDataDTO[]> => {
   if (config.MOCK_API) {
     return [
       {
@@ -132,7 +140,9 @@ export const listFiles = async (folder: FOLDER): Promise<FileDataDTO[]> => {
       },
     ];
   }
-  const response = await fetch(`${config.API_URL}/${folder}`);
+  const response = await fetch(`${config.API_URL}/${folder}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   const json = await response.json();
   return json.data.sort(
     (a, b) => new Date(b.modified).getTime() - new Date(a.modified).getTime()

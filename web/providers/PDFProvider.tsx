@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { FileDataDTO } from '@pdf-generator/shared';
 import { config } from '../config';
+import { useAuth } from './AuthProvider';
 
 export type KeyedVariable = {
   key: number;
@@ -40,6 +41,7 @@ export const PDFProvider = ({ children }: { children: React.ReactNode }) => {
   const [variables, setVariables] = useState<KeyedVariable[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error] = useState<string>('');
+  const auth = useAuth();
 
   const addVariable = useCallback(
     (label: string, value: string) => {
@@ -71,7 +73,7 @@ export const PDFProvider = ({ children }: { children: React.ReactNode }) => {
   const clearVariables = useCallback(() => setVariables([]), [setVariables]);
 
   useEffect(() => {
-    if (!selectedTemplate) {
+    if (!selectedTemplate || !auth.isLoggedIn) {
       setGeneratedUrl('');
       return;
     }
@@ -82,10 +84,10 @@ export const PDFProvider = ({ children }: { children: React.ReactNode }) => {
           `${encodeURIComponent(label)}=${encodeURIComponent(value)}`
       )
       .join('&');
-    const url = `${config.API_URL}/generate/from_template?template=${selectedTemplate.filename}&_id=${selectedTemplate.id}`;
+    const url = `${config.API_URL}/generate/from_template?template=${selectedTemplate.filename}&_id=${selectedTemplate.id}&token=${auth.apiKey}`;
     setGeneratedUrl(urlVariables ? `${url}&${urlVariables}` : url);
     setIsLoading(false);
-  }, [selectedTemplate, variables, setGeneratedUrl]);
+  }, [selectedTemplate, variables, setGeneratedUrl, auth.apiKey]);
 
   return (
     <PDFContext.Provider
