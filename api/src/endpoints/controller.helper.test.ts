@@ -1,8 +1,8 @@
 import { FOLDER } from '@pdf-generator/shared';
-import * as uuid from 'uuid';
 import { authedTestRequest } from '../testUtils/controllers.utils';
 import config from '../config';
 import { overrideNextS3ListObjectResponse } from '../../__mocks__/@aws-sdk/client-s3';
+import { randomId } from '../utils/id';
 import { deleteFiles, getUploadURL, listFiles } from './controller.helper';
 
 describe('getUploadURL', () => {
@@ -53,7 +53,7 @@ describe('listFiles', () => {
 
   it('lists files', async () => {
     const filename = 'test.html';
-    const fileId = uuid.v4();
+    const fileId = randomId();
     const key = `${owner}/${folder}/${fileId}/${filename}`;
     const url = `${config.services.s3.endpointUrl}/${key}`;
     const createdDate = new Date();

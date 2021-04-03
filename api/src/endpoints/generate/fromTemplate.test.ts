@@ -1,4 +1,3 @@
-import * as uuid from 'uuid';
 import { FOLDER } from '@pdf-generator/shared';
 import { authedTestRequest } from '../../testUtils/controllers.utils';
 import {
@@ -6,12 +5,13 @@ import {
   templates,
 } from '../../../__mocks__/@aws-sdk/client-s3';
 import config from '../../config';
+import { randomId } from '../../utils/id';
 import { generatePdfFromTemplate } from './fromTemplate';
 
 describe('generatePdfFromTemplate', () => {
   const bucketUrl = config.services.s3.endpointUrl;
   const user = { username: 'kroloftet' };
-  const randomId = uuid.v4();
+  const id = randomId();
 
   describe('GET request', () => {
     it('returns 400 if template is not specified', async () => {
@@ -30,7 +30,7 @@ describe('generatePdfFromTemplate', () => {
         generatePdfFromTemplate,
         user,
         {
-          query: { template: 'non-existing', _id: randomId },
+          query: { template: 'non-existing', _id: id },
         }
       );
 
@@ -42,7 +42,7 @@ describe('generatePdfFromTemplate', () => {
         generatePdfFromTemplate,
         user,
         {
-          query: { template: templates.htmlTemplate.name, _id: randomId },
+          query: { template: templates.htmlTemplate.name, _id: id },
         }
       );
 
@@ -54,7 +54,7 @@ describe('generatePdfFromTemplate', () => {
     });
     it('stores generated pdf file as public in files folder', async () => {
       await authedTestRequest(generatePdfFromTemplate, user, {
-        query: { template: templates.htmlTemplate.name, _id: randomId },
+        query: { template: templates.htmlTemplate.name, _id: id },
       });
 
       const { ACL, Key } = getLastPutActionArgs();
@@ -70,7 +70,7 @@ describe('generatePdfFromTemplate', () => {
         user,
         {
           method: 'POST',
-          body: { template: templates.htmlTemplate.name, _id: randomId },
+          body: { template: templates.htmlTemplate.name, _id: id },
         }
       );
 

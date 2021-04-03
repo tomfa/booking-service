@@ -1,4 +1,4 @@
-import { getDeterministicId, getGeneratedFileId, randomId } from './id';
+import { getDeterministicId, generateFileId, randomId } from './id';
 
 describe('randomId', () => {
   it('returns a random id', () => {
@@ -26,8 +26,8 @@ describe('getGeneratedFileId', () => {
   const input = { userId, templateId, variables };
 
   it('returns the same id if passed in same args', () => {
-    const key1 = getGeneratedFileId(input);
-    const key2 = getGeneratedFileId({
+    const key1 = generateFileId(input);
+    const key2 = generateFileId({
       ...input,
       variables: { ...input.variables },
     });
@@ -35,26 +35,26 @@ describe('getGeneratedFileId', () => {
     expect(key1).toBe(key2);
   });
   it('returns different id if only user differs', () => {
-    const key1 = getGeneratedFileId({ ...input, userId: 'different-user' });
-    const key2 = getGeneratedFileId({ ...input });
+    const key1 = generateFileId({ ...input, userId: 'different-user' });
+    const key2 = generateFileId({ ...input });
 
     expect(key1).not.toBe(key2);
   });
   it('returns different id if only template differs', () => {
-    const key1 = getGeneratedFileId({
+    const key1 = generateFileId({
       ...input,
       templateId: 'different-template',
     });
-    const key2 = getGeneratedFileId({ ...input });
+    const key2 = generateFileId({ ...input });
 
     expect(key1).not.toBe(key2);
   });
   it('returns different id if only 1 variable differs', () => {
-    const key1 = getGeneratedFileId({
+    const key1 = generateFileId({
       ...input,
       variables: { ...input.variables, extra: 'cracker' },
     });
-    const key2 = getGeneratedFileId({ ...input });
+    const key2 = generateFileId({ ...input });
 
     expect(key1).not.toBe(key2);
   });

@@ -7,13 +7,13 @@ import {
   DeleteObjectsCommand,
   CopyObjectCommand,
 } from '@aws-sdk/client-s3';
-import * as uuid from 'uuid';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { FileDataDTO, FOLDER, utils } from '@pdf-generator/shared';
 import config from '../config';
 import { getFileDataFromKey } from '../endpoints/utils';
 import { TemplateNotFound } from '../utils/errors/TemplateNotFound';
 import { APIError } from '../utils/errors/APIError';
+import { randomId } from '../utils/id';
 import { mapGetFilesResponse } from './fileStorage.mapper';
 import { readableToString } from './utils';
 
@@ -73,6 +73,7 @@ const upload = async ({
 export const store = async ({
   owner,
   content,
+  id,
   filename = 'file.pdf',
   folder = FOLDER.files,
   mimeType = 'application/pdf',
@@ -80,12 +81,12 @@ export const store = async ({
 }: {
   owner: string;
   content: Buffer;
+  id: string;
   filename: string;
   folder?: FOLDER;
   mimeType?: 'application/pdf' | string;
   acl?: 'public-read' | 'private';
 }): Promise<FileDataDTO> => {
-  const id = uuid.v4();
   const key = utils.getKeyFromData({
     owner,
     folder,
@@ -159,7 +160,7 @@ export const getUploadUrl = async ({
   owner,
   folder,
   filename,
-  id = uuid.v4(),
+  id = randomId(),
   acl = 'public-read',
   options: { expiresIn = 15 * 60 } = {},
 }: GetUploadUrlProps): Promise<FileDataDTO> => {

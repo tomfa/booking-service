@@ -10,7 +10,7 @@ export const getDeterministicId = (keys: string[]): string => {
   return uuid.v5(keys.join(';'), config.uuidNameSpace);
 };
 
-export const getGeneratedFileId = ({
+export const generateFileId = ({
   userId,
   templateId,
   variables,

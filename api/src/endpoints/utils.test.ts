@@ -1,6 +1,6 @@
-import * as uuid from 'uuid';
 import { FOLDER, utils } from '@pdf-generator/shared';
 import config from '../config';
+import { randomId } from '../utils/id';
 import { getAbsoluteUrlFromKey, getFileDataFromUrl } from './utils';
 
 describe('getFileDataFromUrl', () => {
@@ -10,7 +10,7 @@ describe('getFileDataFromUrl', () => {
       filename: 'I love aspargus.html',
       modified: '', // Note blank modified
       owner: 'darth',
-      id: uuid.v4(),
+      id: randomId(),
       archived: false,
     };
     const url = getAbsoluteUrlFromKey(utils.getKeyFromData(originalData));
@@ -22,7 +22,7 @@ describe('getFileDataFromUrl', () => {
     expect(parsedData).toEqual({ ...originalData, url });
   });
   it('parses archived urls', () => {
-    const id = uuid.v4();
+    const id = randomId();
     const badUrl = `${config.services.s3.endpointUrl}/darth/${FOLDER.templates}/${id}/I love aspargus.html.archived`;
 
     const data = getFileDataFromUrl(badUrl);
@@ -36,7 +36,7 @@ describe('getFileDataFromUrl', () => {
       filename: 'I love aspargus.html',
       modified: '', // Note blank modified
       owner: 'darth',
-      id: uuid.v4(),
+      id: randomId(),
       archived: true,
     };
     const url = getAbsoluteUrlFromKey(utils.getKeyFromData(originalData));

@@ -6,6 +6,7 @@ import { retrieveTemplate, store } from '../../storage/fileStorage';
 import { BadRequestError } from '../../utils/errors/BadRequestError';
 import { getData, getFileNameFromVariables } from '../utils';
 import { getUserOrThrow } from '../../utils/auth/request.utils';
+import { generateFileId } from '../../utils/id';
 
 export const generatePdfFromTemplate = async (
   req: Express.Request,
@@ -36,7 +37,13 @@ export const generatePdfFromTemplate = async (
   const htmlWithVariables = insertVariables(html, cleanedVariables);
   const pdfContent = await convertHTMLtoPDF(htmlWithVariables);
   const filename = getFileNameFromVariables(variables);
+  const id = generateFileId({
+    userId: user.username,
+    templateId: String(_id),
+    variables: cleanedVariables,
+  });
   const { url } = await store({
+    id,
     content: pdfContent,
     owner: getUserOrThrow(req).username,
     filename,
