@@ -6,6 +6,7 @@ import {
   PutObjectCommand,
   DeleteObjectsCommand,
   CopyObjectCommand,
+  HeadObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { FileDataDTO, FOLDER, utils } from '@pdf-generator/shared';
@@ -44,6 +45,24 @@ export const retrieveTemplate = async ({
       throw new TemplateNotFound(`Unable to find template.`, { templateName });
     }
     throw new APIError(err, { function: 'retrieveTemplate', templateName });
+  }
+};
+
+export const head = async ({ key }): Promise<FileDataDTO | null> => {
+  try {
+    const response = await s3.send(
+      new HeadObjectCommand({
+        Bucket: config.services.s3.bucketName,
+        Key: key,
+      })
+    );
+
+    return getFileDataFromKey(key, response.LastModified.toISOString());
+  } catch (err) {
+    if (err.name === 'NotFound') {
+      return null;
+    }
+    throw err;
   }
 };
 

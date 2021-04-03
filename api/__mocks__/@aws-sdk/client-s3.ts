@@ -26,6 +26,14 @@ const NoSuchKeyError = () =>
     time: new Date(),
   });
 
+const NotFoundError = () =>
+  new AWSError({
+    name: 'NotFound',
+    code: undefined,
+    message: 'NotFound',
+    time: new Date(),
+  });
+
 const createGetObjectMock = (content: string) =>
   jest.fn().mockReturnValue(
     Promise.resolve({
@@ -87,15 +95,23 @@ const deleteMock = jest
         RequestCharged: undefined,
       })
   );
+export const headMock = jest
+  .fn()
+  .mockImplementation((input: { Key: string }) => {
+    if (input.Key.endsWith('existing-file.pdf')) {
+      return Promise.resolve({ LastModified: new Date() });
+    }
+    throw NotFoundError();
+  });
 const copyMock = jest.fn().mockImplementation(() => Promise.resolve({}));
 const getMock = jest.fn().mockImplementation(() => Promise.resolve({}));
-const putMock = jest.fn().mockImplementation(() => {
+export const putMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({ ETag: 'Test-Etag' });
 });
 const listMock = createListObjectMock([]);
 
 export const getLastPutActionArgs = (): Record<string, any> | undefined => {
-  const callLength = putMock.mock.calls?.[0].length;
+  const callLength = putMock.mock.calls?.[0]?.length;
   const args = putMock.mock.calls?.[0]?.[callLength - 1] as
     | Record<string, any>
     | undefined;
@@ -115,6 +131,7 @@ const sendFn = jest
         | ListObjectsCommand
         | DeleteObjectsCommand
         | CopyObjectCommand
+        | HeadObjectCommand
     ) => {
       if (command instanceof GetObjectCommand) {
         getMock(command.input);
@@ -133,6 +150,8 @@ const sendFn = jest
         throw NoSuchKeyError();
       } else if (command instanceof PutObjectCommand) {
         return putMock(command.input);
+      } else if (command instanceof HeadObjectCommand) {
+        return headMock(command.input);
       } else if (command instanceof DeleteObjectsCommand) {
         return deleteMock(command.input);
       } else if (command instanceof ListObjectsCommand) {
@@ -196,6 +215,16 @@ export class DeleteObjectsCommand {
 
 export class CopyObjectCommand {
   name = 'CopyObjectCommand';
+
+  input: Record<string, any>;
+
+  constructor(input: Record<string, any>) {
+    this.input = input;
+  }
+}
+
+export class HeadObjectCommand {
+  name = 'HeadObjectCommand';
 
   input: Record<string, any>;
 

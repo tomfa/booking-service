@@ -2,6 +2,7 @@ import { FOLDER } from '@pdf-generator/shared';
 import { authedTestRequest } from '../../testUtils/controllers.utils';
 import {
   getLastPutActionArgs,
+  putMock,
   templates,
 } from '../../../__mocks__/@aws-sdk/client-s3';
 import config from '../../config';
@@ -53,14 +54,32 @@ describe('generatePdfFromTemplate', () => {
       );
     });
     it('stores generated pdf file as public in files folder', async () => {
+      const beforeCalls = putMock.mock.calls.length;
+
       await authedTestRequest(generatePdfFromTemplate, user, {
         query: { template: templates.htmlTemplate.name, _id: id },
       });
 
+      const afterCalls = putMock.mock.calls.length;
       const { ACL, Key } = getLastPutActionArgs();
       expect(ACL).toBe('public-read');
       expect(Key.startsWith(`${user.username}/${FOLDER.files}`)).toBe(true);
       expect(Key.endsWith('.pdf')).toBe(true);
+      expect(beforeCalls).toBe(afterCalls - 1);
+    });
+    it('returns existing pdf if it has been generated before', async () => {
+      const beforeCalls = putMock.mock.calls.length;
+
+      await authedTestRequest(generatePdfFromTemplate, user, {
+        query: {
+          template: templates.htmlTemplate.name,
+          _id: id,
+          filename: 'existing-file',
+        },
+      });
+
+      const numCalls = putMock.mock.calls.length - beforeCalls;
+      expect(numCalls).toBe(0);
     });
   });
   describe('POST request', () => {
