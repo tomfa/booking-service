@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as Express from 'express';
 import { NotAuthenticatedError } from '../errors/NotAuthenticatedError';
-import { getData } from '../../endpoints/utils';
 import { decodeUrlSafeBase64, isValidUrlSafeBase64 } from '../base64';
 import { BadAuthenticationError } from '../errors/BadAuthenticatedError';
 import { getAuth } from './token';
@@ -23,7 +22,7 @@ export const getUser = (req: Express.Request): Auth | null => {
   if (authHeader) {
     return getAuth(authHeader);
   }
-  const { token } = getData(req);
+  const token = req.query?.token;
   if (!token) {
     return null;
   }

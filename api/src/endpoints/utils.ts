@@ -4,9 +4,13 @@ import config from '../config';
 
 export const getData = (req: Express.Request): JSONObject => {
   if (req.method.toUpperCase() === 'POST') {
-    return (req.body || {}) as JSONObject;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { token, ...data } = (req.body || {}) as JSONObject;
+    return data;
   }
-  return req.query as Record<string, string | string[]>;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { token, ...data } = req.query as Record<string, string | string[]>;
+  return data;
 };
 
 export const getFileDataFromUrl = (url: string, modified = ''): FileDataDTO => {
