@@ -1,27 +1,25 @@
-import { UserAuthData } from './auth/types';
+import { UserWithPassword } from './auth/types';
 import { getUsersFromEnv } from './env.utils';
 
 describe('getUsersFromEnv', () => {
-  const user: UserAuthData = {
+  const user: UserWithPassword = {
     username: 'darth-vader',
     password: 'death-star',
-    apiKey: 'i-am-your-father',
   };
   it('returns user objects', () => {
-    const envVar = `${user.username}:${user.password}:${user.apiKey}`;
+    const envVar = `${user.username}:${user.password}`;
 
     expect(getUsersFromEnv(envVar)).toEqual([user]);
   });
   it('handles multiple users', () => {
-    const user2 = {
+    const user2: UserWithPassword = {
       username: 'luke-skywalker',
       password: 'your-thoughts-betray-you',
-      apiKey: 'the-force-is-strong-in-my-familiy',
     };
     const envVar =
-      `${user.username}:${user.password}:${user.apiKey}` +
+      `${user.username}:${user.password}` +
       ';' +
-      `${user2.username}:${user2.password}:${user2.apiKey}`;
+      `${user2.username}:${user2.password}`;
 
     expect(getUsersFromEnv(envVar)).toEqual([user, user2]);
   });

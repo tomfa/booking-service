@@ -1,15 +1,7 @@
 import config from '../../config';
-import { User, UserAuthData } from './types';
-
-export const getUserAPITokens = (user: User): string[] => {
-  const authData = config.users.find(u => u.username === user.username);
-  if (!authData) {
-    throw new Error(
-      `Unexpected error: Unable to find data for user "${user.username}"`
-    );
-  }
-  return [authData.apiKey];
-};
+import { BadAuthenticationError } from '../errors/BadAuthenticatedError';
+import { UserWithTokenData } from './types';
+import { createApiKey, createJWTtoken } from './token';
 
 export const findUserAuthData = ({
   username,
@@ -17,8 +9,16 @@ export const findUserAuthData = ({
 }: {
   username: string;
   password: string;
-}): UserAuthData | undefined => {
-  return config.users.find(
+}): UserWithTokenData | undefined => {
+  const user = config.users.find(
     u => u.username === username && u.password === password
   );
+  if (!user) {
+    throw new BadAuthenticationError();
+  }
+  return {
+    username: user.username,
+    jwt: createJWTtoken(username),
+    apiKey: createApiKey(username),
+  };
 };

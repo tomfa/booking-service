@@ -5,7 +5,11 @@ export const config = {
   isTest: process.env.NODE_ENV === 'test',
   users: getUsersFromEnv(process.env.USER_DATA),
   allowedOrigins: getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
-  jwtSecret: process.env.JWT_SECRET,
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    audience: getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
+    issuer: process.env.JWT_ISSUER,
+  },
   services: {
     s3: {
       region: process.env.AWS_BUCKET_REGION as string,

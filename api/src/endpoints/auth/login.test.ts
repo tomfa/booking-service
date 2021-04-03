@@ -1,5 +1,8 @@
 import config from '../../config';
 import { testRequest } from '../../testUtils/controllers.utils';
+import { UserWithTokenData } from '../../utils/auth/types';
+import { getAuth } from '../../utils/auth/token';
+import { decodeBase64 } from '../../utils/encoding';
 import { login } from './login';
 
 describe('login', () => {
@@ -11,7 +14,24 @@ describe('login', () => {
     });
 
     expect(status).toBe(200);
-    expect(json.data).toEqual({ username: user.username, apiKey: user.apiKey });
+    const { username, apiKey, jwt } = json.data as UserWithTokenData;
+    expect(username).toBe(user.username);
+    expect(getAuth(jwt)).toEqual(
+      expect.objectContaining({
+        isExpired: false,
+        permissions: ['api:*'],
+        role: 'user',
+        username: user.username,
+      })
+    );
+    expect(getAuth(decodeBase64(apiKey))).toEqual(
+      expect.objectContaining({
+        isExpired: false,
+        permissions: ['api:generate:from_template'],
+        role: 'user',
+        username: 'test-user',
+      })
+    );
   });
   it('returns 401 if username or password is wrong', async () => {
     const { status, message } = await testRequest(login, {

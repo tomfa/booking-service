@@ -22,6 +22,6 @@ export const login = async (req: Express.Request, res: Express.Response) => {
   }
   res.json({
     message: 'OK',
-    data: { username: user.username, apiKey: user.apiKey },
+    data: user,
   });
 };

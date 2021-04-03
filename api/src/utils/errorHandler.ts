@@ -32,7 +32,7 @@ export const errorMiddleware = (
       status: err.httpCode,
     });
   } else {
-    if (config.isDevelopment) {
+    if (config.isDevelopment || config.isTest) {
       // eslint-disable-next-line no-console
       console.log(err);
     }

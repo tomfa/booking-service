@@ -4,7 +4,6 @@ import { NotAuthenticatedError } from '../errors/NotAuthenticatedError';
 import { User } from './types';
 
 export const getUser = (req: Express.Request): User | null => {
-  // TODO: Make it real
   return {
     username: 'kroloftet',
   };

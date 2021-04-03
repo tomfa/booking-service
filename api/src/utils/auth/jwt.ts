@@ -2,12 +2,12 @@ import * as jwt from 'jsonwebtoken';
 import { JSONObject } from '@pdf-generator/shared';
 import config from '../../config';
 
-export const sign = (payload: JSONObject): string => {
-  const token = jwt.sign(payload, config.jwtSecret);
+export function sign<T extends JSONObject>(payload: T): string {
+  const token = jwt.sign(payload, config.jwt.secret);
   return token;
-};
+}
 
-export const verify = (token: string): JSONObject => {
-  const data = jwt.verify(token, config.jwtSecret);
-  return data as JSONObject;
-};
+export function verify<T = JSONObject>(token: string): T {
+  const data = jwt.verify(token, config.jwt.secret);
+  return (data as unknown) as T;
+}

@@ -8,7 +8,8 @@ export class BadAuthenticationError extends APIError {
 
   httpCode = 401;
 
-  constructor(context?: ErrorContext) {
-    super('Wrong username or password', context);
+  constructor(message = 'Wrong username or password', context?: ErrorContext) {
+    super(message, context);
+    this.displayMessage = message;
   }
 }
