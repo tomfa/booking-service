@@ -18,7 +18,11 @@ export const ProfileDropdown = () => {
   }
   return (
     <ProfileDropdownWrapper>
-      <IconButton icon={IconType.USER} onClick={() => setOpen(o => !o)} />
+      <IconButton
+        size={20}
+        icon={IconType.USER}
+        onClick={() => setOpen(o => !o)}
+      />
       {isOpen && (
         <ProfileDropdownMenu>
           <Code style={{ flexDirection: 'column', marginBottom: '1rem' }}>
@@ -29,7 +33,6 @@ export const ProfileDropdown = () => {
             </span>
             {auth.jwtToken}
           </Code>
-          <hr />
           <Link href={'/logout'}>
             <span>Log out</span>
           </Link>
