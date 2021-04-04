@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 export const Wrapper = styled.div`
   display: flex;
+  position: sticky;
+  top: 0;
   justify-content: center;
   background: ${p => p.theme.colors.primary};
   width: 100vw;
