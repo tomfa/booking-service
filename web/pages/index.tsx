@@ -1,10 +1,8 @@
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useAuth } from '../providers/AuthProvider';
-import { PageWrapper } from '../components/PageWrapper.styles';
-import { Header } from '../containers/Header';
 import { PDFEditor } from '../containers/PDFEditor';
+import { Layout } from '../components/Layout';
 
 export default function Home() {
   const { isLoggedIn } = useAuth();
@@ -15,17 +13,5 @@ export default function Home() {
     }
   }, [router, isLoggedIn]);
 
-  return (
-    <>
-      <Head>
-        <title>PDF Generator</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <PageWrapper>
-        <Header />
-        {isLoggedIn && <PDFEditor />}
-      </PageWrapper>
-    </>
-  );
+  return <Layout>{isLoggedIn && <PDFEditor />}</Layout>;
 }
