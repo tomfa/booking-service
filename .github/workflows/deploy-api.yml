@@ -29,4 +29,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_MASTER_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_MASTER_SECRET_ACCESS_KEY }}
+          USER_DATA: ${{ secrets.USER_DATA }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          UUID_NAMESPACE: ${{ secrets.UUID_NAMESPACE }}
 
