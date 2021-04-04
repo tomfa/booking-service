@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Nav, Wrapper, LinkList, LinkListItem } from './Footer.styles';
 
 export const Footer = () => {
@@ -5,7 +6,10 @@ export const Footer = () => {
     <Wrapper>
       <Nav>
         <LinkList>
-          <LinkListItem>© {new Date().getFullYear()} docforest </LinkListItem>
+          <LinkListItem>© {new Date().getFullYear()} DocForest </LinkListItem>
+          <LinkListItem>
+            <Link href={'/privacy'}>Privacy policy</Link>
+          </LinkListItem>
         </LinkList>
       </Nav>
     </Wrapper>

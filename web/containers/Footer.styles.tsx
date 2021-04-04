@@ -26,7 +26,8 @@ export const LinkListItem = styled.li`
   padding-right: 1rem;
   border-right: 1px solid white;
   margin-right: 1rem;
-  opacity: 0.4;
+  opacity: 0.7;
+  font-size: 0.8rem;
 
   &:hover {
     opacity: 1;
