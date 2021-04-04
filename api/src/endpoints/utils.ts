@@ -18,7 +18,10 @@ export const getFileDataFromUrl = (url: string, modified = ''): FileDataDTO => {
     throw new Error(`Can not construct FileDataDTO from unknown URL ${url}`);
   }
   const key = url.split(config.services.s3.endpointUrl).reverse()[0];
-  return { ...utils.getFileDataFromKey(key, modified), url };
+  return {
+    ...utils.getFileDataFromKey(key, modified),
+    url: utils.removeQueryFromUrl(url),
+  };
 };
 
 export const getFileDataFromKey = (

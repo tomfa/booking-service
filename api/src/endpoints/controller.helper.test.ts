@@ -20,14 +20,29 @@ describe('getUploadURL', () => {
 
     expect(status).toBe(200);
     expect(message).toBe('OK');
-    const [key, signing] = json.url.split('?');
+    const { uploadUrl, file } = json.data;
+    const [fileUrl, signing] = uploadUrl.split('?');
     expect(
-      key.startsWith(
+      fileUrl.startsWith(
         'https://s3.eu-north-1.amazonaws.com/test.mybucket.com/kroloftet/templates/'
       )
     ).toBe(true);
-    expect(key.endsWith('Cheese.jpg')).toBe(true);
+    expect(fileUrl.endsWith('Cheese.jpg')).toBe(true);
     expect(signing).toContain('X-Amz-Algorithm');
+    expect(file).toEqual(
+      expect.objectContaining({
+        owner: 'kroloftet',
+        folder: 'templates',
+        filename: 'Cheese.jpg',
+        archived: false,
+      })
+    );
+    expect(
+      file.url.startsWith(
+        'https://s3.eu-north-1.amazonaws.com/test.mybucket.com/kroloftet/templates/'
+      )
+    ).toBeTruthy();
+    expect(file.url.endsWith('Cheese.jpg')).toBeTruthy();
   });
 });
 
