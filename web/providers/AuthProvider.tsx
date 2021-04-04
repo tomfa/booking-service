@@ -77,6 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = useCallback(() => {
     setLoading(true);
     setUser(null);
+    setJwtToken(null);
     setError('');
     setLoading(false);
   }, [setError, setLoading, setUser]);
