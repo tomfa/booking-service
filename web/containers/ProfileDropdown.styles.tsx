@@ -6,6 +6,7 @@ export const ProfileDropdownWrapper = styled.div`
 
 export const ProfileDropdownMenu = styled.div`
   position: absolute;
+  z-index: 10;
   right: -1rem;
   background: ${p => p.theme.colors.primary};
   padding: 1rem;
