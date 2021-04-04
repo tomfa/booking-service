@@ -57,6 +57,7 @@ export const getFileDataFromUrl = (
   url: string,
   setModified = ''
 ): FileDataDTO => {
-  const key = removeQueryFromUrl(removeDomainFromUrl(url));
-  return { ...getFileDataFromKey(key, setModified), url };
+  const urlWithoutQuery = removeQueryFromUrl(url);
+  const key = removeDomainFromUrl(urlWithoutQuery);
+  return { ...getFileDataFromKey(key, setModified), url: urlWithoutQuery };
 };

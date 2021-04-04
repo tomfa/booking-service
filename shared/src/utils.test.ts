@@ -32,6 +32,24 @@ describe('getFileDataFromUrl', () => {
     expect(data.archived).toBe(true);
   });
 
+  it('ignores amz-permissions query params', () => {
+    const originalData = {
+      folder: FOLDER.templates,
+      filename: 'I love aspargus.html',
+      modified: '', // Note blank modified
+      owner: 'darth',
+      id: 'random-uuid-key',
+      archived: false,
+    };
+    const url = `https://s3.eu-north-1.amazonaws.com/test.mybucket.com/${originalData.owner}/${originalData.folder}/${originalData.id}/${originalData.filename}`;
+
+    const parsedData = getFileDataFromUrl(
+      url +
+        '?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD'
+    );
+    expect(parsedData).toEqual({ ...originalData, url });
+  });
+
   it('throws an error when URL is missing expected parts', () => {
     const missingId = '';
     const badUrl = `${endpoint}/darth/folder/${missingId}/I love aspargus.html`;
