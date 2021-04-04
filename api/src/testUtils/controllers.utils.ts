@@ -19,7 +19,7 @@ export const authedTestRequest = async (
   const token = createJWTtoken(user.username);
   return testRequest(controller, {
     ...options,
-    headers: { ...headers, Authorization: `Bearer ${token}` },
+    headers: { ...headers, authorization: `Bearer ${token}` },
   });
 };
 

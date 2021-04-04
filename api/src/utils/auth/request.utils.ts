@@ -7,7 +7,7 @@ import { getAuth } from './token';
 import { Auth, User } from './types';
 
 const getAuthHeader = (req: Express.Request): string | null => {
-  const { Authorization: authHeader } = req.headers;
+  const { authorization: authHeader } = req.headers;
   if (Array.isArray(authHeader)) {
     return authHeader[0].split(' ').reverse()[0];
   }

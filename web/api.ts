@@ -63,7 +63,7 @@ export const uploadFile = async (
   const fileName = file.name;
   const response = await fetch(
     `${config.API_URL}/${folder}/upload_url?name=${fileName}`,
-    { headers: { Authorization: `Bearer ${token}` } }
+    { headers: { authorization: `Bearer ${token}` } }
   );
   const { url } = await response.json();
   await performUpload({ file, url });
@@ -92,7 +92,7 @@ export const deleteFile = async (
     `${config.API_URL}/${file.folder}/?files=${fileKey}&permanent=${permanent}`,
     {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { authorization: `Bearer ${token}` },
     }
   );
   const json = await response.json();
@@ -141,7 +141,7 @@ export const listFiles = async (
     ];
   }
   const response = await fetch(`${config.API_URL}/${folder}`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { authorization: `Bearer ${token}` },
   });
   const json = await response.json();
   return json.data.sort(

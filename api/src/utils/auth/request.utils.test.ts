@@ -16,7 +16,7 @@ describe('getUser', () => {
   it('returns user from authentication header', () => {
     const req = getMockReq({
       headers: {
-        Authorization: `Bearer ${authHeaderValue}`,
+        authorization: `Bearer ${authHeaderValue}`,
       },
     });
 
@@ -47,7 +47,7 @@ describe('getUser', () => {
     const req = getMockReq({
       query: { token },
       headers: {
-        Authorization: `Bearer ${authHeaderValue}`,
+        authorization: `Bearer ${authHeaderValue}`,
       },
     });
 
@@ -80,7 +80,7 @@ describe('getUser', () => {
     const badToken = jwt.sign(validTokenData, invalidSigningKey);
 
     const req = getMockReq({
-      headers: { Authorization: `Bearer ${badToken}` },
+      headers: { authorization: `Bearer ${badToken}` },
     });
 
     try {
@@ -99,7 +99,7 @@ describe('getUserOrThrow', () => {
   it('returns user if auth present', () => {
     const req = getMockReq({
       headers: {
-        Authorization: `Bearer ${authHeaderValue}`,
+        authorization: `Bearer ${authHeaderValue}`,
       },
     });
 
