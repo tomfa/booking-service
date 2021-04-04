@@ -38,7 +38,18 @@ export const Fonts = ({
         title={'Upload new fonts'}
         onDrop={uploadFonts}
         isLoading={isUploadingFonts}
-        mimeTypes={['.otf', 'application/vnd.ms-opentype']}
+        mimeTypes={[
+          '.otf',
+          '.woff',
+          '.woff2',
+          '.eot',
+          '.ttf',
+          'application/vnd.ms-opentype',
+          'application/vnd.ms-fontobject',
+          'font/ttf',
+          'font/woff',
+          'font/woff2',
+        ]}
       />
 
       <FileList
