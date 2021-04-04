@@ -1,4 +1,5 @@
 import {
+  getFileDataFromKey,
   getFileDataFromUrl,
   getKeyFromData,
   removeDomainFromUrl,
@@ -22,6 +23,7 @@ describe('getFileDataFromUrl', () => {
     const parsedData = getFileDataFromUrl(url);
     expect(parsedData).toEqual({ ...originalData, url });
   });
+
   it('parses archived urls', () => {
     const id = 'random-uuid-key';
     const badUrl = `${endpoint}/darth/${FOLDER.templates}/${id}/I love aspargus.html.archived`;
@@ -80,6 +82,25 @@ describe('getKeyFromData', () => {
       `darth/${FOLDER.fonts}/${fileData.id}/I love aspargus.html`
     );
     expect(archivedKey).toBe(`${fileKey}.archived`);
+  });
+});
+
+describe('getFileDataFromKey', () => {
+  it('ignores any query params in key', () => {
+    const originalData = {
+      folder: FOLDER.templates,
+      filename: 'I love aspargus.html',
+      modified: '', // Note blank modified
+      owner: 'darth',
+      id: 'random-uuid-key',
+      archived: false,
+    };
+    const key = getKeyFromData(originalData);
+
+    const parsedData = getFileDataFromKey(
+      key + '?what=iamnotmenttobehere&thatswhyihaveatest=true'
+    );
+    expect(parsedData).toEqual(originalData);
   });
 });
 

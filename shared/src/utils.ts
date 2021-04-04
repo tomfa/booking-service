@@ -26,6 +26,7 @@ export const getFileDataFromKey = (
   setModified = ''
 ): Omit<FileDataDTO, 'url'> => {
   const parts = key
+    .split('?')[0]
     .split('/')
     .filter(l => !!l)
     .reverse();
