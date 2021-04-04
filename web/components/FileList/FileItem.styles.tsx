@@ -1,12 +1,11 @@
 import styled from 'styled-components';
+import { large } from '../../styles/mediaQueries';
 import { ActionWrapper } from './FileActions.styles';
 
 export const DateStamp = styled.span`
   text-align: right;
   margin: 0.5rem 1rem;
-  opactiy: 0.7em;
   font-size: 0.7em;
-  margin-left: 1rem;
 `;
 
 export const ListItemText = styled.span`
@@ -54,16 +53,18 @@ export const ListItem = styled.li<{
     outline: 2px solid ${p => p.theme.colors.primary};
   }
 
-  &:hover {
-    background-color: ${p => p.theme.colors.primary};
-    color: black;
+  ${large} {
+    &:hover {
+      background-color: ${p => p.theme.colors.primary};
+      color: black;
 
-    & > ${DateStamp} {
-      display: none;
-    }
+      & > ${DateStamp} {
+        display: none;
+      }
 
-    & > ${ActionWrapper} {
-      display: flex;
+      & > ${ActionWrapper} {
+        display: flex;
+      }
     }
   }
 

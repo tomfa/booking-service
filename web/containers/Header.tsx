@@ -33,9 +33,7 @@ export const ProfileDropdown = () => {
             </span>
             {auth.jwtToken}
           </Code>
-          <Link href={'/logout'}>
-            <span>Log out</span>
-          </Link>
+          <Link href={'/logout'}>Log out</Link>
         </ProfileDropdownMenu>
       )}
     </ProfileDropdownWrapper>

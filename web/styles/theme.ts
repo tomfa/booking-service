@@ -14,13 +14,21 @@ export const theme = {
     textSecondary: '#000000',
     links: '#0070f3',
 
+    muted: '#7d7777',
     success: '#139113',
     bgSuccess: '#016201',
     danger: '#ca082a',
     bgDanger: '#9d041f',
   },
   layout: {
-    maxWidth: '800',
+    sizes: {
+      tiny: 320,
+      small: 360,
+      medium: 481,
+      large: 800,
+      huge: 1200,
+    },
+    contentWidth: 650,
   },
 };
 

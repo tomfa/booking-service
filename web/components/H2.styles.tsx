@@ -6,4 +6,8 @@ export const H2 = styled.h2`
   padding-bottom: 0.5rem;
   border-bottom: 1px solid ${p => p.theme.colors.secondary};
   align-items: flex-end;
+
+  & + p {
+    margin-top: 0;
+  }
 `;

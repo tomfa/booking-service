@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { large } from '../styles/mediaQueries';
 
 export const Code = styled.code`
   display: flex;
@@ -9,7 +10,7 @@ export const Code = styled.code`
 
   flex-direction: column;
 
-  @media (min-width: 701px) {
+  ${large} {
     flex-direction: row;
   }
 `;

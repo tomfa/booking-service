@@ -5,4 +5,8 @@ export const ActionWrapper = styled.div`
   padding: 0 0.5rem;
   align-items: center;
   flex-direction: row;
+
+  & > *:not(:last-child) {
+    margin-right: 0.5rem;
+  }
 `;

@@ -60,10 +60,11 @@ export const PDFProvider = ({ children }: { children: React.ReactNode }) => {
       { label, value }: { label: string; value: string | number | null }
     ) => {
       if (value !== null) {
-        setVariables(existing => [
-          { key, label, value },
-          ...existing.filter(item => key !== item.key),
-        ]);
+        setVariables(existing =>
+          existing.map(item =>
+            item.key === key ? { key, label, value } : item
+          )
+        );
       } else {
         setVariables(existing => existing.filter(item => key !== item.key));
       }
@@ -84,10 +85,21 @@ export const PDFProvider = ({ children }: { children: React.ReactNode }) => {
           `${encodeURIComponent(label)}=${encodeURIComponent(value)}`
       )
       .join('&');
-    const url = `${config.API_URL}/generate/from_template?template=${selectedTemplate.filename}&_id=${selectedTemplate.id}&token=${auth.apiKey}`;
-    setGeneratedUrl(urlVariables ? `${url}&${urlVariables}` : url);
+    const url = `${config.API_URL}/generate/from_template?template=${selectedTemplate.filename}`;
+    const boringVariables = `_id=${selectedTemplate.id}&token=${auth.apiKey}`;
+    setGeneratedUrl(
+      urlVariables
+        ? `${url}&${urlVariables}&${boringVariables}`
+        : `${url}&${boringVariables}`
+    );
     setIsLoading(false);
-  }, [selectedTemplate, variables, setGeneratedUrl, auth.apiKey]);
+  }, [
+    selectedTemplate,
+    variables,
+    setGeneratedUrl,
+    auth.apiKey,
+    auth.isLoggedIn,
+  ]);
 
   return (
     <PDFContext.Provider

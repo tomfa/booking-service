@@ -14,6 +14,6 @@ export const Nav = styled.nav`
   flex-wrap: wrap;
 
   width: 100%;
-  max-width: 700px;
+  max-width: ${p => p.theme.layout.contentWidth}px;
   padding: 1rem;
 `;

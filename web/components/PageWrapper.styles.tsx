@@ -10,4 +10,6 @@ export const PageWrapper = styled.div`
 
 export const ContentWrapper = styled.div`
   flex-grow: 1;
+  width: 100%;
+  max-width: ${p => p.theme.layout.contentWidth}px;
 `;

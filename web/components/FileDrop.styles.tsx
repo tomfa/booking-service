@@ -7,6 +7,7 @@ export const Wrapper = styled.button<{
 }>`
   background: none;
   padding: 3rem 2rem;
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;

@@ -25,7 +25,7 @@ const App = ({ Component, pageProps }: AppProps) => (
           color: ${theme.colors.textPrimary};
         }
         a {
-          color: ${theme.colors.links};
+          color: ${theme.colors.textPrimary};
         }
         * {
           box-sizing: border-box;

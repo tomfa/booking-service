@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { large } from '../styles/mediaQueries';
 import { BlankButton } from './Button.style';
 
 export const Button = styled(BlankButton)`
@@ -7,8 +8,10 @@ export const Button = styled(BlankButton)`
 
   color: ${p => p.theme.colors.textPrimary};
 
-  &:hover,
-  &:focus {
-    color: ${p => p.theme.colors.primary};
+  ${large} {
+    &:hover,
+    &:focus {
+      color: ${p => p.theme.colors.primary};
+    }
   }
 `;

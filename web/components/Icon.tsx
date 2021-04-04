@@ -16,6 +16,7 @@ import {
   Gear,
   Key,
   User,
+  LockSimple as Lock,
 } from 'phosphor-react';
 import { MouseEventHandler } from 'react';
 import NextLink from 'next/link';
@@ -40,6 +41,7 @@ export enum IconType {
   FONT,
   AUTH,
   LOADING,
+  LOCK,
 }
 
 interface ComponentProps extends PhoshopProps {
@@ -94,6 +96,9 @@ const IconSVG = ({ icon, ...props }: ComponentProps) => {
   if (icon === IconType.USER) {
     return <User {...props} />;
   }
+  if (icon === IconType.LOCK) {
+    return <Lock {...props} />;
+  }
   throw new Error(`Icon type ${icon} not supported`);
 };
 
@@ -106,6 +111,7 @@ type IconProps = {
   withPadding?: boolean;
   size?: number;
   style?: React.CSSProperties;
+  className?: string;
 };
 type IconLinkProps = Omit<IconProps, 'hoverable'> & { href: string };
 
@@ -118,6 +124,7 @@ export const Icon = ({
   withPadding = false,
   size = 11,
   style,
+  className,
 }: IconProps) => {
   return (
     <IconWrapper
@@ -126,7 +133,8 @@ export const Icon = ({
       $color={color}
       $hoverColor={hoverColor}
       $withPadding={withPadding}
-      style={style}>
+      style={style}
+      className={className}>
       <IconSVG icon={icon} weight={'bold'} size={size} />
     </IconWrapper>
   );
@@ -140,14 +148,15 @@ export const IconLink = ({ href, ...props }: IconLinkProps) => {
   );
 };
 
-type IconButtonProps = Omit<IconProps, 'hoverable'> & {
+export type IconButtonProps = Omit<IconProps, 'hoverable'> & {
   onClick: MouseEventHandler<HTMLButtonElement>;
 };
 export const IconButton = ({ onClick, ...props }: IconButtonProps) => (
   <BlankButton
     onClick={onClick}
     hoverColor={props.hoverColor}
-    color={props.color}>
+    color={props.color}
+    $noPadding>
     <Icon
       hoverable
       withPadding

@@ -6,6 +6,7 @@ import { IconType } from './Icon';
 import { LineHeader } from './LineHeader';
 import { FormInput } from './FormInput';
 import { FormError } from './FormError';
+import { Form } from './Form.styles';
 
 type Props = { error?: string; onSubmit: (data: LoginData) => Promise<void> };
 export const Login = ({ onSubmit, error }: Props) => {
@@ -27,7 +28,7 @@ export const Login = ({ onSubmit, error }: Props) => {
   return (
     <Main>
       <LineHeader icon={IconType.AUTH} header={'Log in'} hideButton />
-      <form onSubmit={onFormSubmit}>
+      <Form onSubmit={onFormSubmit}>
         <FormInput
           label={'Username'}
           name={'username'}
@@ -40,9 +41,14 @@ export const Login = ({ onSubmit, error }: Props) => {
           type={'password'}
           inputRef={passwordRef}
         />
-        <Button label={isLoading ? '...' : 'Log in'} type={'submit'} />
+        <Button
+          large
+          label={isLoading ? '...' : 'Log in'}
+          type={'submit'}
+          style={{ marginTop: '1rem' }}
+        />
         <FormError hidden={!error} error={error} />
-      </form>
+      </Form>
     </Main>
   );
 };

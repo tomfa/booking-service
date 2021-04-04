@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import * as MQ from '../styles/mediaQueries';
 
 export const H1 = styled.h1`
   color: ${p => p.theme.colors.primary};
@@ -7,7 +8,7 @@ export const H1 = styled.h1`
   line-height: 1.15;
   font-size: 3rem;
 
-  @media (min-width: 701px) {
+  ${MQ.large} {
     font-size: 4rem;
   }
 `;

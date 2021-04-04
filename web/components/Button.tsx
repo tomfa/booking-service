@@ -1,10 +1,11 @@
 import { MouseEventHandler } from 'react';
 import { Icon, IconType } from './Icon';
-import { BaseButton, BlankButton } from './Button.style';
+import { BaseButton, BlankButton, ButtonText } from './Button.style';
 
 export const Button = ({
   label,
   icon,
+  large,
   secondary,
   blank,
   onClick,
@@ -12,15 +13,16 @@ export const Button = ({
 }: {
   label: string;
   icon?: IconType;
+  large?: boolean;
   secondary?: boolean;
   blank?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   const ButtonComponent = blank ? BlankButton : BaseButton;
   return (
-    <ButtonComponent onClick={onClick} {...props}>
+    <ButtonComponent onClick={onClick} {...props} $large={large}>
       {icon && <Icon icon={icon} secondary={secondary} />}
-      <span style={{ marginLeft: '0.3rem' }}>{label}</span>
+      <ButtonText $addLeftMargin={!!icon}>{label}</ButtonText>
     </ButtonComponent>
   );
 };

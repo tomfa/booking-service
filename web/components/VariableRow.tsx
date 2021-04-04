@@ -1,7 +1,12 @@
 import { useTheme } from 'styled-components';
 import { KeyedVariable, UpdateVariableFunc } from '../providers/PDFProvider';
-import { IconButton, IconType } from './Icon';
-import { NameInput, Row, ValueInput } from './VariableRow.styles';
+import { IconType } from './Icon';
+import {
+  NameInput,
+  Row,
+  ValueInput,
+  VariableDangerButton,
+} from './VariableRow.styles';
 
 export const VariableRow = ({
   variable,
@@ -33,13 +38,13 @@ export const VariableRow = ({
           })
         }
       />
-      <IconButton
-        icon={IconType.CHECK}
+      <VariableDangerButton
+        icon={IconType.REMOVE}
         onClick={() =>
           updateVariable(variable.key, { value: null, label: variable.label })
         }
-        color={theme.colors.textPrimary}
-        hoverColor={theme.colors.success}
+        hoverColor={theme.colors.danger}
+        size={20}
       />
     </Row>
   );

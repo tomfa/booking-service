@@ -13,19 +13,20 @@ export const Nav = styled.nav`
   justify-content: center;
 
   width: 100%;
-  max-width: 700px;
+  max-width: ${p => p.theme.layout.contentWidth}px;
   padding: 1rem;
 `;
 
 export const LinkList = styled.ul`
+  padding: 0;
   display: flex;
   list-style: none;
 `;
 
 export const LinkListItem = styled.li`
-  padding-right: 1rem;
   border-right: 1px solid white;
-  margin-right: 1rem;
+  padding-right: 0.5rem;
+  margin-right: 0.5rem;
   opacity: 0.7;
   font-size: 0.8rem;
 

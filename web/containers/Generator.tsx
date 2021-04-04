@@ -9,6 +9,7 @@ import { getFileNameFromVariables } from '../utils/files';
 import { Card } from '../components/Card.styles';
 import { LineHeader } from '../components/LineHeader';
 import { VariableEditor } from '../components/VariableEditor';
+import { MutedText } from '../components/MutedText.styles';
 
 export const Generator = () => {
   const theme = useTheme();
@@ -68,7 +69,12 @@ export const Generator = () => {
             )}
           </small>
           <Code>
-            <a href={generatedUrl}>{generatedUrl}</a>
+            <a
+              href={generatedUrl}
+              style={{ textDecoration: 'none', marginRight: '1rem' }}>
+              {generatedUrl.split('&_id')[0]}
+              <MutedText>&_id{generatedUrl.split('&_id')[1]}</MutedText>
+            </a>
             <Button
               onClick={onCopy}
               style={{ alignSelf: 'flex-start', marginTop: '1rem' }}
