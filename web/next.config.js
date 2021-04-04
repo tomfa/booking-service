@@ -19,8 +19,13 @@ module.exports = phase => ({
     return commitSha.substr(0, 7);
   },
 
-  webpack: config => {
+  webpack: (config, { webpack, buildId }) => {
     fixEnums(config);
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env.CONFIG_BUILD_ID': JSON.stringify(buildId),
+      })
+    );
     return config;
   },
 });
