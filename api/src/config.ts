@@ -16,6 +16,7 @@ export const config = {
       region: process.env.AWS_BUCKET_REGION as string,
       bucketName: process.env.S3_BUCKET_NAME as string,
       endpointUrl: process.env.FILE_ENDPOINT_URL as string,
+      s3BucketUrl: `https://s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${process.env.S3_BUCKET_NAME}`,
     },
   },
 };

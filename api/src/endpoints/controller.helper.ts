@@ -3,7 +3,8 @@ import { FOLDER } from '@pdf-generator/shared';
 import { getUploadUrl, list, move, remove } from '../storage/fileStorage';
 import { BadRequestError } from '../utils/errors/BadRequestError';
 import { getUserOrThrow } from '../utils/auth/request.utils';
-import { getData, getFileDataFromKey } from './utils';
+import config from '../config';
+import { getData, getFileDataFromKey, getFileDataFromUrl } from './utils';
 
 export const listFiles = (folder: FOLDER) => async (
   req: Express.Request,
@@ -23,12 +24,18 @@ export const getUploadURL = (folder: FOLDER) => async (
   if (!name) {
     throw new BadRequestError({ field: 'name', error: 'query param missing' });
   }
-  const data = await getUploadUrl({
+  const { url: uploadUrl } = await getUploadUrl({
     folder,
     owner: owner.username,
     filename: String(name),
   });
-  return res.json({ message: 'OK', url: data.url });
+  const file = getFileDataFromUrl(
+    uploadUrl.replace(
+      config.services.s3.s3BucketUrl,
+      config.services.s3.endpointUrl
+    )
+  );
+  return res.json({ message: 'OK', data: { uploadUrl, file } });
 };
 
 const mapDataInputToStringArray = (value: unknown): string[] => {

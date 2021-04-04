@@ -1,4 +1,4 @@
-import { FileDataDTO, FOLDER, utils } from '@pdf-generator/shared';
+import { FileDataDTO, FOLDER } from '@pdf-generator/shared';
 import { config } from './config';
 
 const performUpload = ({ file, url }: { file: File; url: string }) =>
@@ -65,14 +65,12 @@ export const uploadFile = async (
     `${config.API_URL}/${folder}/upload_url?name=${fileName}`,
     { headers: { authorization: `Bearer ${token}` } }
   );
-  const { url } = await response.json();
-  await performUpload({ file, url });
-
-  const data = utils.getFileDataFromUrl(url);
+  const { data } = await response.json();
+  await performUpload({ file, url: data.uploadUrl });
 
   return {
     success: true,
-    data,
+    data: data.file,
   };
 };
 
