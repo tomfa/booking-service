@@ -25,9 +25,9 @@ export const ProfileDropdown = () => {
             <span style={{ opacity: 0.5, flex: '1' }}>{`//`} username:</span>
             {auth.username}
             <span style={{ opacity: 0.5, flex: '1', paddingTop: '1rem' }}>
-              {`//`} api-key:
+              {`//`} JWT token:
             </span>
-            {auth.apiKey}
+            {auth.jwtToken}
           </Code>
           <hr />
           <Link href={'/logout'}>
