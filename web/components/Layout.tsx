@@ -1,6 +1,7 @@
 import Head from 'next/head';
+import { Footer } from '../containers/Footer';
 import { Header } from '../containers/Header';
-import { PageWrapper } from './PageWrapper.styles';
+import { ContentWrapper, PageWrapper } from './PageWrapper.styles';
 
 export const Layout = ({
   children,
@@ -17,7 +18,8 @@ export const Layout = ({
       </Head>
       <PageWrapper>
         <Header />
-        {children}
+        <ContentWrapper>{children}</ContentWrapper>
+        <Footer />
       </PageWrapper>
     </>
   );
