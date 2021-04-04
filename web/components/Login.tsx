@@ -18,7 +18,7 @@ export const Login = ({ onSubmit, error }: Props) => {
       e.preventDefault();
       setLoading(true);
       await onSubmit({
-        username: usernameRef.current.value,
+        username: usernameRef.current.value.toLowerCase().trim(),
         password: passwordRef.current.value,
       });
       setLoading(false);
