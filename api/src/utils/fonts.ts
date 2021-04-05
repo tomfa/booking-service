@@ -31,7 +31,7 @@ export const findGoogleFontFamily = (font: Font): string | undefined => {
     return undefined;
   }
   const googleFontTypes = font.types.map(toGoogleFontType);
-  return `${font.name}:${googleFontTypes.join(',')}`;
+  return `${font.name.replace(/ /g, '+')}:${googleFontTypes.join(',')}`;
 };
 
 export const findGoogleFontUrl = (
@@ -125,4 +125,19 @@ export const extractUsedFonts = (svg: string): Font[] => {
   const $ = cheerio.load(svg);
   const fonts = Array.from($('text[font-family]')).map(getFontFromDomElement);
   return mergeDuplicates(fonts);
+};
+
+export const insertFontsInSVG = (svg: string): string => {
+  const usedFonts = extractUsedFonts(svg);
+  const fontUrls = findGoogleFontUrl(usedFonts);
+  const $ = cheerio.load(svg);
+  const head = $('head');
+  const meta = `<meta content="text/html;charset=utf-8" http-equiv="Content-Type">\n<meta content="utf-8" http-equiv="encoding">`;
+  head.append(meta);
+  const style = `<style>body { padding: 0; margin: 0 }</style>`;
+  head.append(style);
+  if (fontUrls.html) {
+    head.append(`${fontUrls.html}`);
+  }
+  return $.html();
 };

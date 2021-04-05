@@ -1,0 +1,18 @@
+<svg width="595" height="842" viewBox="0 0 595 842" fill="none"
+     xmlns="http://www.w3.org/2000/svg">
+    <rect width="595" height="842" fill="#E5E5E5"/>
+    <rect width="595" height="842" fill="white"/>
+    <text fill="black" xml:space="preserve" style="white-space: pre"
+          font-family="Roboto" font-size="12" letter-spacing="0em">
+        <tspan x="56" y="83.1016">Roboto Invoice</tspan>
+    </text>
+    <text fill="black" xml:space="preserve" style="white-space: pre"
+          font-family="Red Hat Display" font-size="12" letter-spacing="0em">
+        <tspan x="56" y="120.278">Red Hat Display Invoice</tspan>
+    </text>
+    <text fill="black" xml:space="preserve" style="white-space: pre"
+          font-family="Roboto" font-size="12" font-weight="bold"
+          letter-spacing="0em">
+        <tspan x="56" y="155.102">Dela+Gothic+One Bold Invoice</tspan>
+    </text>
+</svg>

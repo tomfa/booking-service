@@ -1,4 +1,16 @@
-import { extractUsedFonts, findGoogleFontUrl, Font } from './fonts';
+import * as path from 'path';
+import * as cheerio from 'cheerio';
+import { requireFile } from '../testUtils/load.utils';
+import {
+  extractUsedFonts,
+  findGoogleFontUrl,
+  Font,
+  insertFontsInSVG,
+} from './fonts';
+
+const testTemplate = requireFile(
+  path.join(__dirname, '../testUtils/template.svg')
+);
 
 const googleFont: Font = {
   name: 'Roboto',
@@ -51,6 +63,22 @@ describe('extractUsedFonts', () => {
         name: 'Red Hat Display',
         types: [{ weight: 400, italic: true }],
       })
+    );
+  });
+});
+
+describe('insertFontsInSVG', () => {
+  it('adds an html wrapper around the SVG with fonts in head', () => {
+    const html = insertFontsInSVG(testTemplate);
+
+    const $ = cheerio.load(html);
+    const head = $('head').html();
+    const body = $('body').html();
+    const svg = $(testTemplate).html();
+
+    expect(body).toContain(svg);
+    expect(head).toContain(
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,700|Red+Hat+Display:regular&amp;display=block">'
     );
   });
 });
