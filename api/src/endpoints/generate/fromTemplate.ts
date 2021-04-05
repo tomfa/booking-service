@@ -9,14 +9,15 @@ import { BadRequestError } from '../../utils/errors/BadRequestError';
 import { getData, getFileNameFromVariables } from '../utils';
 import { getUserOrThrow } from '../../utils/auth/request.utils';
 import { generateFileId } from '../../utils/id';
+import { insertFontsInSVG } from '../../utils/fonts';
 
 export const generatePdfFromTemplate = async (
   req: Express.Request,
   res: Express.Response
 ) => {
-  const { template, _id, ...variables } = getData(req);
+  const { template: templateName, _id, ...variables } = getData(req);
   const user = getUserOrThrow(req);
-  if (!template) {
+  if (!templateName) {
     throw new BadRequestError({
       field: 'template',
       error: 'query param is missing',
@@ -31,11 +32,14 @@ export const generatePdfFromTemplate = async (
 
   const cleanedVariables: Variables = cleanVariables(variables);
 
-  const html = await retrieveTemplate({
-    templateName: String(template),
+  const template = await retrieveTemplate({
+    templateName: String(templateName),
     id: String(_id),
     owner: user.username,
   });
+  const html = String(templateName).endsWith('.svg')
+    ? insertFontsInSVG(template)
+    : template;
   const filename = getFileNameFromVariables(variables);
   const id = generateFileId({
     userId: user.username,
