@@ -134,7 +134,7 @@ export const insertFontsInSVG = (svg: string): string => {
   const head = $('head');
   const meta = `<meta content="text/html;charset=utf-8" http-equiv="Content-Type">\n<meta content="utf-8" http-equiv="encoding">`;
   head.append(meta);
-  const style = `<style>body { padding: 0; margin: 0 }</style>`;
+  const style = `<style>body { padding: 0; margin: 0 } svg { width: 100vw !important; height: 100vh !important; }</style>`;
   head.append(style);
   if (fontUrls.html) {
     head.append(`${fontUrls.html}`);
