@@ -7,6 +7,7 @@ export const Wrapper = styled.div`
   justify-content: center;
   background: ${p => p.theme.colors.primary};
   width: 100vw;
+  z-index: ${p => p.theme.z.top};
 `;
 
 export const Nav = styled.nav`

@@ -5,6 +5,12 @@ export const theme = {
       '    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
     secondary: "'Barlow Condensed', sans-serif",
   },
+  z: {
+    normal: 0,
+    below: -10,
+    above: 5,
+    top: 10,
+  },
   colors: {
     primary: '#8BA02A',
     secondary: '#C6A666',
