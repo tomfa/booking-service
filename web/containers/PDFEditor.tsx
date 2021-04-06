@@ -41,8 +41,8 @@ export const PDFEditor = () => {
       />
       <Generator />
 
-      <Fonts onDelete={onDelete} />
       <Files onDelete={onDelete} />
+      <Fonts onDelete={onDelete} />
     </Main>
   );
 };

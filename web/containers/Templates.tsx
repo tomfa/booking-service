@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FileDataDTO } from '@pdf-generator/shared';
+import Link from 'next/link';
 import { FileDrop } from '../components/FileDrop';
 import { FileList } from '../components/FileList/FileList';
 import { useData } from '../providers/DataProvider';
@@ -43,6 +44,20 @@ export const Templates = ({
         buttonLabel={(showArchive && 'Hide archived') || 'Show archived'}
         hideButton={!hasArchivedFiles}
       />
+
+      <h3 style={{ marginTop: 0 }}>Upload an SVG or HTML template</h3>
+
+      <p>
+        SVG files can use any{' '}
+        <Link href="fonts.googleapis.com/">Google Font</Link>. For other fonts,
+        the template must be an HTML file, with fonts included with {`<link>`}{' '}
+        or in {`<style>`}
+      </p>
+
+      <p>
+        Text elements in SVG files must be of type <code>{`<Text>`}</code>, not{' '}
+        <code>{`<Path>`}</code>{' '}
+      </p>
 
       <FileDrop
         title={'Upload new template'}
