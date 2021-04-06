@@ -46,6 +46,10 @@ function findDotGit(inputDir, maxAttempts = 999) {
 }
 
 function findLastCommitSha({ dir } = { dir: __dirname }) {
+  if (process.env.GITHUB_SHA) {
+    // Github actions exposes this
+    return process.env.GITHUB_SHA.substr(0, 7);
+  }
   return lastCommitId(findDotGit(dir));
 }
 
