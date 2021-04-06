@@ -25,6 +25,10 @@ jobs:
         working-directory: api
       - name: serverless deploy
         run: |
+          touch api/.env.local.production
+          echo "USER_DATA=$USER_DATA" >> "api/.env.production.local"
+          echo "JWT_SECRET=$JWT_SECRET" >> "api/.env.production.local"
+          echo "UUID_NAMESPACE=$UUID_NAMESPACE" >> "api/.env.production.local"
           yarn api deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_MASTER_ACCESS_KEY_ID }}
