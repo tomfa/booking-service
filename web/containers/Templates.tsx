@@ -50,8 +50,8 @@ export const Templates = ({
       <p>
         SVG files can use any{' '}
         <Link href="fonts.googleapis.com/">Google Font</Link>. For other fonts,
-        the template must be an HTML file, with fonts included with {`<link>`}{' '}
-        or in {`<style>`}
+        the template must be an HTML file, with fonts included with{' '}
+        <code>{`<link>`}</code> or in <code>{`<style>`}</code>
       </p>
 
       <p>
