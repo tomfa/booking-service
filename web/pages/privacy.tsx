@@ -5,7 +5,7 @@ import { Layout } from '../components/Layout';
 
 export default function PrivacyPage() {
   return (
-    <Layout>
+    <Layout social={{ title: 'DocForest | Privacy' }}>
       <Main>
         <div
           style={{

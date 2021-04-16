@@ -13,5 +13,9 @@ export default function Home() {
     }
   }, [router, isLoggedIn]);
 
-  return <Layout>{isLoggedIn && <PDFEditor />}</Layout>;
+  return (
+    <Layout social={{ title: 'DocForest | Home' }}>
+      {isLoggedIn && <PDFEditor />}
+    </Layout>
+  );
 }

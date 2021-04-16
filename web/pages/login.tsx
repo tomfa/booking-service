@@ -14,7 +14,7 @@ export default function LoginPage() {
   }, [router, isLoggedIn]);
 
   return (
-    <Layout>
+    <Layout social={{ title: 'DocForest | Login' }}>
       <Login onSubmit={login} error={error} />
     </Layout>
   );

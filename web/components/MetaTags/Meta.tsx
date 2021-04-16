@@ -1,28 +1,36 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { config } from '../../config';
 
-const Meta = () => (
-  <Head>
-    <title>ihasabucket - instant web app hosting</title>
-    <meta
-      property="og:image"
-      content="https://user-images.githubusercontent.com/1502702/92998877-e9e1cc00-f51c-11ea-98e6-331460921cde.jpg"
-    />
-    <meta property="og:url" content="https://ihasabucket.it" />
-    <meta
-      property="og:title"
-      content="I has a bucket - instant web app hosting"
-    />
-    <meta
-      property="og:description"
-      content="Guide for hosting React, Vue, Gatsby or user uploads on AWS S3 buckets"
-    />
+export type SocialTags = {
+  title?: string;
+  description?: string;
+  imagePath?: string;
+};
+const DEFAULT_TITLE = 'DocForest | PDF generator';
+const DEFAULT_DESCRIPTION = 'Generate docs from API using custom templates';
+const DEFAULT_IMAGE_PATH = 'public/social.jpg';
 
-    <link rel="icon" href="/favicon.ico" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600&display=swap"
-      rel="stylesheet"
-    />
-  </Head>
-);
+const Meta = (props: SocialTags) => {
+  const router = useRouter();
+  const title = props.title || DEFAULT_TITLE;
+  const description = props.description || DEFAULT_DESCRIPTION;
+  const baseUrl = router.basePath
+    ? `${config.WEB_URL}/${router.basePath}`
+    : config.WEB_URL;
+  const url = `${baseUrl}/${router.asPath}`;
+  const imageUrl = `${baseUrl}/${props.imagePath || DEFAULT_IMAGE_PATH}`;
+  return (
+    <Head>
+      <title>{title}</title>
+      <meta charSet="utf-8" />
+      <meta name="description" content={description} />
+      <meta property="og:image" content={imageUrl} />
+      <meta property="og:url" content={url} />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+    </Head>
+  );
+};
 
 export default Meta;
