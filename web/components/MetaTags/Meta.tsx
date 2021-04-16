@@ -9,7 +9,7 @@ export type SocialTags = {
 };
 const DEFAULT_TITLE = 'DocForest | PDF generator';
 const DEFAULT_DESCRIPTION = 'Generate docs from API using custom templates';
-const DEFAULT_IMAGE_PATH = 'public/social.jpg';
+const DEFAULT_IMAGE_PATH = 'social.jpg';
 
 const Meta = (props: SocialTags) => {
   const router = useRouter();
@@ -18,7 +18,7 @@ const Meta = (props: SocialTags) => {
   const baseUrl = router.basePath
     ? `${config.WEB_URL}/${router.basePath}`
     : config.WEB_URL;
-  const url = `${baseUrl}/${router.asPath}`;
+  const url = router.asPath ? `${baseUrl}/${router.asPath}` : baseUrl;
   const imageUrl = `${baseUrl}/${props.imagePath || DEFAULT_IMAGE_PATH}`;
   return (
     <Head>
