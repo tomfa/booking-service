@@ -204,10 +204,18 @@ describe('BookingAPI', () => {
     it('throws BadRequestError if resource is closed at requested time', async () => {});
     it('throws BadRequestError if booking hour does not match slot for resource', async () => {});
   });
-  describe.skip('cancelBooking', () => {
-    it('works', async () => {
-      const response = true; // await api.cancelBooking();
-      expect(response).toBe(true);
+  describe('cancelBooking', () => {
+    it('changes canceled attribute to true', async () => {
+      expect(booking.canceled).toBe(false);
+
+      await api.cancelBooking(booking.id);
+
+      expect((await api.getBooking(booking.id)).canceled).toBe(true);
+    });
+    it('throws ObjectDoesNotExist if booking does not exist', async () => {
+      await expect(api.cancelBooking('does-not-exist')).rejects.toThrow(
+        ObjectDoesNotExist
+      );
     });
   });
   describe.skip('findsBookings', () => {

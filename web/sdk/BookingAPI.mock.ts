@@ -162,9 +162,18 @@ export default class BookingAPI implements IBookingAPI {
   async cancelBooking(bookingId: string): Promise<void> {
     const existingBooking = await this.getBooking(bookingId);
     if (!existingBooking) {
-      throw new Error(`Booking with id ${bookingId} does not exist`);
+      throw new ObjectDoesNotExist(
+        `Booking with id ${bookingId} does not exist`
+      );
     }
-    this.bookings = this.bookings.filter(b => b.id !== bookingId);
+    if (existingBooking.canceled) {
+      return;
+    }
+    this.bookings = this.bookings.map(b =>
+      b.id === bookingId
+        ? { ...existingBooking, canceled: true }
+        : existingBooking
+    );
   }
 
   async findsBookings({
