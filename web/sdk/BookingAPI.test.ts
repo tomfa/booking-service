@@ -3,8 +3,8 @@ import { Booking, Resource, Schedule } from './BookingAPI.types';
 import { openingHourGenerator } from './utils';
 import {
   BadRequestError,
-  ConflictingResourceExists,
-  ResourceDoesNotExist,
+  ConflictingObjectExists,
+  ObjectDoesNotExist,
 } from './errors';
 
 const getOpenHours = openingHourGenerator({
@@ -45,21 +45,23 @@ const dummyBooking: Omit<Booking, 'id'> = {
 
 describe('BookingAPI', () => {
   let api: BookingAPI = new BookingAPI({ apiKey: 'dummy-key' });
+  let booking;
+  let resource;
 
   beforeEach(async () => {
     api = new BookingAPI({ apiKey: 'dummy-key' });
-    await api.addResource(dummyResource, dummyResourceId);
-    await api.addBooking(dummyBooking);
+    resource = await api.addResource(dummyResource, dummyResourceId);
+    booking = await api.addBooking(dummyBooking);
   });
 
   describe('getResource', () => {
     it('returns resource', async () => {
-      const response = await api.getResource(dummyResourceId);
-      expect(response).toEqual({ ...dummyResource, id: dummyResourceId });
+      const response = await api.getResource(resource.id);
+      expect(response).toBe(resource);
     });
-    it('throws ResourceDoesNotExist if resource does not exist', async () => {
+    it('throws ObjectDoesNotExist if resource does not exist', async () => {
       await expect(api.getResource('invalid-id')).rejects.toThrowError(
-        ResourceDoesNotExist
+        ObjectDoesNotExist
       );
     });
   });
@@ -67,25 +69,25 @@ describe('BookingAPI', () => {
     it('adds a new resource with a random id', async () => {
       const newResource = { ...dummyResource, label: 'A new resource' };
 
-      const resource = await api.addResource(newResource);
+      const response = await api.addResource(newResource);
 
-      expect(resource).toEqual(expect.objectContaining(newResource));
-      expect(resource.id).toBeTruthy();
+      expect(response).toEqual(expect.objectContaining(newResource));
+      expect(response.id).toBeTruthy();
     });
     it('can optionally have id specified by caller', async () => {
       const newResource = { ...dummyResource, label: 'A new resource' };
       const predeterminedId = 'cheesedoodles';
 
-      const resource = await api.addResource(newResource, predeterminedId);
+      const response = await api.addResource(newResource, predeterminedId);
 
-      expect(resource).toEqual(expect.objectContaining(newResource));
-      expect(resource.id).toBe(predeterminedId);
+      expect(response).toEqual(expect.objectContaining(newResource));
+      expect(response.id).toBe(predeterminedId);
     });
-    it('throws ConflictingResourceExists if label is already taken', async () => {
+    it('throws ConflictingObjectExists if label is already taken', async () => {
       const newResource = { ...dummyResource, label: dummyResource.label };
 
       await expect(api.addResource(newResource)).rejects.toThrowError(
-        ConflictingResourceExists
+        ConflictingObjectExists
       );
     });
   });
@@ -115,12 +117,12 @@ describe('BookingAPI', () => {
       await api.deleteResource(dummyResourceId);
 
       await expect(api.getResource(dummyResourceId)).rejects.toThrowError(
-        ResourceDoesNotExist
+        ObjectDoesNotExist
       );
     });
-    it('throws ResourceDoesNotExist if no resource found', async () => {
+    it('throws ObjectDoesNotExist if no resource found', async () => {
       await expect(api.deleteResource('non-existing-id')).rejects.toThrowError(
-        ResourceDoesNotExist
+        ObjectDoesNotExist
       );
     });
   });
@@ -152,10 +154,15 @@ describe('BookingAPI', () => {
       expect(response).toBe(true);
     });
   });
-  describe.skip('getBooking', () => {
-    it('works', async () => {
-      const response = true; // await api.getBooking();
-      expect(response).toBe(true);
+  describe('getBooking', () => {
+    it('returns booking', async () => {
+      const response = await api.getBooking(booking.id);
+      expect(response).toBe(booking);
+    });
+    it('throws ObjectDoesNotExist if resource does not exist', async () => {
+      await expect(api.getBooking('invalid-id')).rejects.toThrowError(
+        ObjectDoesNotExist
+      );
     });
   });
   describe.skip('addBooking', () => {

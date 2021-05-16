@@ -2,8 +2,8 @@ import { IBookingAPI, Resource, Booking, TimeSlot } from './BookingAPI.types';
 import * as utils from './utils';
 import {
   BadRequestError,
-  ConflictingResourceExists,
-  ResourceDoesNotExist,
+  ConflictingObjectExists,
+  ObjectDoesNotExist,
 } from './errors';
 
 export default class BookingAPI implements IBookingAPI {
@@ -29,7 +29,7 @@ export default class BookingAPI implements IBookingAPI {
   async getResource(resourceId: string): Promise<Resource> {
     const resource = this.resources.find(r => r.id === resourceId);
     if (!resource) {
-      throw new ResourceDoesNotExist(`Resource ${resourceId} not found`);
+      throw new ObjectDoesNotExist(`Resource ${resourceId} not found`);
     }
     return Promise.resolve(resource);
   }
@@ -42,14 +42,14 @@ export default class BookingAPI implements IBookingAPI {
       r => r.label === resource.label
     );
     if (resourceWithSameLabel) {
-      throw new ConflictingResourceExists(
+      throw new ConflictingObjectExists(
         `Resource with label ${resource.label} already exists`
       );
     }
     const id = resourceId || '_' + Math.random().toString(36).substr(2, 9);
     const resourceWithSameId = this.resources.find(r => r.id === resourceId);
     if (resourceWithSameId) {
-      throw new ConflictingResourceExists(
+      throw new ConflictingObjectExists(
         `Resource with id ${id} already exists`
       );
     }
@@ -141,8 +141,12 @@ export default class BookingAPI implements IBookingAPI {
     );
   }
 
-  async getBooking(bookingId: string): Promise<Booking | undefined> {
-    return this.bookings.find(b => b.id === bookingId);
+  async getBooking(bookingId: string): Promise<Booking> {
+    const booking = this.bookings.find(b => b.id === bookingId);
+    if (!booking) {
+      throw new ObjectDoesNotExist(`Booking ${bookingId} does not exist`);
+    }
+    return booking;
   }
 
   async addBooking(booking: Omit<Booking, 'id'>): Promise<Booking> {
