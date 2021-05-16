@@ -1,6 +1,7 @@
 import BookingAPI from './BookingAPI.mock';
 import { Booking, Resource, Schedule } from './BookingAPI.types';
 import { openingHourGenerator } from './utils';
+import { ResourceDoesNotExist } from './errors';
 
 const getOpenHours = openingHourGenerator({
   slotDuration: 60,
@@ -22,7 +23,7 @@ const dummySchedule: Schedule = {
   },
 };
 
-const dummyResourceId = 'dummy-resource'
+const dummyResourceId = 'dummy-resource';
 const dummyResource: Omit<Resource, 'id'> = {
   label: 'Dummy resource',
   schedule: dummySchedule,
@@ -40,85 +41,96 @@ const dummyBooking: Omit<Booking, 'id'> = {
 
 describe('BookingAPI', () => {
   const api = new BookingAPI({ apiKey: 'dummy-key' });
+
   beforeAll(async () => {
     await api.addResource(dummyResource, dummyResourceId);
-    await api.addBooking(dummyBooking)
-  })
+    await api.addBooking(dummyBooking);
+  });
+
   describe('getResource', () => {
-    it('works', async () => {
+    it('returns resource if exists', async () => {
       const response = await api.getResource(dummyResourceId);
       expect(response).toEqual({ ...dummyResource, id: dummyResourceId });
+    });
+    it('throws error if it is missing', async () => {
+      try {
+        await api.getResource('invalid-id');
+        fail('Should throw error');
+      } catch (err) {
+        expect(err instanceof ResourceDoesNotExist).toBe(true);
+        expect((err as ResourceDoesNotExist).httpCode).toBe(404);
+      }
     });
   });
   describe.skip('addResource', () => {
     it('works', async () => {
-      const response = true; //await api.addResource();
+      const response = true; // await api.addResource();
       expect(response).toBe(true);
     });
   });
   describe.skip('updateResource', () => {
     it('works', async () => {
-      const response = true; //await api.updateResource();
+      const response = true; // await api.updateResource();
       expect(response).toBe(true);
     });
   });
   describe.skip('deleteResource', () => {
     it('works', async () => {
-      const response = true; //await api.deleteResource();
+      const response = true; // await api.deleteResource();
       expect(response).toBe(true);
     });
   });
   describe.skip('findResources', () => {
     it('works', async () => {
-      const response = true; //await api.findResources();
+      const response = true; // await api.findResources();
       expect(response).toBe(true);
     });
   });
   describe.skip('getNextAvailable', () => {
     it('works', async () => {
-      const response = true; //await api.getNextAvailable();
+      const response = true; // await api.getNextAvailable();
       expect(response).toBe(true);
     });
   });
   describe.skip('findAvailability', () => {
     it('works', async () => {
-      const response = true; //await api.findAvailability();
+      const response = true; // await api.findAvailability();
       expect(response).toBe(true);
     });
   });
   describe.skip('getBooking', () => {
     it('works', async () => {
-      const response = true; //await api.getBooking();
+      const response = true; // await api.getBooking();
       expect(response).toBe(true);
     });
   });
   describe.skip('addBooking', () => {
     it('works', async () => {
-      const response = true; //await api.addBooking();
+      const response = true; // await api.addBooking();
       expect(response).toBe(true);
     });
   });
   describe.skip('cancelBooking', () => {
     it('works', async () => {
-      const response = true; //await api.cancelBooking();
+      const response = true; // await api.cancelBooking();
       expect(response).toBe(true);
     });
   });
   describe.skip('findsBookings', () => {
     it('works', async () => {
-      const response = true; //await api.findsBookings();
+      const response = true; // await api.findsBookings();
       expect(response).toBe(true);
     });
   });
   describe.skip('getLatestBooking', () => {
     it('works', async () => {
-      const response = true; //await api.getLatestBooking();
+      const response = true; // await api.getLatestBooking();
       expect(response).toBe(true);
     });
   });
   describe.skip('getBookedDuration', () => {
     it('works', async () => {
-      const response = true; //await api.getBookedDuration();
+      const response = true; // await api.getBookedDuration();
       expect(response).toBe(true);
     });
   });

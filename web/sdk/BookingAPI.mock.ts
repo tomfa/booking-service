@@ -1,15 +1,14 @@
-import {
-  IBookingAPI,
-  Resource,
-  Booking,
-  TimeSlot,
-} from './BookingAPI.types';
+import { IBookingAPI, Resource, Booking, TimeSlot } from './BookingAPI.types';
 import * as utils from './utils';
+import { ResourceDoesNotExist } from './errors';
 
 export default class BookingAPI implements IBookingAPI {
   private resources: Resource[] = [];
+
   private bookings: Booking[] = [];
+
   private apiKey: string;
+
   private baseUrl: string;
 
   constructor({
@@ -26,23 +25,27 @@ export default class BookingAPI implements IBookingAPI {
   async getResource(resourceId: string): Promise<Resource> {
     const resource = this.resources.find(r => r.id === resourceId);
     if (!resource) {
-      console.log('only got resources', this.resources, 'not id', resourceId);
-      throw new Error(`Unknown resource ${resourceId}`);
+      throw new ResourceDoesNotExist(`Resource ${resourceId} not found`);
     }
     return Promise.resolve(resource);
   }
 
-  async addResource(resource: Omit<Resource, 'id'>, resourceId?: string): Promise<Resource> {
-    const resourceWithSameLabel = this.resources.find(r => r.label === resource.label);
+  async addResource(
+    resource: Omit<Resource, 'id'>,
+    resourceId?: string
+  ): Promise<Resource> {
+    const resourceWithSameLabel = this.resources.find(
+      r => r.label === resource.label
+    );
     if (resourceWithSameLabel) {
       throw new Error(`Resource with label ${resource.label} already exists`);
     }
     const id = resourceId || '_' + Math.random().toString(36).substr(2, 9);
-    const resourceWithSameId = this.resources.find(r => r.id === resource.id);
+    const resourceWithSameId = this.resources.find(r => r.id === resourceId);
     if (resourceWithSameId) {
       throw new Error(`Resource with id ${id} already exists`);
     }
-    const newResource = {...resource, id }
+    const newResource = { ...resource, id };
     this.resources.push(newResource);
     return Promise.resolve(newResource);
   }
@@ -53,7 +56,7 @@ export default class BookingAPI implements IBookingAPI {
       throw new Error(`Resource with id ${resource.id} does not exist.`);
     }
     this.resources.map(existing =>
-      existing.id === resource.id ? resource : existing,
+      existing.id === resource.id ? resource : existing
     );
     return Promise.resolve(resource);
   }
@@ -109,7 +112,11 @@ export default class BookingAPI implements IBookingAPI {
       props.to || new Date(props.from.getTime() + 31 * 24 * 3600 * 1000);
 
     const resource = await this.getResource(resourceId);
-    const tempSlots: TimeSlot[] = utils.constructAllSlots({ resource, from, to });
+    const tempSlots: TimeSlot[] = utils.constructAllSlots({
+      resource,
+      from,
+      to,
+    });
     const bookings = await this.findsBookings({
       from,
       to,
@@ -118,10 +125,10 @@ export default class BookingAPI implements IBookingAPI {
     });
     const slotsWithCorrectAvailability: TimeSlot[] = utils.reduceAvailability(
       tempSlots,
-      bookings,
+      bookings
     );
     return Promise.resolve(
-      slotsWithCorrectAvailability.filter(s => s.availableSeats >= 1),
+      slotsWithCorrectAvailability.filter(s => s.availableSeats >= 1)
     );
   }
 
@@ -213,7 +220,7 @@ export default class BookingAPI implements IBookingAPI {
     userId: string,
     resourceIds?: string[],
     from?: Date,
-    to?: Date,
+    to?: Date
   ): Promise<{ minutes: number; bookingIds: string[] }> {
     const matchingBookings = await this.findsBookings({
       userId,
@@ -224,7 +231,7 @@ export default class BookingAPI implements IBookingAPI {
     const bookingIds = matchingBookings.map(b => b.id);
     const minutes = matchingBookings.reduce(
       (sum, booking) => sum + utils.getBookingDurationMinutes(booking),
-      0,
+      0
     );
     return { minutes, bookingIds };
   }
