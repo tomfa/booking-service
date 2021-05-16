@@ -75,10 +75,7 @@ export default class BookingAPI implements IBookingAPI {
 
   async deleteResource(resourceId: string): Promise<void> {
     const existingResource = await this.getResource(resourceId);
-    if (existingResource) {
-      throw new Error(`Resource with id ${resourceId} does not exist.`);
-    }
-    this.resources = this.resources.filter(r => r.id !== resourceId);
+    this.resources = this.resources.filter(r => r.id !== existingResource.id);
   }
 
   async findResources(filters?: Partial<Resource>): Promise<Resource[]> {

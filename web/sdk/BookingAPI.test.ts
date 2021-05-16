@@ -108,10 +108,20 @@ describe('BookingAPI', () => {
       ).rejects.toThrowError(BadRequestError);
     });
   });
-  describe.skip('deleteResource', () => {
-    it('works', async () => {
-      const response = true; // await api.deleteResource();
-      expect(response).toBe(true);
+  describe('deleteResource', () => {
+    it('deletes the resource', async () => {
+      expect(await api.getResource(dummyResourceId)).toBeTruthy();
+
+      await api.deleteResource(dummyResourceId);
+
+      await expect(api.getResource(dummyResourceId)).rejects.toThrowError(
+        ResourceDoesNotExist
+      );
+    });
+    it('throws ResourceDoesNotExist if no resource found', async () => {
+      await expect(api.deleteResource('non-existing-id')).rejects.toThrowError(
+        ResourceDoesNotExist
+      );
     });
   });
   describe.skip('findResources', () => {
