@@ -1,7 +1,11 @@
 import BookingAPI from './BookingAPI.mock';
 import { Booking, Resource, Schedule } from './BookingAPI.types';
 import { openingHourGenerator } from './utils';
-import { ConflictingResourceExists, ResourceDoesNotExist } from './errors';
+import {
+  BadRequestError,
+  ConflictingResourceExists,
+  ResourceDoesNotExist,
+} from './errors';
 
 const getOpenHours = openingHourGenerator({
   slotDuration: 60,
@@ -54,13 +58,9 @@ describe('BookingAPI', () => {
       expect(response).toEqual({ ...dummyResource, id: dummyResourceId });
     });
     it('throws ResourceDoesNotExist if resource does not exist', async () => {
-      try {
-        await api.getResource('invalid-id');
-        fail('Should throw error');
-      } catch (err) {
-        expect(err instanceof ResourceDoesNotExist).toBe(true);
-        expect((err as ResourceDoesNotExist).httpCode).toBe(404);
-      }
+      await expect(api.getResource('invalid-id')).rejects.toThrowError(
+        ResourceDoesNotExist
+      );
     });
   });
   describe('addResource', () => {
@@ -84,19 +84,28 @@ describe('BookingAPI', () => {
     it('throws ConflictingResourceExists if label is already taken', async () => {
       const newResource = { ...dummyResource, label: dummyResource.label };
 
-      try {
-        await api.addResource(newResource);
-        fail('Should throw error');
-      } catch (err) {
-        expect(err instanceof ConflictingResourceExists).toBe(true);
-        expect((err as ConflictingResourceExists).httpCode).toBe(400);
-      }
+      await expect(api.addResource(newResource)).rejects.toThrowError(
+        ConflictingResourceExists
+      );
     });
   });
-  describe.skip('updateResource', () => {
-    it('works', async () => {
-      const response = true; // await api.updateResource();
-      expect(response).toBe(true);
+  describe('updateResource', () => {
+    it('updates the resource', async () => {
+      expect((await api.getResource(dummyResourceId)).enabled).toBe(true);
+
+      const response = await api.updateResource(dummyResourceId, {
+        enabled: false,
+      });
+
+      expect(response).toEqual(
+        expect.objectContaining({ ...dummyResource, enabled: false })
+      );
+      expect((await api.getResource(dummyResourceId)).enabled).toBe(false);
+    });
+    it('throws BadRequestError if attempting to update the id', async () => {
+      await expect(
+        api.updateResource(dummyResourceId, { id: 'newId' })
+      ).rejects.toThrowError(BadRequestError);
     });
   });
   describe.skip('deleteResource', () => {

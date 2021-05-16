@@ -1,22 +1,17 @@
 /* eslint-disable max-classes-per-file */
 
 export class GenericBookingError extends Error {
-  httpCode: number;
-
-  constructor(httpStatus: number, message?: string) {
-    super(message);
-    this.httpCode = httpStatus;
-  }
+  httpCode: number = 500;
 }
 
 export class ResourceDoesNotExist extends GenericBookingError {
-  constructor(message?: string) {
-    super(404, message);
-  }
+  httpCode = 404;
+}
+
+export class BadRequestError extends GenericBookingError {
+  httpCode = 400;
 }
 
 export class ConflictingResourceExists extends GenericBookingError {
-  constructor(message?: string) {
-    super(400, message);
-  }
+  httpCode = 400;
 }

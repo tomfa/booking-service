@@ -1,6 +1,10 @@
 import { IBookingAPI, Resource, Booking, TimeSlot } from './BookingAPI.types';
 import * as utils from './utils';
-import { ConflictingResourceExists, ResourceDoesNotExist } from './errors';
+import {
+  BadRequestError,
+  ConflictingResourceExists,
+  ResourceDoesNotExist,
+} from './errors';
 
 export default class BookingAPI implements IBookingAPI {
   private resources: Resource[] = [];
@@ -54,15 +58,19 @@ export default class BookingAPI implements IBookingAPI {
     return Promise.resolve(newResource);
   }
 
-  async updateResource(resource: Resource): Promise<Resource> {
-    const previousResource = await this.getResource(resource.id);
-    if (previousResource) {
-      throw new Error(`Resource with id ${resource.id} does not exist.`);
+  async updateResource(
+    resourceId: string,
+    resource: Partial<Resource>
+  ): Promise<Resource> {
+    const existingResource = await this.getResource(resourceId);
+    if (resource.id && resource.id !== existingResource.id) {
+      throw new BadRequestError(`Can not change the id of a Resource.`);
     }
-    this.resources.map(existing =>
-      existing.id === resource.id ? resource : existing
+    const updatedResource = { ...existingResource, ...resource };
+    this.resources = this.resources.map(existing =>
+      existing.id === existingResource.id ? updatedResource : existing
     );
-    return Promise.resolve(resource);
+    return Promise.resolve(updatedResource);
   }
 
   async deleteResource(resourceId: string): Promise<void> {

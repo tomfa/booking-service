@@ -45,33 +45,40 @@ export type TimeSlot = {
 export interface IBookingAPI {
   getResource(resourceId: string): Promise<Resource | undefined>;
   addResource(resource: Resource): Promise<Resource>;
-  updateResource(resource: Resource): Promise<Resource>;
+  updateResource(
+    resourceId: string,
+    resource: Partial<Resource>
+  ): Promise<Resource>;
   deleteResource(resourceId: string): Promise<void>;
   findResources(): Promise<Resource[]>;
 
   getNextAvailable(resourceId: string): Promise<TimeSlot | undefined>;
-  findAvailability(props: { resourceId: string, from?: Date, to?: Date }): Promise<TimeSlot[]>;
+  findAvailability(props: {
+    resourceId: string;
+    from?: Date;
+    to?: Date;
+  }): Promise<TimeSlot[]>;
 
   getBooking(bookingId: string): Promise<Booking | undefined>;
   addBooking(booking: Omit<Booking, 'id'>): Promise<Booking>;
   cancelBooking(bookingId: string): Promise<void>;
   findsBookings(props: {
-    userId?: string,
-    resourceIds?: string[],
-    from?: Date,
-    to?: Date,
-    includeCanceled?: boolean,
+    userId?: string;
+    resourceIds?: string[];
+    from?: Date;
+    to?: Date;
+    includeCanceled?: boolean;
   }): Promise<Booking[]>;
 
   getLatestBooking(props: {
-    userId?: string,
-    resourceIds?: string[],
-    before?: Date,
+    userId?: string;
+    resourceIds?: string[];
+    before?: Date;
   }): Promise<Booking | undefined>;
   getBookedDuration(
     userId: string,
     resourceIds?: string[],
     from?: Date,
-    to?: Date,
+    to?: Date
   ): Promise<{ minutes: number; bookingIds: string[] }>;
 }
