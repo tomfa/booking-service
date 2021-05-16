@@ -1,5 +1,6 @@
-import { IBookingAPI, Resource, Booking, TimeSlot } from './BookingAPI.types';
+import { Booking, IBookingAPI, Resource, TimeSlot } from './BookingAPI.types';
 import * as utils from './utils';
+import { verifyIsBookable } from './utils';
 import {
   BadRequestError,
   ConflictingObjectExists,
@@ -152,6 +153,8 @@ export default class BookingAPI implements IBookingAPI {
   async addBooking(booking: Omit<Booking, 'id'>): Promise<Booking> {
     const id = '_' + Math.random().toString(36).substr(2, 9);
     const newBooking = { ...booking, id };
+    const resource = await this.getResource(newBooking.resourceId);
+    verifyIsBookable(resource, this.bookings, newBooking);
     this.bookings.push(newBooking);
     return Promise.resolve(newBooking);
   }

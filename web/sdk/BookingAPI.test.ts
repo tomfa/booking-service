@@ -45,8 +45,8 @@ const dummyBooking: Omit<Booking, 'id'> = {
 
 describe('BookingAPI', () => {
   let api: BookingAPI = new BookingAPI({ apiKey: 'dummy-key' });
-  let booking;
-  let resource;
+  let booking: Booking;
+  let resource: Resource;
 
   beforeEach(async () => {
     api = new BookingAPI({ apiKey: 'dummy-key' });
@@ -60,7 +60,7 @@ describe('BookingAPI', () => {
       expect(response).toBe(resource);
     });
     it('throws ObjectDoesNotExist if resource does not exist', async () => {
-      await expect(api.getResource('invalid-id')).rejects.toThrowError(
+      await expect(api.getResource('invalid-id')).rejects.toThrow(
         ObjectDoesNotExist
       );
     });
@@ -86,7 +86,7 @@ describe('BookingAPI', () => {
     it('throws ConflictingObjectExists if label is already taken', async () => {
       const newResource = { ...dummyResource, label: dummyResource.label };
 
-      await expect(api.addResource(newResource)).rejects.toThrowError(
+      await expect(api.addResource(newResource)).rejects.toThrow(
         ConflictingObjectExists
       );
     });
@@ -107,7 +107,7 @@ describe('BookingAPI', () => {
     it('throws BadRequestError if attempting to update the id', async () => {
       await expect(
         api.updateResource(dummyResourceId, { id: 'newId' })
-      ).rejects.toThrowError(BadRequestError);
+      ).rejects.toThrow(BadRequestError);
     });
   });
   describe('deleteResource', () => {
@@ -116,12 +116,12 @@ describe('BookingAPI', () => {
 
       await api.deleteResource(dummyResourceId);
 
-      await expect(api.getResource(dummyResourceId)).rejects.toThrowError(
+      await expect(api.getResource(dummyResourceId)).rejects.toThrow(
         ObjectDoesNotExist
       );
     });
     it('throws ObjectDoesNotExist if no resource found', async () => {
-      await expect(api.deleteResource('non-existing-id')).rejects.toThrowError(
+      await expect(api.deleteResource('non-existing-id')).rejects.toThrow(
         ObjectDoesNotExist
       );
     });
@@ -160,16 +160,49 @@ describe('BookingAPI', () => {
       expect(response).toBe(booking);
     });
     it('throws ObjectDoesNotExist if resource does not exist', async () => {
-      await expect(api.getBooking('invalid-id')).rejects.toThrowError(
+      await expect(api.getBooking('invalid-id')).rejects.toThrow(
         ObjectDoesNotExist
       );
     });
   });
-  describe.skip('addBooking', () => {
-    it('works', async () => {
-      const response = true; // await api.addBooking();
-      expect(response).toBe(true);
+  describe('addBooking', () => {
+    it('returns new booking', async () => {
+      const response = await api.addBooking({ ...booking });
+
+      expect(response).toEqual({ ...booking, id: response.id });
+      expect(response.id).not.toEqual(booking.id);
     });
+    it('throws ObjectDoesNotExist if resource id is unknown', async () => {
+      const invalidBooking = { ...booking, resourceId: 'unknown-id' };
+
+      await expect(api.addBooking(invalidBooking)).rejects.toThrow(
+        ObjectDoesNotExist
+      );
+    });
+    it('throws BadRequestError if resource is disabled', async () => {
+      await api.updateResource(resource.id, { enabled: false });
+
+      await expect(api.addBooking({ ...booking })).rejects.toThrow(
+        new BadRequestError(
+          `Unable to add booking to disabled resource ${resource.id}`
+        )
+      );
+    });
+    it('throws BadRequestError if resource has no slots left', async () => {
+      await api.updateResource(resource.id, { seats: 1 });
+
+      await expect(api.addBooking({ ...booking })).rejects.toThrow(
+        new BadRequestError(
+          `No available slots in requested period for resource ${resource.id}`
+        )
+      );
+
+      // Considers cancelled booking an open slot
+      await api.cancelBooking(booking.id);
+      await api.addBooking({ ...booking });
+    });
+    it('throws BadRequestError if resource is closed at requested time', async () => {});
+    it('throws BadRequestError if booking hour does not match slot for resource', async () => {});
   });
   describe.skip('cancelBooking', () => {
     it('works', async () => {
