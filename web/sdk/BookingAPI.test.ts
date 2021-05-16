@@ -203,14 +203,14 @@ describe('BookingAPI', () => {
     });
     it('throws BadRequestError if resource is closed at requested time', async () => {
       const mondayAtMidnightUTC = new Date('2021-05-17T00:00:00Z');
-      const halfHourLater = new Date(
-        mondayAtMidnightUTC.getTime() + 1800 * 1000
+      const oneHourLater = new Date(
+        mondayAtMidnightUTC.getTime() + 3600 * 1000
       );
 
       const invalidBookingPayload: Booking = {
         ...booking,
         start: mondayAtMidnightUTC,
-        end: halfHourLater,
+        end: oneHourLater,
       };
 
       await expect(api.addBooking(invalidBookingPayload)).rejects.toThrow(
@@ -219,7 +219,29 @@ describe('BookingAPI', () => {
         )
       );
     });
-    it('throws BadRequestError if booking hour does not match slot for resource', async () => {});
+    it('throws BadRequestError if booking hour does not match slot for resource', async () => {
+      const validMondayHour = new Date('2021-05-17T13:00:00Z');
+      const addToValidHour = (minutes: number) =>
+        new Date(validMondayHour.getTime() + minutes * 60 * 1000);
+
+      const validBookingPayload: Booking = {
+        ...booking,
+        start: validMondayHour,
+        end: addToValidHour(60),
+      };
+      await api.addBooking(validBookingPayload);
+
+      const invalidBooking = {
+        ...validBookingPayload,
+        start: addToValidHour(1),
+        end: addToValidHour(61),
+      };
+      await expect(api.addBooking(invalidBooking)).rejects.toThrow(
+        new BadRequestError(
+          `Booked time 2021-05-17T13:01:00.000Z does not fit into resource ${resource.id} time slots`
+        )
+      );
+    });
   });
   describe('cancelBooking', () => {
     it('changes canceled attribute to true', async () => {

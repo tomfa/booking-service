@@ -120,16 +120,6 @@ export const openingHourGenerator = ({
   };
 };
 
-export const isSlotAvailable = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  resource: Resource,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  booking: Booking
-): boolean => {
-  // TODO
-  return true;
-};
-
 const getIsoDate = (date: Date): IsoDate => {
   return date.toISOString().substr(0, 10);
 };
@@ -219,6 +209,39 @@ const isOutsideOpeningHours = (
   return false;
 };
 
+export const bookingSlotFitsInResourceSlots = (
+  resource: Resource,
+  booking: Booking
+): boolean => {
+  const bookingDurationMinutes =
+    (booking.end.getTime() - booking.start.getTime()) / (60 * 1000);
+  const openingHours = getOpeningHoursForDate(resource, booking.start);
+
+  const { hour: startHour, minute: startMinute } = splitHourMinute(
+    openingHours.start
+  );
+  const { hour: bookHour, minute: bookMinute } = splitHourMinuteOfDay(
+    booking.start
+  );
+  const bookingDiffFromOpeningMinutes =
+    bookHour * 60 + bookMinute - (startHour * 60 + startMinute);
+
+  if (bookingDiffFromOpeningMinutes < 0) {
+    return false;
+  }
+  if (bookingDiffFromOpeningMinutes % openingHours.slotIntervalMinutes !== 0) {
+    return false;
+  }
+  if (bookingDurationMinutes !== openingHours.slotDurationMinutes) {
+    throw new BadRequestError(
+      `Booking length ${bookingDurationMinutes}min does not fit into opening hours at ${getIsoDate(
+        booking.start
+      )} for resource ${resource.id}`
+    );
+  }
+  return true;
+};
+
 export const verifyIsBookable = (
   resource: Resource,
   existingBookings: Booking[],
@@ -250,11 +273,11 @@ export const verifyIsBookable = (
       ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
     );
   }
-  if (!isSlotAvailable(resource, booking)) {
+  if (!bookingSlotFitsInResourceSlots(resource, booking)) {
     throw new BadRequestError(
-      `Slot from=${booking.start.toISOString()} to ${booking.end.toISOString()} is not available for resource ${
+      `Booked time ${booking.start.toISOString()} does not fit into resource ${
         resource.id
-      }`,
+      } time slots`,
       ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
     );
   }
