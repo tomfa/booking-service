@@ -1,6 +1,6 @@
 import { IBookingAPI, Resource, Booking, TimeSlot } from './BookingAPI.types';
 import * as utils from './utils';
-import { ResourceDoesNotExist } from './errors';
+import { ConflictingResourceExists, ResourceDoesNotExist } from './errors';
 
 export default class BookingAPI implements IBookingAPI {
   private resources: Resource[] = [];
@@ -38,12 +38,16 @@ export default class BookingAPI implements IBookingAPI {
       r => r.label === resource.label
     );
     if (resourceWithSameLabel) {
-      throw new Error(`Resource with label ${resource.label} already exists`);
+      throw new ConflictingResourceExists(
+        `Resource with label ${resource.label} already exists`
+      );
     }
     const id = resourceId || '_' + Math.random().toString(36).substr(2, 9);
     const resourceWithSameId = this.resources.find(r => r.id === resourceId);
     if (resourceWithSameId) {
-      throw new Error(`Resource with id ${id} already exists`);
+      throw new ConflictingResourceExists(
+        `Resource with id ${id} already exists`
+      );
     }
     const newResource = { ...resource, id };
     this.resources.push(newResource);

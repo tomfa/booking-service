@@ -1,7 +1,7 @@
 import BookingAPI from './BookingAPI.mock';
 import { Booking, Resource, Schedule } from './BookingAPI.types';
 import { openingHourGenerator } from './utils';
-import { ResourceDoesNotExist } from './errors';
+import { ConflictingResourceExists, ResourceDoesNotExist } from './errors';
 
 const getOpenHours = openingHourGenerator({
   slotDuration: 60,
@@ -40,19 +40,20 @@ const dummyBooking: Omit<Booking, 'id'> = {
 };
 
 describe('BookingAPI', () => {
-  const api = new BookingAPI({ apiKey: 'dummy-key' });
+  let api: BookingAPI = new BookingAPI({ apiKey: 'dummy-key' });
 
-  beforeAll(async () => {
+  beforeEach(async () => {
+    api = new BookingAPI({ apiKey: 'dummy-key' });
     await api.addResource(dummyResource, dummyResourceId);
     await api.addBooking(dummyBooking);
   });
 
   describe('getResource', () => {
-    it('returns resource if exists', async () => {
+    it('returns resource', async () => {
       const response = await api.getResource(dummyResourceId);
       expect(response).toEqual({ ...dummyResource, id: dummyResourceId });
     });
-    it('throws error if it is missing', async () => {
+    it('throws ResourceDoesNotExist if resource does not exist', async () => {
       try {
         await api.getResource('invalid-id');
         fail('Should throw error');
@@ -62,10 +63,34 @@ describe('BookingAPI', () => {
       }
     });
   });
-  describe.skip('addResource', () => {
-    it('works', async () => {
-      const response = true; // await api.addResource();
-      expect(response).toBe(true);
+  describe('addResource', () => {
+    it('adds a new resource with a random id', async () => {
+      const newResource = { ...dummyResource, label: 'A new resource' };
+
+      const resource = await api.addResource(newResource);
+
+      expect(resource).toEqual(expect.objectContaining(newResource));
+      expect(resource.id).toBeTruthy();
+    });
+    it('can optionally have id specified by caller', async () => {
+      const newResource = { ...dummyResource, label: 'A new resource' };
+      const predeterminedId = 'cheesedoodles';
+
+      const resource = await api.addResource(newResource, predeterminedId);
+
+      expect(resource).toEqual(expect.objectContaining(newResource));
+      expect(resource.id).toBe(predeterminedId);
+    });
+    it('throws ConflictingResourceExists if label is already taken', async () => {
+      const newResource = { ...dummyResource, label: dummyResource.label };
+
+      try {
+        await api.addResource(newResource);
+        fail('Should throw error');
+      } catch (err) {
+        expect(err instanceof ConflictingResourceExists).toBe(true);
+        expect((err as ConflictingResourceExists).httpCode).toBe(400);
+      }
     });
   });
   describe.skip('updateResource', () => {
