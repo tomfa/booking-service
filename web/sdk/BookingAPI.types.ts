@@ -21,6 +21,9 @@ export type Schedule = {
 
 export type Resource = {
   id: string;
+  // TODO: Should we add category here?
+  //   So that we could add 14 x "desk" resource with different labels,
+  //   and ask for availability for any resource of category "desk"?
   label: string;
   schedule: Schedule;
   seats: number;

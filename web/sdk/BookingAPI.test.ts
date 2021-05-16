@@ -124,10 +124,20 @@ describe('BookingAPI', () => {
       );
     });
   });
-  describe.skip('findResources', () => {
-    it('works', async () => {
-      const response = true; // await api.findResources();
-      expect(response).toBe(true);
+  describe('findResources', () => {
+    it('returns a list of matching resources', async () => {
+      const resources = await api.findResources({ label: dummyResource.label });
+      expect(resources.length).toBe(1);
+      expect(resources[0]).toEqual({ ...dummyResource, id: dummyResourceId });
+    });
+    it('returns empty list if no matches', async () => {
+      const resources = await api.findResources({ label: 'No matchy' });
+      expect(resources.length).toBe(0);
+    });
+    it('returns all resources if no filter is passed', async () => {
+      const resources = await api.findResources();
+      expect(resources.length).toBe(1);
+      expect(resources[0]).toEqual({ ...dummyResource, id: dummyResourceId });
     });
   });
   describe.skip('getNextAvailable', () => {
