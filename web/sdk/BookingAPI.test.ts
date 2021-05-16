@@ -197,11 +197,28 @@ describe('BookingAPI', () => {
         )
       );
 
-      // Considers cancelled booking an open slot
+      // Check that it considers cancelled booking an open slot
       await api.cancelBooking(booking.id);
       await api.addBooking({ ...booking });
     });
-    it('throws BadRequestError if resource is closed at requested time', async () => {});
+    it('throws BadRequestError if resource is closed at requested time', async () => {
+      const mondayAtMidnightUTC = new Date('2021-05-17T00:00:00Z');
+      const halfHourLater = new Date(
+        mondayAtMidnightUTC.getTime() + 1800 * 1000
+      );
+
+      const invalidBookingPayload: Booking = {
+        ...booking,
+        start: mondayAtMidnightUTC,
+        end: halfHourLater,
+      };
+
+      await expect(api.addBooking(invalidBookingPayload)).rejects.toThrow(
+        new BadRequestError(
+          `Resource ${resource.id} is not open at requested time`
+        )
+      );
+    });
     it('throws BadRequestError if booking hour does not match slot for resource', async () => {});
   });
   describe('cancelBooking', () => {

@@ -1,11 +1,12 @@
 import {
   Booking,
   HourMinute,
+  IsoDate,
   OpeningHour,
   Resource,
   TimeSlot,
 } from './BookingAPI.types';
-import { BadRequestError, ErrorCode } from './errors';
+import { BadRequestError, ErrorCode, GenericBookingError } from './errors';
 
 export const constructAllSlots = ({
   resource,
@@ -129,11 +130,101 @@ export const isSlotAvailable = (
   return true;
 };
 
+const getIsoDate = (date: Date): IsoDate => {
+  return date.toISOString().substr(0, 10);
+};
+
+const getOpeningHoursForDate = (
+  resource: Resource,
+  date: Date
+): OpeningHour => {
+  const overridenTime = resource.schedule.overriddenDates[getIsoDate(date)];
+  if (overridenTime) {
+    return overridenTime;
+  }
+  const dayOfWeek = date.getDay();
+  if (dayOfWeek === 0) {
+    return resource.schedule.mon;
+  }
+  if (dayOfWeek === 1) {
+    return resource.schedule.tue;
+  }
+  if (dayOfWeek === 3) {
+    return resource.schedule.wed;
+  }
+  if (dayOfWeek === 3) {
+    return resource.schedule.thu;
+  }
+  if (dayOfWeek === 4) {
+    return resource.schedule.fri;
+  }
+  if (dayOfWeek === 5) {
+    return resource.schedule.sat;
+  }
+  if (dayOfWeek === 6) {
+    return resource.schedule.sun;
+  }
+  throw new GenericBookingError(
+    `Unable to find openinghours for resource ${resource.id}, date: ${date}`
+  );
+};
+
+const splitHourMinute = (
+  hourMinute: HourMinute
+): { hour: number; minute: number } => {
+  try {
+    const [hourStr, minuteStr] = hourMinute.split(':');
+    const hour = parseInt(hourStr);
+    const minute = parseInt(minuteStr);
+    if (Number.isNaN(hour) || Number.isNaN(minute)) {
+      throw new Error('HourMinute can not be parsed to integers');
+    }
+    return { hour, minute };
+  } catch (error) {
+    throw new GenericBookingError(
+      `Received invalid opening hour ${hourMinute}.`
+    );
+  }
+};
+
+const splitHourMinuteOfDay = (date: Date): { hour: number; minute: number } => {
+  return { hour: date.getUTCHours(), minute: date.getUTCMinutes() };
+};
+
+const isOutsideOpeningHours = (
+  resource: Resource,
+  booking: Booking
+): boolean => {
+  const openingHours = getOpeningHoursForDate(resource, booking.start);
+  if (openingHours.start === openingHours.end) {
+    return true;
+  }
+  const { hour: startHour, minute: startMinute } = splitHourMinute(
+    openingHours.start
+  );
+  const { hour: endHour, minute: endMinute } = splitHourMinute(
+    openingHours.end
+  );
+  const { hour: bookHour, minute: bookMinute } = splitHourMinuteOfDay(
+    booking.start
+  );
+  // Note: Able to book _at_ opening hour
+  if (bookHour * 60 + bookMinute < startHour * 60 + startMinute) {
+    return true;
+  }
+  // Note: Not able to book _at_ closing hour
+  if (bookHour * 60 + bookMinute >= endHour * 60 + endMinute) {
+    return true;
+  }
+  return false;
+};
+
 export const verifyIsBookable = (
   resource: Resource,
   existingBookings: Booking[],
   booking: Booking
 ) => {
+  // TODO: This needs to be tested for many edgecases
   if (!resource.enabled) {
     throw new BadRequestError(
       `Unable to add booking to disabled resource ${resource.id}`,
@@ -150,6 +241,12 @@ export const verifyIsBookable = (
   if (overLappingBookings.length >= resource.seats) {
     throw new BadRequestError(
       `No available slots in requested period for resource ${resource.id}`,
+      ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
+    );
+  }
+  if (isOutsideOpeningHours(resource, booking)) {
+    throw new BadRequestError(
+      `Resource ${resource.id} is not open at requested time`,
       ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
     );
   }
