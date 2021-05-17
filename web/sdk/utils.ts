@@ -17,16 +17,19 @@ export const constructAllSlots = ({
   from: Date;
   to: Date;
 }): TimeSlot[] => {
+  if (!resource.enabled) {
+    return [];
+  }
   const timeslots: TimeSlot[] = [];
   const immediatlyBeforeFrom = new Date(from.getTime() - 1);
-  let cursor = getNextTimeslotStart(resource, immediatlyBeforeFrom);
+  let cursor = getNextTimeslotAfter(resource, immediatlyBeforeFrom);
 
   while (cursor && cursor < to) {
     const currentTimeSlot = getCurrentTimeSlot(resource, cursor);
     if (currentTimeSlot) {
       timeslots.push(currentTimeSlot);
     }
-    cursor = getNextTimeslotStart(resource, cursor);
+    cursor = getNextTimeslotAfter(resource, cursor);
   }
   return timeslots;
 };
@@ -35,7 +38,7 @@ export const getCurrentTimeSlot = (
   resource: Resource,
   time: Date
 ): TimeSlot | undefined => {
-  if (!isOpen(resource, time)) {
+  if (!isWithinOpeningHours(resource, time)) {
     return undefined;
   }
   const schedule = getHoursForTimestamp(resource, time);
@@ -61,25 +64,30 @@ export const getHoursForTimestamp = (
   };
 };
 
-export const getNextSlotAfter = (resource: Resource, time: Date): Date => {
-  return new Date(
-    time.getTime() + resource.schedule.mon.slotIntervalMinutes * 60 * 1000
-  );
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const isOpen = (resource: Resource, time: Date): boolean => {
-  return true; // TODO
-};
-
-export const getNextTimeslotStart = (
+export const isWithinOpeningHours = (
   resource: Resource,
-  cursor: Date
-): Date | undefined => {
-  // TODO: This is no where near right
-  return new Date(
-    cursor.getTime() + resource.schedule.mon.slotDurationMinutes * 60 * 1000
+  time: Date
+): boolean => {
+  const openingHours = getOpeningHoursForDate(resource, time);
+  if (openingHours.start === openingHours.end) {
+    return false;
+  }
+  const { hour: startHour, minute: startMinute } = splitHourMinute(
+    openingHours.start
   );
+  const { hour: endHour, minute: endMinute } = splitHourMinute(
+    openingHours.end
+  );
+  const { hour: bookHour, minute: bookMinute } = splitHourMinuteOfDay(time);
+  // Note: Able to book _at_ opening hour
+  if (bookHour * 60 + bookMinute < startHour * 60 + startMinute) {
+    return false;
+  }
+  // Note: Not able to book _at_ closing hour
+  if (bookHour * 60 + bookMinute >= endHour * 60 + endMinute) {
+    return false;
+  }
+  return true;
 };
 
 export const reduceAvailability = (
@@ -139,7 +147,7 @@ const getOpeningHoursForDate = (
   if (dayOfWeek === 1) {
     return resource.schedule.tue;
   }
-  if (dayOfWeek === 3) {
+  if (dayOfWeek === 2) {
     return resource.schedule.wed;
   }
   if (dayOfWeek === 3) {
@@ -155,7 +163,7 @@ const getOpeningHoursForDate = (
     return resource.schedule.sun;
   }
   throw new GenericBookingError(
-    `Unable to find openinghours for resource ${resource.id}, date: ${date}`
+    `Unable to find openinghours for resource ${resource.id}, date: ${date}, dayofWeek ${dayOfWeek}`
   );
 };
 
@@ -181,32 +189,93 @@ const splitHourMinuteOfDay = (date: Date): { hour: number; minute: number } => {
   return { hour: date.getUTCHours(), minute: date.getUTCMinutes() };
 };
 
-const isOutsideOpeningHours = (
-  resource: Resource,
-  booking: Booking
-): boolean => {
-  const openingHours = getOpeningHoursForDate(resource, booking.start);
-  if (openingHours.start === openingHours.end) {
-    return true;
+const firstSlotOfDay = (
+  openingHours: OpeningHour,
+  day: IsoDate
+): Date | undefined => {
+  if (isClosed(openingHours)) {
+    return undefined;
   }
+  return new Date(`${day}T${openingHours.start}:00Z`);
+};
+
+const isClosed = (openingHours: OpeningHour): boolean => {
+  return openingHours.start === openingHours.end;
+};
+
+const isBeforeOpeningHours = (
+  openingHours: OpeningHour,
+  date: Date
+): boolean => {
   const { hour: startHour, minute: startMinute } = splitHourMinute(
     openingHours.start
   );
+  const { hour, minute } = splitHourMinuteOfDay(date);
+  const bookingDiffFromOpeningMinutes =
+    hour * 60 + minute - (startHour * 60 + startMinute);
+  return bookingDiffFromOpeningMinutes < 0;
+};
+
+const isAfterOpeningHours = (
+  openingHours: OpeningHour,
+  date: Date
+): boolean => {
   const { hour: endHour, minute: endMinute } = splitHourMinute(
     openingHours.end
   );
-  const { hour: bookHour, minute: bookMinute } = splitHourMinuteOfDay(
-    booking.start
+  const { hour, minute } = splitHourMinuteOfDay(date);
+  const minutesUntilClosing = endHour * 60 + endMinute - (hour * 60 + minute);
+  // Note: _at_ closing time will be considered closed
+  return minutesUntilClosing <= 0;
+};
+
+const roundUpToNextSlotStart = (
+  openingHours: OpeningHour,
+  date: Date
+): Date => {
+  const { hour: startHour, minute: startMinute } = splitHourMinute(
+    openingHours.start
   );
-  // Note: Able to book _at_ opening hour
-  if (bookHour * 60 + bookMinute < startHour * 60 + startMinute) {
-    return true;
+  const { hour, minute } = splitHourMinuteOfDay(date);
+  const bookingDiffFromOpeningMinutes =
+    hour * 60 + minute - (startHour * 60 + startMinute);
+  const remainder =
+    bookingDiffFromOpeningMinutes % openingHours.slotIntervalMinutes;
+  if (remainder === 0) {
+    return new Date(
+      date.getTime() + openingHours.slotIntervalMinutes * 60 * 1000
+    );
   }
-  // Note: Not able to book _at_ closing hour
-  if (bookHour * 60 + bookMinute >= endHour * 60 + endMinute) {
-    return true;
+  const minutesToAdd = openingHours.slotIntervalMinutes - remainder;
+  const cleanedDate = new Date(date.getTime() + minutesToAdd * 60 * 1000);
+  cleanedDate.setSeconds(0, 0);
+  return cleanedDate;
+};
+
+const getNextTimeslotAfter = (
+  resource: Resource,
+  date: Date
+): Date | undefined => {
+  if (!resource.enabled) {
+    return undefined;
   }
-  return false;
+  if (Number.isNaN(date.getTime())) {
+    throw new Error(`nextBookingSlotHour: Invalid date passed.`);
+  }
+  const openingHours = getOpeningHoursForDate(resource, date);
+  if (isClosed(openingHours)) {
+    // Consider trying next day?
+    return undefined;
+  }
+  if (isBeforeOpeningHours(openingHours, date)) {
+    return firstSlotOfDay(openingHours, getIsoDate(date));
+  }
+  const cleanedDate = roundUpToNextSlotStart(openingHours, date);
+  if (isAfterOpeningHours(openingHours, cleanedDate)) {
+    // Consider trying next day?
+    return undefined;
+  }
+  return cleanedDate;
 };
 
 export const bookingSlotFitsInResourceSlots = (
@@ -267,7 +336,7 @@ export const verifyIsBookable = (
       ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
     );
   }
-  if (isOutsideOpeningHours(resource, booking)) {
+  if (!isWithinOpeningHours(resource, booking.start)) {
     throw new BadRequestError(
       `Resource ${resource.id} is not open at requested time`,
       ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE

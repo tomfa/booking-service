@@ -26,6 +26,7 @@ export type Resource = {
   //   and ask for availability for any resource of category "desk"?
   label: string;
   schedule: Schedule;
+  // TODO: How to solve "not available until" or "not available after"
   seats: number;
   enabled: boolean;
 };

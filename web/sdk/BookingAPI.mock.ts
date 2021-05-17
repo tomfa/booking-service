@@ -93,14 +93,13 @@ export default class BookingAPI implements IBookingAPI {
     return Promise.resolve(this.resources.filter(matchesFiltering));
   }
 
-  async getNextAvailable(resourceId: string): Promise<TimeSlot | undefined> {
-    const resource = await this.getResource(resourceId);
-    if (!resource.enabled) {
-      return undefined;
-    }
+  async getNextAvailable(
+    resourceId: string,
+    after: Date = new Date()
+  ): Promise<TimeSlot | undefined> {
     const availableSlots = await this.findAvailability({
       resourceId,
-      from: new Date(),
+      from: after,
     });
     if (!availableSlots.length) {
       return undefined;
@@ -122,6 +121,9 @@ export default class BookingAPI implements IBookingAPI {
       props.to || new Date(props.from.getTime() + 31 * 24 * 3600 * 1000);
 
     const resource = await this.getResource(resourceId);
+    if (!resource.enabled) {
+      return [];
+    }
     const tempSlots: TimeSlot[] = utils.constructAllSlots({
       resource,
       from,

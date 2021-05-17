@@ -142,10 +142,13 @@ describe('BookingAPI', () => {
       expect(resources[0]).toEqual({ ...dummyResource, id: dummyResourceId });
     });
   });
-  describe.skip('getNextAvailable', () => {
-    it('works', async () => {
-      const response = true; // await api.getNextAvailable();
-      expect(response).toBe(true);
+  describe('getNextAvailable', () => {
+    it('returns first available slot after now', async () => {
+      const now = new Date('2021-05-17T00:00:00Z');
+
+      const slot = await api.getNextAvailable(resource.id, now);
+
+      expect(slot.start).toEqual(new Date('2021-05-17T08:00:00Z'));
     });
   });
   describe.skip('findAvailability', () => {
