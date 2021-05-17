@@ -22,14 +22,14 @@ export const constructAllSlots = ({
   }
   const timeslots: TimeSlot[] = [];
   const immediatlyBeforeFrom = new Date(from.getTime() - 1);
-  let cursor = getNextTimeslotAfter(resource, immediatlyBeforeFrom);
+  let cursor = getNextTimeslotAfter(resource, immediatlyBeforeFrom, to);
 
   while (cursor && cursor < to) {
     const currentTimeSlot = getCurrentTimeSlot(resource, cursor);
     if (currentTimeSlot) {
       timeslots.push(currentTimeSlot);
     }
-    cursor = getNextTimeslotAfter(resource, cursor);
+    cursor = getNextTimeslotAfter(resource, cursor, to);
   }
   return timeslots;
 };
@@ -142,25 +142,25 @@ const getOpeningHoursForDate = (
   }
   const dayOfWeek = date.getDay();
   if (dayOfWeek === 0) {
-    return resource.schedule.mon;
+    return resource.schedule.sun;
   }
   if (dayOfWeek === 1) {
-    return resource.schedule.tue;
+    return resource.schedule.mon;
   }
   if (dayOfWeek === 2) {
-    return resource.schedule.wed;
+    return resource.schedule.tue;
   }
   if (dayOfWeek === 3) {
-    return resource.schedule.thu;
+    return resource.schedule.wed;
   }
   if (dayOfWeek === 4) {
-    return resource.schedule.fri;
+    return resource.schedule.thu;
   }
   if (dayOfWeek === 5) {
-    return resource.schedule.sat;
+    return resource.schedule.fri;
   }
   if (dayOfWeek === 6) {
-    return resource.schedule.sun;
+    return resource.schedule.sat;
   }
   throw new GenericBookingError(
     `Unable to find openinghours for resource ${resource.id}, date: ${date}, dayofWeek ${dayOfWeek}`
@@ -252,9 +252,15 @@ const roundUpToNextSlotStart = (
   return cleanedDate;
 };
 
+const startOfNextDay = (date: Date): Date => {
+  const thisDay = new Date(getIsoDate(date));
+  return new Date(thisDay.getTime() + 24 * 3600 * 1000);
+};
+
 const getNextTimeslotAfter = (
   resource: Resource,
-  date: Date
+  date: Date,
+  max: Date
 ): Date | undefined => {
   if (!resource.enabled) {
     return undefined;
@@ -264,16 +270,22 @@ const getNextTimeslotAfter = (
   }
   const openingHours = getOpeningHoursForDate(resource, date);
   if (isClosed(openingHours)) {
-    // Consider trying next day?
-    return undefined;
+    const nextDay = startOfNextDay(date);
+    if (nextDay > max) {
+      return undefined;
+    }
+    return getNextTimeslotAfter(resource, nextDay, max);
   }
   if (isBeforeOpeningHours(openingHours, date)) {
     return firstSlotOfDay(openingHours, getIsoDate(date));
   }
   const cleanedDate = roundUpToNextSlotStart(openingHours, date);
   if (isAfterOpeningHours(openingHours, cleanedDate)) {
-    // Consider trying next day?
-    return undefined;
+    const nextDay = startOfNextDay(date);
+    if (nextDay > max) {
+      return undefined;
+    }
+    return getNextTimeslotAfter(resource, nextDay, max);
   }
   return cleanedDate;
 };

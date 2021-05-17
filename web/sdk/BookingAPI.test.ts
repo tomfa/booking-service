@@ -150,6 +150,81 @@ describe('BookingAPI', () => {
 
       expect(slot.start).toEqual(new Date('2021-05-17T08:00:00Z'));
     });
+    it('includes start time now', async () => {
+      const now = new Date('2021-05-17T08:00:00Z');
+
+      const slot = await api.getNextAvailable(resource.id, now);
+
+      expect(slot.start).toEqual(new Date('2021-05-17T08:00:00Z'));
+    });
+    it('checks next day(s) if no available on current day', async () => {
+      const closed = getOpenHours({ start: '00:00', end: '00:00' });
+      const newOpeningHours: Schedule = { ...dummySchedule, mon: closed };
+      await api.updateResource(resource.id, { schedule: newOpeningHours });
+
+      const beforeOpen = new Date('2021-05-17T00:00:00Z');
+
+      const slot = await api.getNextAvailable(resource.id, beforeOpen);
+
+      expect(slot).toBeTruthy();
+      expect(slot.start).toEqual(new Date('2021-05-18T08:00:00Z'));
+    });
+    it('does not return slot if seats are booked', async () => {
+      await api.updateResource(resource.id, { seats: 1 });
+      const beforeOpen = new Date('2021-05-17T00:00:00Z');
+      const beforeSlot = await api.getNextAvailable(resource.id, beforeOpen);
+      expect(beforeSlot.start).toEqual(new Date('2021-05-17T08:00:00Z'));
+
+      await api.addBooking({
+        ...dummyBooking,
+        start: beforeSlot.start,
+        end: beforeSlot.end,
+      });
+      const slot = await api.getNextAvailable(resource.id, beforeOpen);
+
+      expect(slot.start).toEqual(new Date('2021-05-17T09:00:00Z'));
+    });
+    it('returns number of seats available', async () => {
+      await api.updateResource(resource.id, { seats: 2 });
+      await api.addBooking({
+        ...dummyBooking,
+        start: new Date('2021-05-17T08:00:00Z'),
+        end: new Date('2021-05-17T09:00:00Z'),
+      });
+      await api.addBooking({
+        ...dummyBooking,
+        start: new Date('2021-05-17T08:30:00Z'),
+        end: new Date('2021-05-17T09:30:00Z'),
+      });
+
+      const beforeOpen = new Date('2021-05-17T00:00:00Z');
+      const slot = await api.getNextAvailable(resource.id, beforeOpen);
+
+      // Because available 08:00 -> 08:30 is not long enough for 60min slot.
+      expect(slot.start).toEqual(new Date('2021-05-17T09:00:00Z'));
+      expect(slot.availableSeats).toBe(1);
+    });
+    it('returns undefined if unable to find open slot', async () => {
+      const closed = getOpenHours({ start: '00:00', end: '00:00' });
+      const alwaysClosedHours: Schedule = {
+        ...dummySchedule,
+        mon: closed,
+        tue: closed,
+        wed: closed,
+        thu: closed,
+        fri: closed,
+        sat: closed,
+        sun: closed,
+        overriddenDates: {},
+      };
+      await api.updateResource(resource.id, { schedule: alwaysClosedHours });
+
+      const now = new Date('2021-05-17T00:00:00Z');
+
+      const slot = await api.getNextAvailable(resource.id, now);
+
+      expect(slot).toBe(undefined);
+    });
   });
   describe.skip('findAvailability', () => {
     it('works', async () => {
