@@ -2,8 +2,8 @@ import { Booking, IBookingAPI, Resource, TimeSlot } from './BookingAPI.types';
 import * as utils from './utils';
 import { verifyIsBookable } from './utils';
 import {
-  BadRequestError,
   ConflictingObjectExists,
+  ErrorCode,
   ObjectDoesNotExist,
 } from './errors';
 
@@ -30,7 +30,10 @@ export default class BookingAPI implements IBookingAPI {
   async getResource(resourceId: string): Promise<Resource> {
     const resource = this.resources.find(r => r.id === resourceId);
     if (!resource) {
-      throw new ObjectDoesNotExist(`Resource ${resourceId} not found`);
+      throw new ObjectDoesNotExist(
+        `Resource ${resourceId} not found`,
+        ErrorCode.RESOURCE_DOES_NOT_EXIST
+      );
     }
     return Promise.resolve(resource);
   }
@@ -44,14 +47,16 @@ export default class BookingAPI implements IBookingAPI {
     );
     if (resourceWithSameLabel) {
       throw new ConflictingObjectExists(
-        `Resource with label ${resource.label} already exists`
+        `Resource with label ${resource.label} already exists`,
+        ErrorCode.CONFLICTS_WITH_EXISTING_RESOURCE
       );
     }
     const id = resourceId || '_' + Math.random().toString(36).substr(2, 9);
     const resourceWithSameId = this.resources.find(r => r.id === resourceId);
     if (resourceWithSameId) {
       throw new ConflictingObjectExists(
-        `Resource with id ${id} already exists`
+        `Resource with id ${id} already exists`,
+        ErrorCode.CONFLICTS_WITH_EXISTING_RESOURCE
       );
     }
     const newResource = { ...resource, id };
@@ -61,13 +66,14 @@ export default class BookingAPI implements IBookingAPI {
 
   async updateResource(
     resourceId: string,
-    resource: Partial<Resource>
+    resource: Partial<Omit<Resource, 'id'>>
   ): Promise<Resource> {
     const existingResource = await this.getResource(resourceId);
-    if (resource.id && resource.id !== existingResource.id) {
-      throw new BadRequestError(`Can not change the id of a Resource.`);
-    }
-    const updatedResource = { ...existingResource, ...resource };
+    const updatedResource = {
+      ...existingResource,
+      ...resource,
+      id: existingResource.id, // Do not change id
+    };
     this.resources = this.resources.map(existing =>
       existing.id === existingResource.id ? updatedResource : existing
     );
@@ -147,7 +153,10 @@ export default class BookingAPI implements IBookingAPI {
   async getBooking(bookingId: string): Promise<Booking> {
     const booking = this.bookings.find(b => b.id === bookingId);
     if (!booking) {
-      throw new ObjectDoesNotExist(`Booking ${bookingId} does not exist`);
+      throw new ObjectDoesNotExist(
+        `Booking ${bookingId} does not exist`,
+        ErrorCode.BOOKING_DOES_NOT_EXIST
+      );
     }
     return booking;
   }
@@ -165,7 +174,8 @@ export default class BookingAPI implements IBookingAPI {
     const existingBooking = await this.getBooking(bookingId);
     if (!existingBooking) {
       throw new ObjectDoesNotExist(
-        `Booking with id ${bookingId} does not exist`
+        `Booking with id ${bookingId} does not exist`,
+        ErrorCode.BOOKING_DOES_NOT_EXIST
       );
     }
     if (existingBooking.canceled) {

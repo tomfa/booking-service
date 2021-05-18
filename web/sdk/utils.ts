@@ -317,7 +317,8 @@ export const bookingSlotFitsInResourceSlots = (
     throw new BadRequestError(
       `Booking length ${bookingDurationMinutes}min does not fit into opening hours at ${getIsoDate(
         booking.start
-      )} for resource ${resource.id}`
+      )} for resource ${resource.id}`,
+      ErrorCode.INVALID_BOOKING_ARGUMENTS
     );
   }
   return true;

@@ -4,6 +4,7 @@ import { openingHourGenerator } from './utils';
 import {
   BadRequestError,
   ConflictingObjectExists,
+  ErrorCode,
   ObjectDoesNotExist,
 } from './errors';
 
@@ -103,11 +104,6 @@ describe('BookingAPI', () => {
         expect.objectContaining({ ...dummyResource, enabled: false })
       );
       expect((await api.getResource(dummyResourceId)).enabled).toBe(false);
-    });
-    it('throws BadRequestError if attempting to update the id', async () => {
-      await expect(
-        api.updateResource(dummyResourceId, { id: 'newId' })
-      ).rejects.toThrow(BadRequestError);
     });
   });
   describe('deleteResource', () => {
@@ -337,7 +333,8 @@ describe('BookingAPI', () => {
 
       await expect(api.addBooking({ ...booking })).rejects.toThrow(
         new BadRequestError(
-          `Unable to add booking to disabled resource ${resource.id}`
+          `Unable to add booking to disabled resource ${resource.id}`,
+          ErrorCode.RESOURCE_IS_DISABLED
         )
       );
     });
@@ -346,7 +343,8 @@ describe('BookingAPI', () => {
 
       await expect(api.addBooking({ ...booking })).rejects.toThrow(
         new BadRequestError(
-          `No available slots in requested period for resource ${resource.id}`
+          `No available slots in requested period for resource ${resource.id}`,
+          ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
         )
       );
 
@@ -368,7 +366,8 @@ describe('BookingAPI', () => {
 
       await expect(api.addBooking(invalidBookingPayload)).rejects.toThrow(
         new BadRequestError(
-          `Resource ${resource.id} is not open at requested time`
+          `Resource ${resource.id} is not open at requested time`,
+          ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
         )
       );
     });
@@ -391,7 +390,8 @@ describe('BookingAPI', () => {
       };
       await expect(api.addBooking(invalidBooking)).rejects.toThrow(
         new BadRequestError(
-          `Booked time 2021-05-17T13:01:00.000Z does not fit into resource ${resource.id} time slots`
+          `Booked time 2021-05-17T13:01:00.000Z does not fit into resource ${resource.id} time slots`,
+          ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
         )
       );
     });
