@@ -310,7 +310,7 @@ describe('BookingAPI', () => {
           overriddenDates: {
             '2021-05-17': {
               start: '13:00',
-              end: '14:00',
+              end: '13:30',
               slotIntervalMinutes: 15,
               slotDurationMinutes: 30,
             },
@@ -335,15 +335,49 @@ describe('BookingAPI', () => {
           start: new Date('2021-05-17T13:15:00.000Z'),
           end: new Date('2021-05-17T13:45:00.000Z'),
         },
+      ]);
+    });
+    it('considers bookings from before timeframe than can overlap', async () => {
+      const resourceOpen12To14 = await api.updateResource(resource.id, {
+        ...dummyResource,
+        seats: 1,
+        schedule: {
+          ...dummySchedule,
+          overriddenDates: {
+            '2021-05-17': {
+              start: '12:00',
+              end: '14:00',
+              slotIntervalMinutes: 30,
+              slotDurationMinutes: 120,
+            },
+          },
+        },
+      });
+
+      const booking12To14 = {
+        userId: 'jonathan',
+        resourceId: resourceOpen12To14.id,
+        start: new Date('2021-05-17T12:00:00Z'),
+        end: new Date('2021-05-17T14:00:00Z'),
+      };
+      await api.addBooking(booking12To14);
+
+      const slots = await api.findAvailability({
+        resourceId: resourceOpen12To14.id,
+        from: new Date('2021-05-17T13:00:00Z'),
+        to: new Date('2021-05-18T00:00:00Z'),
+      });
+
+      expect(slots).toEqual([
         {
-          availableSeats: 12,
-          start: new Date('2021-05-17T13:30:00.000Z'),
-          end: new Date('2021-05-17T14:00:00.000Z'),
+          availableSeats: 0,
+          start: new Date('2021-05-17T13:00:00.000Z'),
+          end: new Date('2021-05-17T15:00:00.000Z'),
         },
         {
-          availableSeats: 12,
-          start: new Date('2021-05-17T13:45:00.000Z'),
-          end: new Date('2021-05-17T14:15:00.000Z'),
+          availableSeats: 0,
+          start: new Date('2021-05-17T13:30:00.000Z'),
+          end: new Date('2021-05-17T15:30:00.000Z'),
         },
       ]);
     });

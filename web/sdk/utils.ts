@@ -4,9 +4,24 @@ import {
   IsoDate,
   OpeningHour,
   Resource,
+  Schedule,
   TimeSlot,
 } from './BookingAPI.types';
 import { BadRequestError, ErrorCode, GenericBookingError } from './errors';
+
+export const maxSlotDurationMinutes = (schedule: Schedule): number => {
+  const allDurations = Object.values(schedule.overriddenDates).map(
+    d => d.slotDurationMinutes
+  );
+  allDurations.push(schedule.mon.slotDurationMinutes);
+  allDurations.push(schedule.tue.slotDurationMinutes);
+  allDurations.push(schedule.wed.slotDurationMinutes);
+  allDurations.push(schedule.thu.slotDurationMinutes);
+  allDurations.push(schedule.fri.slotDurationMinutes);
+  allDurations.push(schedule.sat.slotDurationMinutes);
+  allDurations.push(schedule.sun.slotDurationMinutes);
+  return Math.max(...allDurations);
+};
 
 export const constructAllSlots = ({
   resource,

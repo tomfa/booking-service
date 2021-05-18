@@ -1,6 +1,6 @@
 import { Booking, IBookingAPI, Resource, TimeSlot } from './BookingAPI.types';
 import * as utils from './utils';
-import { verifyIsBookable } from './utils';
+import { maxSlotDurationMinutes, verifyIsBookable } from './utils';
 import {
   ConflictingObjectExists,
   ErrorCode,
@@ -138,7 +138,9 @@ export default class BookingAPI implements IBookingAPI {
       to,
     });
     const bookings = await this.findBookings({
-      from,
+      from: new Date(
+        from.getTime() - maxSlotDurationMinutes(resource.schedule) * 60 * 1000
+      ),
       to,
       resourceIds: [resourceId],
       includeCanceled: false,
