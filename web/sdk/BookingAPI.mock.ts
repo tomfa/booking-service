@@ -117,8 +117,7 @@ export default class BookingAPI implements IBookingAPI {
     to?: Date;
   }): Promise<TimeSlot[]> {
     const from = props.from || new Date();
-    const to =
-      props.to || new Date(props.from.getTime() + 31 * 24 * 3600 * 1000);
+    const to = props.to || new Date(from.getTime() + 31 * 24 * 3600 * 1000);
 
     const resource = await this.getResource(resourceId);
     if (!resource.enabled) {
