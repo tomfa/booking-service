@@ -1,6 +1,7 @@
 /* eslint-disable max-classes-per-file */
 
 export enum ErrorCode {
+  INVALID_FILTER_OPTIONS = 'invalid_filter_options',
   RESOURCE_IS_DISABLED = 'resource_is_disabled',
   BOOKING_SLOT_IS_NOT_AVAILABLE = 'booking_slot_is_not_available',
   UNKNOWN_ERROR = 'unknown_error',

@@ -189,7 +189,10 @@ export default class BookingAPI implements IBookingAPI {
     from?: Date;
     to?: Date;
     includeCanceled?: boolean;
-  }): Promise<Booking[]> {
+  } = {}): Promise<Booking[]> {
+    if (resourceIds && resourceIds.length === 0) {
+      return [];
+    }
     const matchesFilters = (booking: Booking) => {
       if (userId && userId !== booking.userId) {
         return false;
