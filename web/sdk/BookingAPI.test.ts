@@ -241,10 +241,30 @@ describe('BookingAPI', () => {
       expect(slot).toBe(undefined);
     });
   });
-  describe.skip('findAvailability', () => {
-    it('works', async () => {
-      const response = true; // await api.findAvailability();
-      expect(response).toBe(true);
+  describe('findAvailability', () => {
+    it('returns bookable timeslots ordered by start time', async () => {
+      const from = new Date('2021-05-17T00:00:00Z'); // Open from 08 to 20
+      const to = new Date('2021-05-18T00:00:00Z');
+
+      const slots = await api.findAvailability({
+        resourceId: resource.id,
+        from,
+        to,
+      });
+
+      expect(slots.length).toEqual(12 * 2);
+      const firstSlot = slots[0];
+      const lastSlot = slots[slots.length - 1];
+      expect(firstSlot.start).toEqual(new Date('2021-05-17T08:00:00Z'));
+      expect(firstSlot.end).toEqual(new Date('2021-05-17T09:00:00Z'));
+      expect(firstSlot.availableSeats).toEqual(12);
+
+      // Note 1: Slot starting at closing time (20:00) is not considered available.
+      expect(lastSlot.start).toEqual(new Date('2021-05-17T19:30:00Z'));
+
+      // Note 2: Duration may go outside of opening hours, e.g. for ceramic oven lasting 16 hours
+      expect(lastSlot.end).toEqual(new Date('2021-05-17T20:30:00Z'));
+      expect(lastSlot.availableSeats).toEqual(12);
     });
   });
   describe('getBooking', () => {
