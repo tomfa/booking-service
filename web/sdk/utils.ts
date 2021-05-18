@@ -41,26 +41,11 @@ export const getCurrentTimeSlot = (
   if (!isWithinOpeningHours(resource, time)) {
     return undefined;
   }
-  const schedule = getHoursForTimestamp(resource, time);
+  const schedule = getOpeningHoursForDate(resource, time);
   return {
     availableSeats: resource.seats,
     start: time,
     end: new Date(time.getTime() + 1000 * 60 * schedule.slotDurationMinutes),
-  };
-};
-
-export const getHoursForTimestamp = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  resource: Resource,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  time: Date
-): OpeningHour => {
-  // TODO: This is no where near right
-  return {
-    start: '08:00',
-    end: '16:00',
-    slotDurationMinutes: 60,
-    slotIntervalMinutes: 30,
   };
 };
 
@@ -329,7 +314,6 @@ export const verifyIsBookable = (
   existingBookings: Booking[],
   booking: Booking
 ) => {
-  // TODO: This needs to be tested for many edgecases
   if (!resource.enabled) {
     throw new BadRequestError(
       `Unable to add booking to disabled resource ${resource.id}`,

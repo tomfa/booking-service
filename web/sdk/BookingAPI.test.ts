@@ -302,6 +302,51 @@ describe('BookingAPI', () => {
         },
       ]);
     });
+    it('considers overridden opening hours for that day', async () => {
+      await api.updateResource(resource.id, {
+        ...dummyResource,
+        schedule: {
+          ...dummySchedule,
+          overriddenDates: {
+            '2021-05-17': {
+              start: '13:00',
+              end: '14:00',
+              slotIntervalMinutes: 15,
+              slotDurationMinutes: 30,
+            },
+          },
+        },
+      });
+
+      const slots = await api.findAvailability({
+        resourceId: resource.id,
+        from: new Date('2021-05-17T00:00:00Z'),
+        to: new Date('2021-05-18T00:00:00Z'),
+      });
+
+      expect(slots).toEqual([
+        {
+          availableSeats: 12,
+          start: new Date('2021-05-17T13:00:00.000Z'),
+          end: new Date('2021-05-17T13:30:00.000Z'),
+        },
+        {
+          availableSeats: 12,
+          start: new Date('2021-05-17T13:15:00.000Z'),
+          end: new Date('2021-05-17T13:45:00.000Z'),
+        },
+        {
+          availableSeats: 12,
+          start: new Date('2021-05-17T13:30:00.000Z'),
+          end: new Date('2021-05-17T14:00:00.000Z'),
+        },
+        {
+          availableSeats: 12,
+          start: new Date('2021-05-17T13:45:00.000Z'),
+          end: new Date('2021-05-17T14:15:00.000Z'),
+        },
+      ]);
+    });
   });
   describe('getBooking', () => {
     it('returns booking', async () => {
