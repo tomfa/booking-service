@@ -204,6 +204,21 @@ describe('BookingAPI', () => {
       expect(slot.start).toEqual(new Date('2021-05-17T09:00:00Z'));
       expect(slot.availableSeats).toBe(1);
     });
+    it('ignores canceled bookings', async () => {
+      await api.updateResource(resource.id, { seats: 1 });
+      const newBooking = await api.addBooking({
+        ...dummyBooking,
+        start: new Date('2021-05-17T08:00:00Z'),
+        end: new Date('2021-05-17T09:00:00Z'),
+      });
+      await api.cancelBooking(newBooking.id);
+
+      const beforeOpen = new Date('2021-05-17T00:00:00Z');
+      const slot = await api.getNextAvailable(resource.id, beforeOpen);
+
+      expect(slot.start).toEqual(new Date('2021-05-17T08:00:00Z'));
+      expect(slot.availableSeats).toBe(1);
+    });
     it('returns undefined if unable to find open slot', async () => {
       const closed = getOpenHours({ start: '00:00', end: '00:00' });
       const alwaysClosedHours: Schedule = {

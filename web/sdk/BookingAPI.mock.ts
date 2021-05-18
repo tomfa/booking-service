@@ -171,10 +171,9 @@ export default class BookingAPI implements IBookingAPI {
     if (existingBooking.canceled) {
       return;
     }
-    this.bookings = this.bookings.map(b =>
-      b.id === bookingId
-        ? { ...existingBooking, canceled: true }
-        : existingBooking
+    const updatedBooking: Booking = { ...existingBooking, canceled: true };
+    this.bookings = this.bookings.map(booking =>
+      booking.id === bookingId ? updatedBooking : booking
     );
   }
 
