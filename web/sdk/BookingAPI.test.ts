@@ -266,6 +266,46 @@ describe('BookingAPI', () => {
       expect(lastSlot.end).toEqual(new Date('2021-05-17T20:30:00Z'));
       expect(lastSlot.availableSeats).toEqual(12);
     });
+    it('returns timeslots with availableSeats=0 if fully booked', async () => {
+      await api.updateResource(resource.id, { seats: 1 });
+      await api.addBooking({
+        ...dummyBooking,
+        start: new Date('2021-05-17T08:00:00Z'),
+        end: new Date('2021-05-17T09:00:00Z'),
+      });
+      const from = new Date('2021-05-17T00:00:00Z'); // Open from 08 to 20
+      const to = new Date('2021-05-17T09:30:00Z');
+
+      const slots = await api.findAvailability({
+        resourceId: resource.id,
+        from,
+        to,
+      });
+
+      expect(
+        slots.map(({ availableSeats, start, end }) => ({
+          availableSeats,
+          start: start.toISOString(),
+          end: end.toISOString(),
+        }))
+      ).toEqual([
+        {
+          availableSeats: 0,
+          start: '2021-05-17T08:00:00.000Z',
+          end: '2021-05-17T09:00:00.000Z',
+        },
+        {
+          availableSeats: 0,
+          start: '2021-05-17T08:30:00.000Z',
+          end: '2021-05-17T09:30:00.000Z',
+        },
+        {
+          availableSeats: 1,
+          start: '2021-05-17T09:00:00.000Z',
+          end: '2021-05-17T10:00:00.000Z',
+        },
+      ]);
+    });
   });
   describe('getBooking', () => {
     it('returns booking', async () => {

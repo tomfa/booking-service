@@ -104,7 +104,10 @@ export default class BookingAPI implements IBookingAPI {
     if (!availableSlots.length) {
       return undefined;
     }
-    const slotClosestInTime = availableSlots[0]; // TODO: This would be lucky?
+    // TODO: Only luck that it is ordered by time
+    const slotClosestInTime = availableSlots.find(
+      slot => slot.availableSeats >= 1
+    );
     return slotClosestInTime;
   }
 
@@ -138,9 +141,7 @@ export default class BookingAPI implements IBookingAPI {
       tempSlots,
       bookings
     );
-    return Promise.resolve(
-      slotsWithCorrectAvailability.filter(s => s.availableSeats >= 1)
-    );
+    return Promise.resolve(slotsWithCorrectAvailability);
   }
 
   async getBooking(bookingId: string): Promise<Booking> {
