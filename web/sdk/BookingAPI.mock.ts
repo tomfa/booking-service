@@ -161,9 +161,11 @@ export default class BookingAPI implements IBookingAPI {
     return booking;
   }
 
-  async addBooking(booking: Omit<Booking, 'id'>): Promise<Booking> {
+  async addBooking(
+    booking: Omit<Booking, 'id' | 'canceled'>
+  ): Promise<Booking> {
     const id = '_' + Math.random().toString(36).substr(2, 9);
-    const newBooking = { ...booking, id };
+    const newBooking: Booking = { ...booking, canceled: false, id };
     const resource = await this.getResource(newBooking.resourceId);
     verifyIsBookable(resource, this.bookings, newBooking);
     this.bookings.push(newBooking);
