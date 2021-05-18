@@ -79,10 +79,10 @@ export interface IBookingAPI {
     resourceIds?: string[];
     before?: Date;
   }): Promise<Booking | undefined>;
-  getBookedDuration(
-    userId: string,
-    resourceIds?: string[],
-    from?: Date,
-    to?: Date
-  ): Promise<{ minutes: number; bookingIds: string[] }>;
+  getBookedDuration(props: {
+    userId: string;
+    resourceIds?: string[];
+    from?: Date;
+    to?: Date;
+  }): Promise<{ minutes: number; bookingIds: string[]; numBookings: number }>;
 }

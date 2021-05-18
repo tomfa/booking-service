@@ -245,12 +245,21 @@ export default class BookingAPI implements IBookingAPI {
     return sortedNewestFirst[0];
   }
 
-  async getBookedDuration(
-    userId: string,
-    resourceIds?: string[],
-    from?: Date,
-    to?: Date
-  ): Promise<{ minutes: number; bookingIds: string[] }> {
+  async getBookedDuration({
+    userId,
+    resourceIds,
+    from,
+    to,
+  }: {
+    userId?: string;
+    resourceIds?: string[];
+    from?: Date;
+    to?: Date;
+  } = {}): Promise<{
+    minutes: number;
+    bookingIds: string[];
+    numBookings: number;
+  }> {
     const matchingBookings = await this.findBookings({
       userId,
       resourceIds,
@@ -262,6 +271,6 @@ export default class BookingAPI implements IBookingAPI {
       (sum, booking) => sum + utils.getBookingDurationMinutes(booking),
       0
     );
-    return { minutes, bookingIds };
+    return { minutes, bookingIds, numBookings: matchingBookings.length };
   }
 }

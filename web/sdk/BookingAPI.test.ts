@@ -551,10 +551,54 @@ describe('BookingAPI', () => {
       expect(latestBooking).toBe(undefined);
     });
   });
-  describe.skip('getBookedDuration', () => {
-    it('works', async () => {
-      const response = true; // await api.getBookedDuration();
-      expect(response).toBe(true);
+  describe('getBookedDuration', () => {
+    it('returns minutes booked, number of bookings, booking ids', async () => {
+      const {
+        numBookings,
+        bookingIds,
+        minutes,
+      } = await api.getBookedDuration();
+
+      expect(numBookings).toBe(1);
+      expect(bookingIds).toEqual([booking.id]);
+      expect(minutes).toBe(60);
+    });
+    it('can have result filtered by userId, resourceId or from/to', async () => {
+      const matchingUserId = await api.getBookedDuration({
+        userId: booking.userId,
+      });
+      const matchingResourceId = await api.getBookedDuration({
+        resourceIds: [booking.resourceId],
+      });
+      const differentUserId = await api.getBookedDuration({
+        userId: 'different-user-id',
+      });
+      const differentResourceId = await api.getBookedDuration({
+        resourceIds: ['different-resource-id'],
+      });
+      const periodAfter = await api.getBookedDuration({
+        from: booking.end,
+      });
+      const periodBefore = await api.getBookedDuration({
+        to: booking.start,
+      });
+      // Note: does NOT include booking that started before "from", but ends after
+      const periodStartingJustBefore = await api.getBookedDuration({
+        from: new Date(booking.start.getTime() + 1),
+      });
+      // Note: DOES include booking ends after "to", but starts before
+      const periodEndingJustAfter = await api.getBookedDuration({
+        to: new Date(booking.end.getTime() - 1),
+      });
+
+      expect(matchingUserId.numBookings).toEqual(1);
+      expect(differentUserId.numBookings).toEqual(0);
+      expect(matchingResourceId.numBookings).toEqual(1);
+      expect(differentResourceId.numBookings).toEqual(0);
+      expect(periodAfter.numBookings).toEqual(0);
+      expect(periodBefore.numBookings).toEqual(0);
+      expect(periodStartingJustBefore.numBookings).toEqual(0);
+      expect(periodEndingJustAfter.numBookings).toEqual(1);
     });
   });
 });
