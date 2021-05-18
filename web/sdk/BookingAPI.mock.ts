@@ -222,7 +222,7 @@ export default class BookingAPI implements IBookingAPI {
     userId?: string;
     resourceIds?: string[];
     before?: Date;
-  }): Promise<Booking | undefined> {
+  } = {}): Promise<Booking | undefined> {
     const matchingBookings = await this.findBookings({
       userId,
       resourceIds,
@@ -235,10 +235,10 @@ export default class BookingAPI implements IBookingAPI {
       const aTime = a.start.getTime();
       const bTime = b.start.getTime();
       if (aTime > bTime) {
-        return 1;
+        return -1;
       }
       if (aTime < bTime) {
-        return -1;
+        return 1;
       }
       return 0;
     });

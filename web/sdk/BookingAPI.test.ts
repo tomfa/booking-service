@@ -38,8 +38,8 @@ const dummyResource: Omit<Resource, 'id'> = {
 const dummyBooking: Omit<Booking, 'id'> = {
   userId: 'external-user-id',
   resourceId: dummyResourceId,
-  start: new Date('2021-05-08T13:30'),
-  end: new Date('2021-05-08T14:30'),
+  start: new Date('2021-05-08T13:30:00Z'),
+  end: new Date('2021-05-08T14:30:00Z'),
   canceled: false,
 };
 
@@ -507,10 +507,48 @@ describe('BookingAPI', () => {
       expect(bookings.length).toBe(1);
     });
   });
-  describe.skip('getLatestBooking', () => {
-    it('works', async () => {
-      const response = true; // await api.getLatestBooking();
-      expect(response).toBe(true);
+  describe('getLatestBooking', () => {
+    const oldBooking = {
+      ...dummyBooking,
+      start: new Date(dummyBooking.start.getTime() - 30 * 60 * 1000),
+      end: new Date(dummyBooking.end.getTime() - 30 * 60 * 1000),
+    };
+    const newBooking = {
+      ...dummyBooking,
+      start: new Date(dummyBooking.start.getTime() + 30 * 60 * 1000),
+      end: new Date(dummyBooking.end.getTime() + 30 * 60 * 1000),
+    };
+    it('returns latest booking', async () => {
+      await api.addBooking(newBooking);
+      await api.addBooking(oldBooking);
+
+      const latestBooking = await api.getLatestBooking();
+
+      expect(latestBooking).toEqual(expect.objectContaining(newBooking));
+    });
+    it('filters by resourceId if specified', async () => {
+      const differentResource = await api.addResource({
+        ...dummyResource,
+        label: 'New resource',
+      });
+      await api.addBooking(newBooking);
+      const oldBookingWithMatchingResource = await api.addBooking({
+        ...oldBooking,
+        resourceId: differentResource.id,
+      });
+
+      const latestBooking = await api.getLatestBooking({
+        resourceIds: [differentResource.id],
+      });
+
+      expect(latestBooking).toBe(oldBookingWithMatchingResource);
+    });
+    it('returns undefined if no booking exists matching filter', async () => {
+      const latestBooking = await api.getLatestBooking({
+        userId: 'new-user-without-bookings-id',
+      });
+
+      expect(latestBooking).toBe(undefined);
     });
   });
   describe.skip('getBookedDuration', () => {
