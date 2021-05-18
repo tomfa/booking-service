@@ -410,16 +410,16 @@ describe('BookingAPI', () => {
       );
     });
   });
-  describe('findsBookings', () => {
+  describe('findBookings', () => {
     it('returns a list of bookings matching filter', async () => {
-      const bookings = await api.findsBookings({ resourceIds: [resource.id] });
+      const bookings = await api.findBookings({ resourceIds: [resource.id] });
 
       expect(bookings.length).toBe(1);
       expect(bookings[0]).toBe(booking);
     });
     it('returns empty list if no bookings matches filter', async () => {
       await api.cancelBooking(booking.id);
-      const bookings = await api.findsBookings({
+      const bookings = await api.findBookings({
         resourceIds: [resource.id],
         includeCanceled: false,
       });
@@ -427,12 +427,12 @@ describe('BookingAPI', () => {
       expect(bookings.length).toBe(0);
     });
     it('returns empty list if resourceId filter is empty list', async () => {
-      const bookings = await api.findsBookings({ resourceIds: [] });
+      const bookings = await api.findBookings({ resourceIds: [] });
 
       expect(bookings.length).toBe(0);
     });
     it('excludes bookings with resourceId different than specified', async () => {
-      const bookings = await api.findsBookings({
+      const bookings = await api.findBookings({
         resourceIds: ['different-resource-id'],
       });
 
@@ -443,7 +443,7 @@ describe('BookingAPI', () => {
       const newBooking = await api.addBooking({ ...booking });
       await api.cancelBooking(newBooking.id);
 
-      const bookings = await api.findsBookings();
+      const bookings = await api.findBookings();
 
       expect(bookings.length).toBe(1);
       expect(bookings[0]).toBe(booking);
@@ -452,25 +452,25 @@ describe('BookingAPI', () => {
     it('includes canceled bookings if includeCanceled is true', async () => {
       await api.cancelBooking(booking.id);
 
-      const bookings = await api.findsBookings({ includeCanceled: true });
+      const bookings = await api.findBookings({ includeCanceled: true });
 
       expect(bookings.length).toBe(1);
       expect(bookings[0].canceled).toBe(true);
     });
     it('excludes bookings with start < from filter', async () => {
-      const bookings = await api.findsBookings({
+      const bookings = await api.findBookings({
         from: new Date(booking.start.getTime() + 1),
       });
 
       expect(bookings.length).toBe(0);
     });
     it('includes bookings with start == from filter', async () => {
-      const bookings = await api.findsBookings({ from: booking.start });
+      const bookings = await api.findBookings({ from: booking.start });
 
       expect(bookings.length).toBe(1);
     });
     it('includes bookings with start > from filter', async () => {
-      const bookings = await api.findsBookings({
+      const bookings = await api.findBookings({
         from: new Date(booking.start.getTime() - 1),
       });
 
@@ -478,31 +478,31 @@ describe('BookingAPI', () => {
     });
 
     it('excludes bookings with start > to filter', async () => {
-      const bookings = await api.findsBookings({
+      const bookings = await api.findBookings({
         to: new Date(booking.start.getTime() - 1),
       });
 
       expect(bookings.length).toBe(0);
     });
     it('excludes bookings with start == to filter', async () => {
-      const bookings = await api.findsBookings({ to: booking.start });
+      const bookings = await api.findBookings({ to: booking.start });
 
       expect(bookings.length).toBe(0);
     });
     it('includes bookings with start < to filter', async () => {
-      const bookings = await api.findsBookings({
+      const bookings = await api.findBookings({
         to: new Date(booking.start.getTime() + 1),
       });
 
       expect(bookings.length).toBe(1);
     });
     it('excludes bookings with userId != userId filter', async () => {
-      const bookings = await api.findsBookings({ userId: 'user-2' });
+      const bookings = await api.findBookings({ userId: 'user-2' });
 
       expect(bookings.length).toBe(0);
     });
     it('includes bookings with userId == userId filter', async () => {
-      const bookings = await api.findsBookings({ userId: booking.userId });
+      const bookings = await api.findBookings({ userId: booking.userId });
 
       expect(bookings.length).toBe(1);
     });

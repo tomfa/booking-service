@@ -131,7 +131,7 @@ export default class BookingAPI implements IBookingAPI {
       from,
       to,
     });
-    const bookings = await this.findsBookings({
+    const bookings = await this.findBookings({
       from,
       to,
       resourceIds: [resourceId],
@@ -177,7 +177,7 @@ export default class BookingAPI implements IBookingAPI {
     );
   }
 
-  async findsBookings({
+  async findBookings({
     userId,
     resourceIds,
     from,
@@ -223,7 +223,7 @@ export default class BookingAPI implements IBookingAPI {
     resourceIds?: string[];
     before?: Date;
   }): Promise<Booking | undefined> {
-    const matchingBookings = await this.findsBookings({
+    const matchingBookings = await this.findBookings({
       userId,
       resourceIds,
       to: before,
@@ -251,7 +251,7 @@ export default class BookingAPI implements IBookingAPI {
     from?: Date,
     to?: Date
   ): Promise<{ minutes: number; bookingIds: string[] }> {
-    const matchingBookings = await this.findsBookings({
+    const matchingBookings = await this.findBookings({
       userId,
       resourceIds,
       from,

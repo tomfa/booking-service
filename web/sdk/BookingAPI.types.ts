@@ -66,7 +66,7 @@ export interface IBookingAPI {
   getBooking(bookingId: string): Promise<Booking | undefined>;
   addBooking(booking: Omit<Booking, 'id'>): Promise<Booking>;
   cancelBooking(bookingId: string): Promise<void>;
-  findsBookings(props: {
+  findBookings(props: {
     userId?: string;
     resourceIds?: string[];
     from?: Date;
