@@ -43,11 +43,11 @@ custom:
   serverless-offline:
     noPrependStageInUrl: true
   customDomain:
-    domainName: api.docforest.eu
+    domainName: api.vailable.eu
     basePath: ''
     stage: 'prod'
     createRoute53Record: true
-    certificateName: 'docforest.eu'
+    certificateName: 'vailable.eu'
     autoDomain: true
 
 package:
