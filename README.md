@@ -56,3 +56,54 @@ yarn lint
 # Runs prettier check
 yarn lint:prettier-check
 ```
+
+
+## Using this repo as a template
+
+### Rename
+1. Search replace `booking-api` -> `new-project-name`
+2. Search replace `vailable.eu` -> `new-domain.com`
+
+### Deploy infrastructure
+3. Set up Route53 DNS
+   ```sh
+   cd infrastructure
+   terraform init
+   terraform apply -target=module.domain
+   ```
+4. Update your registrar DNS pointers to the generated servers
+5. Deploy remaining infrastructure
+   ```sh
+   terraform apply
+   ```
+
+### Set up CI
+
+Things are already setup with github CI, but you'll need to add the following secrets to the repository:
+
+```
+# Used by deployment of api. 
+# You need to create and provide these keys yourself 
+AWS_MASTER_ACCESS_KEY_ID
+AWS_MASTER_SECRET_ACCESS_KEY
+
+# Used by deployment of web. 
+# The values are outputted from terraform apply in the previous step
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+
+
+# Bucket for deployment of web.
+# The values are outputted from terraform apply in the previous step 
+AWS_WEB_BUCKET_NAME
+AWS_WEB_CLOUDFRONT_ID
+
+# Dummy user database, e.g. tmp-admin-user:passwordz
+USER_DATA
+
+# Random value acting as your JWT_SECRET.
+JWT_SECRET
+
+# Random UUID acting as your servers identifier for uuid v5
+UUID_NAMESPACE
+```
