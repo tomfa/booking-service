@@ -10,10 +10,10 @@
     d "1"
     es5-ext "^0.10.47"
 
-"@askeladden/eslint-config-askeladden@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@askeladden/eslint-config-askeladden/-/eslint-config-askeladden-0.2.1.tgz#ca52cffa79fc5827dc0f8a9ab946082f7879767d"
-  integrity sha512-gzUhLbRUV7W6c5/IP1luiC3bGlg6lFOZj/fPdKmgw7sbvPOoJIIr2cPF4Dsu+KKlmMHHd+210SOUiNxUtUEm2g==
+"@askeladden/eslint-config-askeladden@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@askeladden/eslint-config-askeladden/-/eslint-config-askeladden-1.0.0.tgz#658ce12988fa6db18f3968625f396fcee380665e"
+  integrity sha512-TWirTJX8Npwd2MRT04rvOlgaxZhcjcES/DVvos7/VkLtyTFYm5/LAQjRVD8d+PU0H7oiE3GT1Oyi89o7h6w+Rg==
 
 "@aws-crypto/crc32@^1.0.0":
   version "1.0.0"

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable unused-imports/no-unused-vars */
 import * as Express from 'express';
 import { NotAuthenticatedError } from '../errors/NotAuthenticatedError';
 import { decodeUrlSafeBase64, isValidUrlSafeBase64 } from '../base64';

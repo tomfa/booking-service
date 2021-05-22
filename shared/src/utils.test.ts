@@ -56,10 +56,9 @@ describe('getFileDataFromUrl', () => {
     const missingId = '';
     const badUrl = `${endpoint}/darth/folder/${missingId}/I love aspargus.html`;
 
-    try {
-      getFileDataFromUrl(badUrl);
-      fail('getFileDataFromUrl should throw error when missing id');
-    } catch (err) {}
+    expect(() => getFileDataFromUrl(badUrl)).toThrow(
+      'Can not construct FileDataDTO from unknown key darth/folder//I love aspargus.html. Missing parts.'
+    );
   });
 });
 

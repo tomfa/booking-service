@@ -4,11 +4,11 @@ import config from '../config';
 
 export const getData = (req: Express.Request): JSONObject => {
   if (req.method.toUpperCase() === 'POST') {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line unused-imports/no-unused-vars
     const { token, ...data } = (req.body || {}) as JSONObject;
     return data;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const { token, ...data } = req.query as Record<string, string | string[]>;
   return data;
 };

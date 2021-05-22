@@ -2,20 +2,11 @@
   "env": { "browser": true, "es2021": true, "node": true },
   "extends": ["@askeladden/eslint-config-askeladden"],
   "rules": {
-    // Avoid unnecessary imports
-    "unused-imports/no-unused-imports-ts": 2,
-
-    // Looks better?
-    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+    // Prettier handles
+    "@typescript-eslint/indent": 0,
 
     // Next handles React in scope for us
-    "react/react-in-jsx-scope": 0,
-
-    // I know when I shouldn't, thank you
-    "react/jsx-props-no-spreading": 0,
-
-    // Typescript handles this
-    "import/no-unresolved": 0
+    "react/react-in-jsx-scope": 0
   },
   "parserOptions": {
     "ecmaFeatures": {
@@ -40,6 +31,5 @@
         "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     }
-  },
-  "plugins": ["unused-imports"]
+  }
 }

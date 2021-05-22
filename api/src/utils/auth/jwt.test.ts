@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable unused-imports/no-unused-vars */
 import * as jsonwebtoken from 'jsonwebtoken';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import * as b64 from '../base64';

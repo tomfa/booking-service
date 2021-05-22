@@ -1,30 +1,10 @@
 {
-  "env": { "node": true },
+  "env": { "node": true, "jest": true, "jasmine": true },
   "extends": ["@askeladden/eslint-config-askeladden/typescript-recommended"],
   "rules": {
-    // Avoid unnecessary imports
-    "unused-imports/no-unused-imports-ts": 2,
-
-    // Looks better?
-    "lines-between-class-members": [
-      "error",
-      "always",
-      { "exceptAfterSingleLine": true }
-    ],
-
-    // Typescript handles this
-    "import/no-unresolved": 0
+    // Prettier handles
+    "@typescript-eslint/indent": 0,
   },
-  "overrides": [
-    {
-      "files": ["*.test.ts"],
-
-      "rules": {
-        // Tests often want to catch errors (and ignore them)
-        "no-empty": 0
-      }
-    }
-  ],
   "settings": {
     "import/ignore": ["@booking-service/shared"],
     "import/resolver": {
@@ -32,6 +12,5 @@
         "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     }
-  },
-  "plugins": ["unused-imports"]
+  }
 }
