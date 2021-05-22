@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import { JSONObject } from '@pdf-generator/shared';
+import { JSONObject } from '@booking-service/shared';
 import config from '../../config';
 
 export function sign<T extends JSONObject>(payload: T): string {

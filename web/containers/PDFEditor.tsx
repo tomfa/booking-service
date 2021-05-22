@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { FileDataDTO } from '@pdf-generator/shared';
+import { FileDataDTO } from '@booking-service/shared';
 import { Main } from '../components/Main.styles';
 import { useData } from '../providers/DataProvider';
 import { usePDFGenerator } from '../providers/PDFProvider';

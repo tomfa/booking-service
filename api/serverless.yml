@@ -1,4 +1,4 @@
-service: pdf-generator-api
+service: booking-service-api
 
 # Adopt behaviour in next version
 useDotenv: true

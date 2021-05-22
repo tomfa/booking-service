@@ -1,5 +1,5 @@
 import * as Express from 'express';
-import { JSONObject, FileDataDTO, utils } from '@pdf-generator/shared';
+import { JSONObject, FileDataDTO, utils } from '@booking-service/shared';
 import config from '../config';
 
 export const getData = (req: Express.Request): JSONObject => {

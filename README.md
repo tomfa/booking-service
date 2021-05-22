@@ -1,15 +1,15 @@
-# pdf-generator
+# booking-service
 
 > Generate PDFs from HTML with S3 + Serverless.
 
-![Unit tests status](https://github.com/tomfa/pdf-generator-api/actions/workflows/tests.yml/badge.svg)
-![ESLint status](https://github.com/tomfa/pdf-generator-api/actions/workflows/lint.yml/badge.svg)
+![Unit tests status](https://github.com/tomfa/booking-service-api/actions/workflows/tests.yml/badge.svg)
+![ESLint status](https://github.com/tomfa/booking-service-api/actions/workflows/lint.yml/badge.svg)
 
 Mono repo containing 3 packages:
 
-- [@pdf-generator/api](https://github.com/tomfa/pdf-generator-api/tree/master/api): Serverless API
-- [@pdf-generator/web](https://github.com/tomfa/pdf-generator-api/tree/master/web): NextJS application
-- [@pdf-generator/shared](https://github.com/tomfa/pdf-generator-api/tree/master/shared): Shared utils and types
+- [@booking-service/api](https://github.com/tomfa/booking-service-api/tree/master/api): Serverless API
+- [@booking-service/web](https://github.com/tomfa/booking-service-api/tree/master/web): NextJS application
+- [@booking-service/shared](https://github.com/tomfa/booking-service-api/tree/master/shared): Shared utils and types
 
 ### Setup
 

@@ -1,4 +1,4 @@
-import { FOLDER } from '@pdf-generator/shared';
+import { FOLDER } from '@booking-service/shared';
 import { authedTestRequest } from '../../testUtils/controllers.utils';
 import {
   getLastPutActionArgs,

@@ -1,4 +1,4 @@
-import { FileDataDTO } from '@pdf-generator/shared';
+import { FileDataDTO } from '@booking-service/shared';
 import { useCallback, useState } from 'react';
 import { useTheme } from 'styled-components';
 import { IconButton, IconLink, IconType } from '../Icon';

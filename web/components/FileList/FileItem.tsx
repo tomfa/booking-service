@@ -1,4 +1,4 @@
-import { FileDataDTO } from '@pdf-generator/shared';
+import { FileDataDTO } from '@booking-service/shared';
 import { IsoToDisplayDateTime } from '../utils/date.utils';
 import { DateStamp, ListItem, ListItemText } from './FileItem.styles';
 import { FileActions } from './FileActions';

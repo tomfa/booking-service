@@ -1,4 +1,4 @@
-import { FOLDER, utils } from '@pdf-generator/shared';
+import { FOLDER, utils } from '@booking-service/shared';
 import config from '../config';
 import { randomId } from '../utils/id';
 import { getAbsoluteUrlFromKey, getFileDataFromUrl } from './utils';

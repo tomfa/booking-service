@@ -1,4 +1,4 @@
-import { FileDataDTO } from '@pdf-generator/shared';
+import { FileDataDTO } from '@booking-service/shared';
 import { useMemo } from 'react';
 import { FileItem } from './FileItem';
 import { List } from './FileList.styles';

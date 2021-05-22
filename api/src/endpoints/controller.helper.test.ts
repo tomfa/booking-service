@@ -1,4 +1,4 @@
-import { FOLDER } from '@pdf-generator/shared';
+import { FOLDER } from '@booking-service/shared';
 import { authedTestRequest } from '../testUtils/controllers.utils';
 import config from '../config';
 import { overrideNextS3ListObjectResponse } from '../../__mocks__/@aws-sdk/client-s3';

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { JSONValue } from '@pdf-generator/shared';
+import { JSONValue } from '@booking-service/shared';
 
 export interface Variables {
   [key: string]: JSONValue;
