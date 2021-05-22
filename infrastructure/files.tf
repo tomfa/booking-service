@@ -12,7 +12,7 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 
-resource "aws_cloudfront_distribution" "distribution" {
+resource "aws_cloudfront_distribution" "file_distribution" {
   origin {
     domain_name = aws_s3_bucket.bucket.bucket_domain_name
     origin_id   = "S3-${aws_s3_bucket.bucket.bucket}"
