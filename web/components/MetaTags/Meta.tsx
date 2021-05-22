@@ -7,8 +7,9 @@ export type SocialTags = {
   description?: string;
   imagePath?: string;
 };
-const DEFAULT_TITLE = 'DocForest | PDF generator';
-const DEFAULT_DESCRIPTION = 'Generate docs from API using custom templates';
+const DEFAULT_TITLE = 'Vailable | Booking service';
+const DEFAULT_DESCRIPTION =
+  'Handling event and resource booking complexity for you';
 const DEFAULT_IMAGE_PATH = 'social.jpg';
 
 const Meta = (props: SocialTags) => {

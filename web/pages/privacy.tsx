@@ -5,7 +5,7 @@ import { Layout } from '../components/Layout';
 
 export default function PrivacyPage() {
   return (
-    <Layout social={{ title: 'DocForest | Privacy' }}>
+    <Layout social={{ title: 'Vailable | Privacy' }}>
       <Main>
         <div
           style={{
@@ -38,8 +38,8 @@ export default function PrivacyPage() {
         </p>
         <h3>Storage</h3>
         <p>
-          All generated documents is stored on AWS S3 buckets located in
-          Stockholm, Sweden.
+          Data is stored on AWS S3 buckets and Aurora Serverless databases
+          located in Stockholm, Sweden.
         </p>
         <h3>Data processing</h3>
         <p>

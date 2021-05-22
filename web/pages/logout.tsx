@@ -15,7 +15,7 @@ export default function LoginPage() {
   }, [router, isLoggedIn, logout]);
 
   return (
-    <Layout social={{ title: 'DocForest | Logging out' }}>
+    <Layout social={{ title: 'Vailable | Logging out' }}>
       <h1 style={{ paddingTop: '3rem' }}>Logging out...</h1>
       <Icon icon={IconType.LOADING} size={100} />
     </Layout>

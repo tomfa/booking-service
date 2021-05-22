@@ -8,7 +8,7 @@ export const Footer = () => {
       <Nav>
         <LinkList>
           <LinkListItem>v. {config.CONFIG_BUILD_ID}</LinkListItem>
-          <LinkListItem>© {new Date().getFullYear()} DocForest </LinkListItem>
+          <LinkListItem>© {new Date().getFullYear()} Vailable </LinkListItem>
           <LinkListItem>
             <Link href={'/privacy'}>Privacy policy</Link>
           </LinkListItem>

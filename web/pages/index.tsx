@@ -13,8 +13,8 @@ export default function Home() {
   }, [router, isLoggedIn]);
 
   return (
-    <Layout social={{ title: 'DocForest | Home' }}>
-      <h1>hi</h1>
+    <Layout social={{ title: 'Vailable | Home' }}>
+      <p>There will likely be things here</p>
     </Layout>
   );
 }

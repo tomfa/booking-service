@@ -6,7 +6,7 @@ export const Logo = () => {
     <Link href="/" passHref>
       <AWrapper>
         <LogoIcon />
-        <LogoText>DocForest</LogoText>
+        <LogoText>Vailable</LogoText>
       </AWrapper>
     </Link>
   );
