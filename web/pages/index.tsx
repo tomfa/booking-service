@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useAuth } from '../providers/AuthProvider';
-import { PDFEditor } from '../containers/PDFEditor';
 import { Layout } from '../components/Layout';
 
 export default function Home() {
@@ -15,7 +14,7 @@ export default function Home() {
 
   return (
     <Layout social={{ title: 'DocForest | Home' }}>
-      {isLoggedIn && <PDFEditor />}
+      <h1>hi</h1>
     </Layout>
   );
 }

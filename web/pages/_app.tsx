@@ -1,21 +1,16 @@
 import { AppProps } from 'next/app';
 import { ThemeProvider } from 'styled-components';
 import { AuthProvider } from '../providers/AuthProvider';
-import { DataProvider } from '../providers/DataProvider';
 
-// Global base styles
 import theme from '../styles/theme';
 import { MessageProvider } from '../providers/MessageProvider';
-import { PDFProvider } from '../providers/PDFProvider';
 
 const App = ({ Component, pageProps }: AppProps) => (
   <ThemeProvider theme={theme}>
     <MessageProvider>
       <AuthProvider>
-        <DataProvider>
-          <PDFProvider>
-            <style>
-              {`
+        <style>
+          {`
         html,
         body {
           padding: 0;
@@ -31,10 +26,8 @@ const App = ({ Component, pageProps }: AppProps) => (
           box-sizing: border-box;
         }
       `}
-            </style>
-            <Component {...pageProps} />
-          </PDFProvider>
-        </DataProvider>
+        </style>
+        <Component {...pageProps} />
       </AuthProvider>
     </MessageProvider>
   </ThemeProvider>
