@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { FileDataDTO } from '@pdf-generator/shared';
+import { FileDataDTO } from '@booking-service/shared';
 import { config } from '../config';
 import { useAuth } from './AuthProvider';
 

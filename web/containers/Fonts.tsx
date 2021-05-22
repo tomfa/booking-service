@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { FileDataDTO } from '@pdf-generator/shared';
+import { FileDataDTO } from '@booking-service/shared';
 import { FileDrop } from '../components/FileDrop';
 import { FileList } from '../components/FileList/FileList';
 import { useData } from '../providers/DataProvider';

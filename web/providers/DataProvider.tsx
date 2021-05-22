@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useState } from 'react';
-import { FileDataDTO, FOLDER } from '@pdf-generator/shared';
+import { FileDataDTO, FOLDER } from '@booking-service/shared';
 import * as api from '../api';
 import { useAuth } from './AuthProvider';
 

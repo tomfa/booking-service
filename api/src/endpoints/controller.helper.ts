@@ -1,5 +1,5 @@
 import * as Express from 'express';
-import { FOLDER } from '@pdf-generator/shared';
+import { FOLDER } from '@booking-service/shared';
 import { getUploadUrl, list, move, remove } from '../storage/fileStorage';
 import { BadRequestError } from '../utils/errors/BadRequestError';
 import { getUserOrThrow } from '../utils/auth/request.utils';

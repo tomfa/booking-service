@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { FOLDER } from '@pdf-generator/shared';
+import { FOLDER } from '@booking-service/shared';
 import { errorWrapper } from './utils/errorHandler';
 import { ControllerFunction } from './types';
 import {

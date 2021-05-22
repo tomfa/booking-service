@@ -1,5 +1,5 @@
 {
-  "name": "pdf-generator",
+  "name": "booking-service",
   "version": "1.0.0",
   "description": "Serverless API for generating PDFs",
   "private": true,
@@ -37,9 +37,9 @@
     "typescript": "^4.2.3"
   },
   "scripts": {
-    "web": "yarn workspace @pdf-generator/web",
-    "api": "yarn workspace @pdf-generator/api",
-    "shared": "yarn workspace @pdf-generator/shared",
+    "web": "yarn workspace @booking-service/web",
+    "api": "yarn workspace @booking-service/api",
+    "shared": "yarn workspace @booking-service/shared",
     "build": "yarn workspaces run build",
     "start": "concurrently \"yarn web start\" \"yarn api start\"",
     "test": "yarn workspaces run test",

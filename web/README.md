@@ -1,6 +1,6 @@
-# pdf-generator-app
+# booking-service-app
 
-Frontend NextJS app for demonstrating pdf-generator-api
+Frontend NextJS app for demonstrating booking-service-api
 
 ### Setup
 

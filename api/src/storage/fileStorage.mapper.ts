@@ -1,5 +1,5 @@
 import { ListObjectsCommandOutput } from '@aws-sdk/client-s3';
-import { FileDataDTO } from '@pdf-generator/shared';
+import { FileDataDTO } from '@booking-service/shared';
 import { getFileDataFromKey } from '../endpoints/utils';
 
 export const mapGetFilesResponse = (

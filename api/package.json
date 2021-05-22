@@ -1,12 +1,12 @@
 {
-  "name": "@pdf-generator/api",
+  "name": "@booking-service/api",
   "version": "1.0.0",
   "description": "Serverless API for generating PDFs",
   "main": "dist/app",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.9.0",
     "@aws-sdk/s3-request-presigner": "^3.9.0",
-    "@pdf-generator/shared": "1.0.0",
+    "@booking-service/shared": "1.0.0",
     "body-parser": "^1.19.0",
     "cheerio": "^1.0.0-rc.5",
     "chrome-aws-lambda": "^8.0.0",

@@ -22,7 +22,7 @@
     }
   ],
   "settings": {
-    "import/ignore": ["@pdf-generator/shared"],
+    "import/ignore": ["@booking-service/shared"],
     "import/resolver": {
       "node": {
         "extensions": [".js", ".jsx", ".ts", ".tsx"]

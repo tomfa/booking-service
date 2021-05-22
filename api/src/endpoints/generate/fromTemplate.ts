@@ -1,6 +1,6 @@
 import * as Express from 'express';
-import { getKeyFromData } from '@pdf-generator/shared/dist/utils';
-import { FOLDER } from '@pdf-generator/shared';
+import { getKeyFromData } from '@booking-service/shared/dist/utils';
+import { FOLDER } from '@booking-service/shared';
 import { convertHTMLtoPDF } from '../../utils/pdf';
 import { cleanVariables, insertVariables } from '../../utils/variables';
 import { Variables } from '../../types';

@@ -9,7 +9,7 @@ import {
   HeadObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { FileDataDTO, FOLDER, utils } from '@pdf-generator/shared';
+import { FileDataDTO, FOLDER, utils } from '@booking-service/shared';
 import config from '../config';
 import { getFileDataFromKey } from '../endpoints/utils';
 import { TemplateNotFound } from '../utils/errors/TemplateNotFound';

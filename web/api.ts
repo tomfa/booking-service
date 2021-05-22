@@ -1,4 +1,4 @@
-import { FileDataDTO, FOLDER } from '@pdf-generator/shared';
+import { FileDataDTO, FOLDER } from '@booking-service/shared';
 import { config } from './config';
 
 const performUpload = ({ file, url }: { file: File; url: string }) =>
