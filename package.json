@@ -7,7 +7,8 @@
     "packages": [
       "api",
       "web",
-      "shared"
+      "shared",
+      "sdk"
     ],
     "nohoist": [
       "**/api/**"
