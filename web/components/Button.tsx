@@ -1,4 +1,4 @@
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, ButtonHTMLAttributes } from 'react';
 import { Icon, IconType } from './Icon';
 import { BaseButton, BlankButton, ButtonText } from './Button.style';
 
@@ -17,7 +17,7 @@ export const Button = ({
   secondary?: boolean;
   blank?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+} & ButtonHTMLAttributes<HTMLButtonElement>) => {
   const ButtonComponent = blank ? BlankButton : BaseButton;
   return (
     <ButtonComponent onClick={onClick} {...props} $large={large}>

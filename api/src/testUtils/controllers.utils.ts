@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import { MockRequest } from '@jest-mock/express/dist/src/request';
 import { getMockReq, getMockRes } from '@jest-mock/express';
 import { errorMiddleware } from '../utils/errorHandler';
@@ -12,7 +13,7 @@ type APIResponse = {
   errors?: string[];
 };
 export const authedTestRequest = async (
-  controller: (req: Express.Request, res: Express.Request) => unknown,
+  controller: (req: Request, res: Response) => unknown,
   user: User,
   { headers = {}, ...options }: MockRequest = {}
 ) => {
@@ -24,7 +25,7 @@ export const authedTestRequest = async (
 };
 
 export const testRequest = async (
-  controller: (req: Express.Request, res: Express.Request) => unknown,
+  controller: (req: Request, res: Response) => unknown,
   { method = 'GET', ...options }: MockRequest = {}
 ): Promise<APIResponse> => {
   const req = getMockReq({ method, ...options });

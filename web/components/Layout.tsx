@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { Footer } from '../containers/Footer';
 import { Header } from '../containers/Header';
 import { ContentWrapper, PageWrapper } from './PageWrapper.styles';
@@ -7,7 +8,7 @@ export const Layout = ({
   children,
   social = {},
 }: {
-  children: React.ReactChild[] | React.ReactChild;
+  children: ReactNode;
   social?: SocialTags;
 }) => {
   return (

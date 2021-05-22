@@ -1,3 +1,4 @@
+import { CSSProperties, MouseEventHandler } from 'react';
 import {
   Link as LinkIcon,
   IconProps as PhoshopProps,
@@ -18,7 +19,7 @@ import {
   User,
   LockSimple as Lock,
 } from 'phosphor-react';
-import { MouseEventHandler } from 'react';
+
 import NextLink from 'next/link';
 import { IconWrapper } from './Icon.styles';
 import { BlankButton } from './Button.style';
@@ -110,7 +111,7 @@ type IconProps = {
   hoverable?: boolean;
   withPadding?: boolean;
   size?: number;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   className?: string;
 };
 type IconLinkProps = Omit<IconProps, 'hoverable'> & { href: string };

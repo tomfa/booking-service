@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext } from 'react';
+import { createContext, useCallback, useContext, ReactNode } from 'react';
 import {
   useAlert,
   positions,
@@ -28,7 +28,7 @@ export type MessageData = {
 
 export const MessageContext = createContext<MessageData>(null);
 
-const InnerMessageProvider = ({ children }: { children: React.ReactNode }) => {
+const InnerMessageProvider = ({ children }: { children: ReactNode }) => {
   // @ts-ignore
   const { show, removeAll } = useAlert();
   const addMessage = useCallback(
@@ -63,11 +63,7 @@ const InnerMessageProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const MessageProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const MessageProvider = ({ children }: { children: ReactNode }) => {
   const options: AlertProviderProps = {
     position: positions.TOP_CENTER,
     offset: '0.5rem',

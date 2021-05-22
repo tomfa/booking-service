@@ -5,6 +5,7 @@ import {
   useContext,
   useState,
   useEffect,
+  ReactNode,
 } from 'react';
 
 import * as api from '../api';
@@ -26,7 +27,7 @@ const LOCALSTORAGE_API_KEY = 'pdf-api-key';
 const LOCALSTORAGE_USER_KEY = 'pdf-user';
 
 export const AuthContext = createContext<AuthData>(null);
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [jwtToken, setJwtToken] = useState<string | null>(

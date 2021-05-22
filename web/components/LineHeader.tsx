@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { useTheme } from 'styled-components';
 import { Button } from './LineHeader.styles';
 import { H2 } from './H2.styles';
@@ -10,7 +11,7 @@ export const LineHeader = ({
   buttonLabel,
   icon,
 }: {
-  header: string | React.ReactNode;
+  header: string | ReactNode;
   onClick?: () => void;
   hideButton?: boolean;
   buttonLabel?: string;
