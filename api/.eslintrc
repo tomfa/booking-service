@@ -3,7 +3,11 @@
   "extends": ["@askeladden/eslint-config-askeladden/typescript-recommended"],
   "rules": {
     // Prettier handles
-    "@typescript-eslint/indent": 0
+    "@typescript-eslint/indent": 0,
+
+    // Use Typescript version to handle enums
+    "no-shadow": 0,
+    "@typescript-eslint/no-shadow": 2
   },
   "overrides": [
     {

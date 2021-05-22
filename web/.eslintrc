@@ -6,7 +6,11 @@
     "@typescript-eslint/indent": 0,
 
     // Next handles React in scope for us
-    "react/react-in-jsx-scope": 0
+    "react/react-in-jsx-scope": 0,
+
+    // Use Typescript version to handle enums
+    "no-shadow": 0,
+    "@typescript-eslint/no-shadow": 2
   },
   "parserOptions": {
     "ecmaFeatures": {
