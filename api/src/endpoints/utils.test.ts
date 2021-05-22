@@ -45,18 +45,16 @@ describe('getFileDataFromUrl', () => {
       'https://example.com'
     );
 
-    try {
-      getFileDataFromUrl(urlFromDifferentDomain);
-      fail('getFileDataFromUrl should throw error when from unknown domain');
-    } catch (err) {}
+    expect(() => getFileDataFromUrl(urlFromDifferentDomain)).toThrow(
+      'getFileDataFromUrl should throw error when from unknown domain'
+    );
   });
   it('throws an error when URL is missing expected parts', () => {
     const missingId = '';
     const badUrl = `${config.services.s3.endpointUrl}/darth/folder/${missingId}/I love aspargus.html`;
 
-    try {
-      getFileDataFromUrl(badUrl);
-      fail('getFileDataFromUrl should throw error when missing id');
-    } catch (err) {}
+    expect(() => getFileDataFromUrl(badUrl)).toThrow(
+      'getFileDataFromUrl should throw error when missing id'
+    );
   });
 });

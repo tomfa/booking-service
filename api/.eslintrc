@@ -9,16 +9,6 @@
     "no-shadow": 0,
     "@typescript-eslint/no-shadow": 2
   },
-  "overrides": [
-    {
-      "files": ["*.test.ts"],
-
-      "rules": {
-        // Tests often want to catch errors (and ignore them)
-        "no-empty": 0
-      }
-    }
-  ],
   "settings": {
     "import/ignore": ["@booking-service/shared"],
     "import/resolver": {

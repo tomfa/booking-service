@@ -34,9 +34,8 @@ describe('insertVariables', () => {
   it('throws if missing variables and strict', () => {
     const html = 'Hei {{ name }}!';
     const variables = {};
-    try {
-      insertVariables(html, variables, true);
-      fail('Missing variable insertion should throw error');
-    } catch (err) {}
+    expect(() => insertVariables(html, variables, true)).toThrow(
+      'Missing variable insertion should throw error'
+    );
   });
 });
