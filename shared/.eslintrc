@@ -5,6 +5,13 @@
     // Avoid unnecessary imports
     "unused-imports/no-unused-imports-ts": 2,
 
+    // Looks better?
+    "lines-between-class-members": [
+      "error",
+      "always",
+      { "exceptAfterSingleLine": true }
+    ],
+
     // Typescript handles this
     "import/no-unresolved": 0
   },

@@ -5,6 +5,9 @@
     // Avoid unnecessary imports
     "unused-imports/no-unused-imports-ts": 2,
 
+    // Looks better?
+    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+
     // Next handles React in scope for us
     "react/react-in-jsx-scope": 0,
 
