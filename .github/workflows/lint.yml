@@ -8,6 +8,7 @@ on:
       - '!.github/workflows/lint.yml'
     branches:
       - master
+      - beta
 jobs:
   lint:
     name: 'Linting'

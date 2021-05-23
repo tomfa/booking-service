@@ -8,6 +8,7 @@ on:
       - '!.github/workflows/tests.yml'
     branches:
       - master
+      - beta
 jobs:
   test:
     runs-on: ubuntu-latest

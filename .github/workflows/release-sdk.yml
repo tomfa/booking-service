@@ -10,6 +10,7 @@ on:
       - '!.github/workflows/release-sdk.yml'
     branches:
       - master
+      - beta
 
 jobs:
 
