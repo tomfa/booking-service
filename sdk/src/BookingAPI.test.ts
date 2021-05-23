@@ -62,7 +62,10 @@ describe('BookingAPI', () => {
     });
     it('throws ObjectDoesNotExist if resource does not exist', async () => {
       await expect(api.getResource('invalid-id')).rejects.toThrow(
-        ObjectDoesNotExist
+        new ObjectDoesNotExist(
+          'Resource invalid-id not found',
+          ErrorCode.RESOURCE_DOES_NOT_EXIST
+        )
       );
     });
   });
@@ -88,7 +91,10 @@ describe('BookingAPI', () => {
       const newResource = { ...dummyResource, label: dummyResource.label };
 
       await expect(api.addResource(newResource)).rejects.toThrow(
-        ConflictingObjectExists
+        new ConflictingObjectExists(
+          'Resource with label Dummy resource already exists',
+          ErrorCode.CONFLICTS_WITH_EXISTING_RESOURCE
+        )
       );
     });
   });
@@ -113,12 +119,18 @@ describe('BookingAPI', () => {
       await api.deleteResource(dummyResourceId);
 
       await expect(api.getResource(dummyResourceId)).rejects.toThrow(
-        ObjectDoesNotExist
+        new ObjectDoesNotExist(
+          'Resource dummy-resource not found',
+          ErrorCode.RESOURCE_DOES_NOT_EXIST
+        )
       );
     });
     it('throws ObjectDoesNotExist if no resource found', async () => {
       await expect(api.deleteResource('non-existing-id')).rejects.toThrow(
-        ObjectDoesNotExist
+        new ObjectDoesNotExist(
+          'Resource non-existing-id not found',
+          ErrorCode.RESOURCE_DOES_NOT_EXIST
+        )
       );
     });
   });
@@ -389,7 +401,10 @@ describe('BookingAPI', () => {
     });
     it('throws ObjectDoesNotExist if resource does not exist', async () => {
       await expect(api.getBooking('invalid-id')).rejects.toThrow(
-        ObjectDoesNotExist
+        new ObjectDoesNotExist(
+          'Booking invalid-id does not exist',
+          ErrorCode.BOOKING_DOES_NOT_EXIST
+        )
       );
     });
   });
@@ -404,7 +419,10 @@ describe('BookingAPI', () => {
       const invalidBooking = { ...booking, resourceId: 'unknown-id' };
 
       await expect(api.addBooking(invalidBooking)).rejects.toThrow(
-        ObjectDoesNotExist
+        new ObjectDoesNotExist(
+          'Resource unknown-id not found',
+          ErrorCode.RESOURCE_DOES_NOT_EXIST
+        )
       );
     });
     it('throws BadRequestError if resource is disabled', async () => {
@@ -485,7 +503,10 @@ describe('BookingAPI', () => {
     });
     it('throws ObjectDoesNotExist if booking does not exist', async () => {
       await expect(api.cancelBooking('does-not-exist')).rejects.toThrow(
-        ObjectDoesNotExist
+        new ObjectDoesNotExist(
+          `Booking does-not-exist does not exist`,
+          ErrorCode.BOOKING_DOES_NOT_EXIST
+        )
       );
     });
   });

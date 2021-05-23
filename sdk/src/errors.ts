@@ -12,7 +12,6 @@ export enum ErrorCode {
 
 export class GenericBookingError extends Error {
   httpCode: number = 500;
-
   errorCode: ErrorCode;
 
   constructor(message: string, errorCode = ErrorCode.UNKNOWN_ERROR) {
