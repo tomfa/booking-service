@@ -41,6 +41,7 @@
   },
   "scripts": {
     "web": "yarn workspace @booking-service/web",
+    "sdk": "yarn workspace vailable",
     "api": "yarn workspace @booking-service/api",
     "shared": "yarn workspace @booking-service/shared",
     "build": "yarn workspaces run build",

@@ -16,7 +16,7 @@
     "build": "tsc -pretty -p .",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
-    "semantic-release": "y build && y test && semantic-release"
+    "release": "npm run build && npm run test && semantic-release"
   },
   "author": "Tomas Albertsen <tomas@webutvikling.org> (http://webutvikling.org/)",
   "license": "ISC",

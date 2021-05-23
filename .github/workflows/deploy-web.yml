@@ -5,6 +5,7 @@ on:
     types: [completed]
     paths-ignore:
       - 'api/**'
+      - 'sdk/**'
       - 'infrastructure/**'
       - '.github/**'
       - '!.github/workflows/deploy-web.yml'
