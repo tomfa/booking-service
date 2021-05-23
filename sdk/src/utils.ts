@@ -6,7 +6,7 @@ import {
   Resource,
   Schedule,
   TimeSlot,
-} from './BookingAPI.types';
+} from './types';
 import { BadRequestError, ErrorCode, GenericBookingError } from './errors';
 
 export const maxSlotDurationMinutes = (schedule: Schedule): number => {
