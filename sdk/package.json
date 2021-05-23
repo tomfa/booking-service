@@ -25,6 +25,6 @@
     "url": "https://github.com/tomfa/booking-service.git"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }
