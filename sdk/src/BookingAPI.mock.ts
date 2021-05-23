@@ -1,4 +1,4 @@
-import { Booking, IBookingAPI, Resource, TimeSlot } from './BookingAPI.types';
+import { Booking, IBookingAPI, Resource, TimeSlot } from './types';
 import * as utils from './utils';
 import { maxSlotDurationMinutes, verifyIsBookable } from './utils';
 import {
