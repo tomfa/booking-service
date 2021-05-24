@@ -254,6 +254,10 @@ export const isBeforeOpeningHours = (
   return bookingDiffFromOpeningMinutes < 0;
 };
 
+export const addMinutes = (date: Date, numMinutes: number): Date => {
+  return new Date(date.getTime() + numMinutes * 60 * 1000);
+};
+
 export const isAfterOpeningHours = (
   openingHours: HourSchedule,
   date: Date
@@ -369,6 +373,46 @@ export const bookingSlotFitsInResourceSlots = (
     );
   }
   return true;
+};
+
+export const createId = () => {
+  return '_' + Math.random().toString(36).substr(2, 9);
+};
+
+export const mapBookingFromInput = (
+  resource: Resource,
+  booking: Omit<Booking, 'id' | 'canceled' | 'end' | 'durationMinutes'> & {
+    durationMinutes?: number;
+  }
+): Booking => {
+  const openingHours = getOpeningHoursForDate(resource, booking.start);
+  if (!isOpen(openingHours)) {
+    throw new BadRequestError(
+      `Unable to add booking: resource ${resource.id} is closed`,
+      ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
+    );
+  }
+  const allowedDurations = [openingHours.slotDurationMinutes]; // TODO: Support more
+  const defaultDuration = openingHours.slotDurationMinutes;
+  const isInvalidDuration =
+    booking.durationMinutes &&
+    !allowedDurations.includes(booking.durationMinutes);
+  if (isInvalidDuration) {
+    throw new BadRequestError(
+      `Unable to add booking: invalid duration ${booking.durationMinutes} for resource ${resource.id}`,
+      ErrorCode.INVALID_BOOKING_ARGUMENTS
+    );
+  }
+  const bookedDuration = booking.durationMinutes || defaultDuration;
+  const end = addMinutes(booking.start, bookedDuration);
+  return {
+    ...booking,
+    canceled: false,
+    durationMinutes: bookedDuration,
+    id: createId(),
+    start: booking.start,
+    end,
+  };
 };
 
 export const verifyIsBookable = (

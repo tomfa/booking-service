@@ -38,7 +38,7 @@ export type Booking = {
   userId: string;
   resourceId: string;
   start: Date;
-  // TODO: Add duration?
+  durationMinutes: number;
   end: Date;
   canceled: boolean;
 };

@@ -1,6 +1,11 @@
 import { Booking, IBookingAPI, Resource, TimeSlot } from './types';
 import * as utils from './utils.internal';
-import { maxSlotDurationMinutes, verifyIsBookable } from './utils.internal';
+import {
+  createId,
+  mapBookingFromInput,
+  maxSlotDurationMinutes,
+  verifyIsBookable,
+} from './utils.internal';
 import {
   ConflictingObjectExists,
   ErrorCode,
@@ -48,7 +53,7 @@ export default class BookingAPI implements IBookingAPI {
         ErrorCode.CONFLICTS_WITH_EXISTING_RESOURCE
       );
     }
-    const id = resourceId || '_' + Math.random().toString(36).substr(2, 9);
+    const id = resourceId || createId();
     const resourceWithSameId = this.resources.find(r => r.id === resourceId);
     if (resourceWithSameId) {
       throw new ConflictingObjectExists(
@@ -161,11 +166,16 @@ export default class BookingAPI implements IBookingAPI {
   }
 
   async addBooking(
-    booking: Omit<Booking, 'id' | 'canceled'>
+    booking: Omit<
+      Booking,
+      | 'id'
+      | 'canceled'
+      | 'end'
+      | ('durationMinutes' & { durationMinutes?: number })
+    >
   ): Promise<Booking> {
-    const id = '_' + Math.random().toString(36).substr(2, 9);
-    const newBooking: Booking = { ...booking, canceled: false, id };
-    const resource = await this.getResource(newBooking.resourceId);
+    const resource = await this.getResource(booking.resourceId);
+    const newBooking = mapBookingFromInput(resource, booking);
     verifyIsBookable(resource, this.bookings, newBooking);
     this.bookings.push(newBooking);
     return Promise.resolve(newBooking);

@@ -31,8 +31,7 @@ const userId = 'freely-selectable-id';
 const newBooking = await API.addBooking({
   userId,
   resourceId,  
-  start: new Date('2021-05-17T13:30:00Z'),
-  end: new Date('2021-05-17T14:30:00Z'),
+  start: new Date('2021-05-17T13:30:00Z')
 });
 
 const bookings = await API.findBookings({ 
