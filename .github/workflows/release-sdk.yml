@@ -80,9 +80,11 @@ jobs:
       - name: Yarn Install
         run: |
           yarn install
+      - name: Yarn build
+        run: |
+          yarn sdk build
       - name: npm deploy
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ".npmrc"
           yarn sdk release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
