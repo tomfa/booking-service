@@ -1,6 +1,6 @@
 import { Booking, IBookingAPI, Resource, TimeSlot } from './types';
-import * as utils from './utils';
-import { maxSlotDurationMinutes, verifyIsBookable } from './utils';
+import * as utils from './utils.internal';
+import { maxSlotDurationMinutes, verifyIsBookable } from './utils.internal';
 import {
   ConflictingObjectExists,
   ErrorCode,
@@ -9,11 +9,8 @@ import {
 
 export default class BookingAPI implements IBookingAPI {
   private resources: Resource[] = [];
-
   private bookings: Booking[] = [];
-
   private apiKey: string;
-
   private baseUrl: string;
 
   constructor({

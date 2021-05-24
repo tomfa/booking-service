@@ -1,4 +1,4 @@
-export type HourMinute = string; // e.g. "00:00"
+export type HourMinute = string; // e.g. "00:00".
 export type IsoDate = string; // e.g. 2020-03-01
 
 export type Closed = 'closed';
@@ -38,6 +38,7 @@ export type Booking = {
   userId: string;
   resourceId: string;
   start: Date;
+  // TODO: Add duration?
   end: Date;
   canceled: boolean;
 };
