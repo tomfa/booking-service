@@ -1,4 +1,4 @@
-import BookingAPI from './BookingAPI.mock';
+import BookingAPI from './API.mock';
 import { Booking, Resource, Schedule } from './types';
 import { openingHourGenerator } from './utils.internal';
 import {
