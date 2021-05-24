@@ -1,13 +1,15 @@
 export type HourMinute = string; // e.g. "00:00"
 export type IsoDate = string; // e.g. 2020-03-01
 
-export type OpeningHour = {
+export type Closed = 'closed';
+export type HourSchedule = {
   start: HourMinute;
   end: HourMinute;
   slotIntervalMinutes: number;
   slotDurationMinutes: number;
 };
 
+export type OpeningHour = HourSchedule | Closed;
 export type Schedule = {
   mon: OpeningHour;
   tue: OpeningHour;

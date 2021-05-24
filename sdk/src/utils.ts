@@ -1,6 +1,7 @@
 import {
   Booking,
   HourMinute,
+  HourSchedule,
   IsoDate,
   OpeningHour,
   Resource,
@@ -10,17 +11,81 @@ import {
 import { BadRequestError, ErrorCode, GenericBookingError } from './errors';
 
 export const maxSlotDurationMinutes = (schedule: Schedule): number => {
-  const allDurations = Object.values(schedule.overriddenDates).map(
-    d => d.slotDurationMinutes
+  const openingHours: OpeningHour[] = [
+    ...Object.values(schedule.overriddenDates),
+    schedule.mon,
+    schedule.tue,
+    schedule.wed,
+    schedule.thu,
+    schedule.fri,
+    schedule.sat,
+    schedule.sun,
+  ];
+  const slotDurations = openingHours
+    .filter(isOpen)
+    .map(s => s.slotDurationMinutes);
+  return Math.max(...slotDurations);
+};
+
+const isValidHourSchedule = (
+  schedule: Partial<HourSchedule>
+): schedule is HourSchedule => {
+  return (
+    schedule.start &&
+    schedule.end &&
+    schedule.slotDurationMinutes !== undefined &&
+    schedule.slotIntervalMinutes !== undefined
   );
-  allDurations.push(schedule.mon.slotDurationMinutes);
-  allDurations.push(schedule.tue.slotDurationMinutes);
-  allDurations.push(schedule.wed.slotDurationMinutes);
-  allDurations.push(schedule.thu.slotDurationMinutes);
-  allDurations.push(schedule.fri.slotDurationMinutes);
-  allDurations.push(schedule.sat.slotDurationMinutes);
-  allDurations.push(schedule.sun.slotDurationMinutes);
-  return Math.max(...allDurations);
+};
+
+export const createSchedule = (
+  defaultSchedule: OpeningHour,
+  overrides?: {
+    mon?: Partial<OpeningHour>;
+    tue?: Partial<OpeningHour>;
+    wed?: Partial<OpeningHour>;
+    thu?: Partial<OpeningHour>;
+    fri?: Partial<OpeningHour>;
+    sat?: Partial<OpeningHour>;
+    sun?: Partial<OpeningHour>;
+    overriddenDates?: Record<IsoDate, Partial<OpeningHour>>;
+  }
+): Schedule => {
+  const withDefaults = (specifiedHours?: Partial<OpeningHour>): OpeningHour => {
+    if (!specifiedHours) {
+      return defaultSchedule;
+    }
+    if (specifiedHours === 'closed') {
+      return 'closed';
+    }
+    if (defaultSchedule === 'closed') {
+      if (!isValidHourSchedule(specifiedHours)) {
+        throw new Error(
+          `DaySchedule can not be partial when default schedule is closed.`
+        );
+      }
+      return specifiedHours;
+    }
+    return { ...defaultSchedule, ...specifiedHours };
+  };
+  const overriddenDates =
+    overrides?.overriddenDates &&
+    Object.fromEntries(
+      Object.entries(overrides.overriddenDates).map(([k, v]) => [
+        k,
+        withDefaults(v),
+      ])
+    );
+  return {
+    mon: withDefaults(overrides?.mon),
+    tue: withDefaults(overrides?.tue),
+    wed: withDefaults(overrides?.wed),
+    thu: withDefaults(overrides?.thu),
+    fri: withDefaults(overrides?.fri),
+    sat: withDefaults(overrides?.sat),
+    sun: withDefaults(overrides?.sun),
+    overriddenDates: overriddenDates || {},
+  };
 };
 
 export const constructAllSlots = ({
@@ -57,6 +122,9 @@ export const getCurrentTimeSlot = (
     return undefined;
   }
   const schedule = getOpeningHoursForDate(resource, time);
+  if (!isOpen(schedule)) {
+    return undefined;
+  }
   return {
     availableSeats: resource.seats,
     start: time,
@@ -69,6 +137,9 @@ export const isWithinOpeningHours = (
   time: Date
 ): boolean => {
   const openingHours = getOpeningHoursForDate(resource, time);
+  if (!isOpen(openingHours)) {
+    return false;
+  }
   if (openingHours.start === openingHours.end) {
     return false;
   }
@@ -193,18 +264,14 @@ const firstSlotOfDay = (
   openingHours: OpeningHour,
   day: IsoDate
 ): Date | undefined => {
-  if (isClosed(openingHours)) {
+  if (!isOpen(openingHours)) {
     return undefined;
   }
   return new Date(`${day}T${openingHours.start}:00Z`);
 };
 
-const isClosed = (openingHours: OpeningHour): boolean => {
-  return openingHours.start === openingHours.end;
-};
-
 const isBeforeOpeningHours = (
-  openingHours: OpeningHour,
+  openingHours: HourSchedule,
   date: Date
 ): boolean => {
   const { hour: startHour, minute: startMinute } = splitHourMinute(
@@ -217,7 +284,7 @@ const isBeforeOpeningHours = (
 };
 
 const isAfterOpeningHours = (
-  openingHours: OpeningHour,
+  openingHours: HourSchedule,
   date: Date
 ): boolean => {
   const { hour: endHour, minute: endMinute } = splitHourMinute(
@@ -230,7 +297,7 @@ const isAfterOpeningHours = (
 };
 
 const roundUpToNextSlotStart = (
-  openingHours: OpeningHour,
+  openingHours: HourSchedule,
   date: Date
 ): Date => {
   const { hour: startHour, minute: startMinute } = splitHourMinute(
@@ -257,6 +324,12 @@ const startOfNextDay = (date: Date): Date => {
   return new Date(thisDay.getTime() + 24 * 3600 * 1000);
 };
 
+export const isOpen = (
+  dayScheudle: OpeningHour
+): dayScheudle is HourSchedule => {
+  return dayScheudle !== 'closed';
+};
+
 const getNextTimeslotAfter = (
   resource: Resource,
   date: Date,
@@ -269,7 +342,7 @@ const getNextTimeslotAfter = (
     throw new Error(`nextBookingSlotHour: Invalid date passed.`);
   }
   const openingHours = getOpeningHoursForDate(resource, date);
-  if (isClosed(openingHours)) {
+  if (!isOpen(openingHours)) {
     const nextDay = startOfNextDay(date);
     if (nextDay > max) {
       return undefined;
@@ -297,6 +370,9 @@ export const bookingSlotFitsInResourceSlots = (
   const bookingDurationMinutes =
     (booking.end.getTime() - booking.start.getTime()) / (60 * 1000);
   const openingHours = getOpeningHoursForDate(resource, booking.start);
+  if (!isOpen(openingHours)) {
+    return false;
+  }
 
   const { hour: startHour, minute: startMinute } = splitHourMinute(
     openingHours.start
