@@ -19,9 +19,9 @@ npm install vailable
 ## Basic usage from Node 
 
 ```ts
-import Booking from 'vailable';
+import Vailable from 'vailable';
 
-const API = new Booking({ 
+const API = new Vailable({ 
   apiKey: 'your-secret-api-key' 
 });
 
@@ -33,7 +33,6 @@ const newBooking = await API.addBooking({
   resourceId,  
   start: new Date('2021-05-17T13:30:00Z'),
   end: new Date('2021-05-17T14:30:00Z'),
-  canceled: false,  
 });
 
 const bookings = await API.findBookings({ 
@@ -48,23 +47,18 @@ const bookings = await API.findBookings({
 ### Add resource
 
 ```ts
-import { types } from 'vailalbe';
+import { types, createSchedule } from 'vailalbe';
 
+// 1 hour long sessions, bookable at 08:00, 08:30, 09:00, ..., 19:30
+const schedule = createSchedule({
+  start: '08:00', 
+  end: '20:00', 
+  slotIntervalMinutes: 30,
+  slotDurationMinutes: 60,
+})
 const resource = await API.addResource({
   label: 'My first Spa',
-  schedule: schedule,
+  schedule,
   seats: 12,
   enabled: true,
 })
-
-// 1 hour long sessions, bookable at 08:00, 08:30, 09:00, ..., 19:30 
-const schedule: types.Schedule = {
-  mon: ({ start: '08:00', end: '20:00', slotDurationMinutes: 60, slotDurationInterval: 30 }),
-  tue: ({ start: '08:00', end: '20:00', slotDurationMinutes: 60, slotDurationInterval: 30 }),
-  wed: ({ start: '08:00', end: '20:00', slotDurationMinutes: 60, slotDurationInterval: 30 }),
-  thu: ({ start: '08:00', end: '20:00', slotDurationMinutes: 60, slotDurationInterval: 30 }),
-  fri: ({ start: '08:00', end: '20:00', slotDurationMinutes: 60, slotDurationInterval: 30 }),
-  sat: ({ start: '10:00', end: '16:00', slotDurationMinutes: 60, slotDurationInterval: 30 }),
-  sun: ({ start: '10:00', end: '16:00', slotDurationMinutes: 60, slotDurationInterval: 30 }),
-}
-```
