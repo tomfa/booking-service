@@ -15,17 +15,17 @@ import {
 export default class BookingAPI implements IBookingAPI {
   private resources: Resource[] = [];
   private bookings: Booking[] = [];
-  private apiKey: string;
+  private token: string;
   private baseUrl: string;
 
   constructor({
-    apiKey,
+    token,
     baseUrl = 'https://api.vailable.eu',
   }: {
-    apiKey: string;
+    token: string;
     baseUrl?: string;
   }) {
-    this.apiKey = apiKey;
+    this.token = token;
     this.baseUrl = baseUrl;
   }
 

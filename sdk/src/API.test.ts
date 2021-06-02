@@ -45,12 +45,12 @@ const dummyBooking: Omit<Booking, 'id'> = {
 };
 
 describe('BookingAPI', () => {
-  let api: BookingAPI = new BookingAPI({ apiKey: 'dummy-key' });
+  let api: BookingAPI = new BookingAPI({ token: 'dummy-key' });
   let booking: Booking;
   let resource: Resource;
 
   beforeEach(async () => {
-    api = new BookingAPI({ apiKey: 'dummy-key' });
+    api = new BookingAPI({ token: 'dummy-key' });
     resource = await api.addResource(dummyResource, dummyResourceId);
     booking = await api.addBooking(dummyBooking);
   });
