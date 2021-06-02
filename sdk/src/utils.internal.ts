@@ -341,7 +341,7 @@ const getNextTimeslotAfter = (
 
 export const bookingSlotFitsInResourceSlots = (
   resource: Resource,
-  booking: Booking
+  booking: Omit<Booking, 'seatNumber'>
 ): boolean => {
   const bookingDurationMinutes =
     (booking.end.getTime() - booking.start.getTime()) / (60 * 1000);
@@ -383,7 +383,7 @@ export const createId = () => {
 export const mapBookingFromInput = (
   resource: Resource,
   booking: CreateBookingArgs
-): Booking => {
+): Omit<Booking, 'seatNumber'> => {
   const openingHours = getOpeningHoursForDate(resource, booking.start);
   if (!isOpen(openingHours)) {
     throw new BadRequestError(
@@ -404,28 +404,21 @@ export const mapBookingFromInput = (
   };
 };
 
-export const verifyIsBookable = (
+const generateSeatNumbersForResource = (resource: Resource): number[] => {
+  return Array(resource.seats)
+    .fill('')
+    .map((x, i) => i);
+};
+
+export const getAvailableSeatNumbers = (
   resource: Resource,
   existingBookings: Booking[],
-  booking: Booking
-) => {
+  booking: Omit<Booking, 'seatNumber'>
+): number[] => {
   if (!resource.enabled) {
     throw new BadRequestError(
       `Unable to add booking to disabled resource ${resource.id}`,
       ErrorCode.RESOURCE_IS_DISABLED
-    );
-  }
-  const overLappingBookings = existingBookings.filter(
-    e =>
-      e.resourceId === booking.resourceId &&
-      e.canceled === false &&
-      e.end > booking.start &&
-      e.start < booking.end
-  );
-  if (overLappingBookings.length >= resource.seats) {
-    throw new BadRequestError(
-      `No available slots in requested period for resource ${resource.id}`,
-      ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
     );
   }
   if (!isWithinOpeningHours(resource, booking.start)) {
@@ -442,4 +435,20 @@ export const verifyIsBookable = (
       ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
     );
   }
+  const overLappingBookings = existingBookings.filter(
+    e =>
+      e.resourceId === booking.resourceId &&
+      e.canceled === false &&
+      e.end > booking.start &&
+      e.start < booking.end
+  );
+  if (overLappingBookings.length >= resource.seats) {
+    throw new BadRequestError(
+      `No available slots in requested period for resource ${resource.id}`,
+      ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
+    );
+  }
+  const reservedSeatNumbers = overLappingBookings.map(b => b.seatNumber);
+  const allSeatNumbers = generateSeatNumbersForResource(resource);
+  return allSeatNumbers.filter(num => !reservedSeatNumbers.includes(num));
 };

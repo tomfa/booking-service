@@ -42,11 +42,12 @@ export type Booking = {
   end: Date;
   canceled: boolean;
   comment: string;
+  seatNumber: number;
 };
 
 export type CreateBookingArgs = Omit<
   Booking,
-  'id' | 'canceled' | 'end' | 'durationMinutes' | 'comment'
+  'id' | 'canceled' | 'end' | 'durationMinutes' | 'seatNumber' | 'comment'
 > & { comment?: string };
 
 export type TimeSlot = {

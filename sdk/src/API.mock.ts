@@ -10,11 +10,12 @@ import {
   createId,
   mapBookingFromInput,
   maxSlotDurationMinutes,
-  verifyIsBookable,
+  getAvailableSeatNumbers,
 } from './utils.internal';
 import {
   ConflictingObjectExists,
   ErrorCode,
+  GenericBookingError,
   ObjectDoesNotExist,
 } from './errors';
 
@@ -173,8 +174,19 @@ export default class BookingAPI implements IBookingAPI {
 
   async addBooking(booking: CreateBookingArgs): Promise<Booking> {
     const resource = await this.getResource(booking.resourceId);
-    const newBooking = mapBookingFromInput(resource, booking);
-    verifyIsBookable(resource, this.bookings, newBooking);
+    const newBookingWithoutSeatNumber = mapBookingFromInput(resource, booking);
+    const seatNumbers = getAvailableSeatNumbers(
+      resource,
+      this.bookings,
+      newBookingWithoutSeatNumber
+    );
+    if (seatNumbers.length === 0) {
+      throw new GenericBookingError(`Unable to find available seat number`);
+    }
+    const newBooking = {
+      ...newBookingWithoutSeatNumber,
+      seatNumber: Math.min(...seatNumbers),
+    };
     this.bookings.push(newBooking);
     return Promise.resolve(newBooking);
   }

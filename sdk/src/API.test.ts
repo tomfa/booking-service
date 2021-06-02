@@ -42,7 +42,7 @@ const dummyBookingInput: CreateBookingArgs = {
   start: new Date('2021-05-08T13:30:00Z'),
 };
 
-const dummyBooking: Omit<Booking, 'id'> = {
+const dummyBooking: Omit<Booking, 'id' | 'seatNumber'> = {
   ...dummyBookingInput,
   end: new Date('2021-05-08T14:30:00Z'),
   durationMinutes: 60,
@@ -190,7 +190,7 @@ describe('BookingAPI', () => {
       expect(beforeSlot.start).toEqual(new Date('2021-05-17T08:00:00Z'));
 
       await api.addBooking({
-        ...dummyBooking,
+        ...dummyBookingInput,
         start: beforeSlot.start,
       });
       const slot = await api.getNextAvailable(resource.id, beforeOpen);
@@ -200,11 +200,11 @@ describe('BookingAPI', () => {
     it('returns number of seats available', async () => {
       await api.updateResource(resource.id, { seats: 2 });
       await api.addBooking({
-        ...dummyBooking,
+        ...dummyBookingInput,
         start: new Date('2021-05-17T08:00:00Z'),
       });
       await api.addBooking({
-        ...dummyBooking,
+        ...dummyBookingInput,
         start: new Date('2021-05-17T08:30:00Z'),
       });
 
@@ -367,11 +367,10 @@ describe('BookingAPI', () => {
         },
       });
 
-      const booking12To14 = {
+      const booking12To14: CreateBookingArgs = {
         userId: 'jonathan',
         resourceId: resourceOpen12To14.id,
         start: new Date('2021-05-17T12:00:00Z'),
-        end: new Date('2021-05-17T14:00:00Z'),
       };
       await api.addBooking(booking12To14);
 
@@ -411,10 +410,22 @@ describe('BookingAPI', () => {
   });
   describe('addBooking', () => {
     it('returns new booking', async () => {
-      const response = await api.addBooking({ ...booking });
+      const response = await api.addBooking(dummyBookingInput);
 
-      expect(response).toEqual({ ...booking, id: response.id });
+      expect(response).toEqual({
+        ...booking,
+        id: response.id,
+        seatNumber: booking.seatNumber + 1,
+      });
       expect(response.id).not.toEqual(booking.id);
+    });
+    it('increments seatNumber from 0 to Resource.seats', async () => {
+      expect(booking.seatNumber).toBe(0);
+      for (let i = 1; i < resource.seats; i++) {
+        // eslint-disable-next-line no-await-in-loop
+        const nextBooking = await api.addBooking(dummyBookingInput);
+        expect(nextBooking.seatNumber).toBe(i);
+      }
     });
     it('sets duration to equal resource.slotDuration', async () => {
       const response = await api.addBooking(dummyBookingInput);
