@@ -36,11 +36,16 @@ const dummyResource: Omit<Resource, 'id'> = {
   enabled: true,
 };
 
-const dummyBooking: Omit<Booking, 'id'> = {
+const dummyBookingInput = {
   userId: 'external-user-id',
   resourceId: dummyResourceId,
   start: new Date('2021-05-08T13:30:00Z'),
+};
+
+const dummyBooking: Omit<Booking, 'id'> = {
+  ...dummyBookingInput,
   end: new Date('2021-05-08T14:30:00Z'),
+  durationMinutes: 60,
   canceled: false,
 };
 
@@ -52,7 +57,7 @@ describe('BookingAPI', () => {
   beforeEach(async () => {
     api = new BookingAPI({ token: 'dummy-key' });
     resource = await api.addResource(dummyResource, dummyResourceId);
-    booking = await api.addBooking(dummyBooking);
+    booking = await api.addBooking(dummyBookingInput);
   });
 
   describe('getResource', () => {
@@ -186,7 +191,6 @@ describe('BookingAPI', () => {
       await api.addBooking({
         ...dummyBooking,
         start: beforeSlot.start,
-        end: beforeSlot.end,
       });
       const slot = await api.getNextAvailable(resource.id, beforeOpen);
 
@@ -197,12 +201,10 @@ describe('BookingAPI', () => {
       await api.addBooking({
         ...dummyBooking,
         start: new Date('2021-05-17T08:00:00Z'),
-        end: new Date('2021-05-17T09:00:00Z'),
       });
       await api.addBooking({
         ...dummyBooking,
         start: new Date('2021-05-17T08:30:00Z'),
-        end: new Date('2021-05-17T09:30:00Z'),
       });
 
       const beforeOpen = new Date('2021-05-17T00:00:00Z');
@@ -217,7 +219,6 @@ describe('BookingAPI', () => {
       const newBooking = await api.addBooking({
         ...dummyBooking,
         start: new Date('2021-05-17T08:00:00Z'),
-        end: new Date('2021-05-17T09:00:00Z'),
       });
       await api.cancelBooking(newBooking.id);
 
@@ -279,7 +280,6 @@ describe('BookingAPI', () => {
       await api.addBooking({
         ...dummyBooking,
         start: new Date('2021-05-17T08:00:00Z'),
-        end: new Date('2021-05-17T09:00:00Z'),
       });
       const from = new Date('2021-05-17T00:00:00Z'); // Open from 08 to 20
       const to = new Date('2021-05-17T09:30:00Z');
@@ -609,16 +609,14 @@ describe('BookingAPI', () => {
   });
   describe('getLatestBooking', () => {
     const oldBooking = {
-      ...dummyBooking,
+      ...dummyBookingInput,
       start: new Date(dummyBooking.start.getTime() - 30 * 60 * 1000),
-      end: new Date(dummyBooking.end.getTime() - 30 * 60 * 1000),
     };
     const newBooking = {
-      ...dummyBooking,
+      ...dummyBookingInput,
       start: new Date(dummyBooking.start.getTime() + 30 * 60 * 1000),
-      end: new Date(dummyBooking.end.getTime() + 30 * 60 * 1000),
     };
-    it('returns latest booking', async () => {
+    it('returns booking with latest start time', async () => {
       await api.addBooking(newBooking);
       await api.addBooking(oldBooking);
 
