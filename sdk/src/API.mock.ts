@@ -228,6 +228,7 @@ export default class BookingAPI implements IBookingAPI {
 
   async findBookings({
     userId,
+    resourceCategories,
     resourceIds,
     from,
     to,
@@ -235,6 +236,7 @@ export default class BookingAPI implements IBookingAPI {
   }: {
     userId?: string;
     resourceIds?: string[];
+    resourceCategories?: string[];
     from?: Date;
     to?: Date;
     includeCanceled?: boolean;
@@ -242,11 +244,26 @@ export default class BookingAPI implements IBookingAPI {
     if (resourceIds && resourceIds.length === 0) {
       return [];
     }
+    let resourceCategoriesIds: string[] | null = null;
+    if (resourceCategories) {
+      if (resourceCategories.length === 0) {
+        return [];
+      }
+      resourceCategoriesIds = this.resources
+        .filter(r => resourceCategories.includes(r.category))
+        .map(r => r.id);
+    }
     const matchesFilters = (booking: Booking) => {
       if (userId && userId !== booking.userId) {
         return false;
       }
       if (resourceIds && !resourceIds.includes(booking.resourceId)) {
+        return false;
+      }
+      if (
+        resourceCategoriesIds &&
+        !resourceCategoriesIds.includes(booking.resourceId)
+      ) {
         return false;
       }
       if (from && from.getTime() > booking.start.getTime()) {

@@ -695,6 +695,27 @@ describe('BookingAPI', () => {
 
       expect(bookings.length).toBe(1);
     });
+    it('includes bookings with resource.category == category filter', async () => {
+      const meetingRoom = await api.addResource({
+        ...dummyResource,
+        label: 'MeetingRoom A',
+        category: 'room',
+      });
+      const roomBooking = await api.addBooking({
+        ...booking,
+        resourceId: meetingRoom.id,
+      });
+
+      const bookings = await api.findBookings();
+      const roomBookings = await api.findBookings({
+        resourceCategories: ['room'],
+      });
+
+      expect(bookings.length).toBe(2);
+      expect(roomBookings.length).toBe(1);
+      expect(roomBookings[0].resourceId).toBe(meetingRoom.id);
+      expect(roomBookings[0].id).toBe(roomBooking.id);
+    });
   });
   describe('getLatestBooking', () => {
     const oldBooking = {
