@@ -23,14 +23,16 @@ export type Schedule = {
 
 export type Resource = {
   id: string;
-  // TODO: Should we add category here?
-  //   So that we could add 14 x "desk" resource with different labels,
-  //   and ask for availability for any resource of category "desk"?
+  category: string;
   label: string;
   schedule: Schedule;
   // TODO: How to solve not available until/after
   seats: number;
   enabled: boolean;
+};
+
+export type CreateResourceArgs = Omit<Resource, 'id' | 'category'> & {
+  category?: string;
 };
 
 export type Booking = {

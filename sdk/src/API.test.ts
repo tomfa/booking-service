@@ -30,6 +30,7 @@ const dummySchedule: Schedule = {
 
 const dummyResourceId = 'dummy-resource';
 const dummyResource: Omit<Resource, 'id'> = {
+  category: '',
   label: 'Dummy resource',
   schedule: dummySchedule,
   seats: 12,
@@ -92,6 +93,18 @@ describe('BookingAPI', () => {
 
       expect(response).toEqual(expect.objectContaining(newResource));
       expect(response.id).toBe(predeterminedId);
+    });
+    it('can optionally have category specified by caller', async () => {
+      const newResource = {
+        ...dummyResource,
+        label: 'MeetingRoom A',
+        category: 'meeting-room',
+      };
+
+      const response = await api.addResource(newResource);
+
+      expect(response).toEqual(expect.objectContaining(newResource));
+      expect(response.category).toBe('meeting-room');
     });
     it('throws ConflictingObjectExists if label is already taken', async () => {
       const newResource = { ...dummyResource, label: dummyResource.label };

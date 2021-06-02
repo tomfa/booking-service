@@ -1,6 +1,7 @@
 import {
   Booking,
   CreateBookingArgs,
+  CreateResourceArgs,
   IBookingAPI,
   Resource,
   TimeSlot,
@@ -48,7 +49,7 @@ export default class BookingAPI implements IBookingAPI {
   }
 
   async addResource(
-    resource: Omit<Resource, 'id'>,
+    resource: CreateResourceArgs,
     resourceId?: string
   ): Promise<Resource> {
     const resourceWithSameLabel = this.resources.find(
@@ -68,7 +69,7 @@ export default class BookingAPI implements IBookingAPI {
         ErrorCode.CONFLICTS_WITH_EXISTING_RESOURCE
       );
     }
-    const newResource = { ...resource, id };
+    const newResource = { ...resource, id, category: resource.category || '' };
     this.resources.push(newResource);
     return Promise.resolve(newResource);
   }
