@@ -1,6 +1,6 @@
 import BookingAPI from './API.mock';
 import { Booking, CreateBookingArgs, Resource, Schedule } from './types';
-import { openingHourGenerator } from './utils.internal';
+import { addMinutes, openingHourGenerator } from './utils.internal';
 import {
   BadRequestError,
   ConflictingObjectExists,
@@ -47,6 +47,7 @@ const dummyBooking: Omit<Booking, 'id'> = {
   end: new Date('2021-05-08T14:30:00Z'),
   durationMinutes: 60,
   canceled: false,
+  comment: '',
 };
 
 describe('BookingAPI', () => {
@@ -415,6 +416,23 @@ describe('BookingAPI', () => {
       expect(response).toEqual({ ...booking, id: response.id });
       expect(response.id).not.toEqual(booking.id);
     });
+    it('sets duration to equal resource.slotDuration', async () => {
+      const response = await api.addBooking(dummyBookingInput);
+
+      expect(response.durationMinutes).toEqual(60);
+      expect(response.end).toEqual(addMinutes(dummyBookingInput.start, 60));
+      expect(response.id).not.toEqual(booking.id);
+    });
+    it('stores optional comment argument, or sets to empty string', async () => {
+      const bookingWithoutcomment = await api.addBooking(dummyBookingInput);
+      const bookingWithcomment = await api.addBooking({
+        ...dummyBookingInput,
+        comment: 'Cheese please',
+      });
+
+      expect(bookingWithoutcomment.comment).toEqual('');
+      expect(bookingWithcomment.comment).toEqual('Cheese please');
+    });
     it('throws ObjectDoesNotExist if resource id is unknown', async () => {
       const invalidBooking = { ...booking, resourceId: 'unknown-id' };
 
@@ -503,6 +521,25 @@ describe('BookingAPI', () => {
     });
     it('throws ObjectDoesNotExist if booking does not exist', async () => {
       await expect(api.cancelBooking('does-not-exist')).rejects.toThrow(
+        new ObjectDoesNotExist(
+          `Booking does-not-exist does not exist`,
+          ErrorCode.BOOKING_DOES_NOT_EXIST
+        )
+      );
+    });
+  });
+  describe('setBookingComment', () => {
+    it('updates comment', async () => {
+      expect(booking.comment).toBe('');
+
+      await api.setBookingComment(booking.id, 'hi-there');
+
+      expect((await api.getBooking(booking.id)).comment).toBe('hi-there');
+    });
+    it('throws ObjectDoesNotExist if booking does not exist', async () => {
+      await expect(
+        api.setBookingComment('does-not-exist', 'hi-there')
+      ).rejects.toThrow(
         new ObjectDoesNotExist(
           `Booking does-not-exist does not exist`,
           ErrorCode.BOOKING_DOES_NOT_EXIST

@@ -395,6 +395,7 @@ export const mapBookingFromInput = (
   const end = addMinutes(booking.start, bookedDuration);
   return {
     ...booking,
+    comment: booking.comment || '',
     canceled: false,
     durationMinutes: bookedDuration,
     id: createId(),
