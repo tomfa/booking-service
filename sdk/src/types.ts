@@ -43,6 +43,11 @@ export type Booking = {
   canceled: boolean;
 };
 
+export type CreateBookingArgs = Omit<
+  Booking,
+  'id' | 'canceled' | 'end' | 'durationMinutes'
+>;
+
 export type TimeSlot = {
   availableSeats: number;
   start: Date;

@@ -1,5 +1,6 @@
 import {
   Booking,
+  CreateBookingArgs,
   HourMinute,
   HourSchedule,
   IsoDate,
@@ -381,9 +382,7 @@ export const createId = () => {
 
 export const mapBookingFromInput = (
   resource: Resource,
-  booking: Omit<Booking, 'id' | 'canceled' | 'end' | 'durationMinutes'> & {
-    durationMinutes?: number;
-  }
+  booking: CreateBookingArgs
 ): Booking => {
   const openingHours = getOpeningHoursForDate(resource, booking.start);
   if (!isOpen(openingHours)) {
@@ -392,18 +391,7 @@ export const mapBookingFromInput = (
       ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
     );
   }
-  const allowedDurations = [openingHours.slotDurationMinutes]; // TODO: Support more
-  const defaultDuration = openingHours.slotDurationMinutes;
-  const isInvalidDuration =
-    booking.durationMinutes &&
-    !allowedDurations.includes(booking.durationMinutes);
-  if (isInvalidDuration) {
-    throw new BadRequestError(
-      `Unable to add booking: invalid duration ${booking.durationMinutes} for resource ${resource.id}`,
-      ErrorCode.INVALID_BOOKING_ARGUMENTS
-    );
-  }
-  const bookedDuration = booking.durationMinutes || defaultDuration;
+  const bookedDuration = openingHours.slotDurationMinutes;
   const end = addMinutes(booking.start, bookedDuration);
   return {
     ...booking,

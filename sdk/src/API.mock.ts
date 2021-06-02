@@ -1,4 +1,10 @@
-import { Booking, IBookingAPI, Resource, TimeSlot } from './types';
+import {
+  Booking,
+  CreateBookingArgs,
+  IBookingAPI,
+  Resource,
+  TimeSlot,
+} from './types';
 import * as utils from './utils.internal';
 import {
   createId,
@@ -165,15 +171,7 @@ export default class BookingAPI implements IBookingAPI {
     return booking;
   }
 
-  async addBooking(
-    booking: Omit<
-      Booking,
-      | 'id'
-      | 'canceled'
-      | 'end'
-      | ('durationMinutes' & { durationMinutes?: number })
-    >
-  ): Promise<Booking> {
+  async addBooking(booking: CreateBookingArgs): Promise<Booking> {
     const resource = await this.getResource(booking.resourceId);
     const newBooking = mapBookingFromInput(resource, booking);
     verifyIsBookable(resource, this.bookings, newBooking);

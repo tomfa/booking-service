@@ -1,5 +1,5 @@
 import BookingAPI from './API.mock';
-import { Booking, Resource, Schedule } from './types';
+import { Booking, CreateBookingArgs, Resource, Schedule } from './types';
 import { openingHourGenerator } from './utils.internal';
 import {
   BadRequestError,
@@ -36,7 +36,7 @@ const dummyResource: Omit<Resource, 'id'> = {
   enabled: true,
 };
 
-const dummyBookingInput = {
+const dummyBookingInput: CreateBookingArgs = {
   userId: 'external-user-id',
   resourceId: dummyResourceId,
   start: new Date('2021-05-08T13:30:00Z'),
