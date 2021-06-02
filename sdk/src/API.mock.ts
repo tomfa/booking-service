@@ -100,12 +100,14 @@ export default class BookingAPI implements IBookingAPI {
       if (!filters) {
         return true;
       }
-      const withUpdateString = JSON.stringify({
-        ...resource,
-        ...filters,
-      });
-      return withUpdateString === JSON.stringify(resource);
+      const fieldMatches = Object.entries(filters).map(
+        ([key, value]) => resource[key] === value
+      );
+      return !fieldMatches.includes(false);
     };
+    if (!filters) {
+      return this.resources;
+    }
     return Promise.resolve(this.resources.filter(matchesFiltering));
   }
 

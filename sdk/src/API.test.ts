@@ -168,6 +168,34 @@ describe('BookingAPI', () => {
       expect(resources.length).toBe(1);
       expect(resources[0]).toEqual({ ...dummyResource, id: dummyResourceId });
     });
+    it('returns all resources matching category if category specified', async () => {
+      const roomResourceA = await api.addResource({
+        ...dummyResource,
+        label: 'Room A',
+        category: 'room',
+      });
+      const roomResourceB = await api.addResource({
+        ...dummyResource,
+        label: 'Room B',
+        category: 'room',
+      });
+      const deskResource = await api.addResource({
+        ...dummyResource,
+        label: 'Desk B',
+        category: 'desk',
+      });
+
+      const rooms = await api.findResources({ category: 'room' });
+      const desks = await api.findResources({ category: 'desk' });
+
+      expect(rooms.length).toBe(2);
+      expect(rooms.map(r => r.label)).toEqual([
+        roomResourceA.label,
+        roomResourceB.label,
+      ]);
+      expect(desks.length).toBe(1);
+      expect(desks.map(r => r.label)).toEqual([deskResource.label]);
+    });
   });
   describe('getNextAvailable', () => {
     it('returns first available slot after now', async () => {
