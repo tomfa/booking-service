@@ -4,14 +4,16 @@
 
 ![Unit tests status](https://github.com/tomfa/booking-service-api/actions/workflows/tests.yml/badge.svg)
 ![ESLint status](https://github.com/tomfa/booking-service-api/actions/workflows/lint.yml/badge.svg)
+[![codecov](https://codecov.io/gh/tomfa/booking-service/branch/master/graph/badge.svg?token=BX9E38JQO8)](https://codecov.io/gh/tomfa/booking-service)
 
 Mono repo containing 3 packages:
 
 - [@booking-service/api](https://github.com/tomfa/booking-service-api/tree/master/api): Serverless API
 - [@booking-service/web](https://github.com/tomfa/booking-service-api/tree/master/web): NextJS application
 - [@booking-service/shared](https://github.com/tomfa/booking-service-api/tree/master/shared): Shared utils and types
+- [@vailable](https://github.com/tomfa/booking-service-api/tree/master/sdk): SDK for integration
 
-### Setup
+### Initial setup
 
 ```
 yarn
@@ -91,7 +93,6 @@ AWS_MASTER_SECRET_ACCESS_KEY
 # The values are outputted from terraform apply in the previous step
 AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
-
 
 # Bucket for deployment of web.
 # The values are outputted from terraform apply in the previous step 
