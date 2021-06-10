@@ -25,4 +25,11 @@ export type TokenData = {
   role: Role;
 };
 
+export type APITokenData = {
+  iss: string;
+  aud?: string[];
+  exp?: number;
+  permissions: string[];
+};
+
 export type UserWithTokenData = User & { apiKey: string; jwt: string };
