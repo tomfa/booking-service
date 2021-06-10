@@ -39,5 +39,24 @@ jobs:
     - name: Upload codecov
       uses: codecov/codecov-action@v1
       with:
+        flags: api
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./api/coverage/coverage-final.json,./web/coverage/coverage-final.json,./shared/coverage/coverage-final.json,/sdk/coverage/coverage-final.json
+        files: ./api/coverage/coverage-final.json
+    - name: Upload codecov
+      uses: codecov/codecov-action@v1
+      with:
+        flags: web
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./web/coverage/coverage-final.json
+    - name: Upload codecov
+      uses: codecov/codecov-action@v1
+      with:
+        flags: sdk
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./sdk/coverage/coverage-final.json
+    - name: Upload codecov
+      uses: codecov/codecov-action@v1
+      with:
+        flags: shared
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./shared/coverage/coverage-final.json
