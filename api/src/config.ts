@@ -1,4 +1,9 @@
-import { getUsersFromEnv, getOriginsFromEnv } from './utils/env.utils';
+import { cleanIssuer } from './utils/auth/jwt';
+import {
+  getUsersFromEnv,
+  getOriginsFromEnv,
+  getAcceptedIssuersFromEnv,
+} from './utils/env.utils';
 
 export const config = {
   isDevelopment: process.env.ENVIRONMENT === 'development',
@@ -7,9 +12,14 @@ export const config = {
   allowedOrigins: getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
   uuidNameSpace: process.env.UUID_NAMESPACE,
   jwt: {
+    acceptedIssuers: getAcceptedIssuersFromEnv(process.env.ACCEPTED_ISSUERS),
     secret: process.env.JWT_SECRET,
-    audience: getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
-    issuer: process.env.JWT_ISSUER,
+    audience: [
+      process.env.JWT_ISSUER,
+      ...getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
+    ],
+    issuer: process.env.JWT_ISSUER && cleanIssuer(process.env.JWT_ISSUER),
+    permissionPrefix: 'vailable:',
   },
   services: {
     s3: {

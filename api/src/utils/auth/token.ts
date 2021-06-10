@@ -1,5 +1,4 @@
 import { encodeUrlSafeBase64 } from '../base64';
-import { BadAuthenticationError } from '../errors/BadAuthenticatedError';
 import config from '../../config';
 import { sign, verify } from './jwt';
 import { Auth, TokenData } from './types';
@@ -8,13 +7,14 @@ export const createJWTtoken = (
   username: string,
   permissions: string[] = ['api:*']
 ): string => {
-  return sign<Omit<TokenData, 'iat'>>({
+  const data: Omit<TokenData, 'iat' | 'exp'> = {
     iss: config.jwt.issuer,
     aud: config.jwt.audience,
     sub: username,
-    permissions,
+    permissions: permissions.map(addPermissionPrefixIfNeeded),
     role: 'user',
-  });
+  };
+  return sign(data);
 };
 
 export const createApiKey = (
@@ -26,18 +26,19 @@ export const createApiKey = (
   return apiKey;
 };
 
-export const getAuth = (key: string): Auth => {
-  try {
-    const data = verify<TokenData>(key);
-    return {
-      username: data.sub,
-      role: data.role,
-      isExpired: false,
-      permissions: data.permissions,
-    };
-  } catch (err) {
-    throw new BadAuthenticationError('Invalid JWT token');
-  }
+export async function getAuth(key: string): Promise<Auth> {
+  const data = await verify(key);
+  return {
+    username: data.sub,
+    role: data.role,
+    isExpired: false,
+    permissions: data.permissions,
+  };
+}
+
+export const addPermissionPrefixIfNeeded = (permission: string) => {
+  const prefix = config.jwt.permissionPrefix;
+  return permission.startsWith(prefix) ? permission : `${prefix}${permission}`;
 };
 
 const isPermissionGranted = ({
@@ -47,16 +48,16 @@ const isPermissionGranted = ({
   allowedPermission: string;
   requestedPermission: string;
 }): boolean => {
-  return (
-    requestedPermission.match(allowedPermission.replace('*', '(.*)')).length > 0
-  );
+  const requested = addPermissionPrefixIfNeeded(requestedPermission);
+  const allowed = addPermissionPrefixIfNeeded(allowedPermission);
+  return requested.match(allowed.replace('*', '(.*)')).length > 0;
 };
 
-export const hasPermission = (auth: Auth, permission: string): boolean => {
+export function hasPermission(auth: Auth, permission: string): boolean {
   return !!auth.permissions.find(p =>
     isPermissionGranted({
       allowedPermission: p,
       requestedPermission: permission,
     })
   );
-};
+}

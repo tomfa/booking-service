@@ -14,7 +14,7 @@ const del = (url: string, fun: ControllerFunction) =>
   router.delete(url, errorWrapper(fun));
 
 get(`/me`, async (req: Request, res: Response) => {
-  const owner = getUserOrThrow(req);
+  const owner = await getUserOrThrow(req);
   return res.json({ data: owner, message: 'OK' });
 });
 del(`/me`, async (req: Request, res: Response) => {

@@ -2,12 +2,12 @@
 import * as Express from 'express';
 import { getUser } from './request.utils';
 
-export const authMiddleware = (
+export const authMiddleware = async (
   req: Express.Request,
   res: Express.Response,
   next: Express.NextFunction
 ) => {
   // @ts-ignore
-  req.user = getUser(req);
+  req.user = await getUser(req);
   next();
 };

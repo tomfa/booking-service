@@ -47,6 +47,7 @@
     "build": "yarn workspaces run build",
     "start": "concurrently \"yarn web start\" \"yarn api start\"",
     "test": "yarn workspaces run test",
+    "test:all": "yarn workspaces run test --ci --coverage",
     "test:api": "yarn api test",
     "test:compile": "tsc -v && tsc --noEmit",
     "lint": "eslint .",
