@@ -35,4 +35,9 @@ jobs:
         yarn test:compile
     - name: Unit tests
       run: |
-        yarn test
+        yarn test:all
+    - name: Upload codecov
+    - uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        files: ./api/coverage/coverage-final.json,./web/coverage/coverage-final.json,./shared/coverage/coverage-final.json,/sdk/coverage/coverage-final.json
