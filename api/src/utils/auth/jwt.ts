@@ -20,7 +20,8 @@ export async function verify(apiToken: string): Promise<TokenData> {
     return jwt.verify(apiToken, config.jwt.secret) as TokenData;
   }
   const keyStore = await getKeyStore(data.iss);
-  return getAPITokenData(keyStore, apiToken);
+  const tokenData = await getAPITokenData(keyStore, apiToken);
+  return tokenData;
 }
 
 const getAcceptedAudiences = () => {

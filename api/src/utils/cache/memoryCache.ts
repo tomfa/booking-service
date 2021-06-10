@@ -1,4 +1,4 @@
-const store: Record<string, { expires: number; value: unknown }> = {};
+let store: Record<string, { expires: number; value: unknown }> = {};
 
 function get<T = any>(key: string): T | undefined {
   const cacheValue = store[key];
@@ -25,4 +25,8 @@ function set({
   store[key] = { value, expires };
 }
 
-export const cache = { set, get };
+function clear() {
+  store = {};
+}
+
+export const cache = { set, get, clear };

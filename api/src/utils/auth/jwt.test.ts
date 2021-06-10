@@ -8,6 +8,7 @@ import { JSONObject } from '@booking-service/shared';
 import * as b64 from '../base64';
 import config from '../../config';
 import { BadAuthenticationError } from '../errors/BadAuthenticatedError';
+import { cache } from '../cache/memoryCache';
 import { sign, verify } from './jwt';
 
 describe('sign', () => {
@@ -110,6 +111,7 @@ describe('verify', () => {
     expect(verifiedData).toEqual(expect.objectContaining(data));
   });
   it('accepts tokens issued by accepted third parties', async () => {
+    cache.clear();
     const validIssuer = config.jwt.acceptedIssuers[0];
     const thirdPartyData = {
       ...data,
@@ -128,7 +130,41 @@ describe('verify', () => {
 
     expect(verifiedData).toEqual(thirdPartyData);
   });
+  it('utilizes a cache to prevent frequent retrieval of third party JWK keys', async () => {
+    cache.clear();
+    const validIssuer = config.jwt.acceptedIssuers[0];
+    const thirdPartyData = {
+      ...data,
+      iss: validIssuer,
+      exp: Math.floor(Date.now() / 1000) + 2000,
+    };
+    const { token, keystore } = await createThirdPartyToken(
+      thirdPartyData,
+      validIssuer
+    );
+    nock(`https://${validIssuer}`)
+      .get('/.well-known/jwks.json')
+      .reply(200, keystore);
+
+    await verify(token); // "Spends" nock above
+
+    nock(`https://${validIssuer}`).get('/.well-known/jwks.json').reply(404);
+
+    await verify(token); // Goes towards cache
+    cache.clear();
+
+    try {
+      await verify(token);
+      fail('Fetching keys from server should return 404');
+    } catch (err) {
+      expect(err instanceof BadAuthenticationError).toBe(true);
+      expect(err.displayMessage).toBe(
+        `Unable to get key store. https://thirdparty.com/.well-known/jwks.json returned HTTP status 404`
+      );
+    }
+  });
   it('rejects tokens issued by accepted third parties, if no jwks endpoint exists', async () => {
+    cache.clear();
     const validIssuer = config.jwt.acceptedIssuers[0];
     const thirdPartyData = {
       ...data,
