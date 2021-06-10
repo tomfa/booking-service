@@ -5,6 +5,7 @@ import { JSONObject } from '@booking-service/shared';
 import config from '../../config';
 import { BadAuthenticationError } from '../errors/BadAuthenticatedError';
 import { APIError } from '../errors/APIError';
+import { cache } from '../cache/memoryCache';
 import { APITokenData, TokenData } from './types';
 
 export function sign<T extends JSONObject>(payload: T): string {
@@ -142,6 +143,10 @@ function mapToTokenData(apiToken: string): TokenData {
 
 async function getKeyStore(issuer: string): Promise<jose.JWK.KeyStore> {
   const url = `https://${issuer}/.well-known/jwks.json`;
+  const cacheValue = cache.get(url);
+  if (cacheValue) {
+    return jose.JWK.asKeyStore(cacheValue);
+  }
   try {
     const response = await fetch(url);
     if (response.status >= 400) {
@@ -150,6 +155,7 @@ async function getKeyStore(issuer: string): Promise<jose.JWK.KeyStore> {
       );
     }
     const json = await response.json();
+    cache.set({ key: url, value: json, expiresAfterMinutes: 180 });
     const keyStore = await jose.JWK.asKeyStore(json);
     return keyStore;
   } catch (err) {
