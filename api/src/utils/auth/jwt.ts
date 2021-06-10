@@ -4,6 +4,7 @@ import * as fetch from 'node-fetch';
 import { JSONObject } from '@booking-service/shared';
 import config from '../../config';
 import { BadAuthenticationError } from '../errors/BadAuthenticatedError';
+import { APIError } from '../errors/APIError';
 import { APITokenData, TokenData } from './types';
 
 export function sign<T extends JSONObject>(payload: T): string {
@@ -143,13 +144,21 @@ async function getKeyStore(issuer: string): Promise<jose.JWK.KeyStore> {
   const url = `https://${issuer}/.well-known/jwks.json`;
   try {
     const response = await fetch(url);
+    if (response.status >= 400) {
+      throw new BadAuthenticationError(
+        `Unable to get key store. ${url} returned HTTP status ${response.status}`
+      );
+    }
     const json = await response.json();
     const keyStore = await jose.JWK.asKeyStore(json);
     return keyStore;
   } catch (err) {
+    if (err instanceof APIError) {
+      throw err;
+    }
     // eslint-disable-next-line no-console
     console.log(`Error when retrieving jwks`, err);
-    throw new BadAuthenticationError(`Unable to get key store at ${url}`);
+    throw new BadAuthenticationError(`Unable to parse key store from ${url}`);
   }
 }
 
