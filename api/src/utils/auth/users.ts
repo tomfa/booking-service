@@ -14,7 +14,7 @@ export const findUserAuthData = ({
     u => u.username === username && u.password === password
   );
   if (!user) {
-    throw new BadAuthenticationError();
+    throw new BadAuthenticationError(`Wrong username or password`);
   }
   return {
     username: user.username,

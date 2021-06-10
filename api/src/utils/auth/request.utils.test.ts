@@ -8,50 +8,19 @@ import { getUser, getUserOrThrow } from './request.utils';
 
 describe('getUser', () => {
   const username = 'test-user';
-  const authHeaderPermission = 'api:*';
-  const apiKeyPermission = 'api:generate:*';
+  const authHeaderPermission = config.jwt.permissionPrefix + 'api:*';
+  const apiKeyPermission = config.jwt.permissionPrefix + 'api:generate:*';
   const authHeaderValue = createJWTtoken(username, [authHeaderPermission]);
   const token = createApiKey(username, [apiKeyPermission]);
 
-  it('returns user from authentication header', () => {
+  it('returns user from authentication header', async () => {
     const req = getMockReq({
       headers: {
         authorization: `Bearer ${authHeaderValue}`,
       },
     });
 
-    const user = getUser(req);
-
-    expect(user).toEqual({
-      username,
-      isExpired: false,
-      permissions: ['api:*'],
-      role: 'user',
-    });
-  });
-
-  it('returns user from token query parameter', () => {
-    const req = getMockReq({ query: { token } });
-
-    const user = getUser(req);
-
-    expect(user).toEqual({
-      username,
-      isExpired: false,
-      permissions: [apiKeyPermission],
-      role: 'user',
-    });
-  });
-
-  it('returns user from header if both header and query token is present', () => {
-    const req = getMockReq({
-      query: { token },
-      headers: {
-        authorization: `Bearer ${authHeaderValue}`,
-      },
-    });
-
-    const user = getUser(req);
+    const user = await getUser(req);
 
     expect(user).toEqual({
       username,
@@ -61,14 +30,45 @@ describe('getUser', () => {
     });
   });
 
-  it('returns null if no auth present', () => {
+  it('returns user from token query parameter', async () => {
+    const req = getMockReq({ query: { token } });
+
+    const user = await getUser(req);
+
+    expect(user).toEqual({
+      username,
+      isExpired: false,
+      permissions: [apiKeyPermission],
+      role: 'user',
+    });
+  });
+
+  it('returns user from header if both header and query token is present', async () => {
+    const req = getMockReq({
+      query: { token },
+      headers: {
+        authorization: `Bearer ${authHeaderValue}`,
+      },
+    });
+
+    const user = await getUser(req);
+
+    expect(user).toEqual({
+      username,
+      isExpired: false,
+      permissions: [authHeaderPermission],
+      role: 'user',
+    });
+  });
+
+  it('returns null if no auth present', async () => {
     const req = getMockReq();
 
-    const user = getUser(req);
+    const user = await getUser(req);
 
     expect(user).toBe(null);
   });
-  it('throws BadAuthenticationError if auth is invalid', () => {
+  it('throws BadAuthenticationError if auth is invalid', async () => {
     const invalidSigningKey = 'i-am-trying-to-hack';
     const validTokenData = {
       iss: config.jwt.issuer,
@@ -84,7 +84,7 @@ describe('getUser', () => {
     });
 
     try {
-      getUser(req);
+      await getUser(req);
       fail('Getting user with bad auth should throw error');
     } catch (err) {
       expect(err).toBeInstanceOf(BadAuthenticationError);
@@ -93,30 +93,30 @@ describe('getUser', () => {
 });
 describe('getUserOrThrow', () => {
   const username = 'test-user';
-  const authHeaderPermission = 'api:*';
+  const authHeaderPermission = config.jwt.permissionPrefix + 'api:*';
   const authHeaderValue = createJWTtoken(username, [authHeaderPermission]);
 
-  it('returns user if auth present', () => {
+  it('returns user if auth present', async () => {
     const req = getMockReq({
       headers: {
         authorization: `Bearer ${authHeaderValue}`,
       },
     });
 
-    const user = getUser(req);
+    const user = await getUser(req);
 
     expect(user).toEqual({
       username,
       isExpired: false,
-      permissions: ['api:*'],
+      permissions: [authHeaderPermission],
       role: 'user',
     });
   });
-  it('throws NotAuthenticated error if no auth present', () => {
+  it('throws NotAuthenticated error if no auth present', async () => {
     const req = getMockReq();
 
     try {
-      getUserOrThrow(req);
+      await getUserOrThrow(req);
       fail('getUserOrThrow should throw when no auth exists');
     } catch (err) {
       expect(err).toBeInstanceOf(NotAuthenticatedError);

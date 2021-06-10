@@ -16,20 +16,18 @@ export type UserWithPassword = {
   password: string;
 };
 
-export type TokenData = {
-  iss: string;
-  aud: string[];
-  iat: number;
+export interface APITokenData {
   sub: string;
-  permissions: string[];
-  role: Role;
-};
-
-export type APITokenData = {
   iss: string;
   aud?: string[];
-  exp?: number;
+  exp: number;
+  iat?: number;
   permissions: string[];
-};
+}
+
+export interface TokenData extends APITokenData {
+  aud: string[];
+  role: Role;
+}
 
 export type UserWithTokenData = User & { apiKey: string; jwt: string };

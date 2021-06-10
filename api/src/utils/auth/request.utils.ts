@@ -17,7 +17,7 @@ const getAuthHeader = (req: Express.Request): string | null => {
   return null;
 };
 
-export const getUser = (req: Express.Request): Auth | null => {
+export const getUser = async (req: Express.Request): Promise<Auth | null> => {
   const authHeader = getAuthHeader(req);
   if (authHeader) {
     return getAuth(authHeader);
@@ -32,8 +32,8 @@ export const getUser = (req: Express.Request): Auth | null => {
   return getAuth(decodeUrlSafeBase64(token));
 };
 
-export const getUserOrThrow = (req: Express.Request): User => {
-  const user = getUser(req);
+export const getUserOrThrow = async (req: Express.Request): Promise<User> => {
+  const user = await getUser(req);
   if (!user) {
     throw new NotAuthenticatedError();
   }

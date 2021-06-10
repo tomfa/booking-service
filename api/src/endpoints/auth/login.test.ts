@@ -7,6 +7,7 @@ import { login } from './login';
 
 describe('login', () => {
   const user = config.users[0];
+  const apiPermissions = config.jwt.permissionPrefix + 'api:*';
   it('returns 200 OK with token', async () => {
     const { status, json } = await testRequest(login, {
       method: 'post',
@@ -16,18 +17,22 @@ describe('login', () => {
     expect(status).toBe(200);
     const { username, apiKey, jwt } = json.data as UserWithTokenData;
     expect(username).toBe(user.username);
-    expect(getAuth(jwt)).toEqual(
+    const auth = await getAuth(jwt);
+    const tokenAuth = await getAuth(decodeUrlSafeBase64(apiKey));
+    expect(auth).toEqual(
       expect.objectContaining({
         isExpired: false,
-        permissions: ['api:*'],
+        permissions: [apiPermissions],
         role: 'user',
         username: user.username,
       })
     );
-    expect(getAuth(decodeUrlSafeBase64(apiKey))).toEqual(
+    expect(tokenAuth).toEqual(
       expect.objectContaining({
         isExpired: false,
-        permissions: ['api:generate:from_template'],
+        permissions: [
+          config.jwt.permissionPrefix + 'api:generate:from_template',
+        ],
         role: 'user',
         username: 'test-user',
       })

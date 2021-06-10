@@ -1,7 +1,8 @@
 /* eslint-disable unused-imports/no-unused-vars */
 import * as jsonwebtoken from 'jsonwebtoken';
-import { JsonWebTokenError } from 'jsonwebtoken';
 import * as b64 from '../base64';
+import config from '../../config';
+import { BadAuthenticationError } from '../errors/BadAuthenticatedError';
 import { sign, verify } from './jwt';
 
 describe('sign', () => {
@@ -55,22 +56,28 @@ describe('sign', () => {
 });
 
 describe('verify', () => {
-  const data = { random: 15 };
+  const data = {
+    iss: config.jwt.issuer,
+    aud: config.jwt.audience,
+    sub: 'username',
+    permissions: [config.jwt.permissionPrefix + 'api:*'],
+    role: 'user',
+  };
 
-  it('throws an error if not signed by us', () => {
+  it('throws an error if not signed by us', async () => {
     const invalidToken = jsonwebtoken.sign(data, 'notourkey');
 
     try {
-      verify(invalidToken);
+      await verify(invalidToken);
       fail('Verifying invalid token should throw an error');
     } catch (err) {
-      expect(err instanceof JsonWebTokenError).toBe(true);
+      expect(err instanceof BadAuthenticationError).toBe(true);
     }
   });
-  it('it returns a the data contained in the jwt', () => {
+  it('it returns a the data contained in the jwt', async () => {
     const token = sign(data);
 
-    const verifiedData = verify(token);
+    const verifiedData = await verify(token);
 
     expect(verifiedData).toEqual(expect.objectContaining(data));
   });
