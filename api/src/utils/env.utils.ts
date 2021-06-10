@@ -17,6 +17,18 @@ export const getUsersFromEnv = (
   return envString.split(';').map(toUser);
 };
 
+// TODO: Make an actual user system
+export const getAcceptedIssuersFromEnv = (
+  envString: string | undefined
+): string[] => {
+  if (!envString) {
+    // eslint-disable-next-line no-console
+    console.log(`No issuers found found`);
+    return [];
+  }
+  return envString.split(',');
+};
+
 export const getOriginsFromEnv = (envString: string | undefined): string[] => {
   if (!envString) {
     return [];

@@ -88,15 +88,20 @@ const validateTokenIssuer = (iss: unknown) => {
   if (!iss) {
     throw new BadAuthenticationError(`Token claim 'iss' is missing`);
   }
+  if (typeof iss !== 'string') {
+    throw new BadAuthenticationError(
+      `Token claim 'iss' must be of type string`
+    );
+  }
 
   if (iss === config.jwt.issuer) {
     return;
   }
 
-  const isKnownIssuer = true; // TODO: Read from DB or cache
+  const isKnownIssuer = config.jwt.acceptedIssuers.includes(iss);
   if (!isKnownIssuer) {
     throw new BadAuthenticationError(
-      `Issuer ${iss} is not authorized for this API`
+      `Issuer '${iss}' is not authorized for this API`
     );
   }
 };
@@ -157,7 +162,7 @@ async function getAPITokenData(
     verifiedTokenData = await jose.JWS.createVerify(keyStore).verify(token);
   } catch (err) {
     throw new BadAuthenticationError(
-      `Unable to verify that token originated from  it's issuer.`
+      `Unable to verify that token originated from it's issuer.`
     );
   }
   try {
