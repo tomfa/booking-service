@@ -20,5 +20,63 @@ export class BackendStack extends cdk.Stack {
         },
       },
     });
+
+    const vpc = new ec2.Vpc(this, 'vailable-vpc');
+    const cluster = new rds.ServerlessCluster(this, 'vailable-rds-cluster', {
+      engine: rds.DatabaseClusterEngine.AURORA_POSTGRESQL,
+      parameterGroup: rds.ParameterGroup.fromParameterGroupName(
+        this,
+        'ParamterGroup',
+        'default.aurora.postgresql10'
+      ),
+      defaultDatabaseName: 'vailable_db',
+      vpc,
+      scaling: { autoPause: cdk.Duration.seconds(0) },
+    });
+
+    // Create the Lambda function that will map GraphQL operations into Postgres
+    const postFn = new lambda.Function(this, 'vailable-api-lambda', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: new lambda.AssetCode('lambda'),
+      handler: 'index.handler',
+      memorySize: 1024,
+      environment: {
+        CLUSTER_ARN: cluster.clusterArn,
+        SECRET_ARN: cluster.secret?.secretArn || '',
+        DB_NAME: 'vailable_db',
+        AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      },
+    });
+    // Grant access to the cluster from the Lambda function
+    cluster.grantDataApiAccess(postFn);
+    // Set the new Lambda function as a data source for the AppSync API
+    const lambdaDs = api.addLambdaDataSource('lambdaDatasource', postFn);
+
+    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getResourceById' });
+    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getBookingById' });
+    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getCustomerByIssuer' });
+    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'findResources' });
+    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'findBookings' });
+    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'findAvailability' });
+    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getNextAvailable' });
+    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getLatestBooking' });
+    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getBookedDuration' });
+
+    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addResource' })
+    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'updateResource' })
+    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addBooking' })
+    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'deleteResource' })
+    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'cancelBooking' })
+
+    // CFN Outputs
+    new cdk.CfnOutput(this, 'AppSyncAPIURL', {
+      value: api.graphqlUrl,
+    });
+    new cdk.CfnOutput(this, 'AppSyncAPIKey', {
+      value: api.apiKey || '',
+    });
+    new cdk.CfnOutput(this, 'ProjectRegion', {
+      value: this.region,
+    });
   }
 }

@@ -118,6 +118,17 @@ type BookedDuration {
     numBookings: Int!
 }
 
+
+input UpdateResourceInput {
+    id: String!
+    category: String
+    label: String
+    seats: Int
+    enabled: Boolean
+    schedule: [DateScheduleInput]
+}
+
+
 type Query {
     getResourceById(resourceId: String!): Resource
     getBookingById(bookingId: String!): Booking
@@ -128,15 +139,6 @@ type Query {
     getNextAvailable(resourceId: String!): TimeSlot
     getLatestBooking(filter: FindBookingInput): Booking
     getBookedDuration(filter: FindBookingInput): BookedDuration
-}
-
-input UpdateResourceInput {
-    id: String!
-    category: String
-    label: String
-    seats: Int
-    enabled: Boolean
-    schedule: [DateScheduleInput]
 }
 
 type Mutation {
