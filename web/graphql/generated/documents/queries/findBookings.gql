@@ -1,0 +1,21 @@
+query findBookings($filterBookings: FindBookingInput!){
+    findBookings(filterBookings: $filterBookings){
+        id
+        customer{
+            id
+            name
+            email
+            phoneNumber
+            issuer
+            credits
+            enabled
+        }
+        userId
+        resourceId
+        start
+        end
+        canceled
+        comment
+        seatNumber
+    }
+}

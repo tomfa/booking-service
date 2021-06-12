@@ -1,0 +1,7 @@
+query getNextAvailable($id: String!){
+    getNextAvailable(id: $id){
+        availableSeats
+        start
+        end
+    }
+}
