@@ -68,7 +68,7 @@ export class BackendStack extends cdk.Stack {
     lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'updateResource' })
     lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'updateCustomer' })
     lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addBooking' })
-    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'deleteResource' })
+    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'disableResource' })
     lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'cancelBooking' })
     lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addCustomer' })
     lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'disableCustomer' })
