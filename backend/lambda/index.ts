@@ -14,15 +14,16 @@ import updateResource from './updateResource';
 import addBooking from './addBooking';
 import disableResource from './disableResource';
 import cancelBooking from './cancelBooking';
-import deleteResource from './deleteResource'
 import addCustomer from './addCustomer'
 import disableCustomer from './disableCustomer'
 import * as types from './types'
+import updateCustomer from './updateCustomer';
+import { Mutation, MutationType, QueryType } from './types';
 
 
 type AppSyncEvent = {
   info: {
-    fieldName: string;
+    fieldName: QueryType | MutationType;
   };
   arguments: {
     booking: types.Booking;
@@ -83,6 +84,9 @@ exports.handler = async (event: AppSyncEvent) => {
     case 'updateResource': {
       return await updateResource(event.arguments.updateResourceInput);
     }
+    case 'updateCustomer': {
+      return await updateCustomer(event.arguments.updateCustomerInput);
+    }
     case 'addBooking': {
       return await addBooking(event.arguments.addBookingInput);
     }
@@ -92,14 +96,11 @@ exports.handler = async (event: AppSyncEvent) => {
     case 'cancelBooking': {
       return await cancelBooking(event.arguments.id);
     }
-    case 'deleteResource': {
-      await deleteResource(event.arguments.id)
-    }
     case 'addCustomer': {
-      await addCustomer(event.arguments.addCustomerInput)
+      return await addCustomer(event.arguments.addCustomerInput)
     }
     case 'disableCustomer': {
-      await disableCustomer(event.arguments.id)
+      return await disableCustomer(event.arguments.id)
     }
     default:
       return null;

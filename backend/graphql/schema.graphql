@@ -167,10 +167,10 @@ type Query {
 type Mutation {
     addResource(addResourceInput: AddResourceInput!): Resource
     updateResource(input: UpdateResourceInput!): Resource
+    updateCustomer(addCustomerInput: UpdateCustomerInput!): Customer
     addBooking(addBookingInput: AddBookingInput!): Booking
     disableResource(id: String!): Resource
     cancelBooking(id: String!): Booking
     addCustomer(addCustomerInput: AddCustomerInput!): Customer
     disableCustomer(id: String!): Customer
-    updateCustomer(addCustomerInput: UpdateCustomerInput!): Customer
 }
