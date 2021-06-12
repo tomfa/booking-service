@@ -61,12 +61,17 @@ export class BackendStack extends cdk.Stack {
     lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getNextAvailable' });
     lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getLatestBooking' });
     lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getBookedDuration' });
+    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getCustomerByEmail' });
+    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getCustomerById' });
 
     lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addResource' })
     lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'updateResource' })
+    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'updateCustomer' })
     lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addBooking' })
     lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'deleteResource' })
     lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'cancelBooking' })
+    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addCustomer' })
+    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'disableCustomer' })
 
     // CFN Outputs
     new cdk.CfnOutput(this, 'AppSyncAPIURL', {

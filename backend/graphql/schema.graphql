@@ -32,6 +32,9 @@ type Schedule {
 
 type Customer {
     id: String!
+    name: String
+    email: String
+    phoneNumber: String
     issuer: String!
     credits: Int!
     enabled: Boolean!
@@ -47,7 +50,7 @@ type Resource {
     enabled: Boolean!
 }
 
-input CreateResourceInput {
+input AddResourceInput {
     id: String
     customerId: String!
     category: String
@@ -87,7 +90,7 @@ input FindBookingInput {
 }
 
 
-input CreateBookingInput {
+input AddBookingInput {
     id: String!
     customerId: String!
     userId: String!
@@ -128,23 +131,46 @@ input UpdateResourceInput {
     schedule: [DateScheduleInput]
 }
 
+input AddCustomerInput {
+    id: String
+    name: String
+    email: String!
+    phoneNumber: String
+    issuer: String
+    credits: Int
+    enabled: Boolean
+}
+
+input UpdateCustomerInput {
+    name: String
+    email: String
+    phoneNumber: String
+    issuer: String
+    credits: Int
+    enabled: Boolean
+}
 
 type Query {
-    getResourceById(resourceId: String!): Resource
-    getBookingById(bookingId: String!): Booking
+    getResourceById(id: String!): Resource
+    getBookingById(id: String!): Booking
     getCustomerByIssuer(issuer: String!): Customer
-    findResources(filter: FindResourceInput!): [Resource]
-    findBookings(filter: FindBookingInput!): [Booking]
-    findAvailability(filter: FindAvailabilityInput!): [TimeSlot]
-    getNextAvailable(resourceId: String!): TimeSlot
-    getLatestBooking(filter: FindBookingInput): Booking
-    getBookedDuration(filter: FindBookingInput): BookedDuration
+    getCustomerByEmail(email: String!): Customer
+    getCustomerById(id: String!): Customer
+    findResources(filterResource: FindResourceInput!): [Resource]
+    findBookings(filterBookings: FindBookingInput!): [Booking]
+    findAvailability(filterAvailability: FindAvailabilityInput!): [TimeSlot]
+    getNextAvailable(id: String!): TimeSlot
+    getLatestBooking(filterBookings: FindBookingInput!): Booking
+    getBookedDuration(filterBookings: FindBookingInput!): BookedDuration
 }
 
 type Mutation {
-    addResource(resource: CreateResourceInput!): Resource
-    updateResource(resource: UpdateResourceInput!): Resource
-    addBooking(booking: CreateBookingInput!): Booking
-    deleteResource(resourceId: String!): Resource
-    cancelBooking(bookingId: String!): Booking
+    addResource(addResourceInput: AddResourceInput!): Resource
+    updateResource(input: UpdateResourceInput!): Resource
+    addBooking(addBookingInput: AddBookingInput!): Booking
+    disableResource(id: String!): Resource
+    cancelBooking(id: String!): Booking
+    addCustomer(addCustomerInput: AddCustomerInput!): Customer
+    disableCustomer(id: String!): Customer
+    updateCustomer(addCustomerInput: UpdateCustomerInput!): Customer
 }
