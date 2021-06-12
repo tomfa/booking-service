@@ -1,31 +1,14 @@
-const { v4: uuid } = require('uuid');
-
 import { AddCustomerInput } from './types';
 import { Tables } from './constants';
 import db from './db';
 
-async function addCustomer(customer: AddCustomerInput) {
-  if (!customer.id) customer.id = uuid();
-  const {
-    id,
-    name = '',
-    email,
-    phoneNumber = null,
-    issuer = '',
-    credits = 0,
-    enabled = true,
-  } = customer;
+const { v4: uuid } = require('uuid');
+
+async function addCustomer({ id = uuid(), ...rest }: AddCustomerInput) {
   try {
-    const query = `INSERT INTO ${Tables.Customer} (id, name, email, phoneNumber, issuer, credits, enabled) VALUES(:id, :name, :email, :phoneNumber, :issuer, :credits, :enabled)`;
-    await db.query(query, {
-      id,
-      name,
-      email,
-      phoneNumber,
-      issuer,
-      credits,
-      enabled,
-    });
+    const query = `INSERT INTO ${Tables.Customer} (id, name, email, phone_number, issuer, credits, enabled) VALUES(:id, :name, :email, :phoneNumber, :issuer, :credits, :enabled)`;
+    const customer = { ...rest, id };
+    await db.query(query, customer);
     return customer;
   } catch (err) {
     console.log('Postgres error: ', err);
