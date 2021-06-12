@@ -1,0 +1,24 @@
+{
+  "env": { "node": true, "jest": true, "jasmine": true },
+  "extends": ["@askeladden/eslint-config-askeladden/typescript-recommended"],
+  "rules": {
+    // Prettier handles
+    "@typescript-eslint/indent": 0,
+
+    // While we are testing
+    "no-console": 0,
+    "no-return-await": 0,
+
+    // Use Typescript version to handle enums
+    "no-shadow": 0,
+    "@typescript-eslint/no-shadow": 2
+  },
+  "settings": {
+    "import/ignore": ["@booking-service/shared"],
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  }
+}
