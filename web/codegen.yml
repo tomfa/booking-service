@@ -6,7 +6,7 @@ generates:
     plugins:
       - "typescript"
       - "typescript-operations"
-      - "typescript-react-apollo"
+      - "typescript-react-query"
   graphql/generated/graphql.schema.json:
     plugins:
       - "introspection"

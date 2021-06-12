@@ -1,6 +1,9 @@
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
-
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions,
+} from 'react-query';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
@@ -9,7 +12,31 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
   { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
   { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions = {};
+
+function fetcher<TData, TVariables>(
+  endpoint: string,
+  requestInit: RequestInit,
+  query: string,
+  variables?: TVariables
+) {
+  return async (): Promise<TData> => {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      ...requestInit,
+      body: JSON.stringify({ query, variables }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      const { message } = json.errors[0];
+
+      throw new Error(message);
+    }
+
+    return json.data;
+  };
+}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -922,1041 +949,540 @@ export type GetResourceByIdQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const AddBookingDocument = gql`
-  mutation addBooking($addBookingInput: AddBookingInput!) {
-    addBooking(addBookingInput: $addBookingInput) {
+export const AddBookingDocument = `
+    mutation addBooking($addBookingInput: AddBookingInput!) {
+  addBooking(addBookingInput: $addBookingInput) {
+    id
+    customer {
       id
-      customer {
-        id
-        name
-        email
-        phoneNumber
-        issuer
-        credits
-        enabled
-      }
-      userId
-      resourceId
-      start
-      end
-      canceled
-      comment
-      seatNumber
+      name
+      email
+      phoneNumber
+      issuer
+      credits
+      enabled
     }
+    userId
+    resourceId
+    start
+    end
+    canceled
+    comment
+    seatNumber
   }
-`;
-export type AddBookingMutationFn = Apollo.MutationFunction<
-  AddBookingMutation,
-  AddBookingMutationVariables
->;
-
-/**
- * __useAddBookingMutation__
- *
- * To run a mutation, you first call `useAddBookingMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddBookingMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addBookingMutation, { data, loading, error }] = useAddBookingMutation({
- *   variables: {
- *      addBookingInput: // value for 'addBookingInput'
- *   },
- * });
- */
-export function useAddBookingMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+}
+    `;
+export const useAddBookingMutation = <TError = unknown, TContext = unknown>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  options?: UseMutationOptions<
     AddBookingMutation,
-    AddBookingMutationVariables
+    TError,
+    AddBookingMutationVariables,
+    TContext
   >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<AddBookingMutation, AddBookingMutationVariables>(
-    AddBookingDocument,
+) =>
+  useMutation<
+    AddBookingMutation,
+    TError,
+    AddBookingMutationVariables,
+    TContext
+  >(
+    (variables?: AddBookingMutationVariables) =>
+      fetcher<AddBookingMutation, AddBookingMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        AddBookingDocument,
+        variables
+      )(),
     options
   );
-}
-export type AddBookingMutationHookResult = ReturnType<
-  typeof useAddBookingMutation
->;
-export type AddBookingMutationResult = Apollo.MutationResult<AddBookingMutation>;
-export type AddBookingMutationOptions = Apollo.BaseMutationOptions<
-  AddBookingMutation,
-  AddBookingMutationVariables
->;
-export const AddCustomerDocument = gql`
-  mutation addCustomer($addCustomerInput: AddCustomerInput!) {
-    addCustomer(addCustomerInput: $addCustomerInput) {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
+export const AddCustomerDocument = `
+    mutation addCustomer($addCustomerInput: AddCustomerInput!) {
+  addCustomer(addCustomerInput: $addCustomerInput) {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
   }
-`;
-export type AddCustomerMutationFn = Apollo.MutationFunction<
-  AddCustomerMutation,
-  AddCustomerMutationVariables
->;
-
-/**
- * __useAddCustomerMutation__
- *
- * To run a mutation, you first call `useAddCustomerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddCustomerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addCustomerMutation, { data, loading, error }] = useAddCustomerMutation({
- *   variables: {
- *      addCustomerInput: // value for 'addCustomerInput'
- *   },
- * });
- */
-export function useAddCustomerMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+}
+    `;
+export const useAddCustomerMutation = <TError = unknown, TContext = unknown>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  options?: UseMutationOptions<
     AddCustomerMutation,
-    AddCustomerMutationVariables
+    TError,
+    AddCustomerMutationVariables,
+    TContext
   >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<AddCustomerMutation, AddCustomerMutationVariables>(
-    AddCustomerDocument,
+) =>
+  useMutation<
+    AddCustomerMutation,
+    TError,
+    AddCustomerMutationVariables,
+    TContext
+  >(
+    (variables?: AddCustomerMutationVariables) =>
+      fetcher<AddCustomerMutation, AddCustomerMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        AddCustomerDocument,
+        variables
+      )(),
     options
   );
-}
-export type AddCustomerMutationHookResult = ReturnType<
-  typeof useAddCustomerMutation
->;
-export type AddCustomerMutationResult = Apollo.MutationResult<AddCustomerMutation>;
-export type AddCustomerMutationOptions = Apollo.BaseMutationOptions<
-  AddCustomerMutation,
-  AddCustomerMutationVariables
->;
-export const AddResourceDocument = gql`
-  mutation addResource($addResourceInput: AddResourceInput!) {
-    addResource(addResourceInput: $addResourceInput) {
+export const AddResourceDocument = `
+    mutation addResource($addResourceInput: AddResourceInput!) {
+  addResource(addResourceInput: $addResourceInput) {
+    id
+    customer {
       id
-      customer {
-        id
-        name
-        email
-        phoneNumber
-        issuer
-        credits
-        enabled
-      }
-      category
-      label
-      schedule {
-        mon {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        tue {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        wed {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        thu {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        fri {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        sat {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        sun {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        overriddenDates {
-          isoDate
-          schedule {
-            start
-            end
-            slotIntervalMinutes
-            slotDurationMinutes
-          }
-        }
-      }
-      seats
+      name
+      email
+      phoneNumber
+      issuer
+      credits
       enabled
     }
+    category
+    label
+    schedule {
+      mon {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      tue {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      wed {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      thu {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      fri {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      sat {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      sun {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      overriddenDates {
+        isoDate
+        schedule {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+      }
+    }
+    seats
+    enabled
   }
-`;
-export type AddResourceMutationFn = Apollo.MutationFunction<
-  AddResourceMutation,
-  AddResourceMutationVariables
->;
-
-/**
- * __useAddResourceMutation__
- *
- * To run a mutation, you first call `useAddResourceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddResourceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addResourceMutation, { data, loading, error }] = useAddResourceMutation({
- *   variables: {
- *      addResourceInput: // value for 'addResourceInput'
- *   },
- * });
- */
-export function useAddResourceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+}
+    `;
+export const useAddResourceMutation = <TError = unknown, TContext = unknown>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  options?: UseMutationOptions<
     AddResourceMutation,
-    AddResourceMutationVariables
+    TError,
+    AddResourceMutationVariables,
+    TContext
   >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<AddResourceMutation, AddResourceMutationVariables>(
-    AddResourceDocument,
+) =>
+  useMutation<
+    AddResourceMutation,
+    TError,
+    AddResourceMutationVariables,
+    TContext
+  >(
+    (variables?: AddResourceMutationVariables) =>
+      fetcher<AddResourceMutation, AddResourceMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        AddResourceDocument,
+        variables
+      )(),
     options
   );
-}
-export type AddResourceMutationHookResult = ReturnType<
-  typeof useAddResourceMutation
->;
-export type AddResourceMutationResult = Apollo.MutationResult<AddResourceMutation>;
-export type AddResourceMutationOptions = Apollo.BaseMutationOptions<
-  AddResourceMutation,
-  AddResourceMutationVariables
->;
-export const CancelBookingDocument = gql`
-  mutation cancelBooking($id: String!) {
-    cancelBooking(id: $id) {
+export const CancelBookingDocument = `
+    mutation cancelBooking($id: String!) {
+  cancelBooking(id: $id) {
+    id
+    customer {
       id
-      customer {
-        id
-        name
-        email
-        phoneNumber
-        issuer
-        credits
-        enabled
-      }
-      userId
-      resourceId
-      start
-      end
-      canceled
-      comment
-      seatNumber
+      name
+      email
+      phoneNumber
+      issuer
+      credits
+      enabled
     }
+    userId
+    resourceId
+    start
+    end
+    canceled
+    comment
+    seatNumber
   }
-`;
-export type CancelBookingMutationFn = Apollo.MutationFunction<
-  CancelBookingMutation,
-  CancelBookingMutationVariables
->;
-
-/**
- * __useCancelBookingMutation__
- *
- * To run a mutation, you first call `useCancelBookingMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCancelBookingMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [cancelBookingMutation, { data, loading, error }] = useCancelBookingMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useCancelBookingMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+}
+    `;
+export const useCancelBookingMutation = <TError = unknown, TContext = unknown>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  options?: UseMutationOptions<
     CancelBookingMutation,
-    CancelBookingMutationVariables
+    TError,
+    CancelBookingMutationVariables,
+    TContext
   >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
+) =>
+  useMutation<
     CancelBookingMutation,
-    CancelBookingMutationVariables
-  >(CancelBookingDocument, options);
-}
-export type CancelBookingMutationHookResult = ReturnType<
-  typeof useCancelBookingMutation
->;
-export type CancelBookingMutationResult = Apollo.MutationResult<CancelBookingMutation>;
-export type CancelBookingMutationOptions = Apollo.BaseMutationOptions<
-  CancelBookingMutation,
-  CancelBookingMutationVariables
->;
-export const DisableCustomerDocument = gql`
-  mutation disableCustomer($id: String!) {
-    disableCustomer(id: $id) {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
+    TError,
+    CancelBookingMutationVariables,
+    TContext
+  >(
+    (variables?: CancelBookingMutationVariables) =>
+      fetcher<CancelBookingMutation, CancelBookingMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        CancelBookingDocument,
+        variables
+      )(),
+    options
+  );
+export const DisableCustomerDocument = `
+    mutation disableCustomer($id: String!) {
+  disableCustomer(id: $id) {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
   }
-`;
-export type DisableCustomerMutationFn = Apollo.MutationFunction<
-  DisableCustomerMutation,
-  DisableCustomerMutationVariables
->;
-
-/**
- * __useDisableCustomerMutation__
- *
- * To run a mutation, you first call `useDisableCustomerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDisableCustomerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [disableCustomerMutation, { data, loading, error }] = useDisableCustomerMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDisableCustomerMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+}
+    `;
+export const useDisableCustomerMutation = <
+  TError = unknown,
+  TContext = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  options?: UseMutationOptions<
     DisableCustomerMutation,
-    DisableCustomerMutationVariables
+    TError,
+    DisableCustomerMutationVariables,
+    TContext
   >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
+) =>
+  useMutation<
     DisableCustomerMutation,
-    DisableCustomerMutationVariables
-  >(DisableCustomerDocument, options);
-}
-export type DisableCustomerMutationHookResult = ReturnType<
-  typeof useDisableCustomerMutation
->;
-export type DisableCustomerMutationResult = Apollo.MutationResult<DisableCustomerMutation>;
-export type DisableCustomerMutationOptions = Apollo.BaseMutationOptions<
-  DisableCustomerMutation,
-  DisableCustomerMutationVariables
->;
-export const DisableResourceDocument = gql`
-  mutation disableResource($id: String!) {
-    disableResource(id: $id) {
+    TError,
+    DisableCustomerMutationVariables,
+    TContext
+  >(
+    (variables?: DisableCustomerMutationVariables) =>
+      fetcher<DisableCustomerMutation, DisableCustomerMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        DisableCustomerDocument,
+        variables
+      )(),
+    options
+  );
+export const DisableResourceDocument = `
+    mutation disableResource($id: String!) {
+  disableResource(id: $id) {
+    id
+    customer {
       id
-      customer {
-        id
-        name
-        email
-        phoneNumber
-        issuer
-        credits
-        enabled
-      }
-      category
-      label
-      schedule {
-        mon {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        tue {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        wed {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        thu {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        fri {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        sat {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        sun {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        overriddenDates {
-          isoDate
-          schedule {
-            start
-            end
-            slotIntervalMinutes
-            slotDurationMinutes
-          }
-        }
-      }
-      seats
+      name
+      email
+      phoneNumber
+      issuer
+      credits
       enabled
     }
+    category
+    label
+    schedule {
+      mon {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      tue {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      wed {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      thu {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      fri {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      sat {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      sun {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      overriddenDates {
+        isoDate
+        schedule {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+      }
+    }
+    seats
+    enabled
   }
-`;
-export type DisableResourceMutationFn = Apollo.MutationFunction<
-  DisableResourceMutation,
-  DisableResourceMutationVariables
->;
-
-/**
- * __useDisableResourceMutation__
- *
- * To run a mutation, you first call `useDisableResourceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDisableResourceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [disableResourceMutation, { data, loading, error }] = useDisableResourceMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDisableResourceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+}
+    `;
+export const useDisableResourceMutation = <
+  TError = unknown,
+  TContext = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  options?: UseMutationOptions<
     DisableResourceMutation,
-    DisableResourceMutationVariables
+    TError,
+    DisableResourceMutationVariables,
+    TContext
   >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
+) =>
+  useMutation<
     DisableResourceMutation,
-    DisableResourceMutationVariables
-  >(DisableResourceDocument, options);
-}
-export type DisableResourceMutationHookResult = ReturnType<
-  typeof useDisableResourceMutation
->;
-export type DisableResourceMutationResult = Apollo.MutationResult<DisableResourceMutation>;
-export type DisableResourceMutationOptions = Apollo.BaseMutationOptions<
-  DisableResourceMutation,
-  DisableResourceMutationVariables
->;
-export const UpdateCustomerDocument = gql`
-  mutation updateCustomer($addCustomerInput: UpdateCustomerInput!) {
-    updateCustomer(addCustomerInput: $addCustomerInput) {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
+    TError,
+    DisableResourceMutationVariables,
+    TContext
+  >(
+    (variables?: DisableResourceMutationVariables) =>
+      fetcher<DisableResourceMutation, DisableResourceMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        DisableResourceDocument,
+        variables
+      )(),
+    options
+  );
+export const UpdateCustomerDocument = `
+    mutation updateCustomer($addCustomerInput: UpdateCustomerInput!) {
+  updateCustomer(addCustomerInput: $addCustomerInput) {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
   }
-`;
-export type UpdateCustomerMutationFn = Apollo.MutationFunction<
-  UpdateCustomerMutation,
-  UpdateCustomerMutationVariables
->;
-
-/**
- * __useUpdateCustomerMutation__
- *
- * To run a mutation, you first call `useUpdateCustomerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateCustomerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateCustomerMutation, { data, loading, error }] = useUpdateCustomerMutation({
- *   variables: {
- *      addCustomerInput: // value for 'addCustomerInput'
- *   },
- * });
- */
-export function useUpdateCustomerMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+}
+    `;
+export const useUpdateCustomerMutation = <TError = unknown, TContext = unknown>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  options?: UseMutationOptions<
     UpdateCustomerMutation,
-    UpdateCustomerMutationVariables
+    TError,
+    UpdateCustomerMutationVariables,
+    TContext
   >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
+) =>
+  useMutation<
     UpdateCustomerMutation,
-    UpdateCustomerMutationVariables
-  >(UpdateCustomerDocument, options);
-}
-export type UpdateCustomerMutationHookResult = ReturnType<
-  typeof useUpdateCustomerMutation
->;
-export type UpdateCustomerMutationResult = Apollo.MutationResult<UpdateCustomerMutation>;
-export type UpdateCustomerMutationOptions = Apollo.BaseMutationOptions<
-  UpdateCustomerMutation,
-  UpdateCustomerMutationVariables
->;
-export const UpdateResourceDocument = gql`
-  mutation updateResource($input: UpdateResourceInput!) {
-    updateResource(input: $input) {
+    TError,
+    UpdateCustomerMutationVariables,
+    TContext
+  >(
+    (variables?: UpdateCustomerMutationVariables) =>
+      fetcher<UpdateCustomerMutation, UpdateCustomerMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        UpdateCustomerDocument,
+        variables
+      )(),
+    options
+  );
+export const UpdateResourceDocument = `
+    mutation updateResource($input: UpdateResourceInput!) {
+  updateResource(input: $input) {
+    id
+    customer {
       id
-      customer {
-        id
-        name
-        email
-        phoneNumber
-        issuer
-        credits
-        enabled
-      }
-      category
-      label
-      schedule {
-        mon {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        tue {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        wed {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        thu {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        fri {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        sat {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        sun {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        overriddenDates {
-          isoDate
-          schedule {
-            start
-            end
-            slotIntervalMinutes
-            slotDurationMinutes
-          }
-        }
-      }
-      seats
+      name
+      email
+      phoneNumber
+      issuer
+      credits
       enabled
     }
+    category
+    label
+    schedule {
+      mon {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      tue {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      wed {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      thu {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      fri {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      sat {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      sun {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      overriddenDates {
+        isoDate
+        schedule {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+      }
+    }
+    seats
+    enabled
   }
-`;
-export type UpdateResourceMutationFn = Apollo.MutationFunction<
-  UpdateResourceMutation,
-  UpdateResourceMutationVariables
->;
-
-/**
- * __useUpdateResourceMutation__
- *
- * To run a mutation, you first call `useUpdateResourceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateResourceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateResourceMutation, { data, loading, error }] = useUpdateResourceMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateResourceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+}
+    `;
+export const useUpdateResourceMutation = <TError = unknown, TContext = unknown>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  options?: UseMutationOptions<
     UpdateResourceMutation,
-    UpdateResourceMutationVariables
+    TError,
+    UpdateResourceMutationVariables,
+    TContext
   >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
+) =>
+  useMutation<
     UpdateResourceMutation,
-    UpdateResourceMutationVariables
-  >(UpdateResourceDocument, options);
-}
-export type UpdateResourceMutationHookResult = ReturnType<
-  typeof useUpdateResourceMutation
->;
-export type UpdateResourceMutationResult = Apollo.MutationResult<UpdateResourceMutation>;
-export type UpdateResourceMutationOptions = Apollo.BaseMutationOptions<
-  UpdateResourceMutation,
-  UpdateResourceMutationVariables
->;
-export const FindAvailabilityDocument = gql`
-  query findAvailability($filterAvailability: FindAvailabilityInput!) {
-    findAvailability(filterAvailability: $filterAvailability) {
-      availableSeats
-      start
-      end
-    }
+    TError,
+    UpdateResourceMutationVariables,
+    TContext
+  >(
+    (variables?: UpdateResourceMutationVariables) =>
+      fetcher<UpdateResourceMutation, UpdateResourceMutationVariables>(
+        dataSource.endpoint,
+        dataSource.fetchParams || {},
+        UpdateResourceDocument,
+        variables
+      )(),
+    options
+  );
+export const FindAvailabilityDocument = `
+    query findAvailability($filterAvailability: FindAvailabilityInput!) {
+  findAvailability(filterAvailability: $filterAvailability) {
+    availableSeats
+    start
+    end
   }
-`;
-
-/**
- * __useFindAvailabilityQuery__
- *
- * To run a query within a React component, call `useFindAvailabilityQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindAvailabilityQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFindAvailabilityQuery({
- *   variables: {
- *      filterAvailability: // value for 'filterAvailability'
- *   },
- * });
- */
-export function useFindAvailabilityQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FindAvailabilityQuery,
-    FindAvailabilityQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<FindAvailabilityQuery, FindAvailabilityQueryVariables>(
-    FindAvailabilityDocument,
+}
+    `;
+export const useFindAvailabilityQuery = <
+  TData = FindAvailabilityQuery,
+  TError = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  variables: FindAvailabilityQueryVariables,
+  options?: UseQueryOptions<FindAvailabilityQuery, TError, TData>
+) =>
+  useQuery<FindAvailabilityQuery, TError, TData>(
+    ['findAvailability', variables],
+    fetcher<FindAvailabilityQuery, FindAvailabilityQueryVariables>(
+      dataSource.endpoint,
+      dataSource.fetchParams || {},
+      FindAvailabilityDocument,
+      variables
+    ),
     options
   );
-}
-export function useFindAvailabilityLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FindAvailabilityQuery,
-    FindAvailabilityQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    FindAvailabilityQuery,
-    FindAvailabilityQueryVariables
-  >(FindAvailabilityDocument, options);
-}
-export type FindAvailabilityQueryHookResult = ReturnType<
-  typeof useFindAvailabilityQuery
->;
-export type FindAvailabilityLazyQueryHookResult = ReturnType<
-  typeof useFindAvailabilityLazyQuery
->;
-export type FindAvailabilityQueryResult = Apollo.QueryResult<
-  FindAvailabilityQuery,
-  FindAvailabilityQueryVariables
->;
-export const FindBookingsDocument = gql`
-  query findBookings($filterBookings: FindBookingInput!) {
-    findBookings(filterBookings: $filterBookings) {
-      id
-      customer {
-        id
-        name
-        email
-        phoneNumber
-        issuer
-        credits
-        enabled
-      }
-      userId
-      resourceId
-      start
-      end
-      canceled
-      comment
-      seatNumber
-    }
-  }
-`;
-
-/**
- * __useFindBookingsQuery__
- *
- * To run a query within a React component, call `useFindBookingsQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindBookingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFindBookingsQuery({
- *   variables: {
- *      filterBookings: // value for 'filterBookings'
- *   },
- * });
- */
-export function useFindBookingsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FindBookingsQuery,
-    FindBookingsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<FindBookingsQuery, FindBookingsQueryVariables>(
-    FindBookingsDocument,
-    options
-  );
-}
-export function useFindBookingsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FindBookingsQuery,
-    FindBookingsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<FindBookingsQuery, FindBookingsQueryVariables>(
-    FindBookingsDocument,
-    options
-  );
-}
-export type FindBookingsQueryHookResult = ReturnType<
-  typeof useFindBookingsQuery
->;
-export type FindBookingsLazyQueryHookResult = ReturnType<
-  typeof useFindBookingsLazyQuery
->;
-export type FindBookingsQueryResult = Apollo.QueryResult<
-  FindBookingsQuery,
-  FindBookingsQueryVariables
->;
-export const FindResourcesDocument = gql`
-  query findResources($filterResource: FindResourceInput!) {
-    findResources(filterResource: $filterResource) {
-      id
-      customer {
-        id
-        name
-        email
-        phoneNumber
-        issuer
-        credits
-        enabled
-      }
-      category
-      label
-      schedule {
-        mon {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        tue {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        wed {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        thu {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        fri {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        sat {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        sun {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        overriddenDates {
-          isoDate
-          schedule {
-            start
-            end
-            slotIntervalMinutes
-            slotDurationMinutes
-          }
-        }
-      }
-      seats
-      enabled
-    }
-  }
-`;
-
-/**
- * __useFindResourcesQuery__
- *
- * To run a query within a React component, call `useFindResourcesQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindResourcesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFindResourcesQuery({
- *   variables: {
- *      filterResource: // value for 'filterResource'
- *   },
- * });
- */
-export function useFindResourcesQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FindResourcesQuery,
-    FindResourcesQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<FindResourcesQuery, FindResourcesQueryVariables>(
-    FindResourcesDocument,
-    options
-  );
-}
-export function useFindResourcesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FindResourcesQuery,
-    FindResourcesQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<FindResourcesQuery, FindResourcesQueryVariables>(
-    FindResourcesDocument,
-    options
-  );
-}
-export type FindResourcesQueryHookResult = ReturnType<
-  typeof useFindResourcesQuery
->;
-export type FindResourcesLazyQueryHookResult = ReturnType<
-  typeof useFindResourcesLazyQuery
->;
-export type FindResourcesQueryResult = Apollo.QueryResult<
-  FindResourcesQuery,
-  FindResourcesQueryVariables
->;
-export const GetBookedDurationDocument = gql`
-  query getBookedDuration($filterBookings: FindBookingInput!) {
-    getBookedDuration(filterBookings: $filterBookings) {
-      minutes
-      bookingIds
-      numBookings
-    }
-  }
-`;
-
-/**
- * __useGetBookedDurationQuery__
- *
- * To run a query within a React component, call `useGetBookedDurationQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetBookedDurationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetBookedDurationQuery({
- *   variables: {
- *      filterBookings: // value for 'filterBookings'
- *   },
- * });
- */
-export function useGetBookedDurationQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetBookedDurationQuery,
-    GetBookedDurationQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetBookedDurationQuery,
-    GetBookedDurationQueryVariables
-  >(GetBookedDurationDocument, options);
-}
-export function useGetBookedDurationLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetBookedDurationQuery,
-    GetBookedDurationQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetBookedDurationQuery,
-    GetBookedDurationQueryVariables
-  >(GetBookedDurationDocument, options);
-}
-export type GetBookedDurationQueryHookResult = ReturnType<
-  typeof useGetBookedDurationQuery
->;
-export type GetBookedDurationLazyQueryHookResult = ReturnType<
-  typeof useGetBookedDurationLazyQuery
->;
-export type GetBookedDurationQueryResult = Apollo.QueryResult<
-  GetBookedDurationQuery,
-  GetBookedDurationQueryVariables
->;
-export const GetBookingByIdDocument = gql`
-  query getBookingById($id: String!) {
-    getBookingById(id: $id) {
-      id
-      customer {
-        id
-        name
-        email
-        phoneNumber
-        issuer
-        credits
-        enabled
-      }
-      userId
-      resourceId
-      start
-      end
-      canceled
-      comment
-      seatNumber
-    }
-  }
-`;
-
-/**
- * __useGetBookingByIdQuery__
- *
- * To run a query within a React component, call `useGetBookingByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetBookingByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetBookingByIdQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useGetBookingByIdQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetBookingByIdQuery,
-    GetBookingByIdQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetBookingByIdQuery, GetBookingByIdQueryVariables>(
-    GetBookingByIdDocument,
-    options
-  );
-}
-export function useGetBookingByIdLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetBookingByIdQuery,
-    GetBookingByIdQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetBookingByIdQuery, GetBookingByIdQueryVariables>(
-    GetBookingByIdDocument,
-    options
-  );
-}
-export type GetBookingByIdQueryHookResult = ReturnType<
-  typeof useGetBookingByIdQuery
->;
-export type GetBookingByIdLazyQueryHookResult = ReturnType<
-  typeof useGetBookingByIdLazyQuery
->;
-export type GetBookingByIdQueryResult = Apollo.QueryResult<
-  GetBookingByIdQuery,
-  GetBookingByIdQueryVariables
->;
-export const GetCustomerByEmailDocument = gql`
-  query getCustomerByEmail($email: String!) {
-    getCustomerByEmail(email: $email) {
+export const FindBookingsDocument = `
+    query findBookings($filterBookings: FindBookingInput!) {
+  findBookings(filterBookings: $filterBookings) {
+    id
+    customer {
       id
       name
       email
@@ -1965,62 +1491,39 @@ export const GetCustomerByEmailDocument = gql`
       credits
       enabled
     }
+    userId
+    resourceId
+    start
+    end
+    canceled
+    comment
+    seatNumber
   }
-`;
-
-/**
- * __useGetCustomerByEmailQuery__
- *
- * To run a query within a React component, call `useGetCustomerByEmailQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCustomerByEmailQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCustomerByEmailQuery({
- *   variables: {
- *      email: // value for 'email'
- *   },
- * });
- */
-export function useGetCustomerByEmailQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCustomerByEmailQuery,
-    GetCustomerByEmailQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetCustomerByEmailQuery,
-    GetCustomerByEmailQueryVariables
-  >(GetCustomerByEmailDocument, options);
 }
-export function useGetCustomerByEmailLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCustomerByEmailQuery,
-    GetCustomerByEmailQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetCustomerByEmailQuery,
-    GetCustomerByEmailQueryVariables
-  >(GetCustomerByEmailDocument, options);
-}
-export type GetCustomerByEmailQueryHookResult = ReturnType<
-  typeof useGetCustomerByEmailQuery
->;
-export type GetCustomerByEmailLazyQueryHookResult = ReturnType<
-  typeof useGetCustomerByEmailLazyQuery
->;
-export type GetCustomerByEmailQueryResult = Apollo.QueryResult<
-  GetCustomerByEmailQuery,
-  GetCustomerByEmailQueryVariables
->;
-export const GetCustomerByIdDocument = gql`
-  query getCustomerById($id: String!) {
-    getCustomerById(id: $id) {
+    `;
+export const useFindBookingsQuery = <
+  TData = FindBookingsQuery,
+  TError = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  variables: FindBookingsQueryVariables,
+  options?: UseQueryOptions<FindBookingsQuery, TError, TData>
+) =>
+  useQuery<FindBookingsQuery, TError, TData>(
+    ['findBookings', variables],
+    fetcher<FindBookingsQuery, FindBookingsQueryVariables>(
+      dataSource.endpoint,
+      dataSource.fetchParams || {},
+      FindBookingsDocument,
+      variables
+    ),
+    options
+  );
+export const FindResourcesDocument = `
+    query findResources($filterResource: FindResourceInput!) {
+  findResources(filterResource: $filterResource) {
+    id
+    customer {
       id
       name
       email
@@ -2029,62 +1532,116 @@ export const GetCustomerByIdDocument = gql`
       credits
       enabled
     }
+    category
+    label
+    schedule {
+      mon {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      tue {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      wed {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      thu {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      fri {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      sat {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      sun {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      overriddenDates {
+        isoDate
+        schedule {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+      }
+    }
+    seats
+    enabled
   }
-`;
-
-/**
- * __useGetCustomerByIdQuery__
- *
- * To run a query within a React component, call `useGetCustomerByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCustomerByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCustomerByIdQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useGetCustomerByIdQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCustomerByIdQuery,
-    GetCustomerByIdQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(
-    GetCustomerByIdDocument,
+}
+    `;
+export const useFindResourcesQuery = <
+  TData = FindResourcesQuery,
+  TError = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  variables: FindResourcesQueryVariables,
+  options?: UseQueryOptions<FindResourcesQuery, TError, TData>
+) =>
+  useQuery<FindResourcesQuery, TError, TData>(
+    ['findResources', variables],
+    fetcher<FindResourcesQuery, FindResourcesQueryVariables>(
+      dataSource.endpoint,
+      dataSource.fetchParams || {},
+      FindResourcesDocument,
+      variables
+    ),
     options
   );
+export const GetBookedDurationDocument = `
+    query getBookedDuration($filterBookings: FindBookingInput!) {
+  getBookedDuration(filterBookings: $filterBookings) {
+    minutes
+    bookingIds
+    numBookings
+  }
 }
-export function useGetCustomerByIdLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCustomerByIdQuery,
-    GetCustomerByIdQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetCustomerByIdQuery,
-    GetCustomerByIdQueryVariables
-  >(GetCustomerByIdDocument, options);
-}
-export type GetCustomerByIdQueryHookResult = ReturnType<
-  typeof useGetCustomerByIdQuery
->;
-export type GetCustomerByIdLazyQueryHookResult = ReturnType<
-  typeof useGetCustomerByIdLazyQuery
->;
-export type GetCustomerByIdQueryResult = Apollo.QueryResult<
-  GetCustomerByIdQuery,
-  GetCustomerByIdQueryVariables
->;
-export const GetCustomerByIssuerDocument = gql`
-  query getCustomerByIssuer($issuer: String!) {
-    getCustomerByIssuer(issuer: $issuer) {
+    `;
+export const useGetBookedDurationQuery = <
+  TData = GetBookedDurationQuery,
+  TError = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  variables: GetBookedDurationQueryVariables,
+  options?: UseQueryOptions<GetBookedDurationQuery, TError, TData>
+) =>
+  useQuery<GetBookedDurationQuery, TError, TData>(
+    ['getBookedDuration', variables],
+    fetcher<GetBookedDurationQuery, GetBookedDurationQueryVariables>(
+      dataSource.endpoint,
+      dataSource.fetchParams || {},
+      GetBookedDurationDocument,
+      variables
+    ),
+    options
+  );
+export const GetBookingByIdDocument = `
+    query getBookingById($id: String!) {
+  getBookingById(id: $id) {
+    id
+    customer {
       id
       name
       email
@@ -2093,314 +1650,283 @@ export const GetCustomerByIssuerDocument = gql`
       credits
       enabled
     }
+    userId
+    resourceId
+    start
+    end
+    canceled
+    comment
+    seatNumber
   }
-`;
-
-/**
- * __useGetCustomerByIssuerQuery__
- *
- * To run a query within a React component, call `useGetCustomerByIssuerQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCustomerByIssuerQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCustomerByIssuerQuery({
- *   variables: {
- *      issuer: // value for 'issuer'
- *   },
- * });
- */
-export function useGetCustomerByIssuerQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCustomerByIssuerQuery,
-    GetCustomerByIssuerQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetCustomerByIssuerQuery,
-    GetCustomerByIssuerQueryVariables
-  >(GetCustomerByIssuerDocument, options);
 }
-export function useGetCustomerByIssuerLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCustomerByIssuerQuery,
-    GetCustomerByIssuerQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetCustomerByIssuerQuery,
-    GetCustomerByIssuerQueryVariables
-  >(GetCustomerByIssuerDocument, options);
-}
-export type GetCustomerByIssuerQueryHookResult = ReturnType<
-  typeof useGetCustomerByIssuerQuery
->;
-export type GetCustomerByIssuerLazyQueryHookResult = ReturnType<
-  typeof useGetCustomerByIssuerLazyQuery
->;
-export type GetCustomerByIssuerQueryResult = Apollo.QueryResult<
-  GetCustomerByIssuerQuery,
-  GetCustomerByIssuerQueryVariables
->;
-export const GetLatestBookingDocument = gql`
-  query getLatestBooking($filterBookings: FindBookingInput!) {
-    getLatestBooking(filterBookings: $filterBookings) {
-      id
-      customer {
-        id
-        name
-        email
-        phoneNumber
-        issuer
-        credits
-        enabled
-      }
-      userId
-      resourceId
-      start
-      end
-      canceled
-      comment
-      seatNumber
-    }
-  }
-`;
-
-/**
- * __useGetLatestBookingQuery__
- *
- * To run a query within a React component, call `useGetLatestBookingQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLatestBookingQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetLatestBookingQuery({
- *   variables: {
- *      filterBookings: // value for 'filterBookings'
- *   },
- * });
- */
-export function useGetLatestBookingQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetLatestBookingQuery,
-    GetLatestBookingQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetLatestBookingQuery, GetLatestBookingQueryVariables>(
-    GetLatestBookingDocument,
+    `;
+export const useGetBookingByIdQuery = <
+  TData = GetBookingByIdQuery,
+  TError = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  variables: GetBookingByIdQueryVariables,
+  options?: UseQueryOptions<GetBookingByIdQuery, TError, TData>
+) =>
+  useQuery<GetBookingByIdQuery, TError, TData>(
+    ['getBookingById', variables],
+    fetcher<GetBookingByIdQuery, GetBookingByIdQueryVariables>(
+      dataSource.endpoint,
+      dataSource.fetchParams || {},
+      GetBookingByIdDocument,
+      variables
+    ),
     options
   );
-}
-export function useGetLatestBookingLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetLatestBookingQuery,
-    GetLatestBookingQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetLatestBookingQuery,
-    GetLatestBookingQueryVariables
-  >(GetLatestBookingDocument, options);
-}
-export type GetLatestBookingQueryHookResult = ReturnType<
-  typeof useGetLatestBookingQuery
->;
-export type GetLatestBookingLazyQueryHookResult = ReturnType<
-  typeof useGetLatestBookingLazyQuery
->;
-export type GetLatestBookingQueryResult = Apollo.QueryResult<
-  GetLatestBookingQuery,
-  GetLatestBookingQueryVariables
->;
-export const GetNextAvailableDocument = gql`
-  query getNextAvailable($id: String!) {
-    getNextAvailable(id: $id) {
-      availableSeats
-      start
-      end
-    }
+export const GetCustomerByEmailDocument = `
+    query getCustomerByEmail($email: String!) {
+  getCustomerByEmail(email: $email) {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
   }
-`;
-
-/**
- * __useGetNextAvailableQuery__
- *
- * To run a query within a React component, call `useGetNextAvailableQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetNextAvailableQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetNextAvailableQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useGetNextAvailableQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetNextAvailableQuery,
-    GetNextAvailableQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetNextAvailableQuery, GetNextAvailableQueryVariables>(
-    GetNextAvailableDocument,
+}
+    `;
+export const useGetCustomerByEmailQuery = <
+  TData = GetCustomerByEmailQuery,
+  TError = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  variables: GetCustomerByEmailQueryVariables,
+  options?: UseQueryOptions<GetCustomerByEmailQuery, TError, TData>
+) =>
+  useQuery<GetCustomerByEmailQuery, TError, TData>(
+    ['getCustomerByEmail', variables],
+    fetcher<GetCustomerByEmailQuery, GetCustomerByEmailQueryVariables>(
+      dataSource.endpoint,
+      dataSource.fetchParams || {},
+      GetCustomerByEmailDocument,
+      variables
+    ),
     options
   );
+export const GetCustomerByIdDocument = `
+    query getCustomerById($id: String!) {
+  getCustomerById(id: $id) {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
+  }
 }
-export function useGetNextAvailableLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetNextAvailableQuery,
-    GetNextAvailableQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetNextAvailableQuery,
-    GetNextAvailableQueryVariables
-  >(GetNextAvailableDocument, options);
+    `;
+export const useGetCustomerByIdQuery = <
+  TData = GetCustomerByIdQuery,
+  TError = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  variables: GetCustomerByIdQueryVariables,
+  options?: UseQueryOptions<GetCustomerByIdQuery, TError, TData>
+) =>
+  useQuery<GetCustomerByIdQuery, TError, TData>(
+    ['getCustomerById', variables],
+    fetcher<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(
+      dataSource.endpoint,
+      dataSource.fetchParams || {},
+      GetCustomerByIdDocument,
+      variables
+    ),
+    options
+  );
+export const GetCustomerByIssuerDocument = `
+    query getCustomerByIssuer($issuer: String!) {
+  getCustomerByIssuer(issuer: $issuer) {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
+  }
 }
-export type GetNextAvailableQueryHookResult = ReturnType<
-  typeof useGetNextAvailableQuery
->;
-export type GetNextAvailableLazyQueryHookResult = ReturnType<
-  typeof useGetNextAvailableLazyQuery
->;
-export type GetNextAvailableQueryResult = Apollo.QueryResult<
-  GetNextAvailableQuery,
-  GetNextAvailableQueryVariables
->;
-export const GetResourceByIdDocument = gql`
-  query getResourceById($id: String!) {
-    getResourceById(id: $id) {
+    `;
+export const useGetCustomerByIssuerQuery = <
+  TData = GetCustomerByIssuerQuery,
+  TError = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  variables: GetCustomerByIssuerQueryVariables,
+  options?: UseQueryOptions<GetCustomerByIssuerQuery, TError, TData>
+) =>
+  useQuery<GetCustomerByIssuerQuery, TError, TData>(
+    ['getCustomerByIssuer', variables],
+    fetcher<GetCustomerByIssuerQuery, GetCustomerByIssuerQueryVariables>(
+      dataSource.endpoint,
+      dataSource.fetchParams || {},
+      GetCustomerByIssuerDocument,
+      variables
+    ),
+    options
+  );
+export const GetLatestBookingDocument = `
+    query getLatestBooking($filterBookings: FindBookingInput!) {
+  getLatestBooking(filterBookings: $filterBookings) {
+    id
+    customer {
       id
-      customer {
-        id
-        name
-        email
-        phoneNumber
-        issuer
-        credits
-        enabled
-      }
-      category
-      label
-      schedule {
-        mon {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        tue {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        wed {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        thu {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        fri {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        sat {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        sun {
-          start
-          end
-          slotIntervalMinutes
-          slotDurationMinutes
-        }
-        overriddenDates {
-          isoDate
-          schedule {
-            start
-            end
-            slotIntervalMinutes
-            slotDurationMinutes
-          }
-        }
-      }
-      seats
+      name
+      email
+      phoneNumber
+      issuer
+      credits
       enabled
     }
+    userId
+    resourceId
+    start
+    end
+    canceled
+    comment
+    seatNumber
   }
-`;
-
-/**
- * __useGetResourceByIdQuery__
- *
- * To run a query within a React component, call `useGetResourceByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetResourceByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetResourceByIdQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useGetResourceByIdQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetResourceByIdQuery,
-    GetResourceByIdQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetResourceByIdQuery, GetResourceByIdQueryVariables>(
-    GetResourceByIdDocument,
+}
+    `;
+export const useGetLatestBookingQuery = <
+  TData = GetLatestBookingQuery,
+  TError = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  variables: GetLatestBookingQueryVariables,
+  options?: UseQueryOptions<GetLatestBookingQuery, TError, TData>
+) =>
+  useQuery<GetLatestBookingQuery, TError, TData>(
+    ['getLatestBooking', variables],
+    fetcher<GetLatestBookingQuery, GetLatestBookingQueryVariables>(
+      dataSource.endpoint,
+      dataSource.fetchParams || {},
+      GetLatestBookingDocument,
+      variables
+    ),
     options
   );
+export const GetNextAvailableDocument = `
+    query getNextAvailable($id: String!) {
+  getNextAvailable(id: $id) {
+    availableSeats
+    start
+    end
+  }
 }
-export function useGetResourceByIdLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetResourceByIdQuery,
-    GetResourceByIdQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetResourceByIdQuery,
-    GetResourceByIdQueryVariables
-  >(GetResourceByIdDocument, options);
+    `;
+export const useGetNextAvailableQuery = <
+  TData = GetNextAvailableQuery,
+  TError = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  variables: GetNextAvailableQueryVariables,
+  options?: UseQueryOptions<GetNextAvailableQuery, TError, TData>
+) =>
+  useQuery<GetNextAvailableQuery, TError, TData>(
+    ['getNextAvailable', variables],
+    fetcher<GetNextAvailableQuery, GetNextAvailableQueryVariables>(
+      dataSource.endpoint,
+      dataSource.fetchParams || {},
+      GetNextAvailableDocument,
+      variables
+    ),
+    options
+  );
+export const GetResourceByIdDocument = `
+    query getResourceById($id: String!) {
+  getResourceById(id: $id) {
+    id
+    customer {
+      id
+      name
+      email
+      phoneNumber
+      issuer
+      credits
+      enabled
+    }
+    category
+    label
+    schedule {
+      mon {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      tue {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      wed {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      thu {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      fri {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      sat {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      sun {
+        start
+        end
+        slotIntervalMinutes
+        slotDurationMinutes
+      }
+      overriddenDates {
+        isoDate
+        schedule {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+      }
+    }
+    seats
+    enabled
+  }
 }
-export type GetResourceByIdQueryHookResult = ReturnType<
-  typeof useGetResourceByIdQuery
->;
-export type GetResourceByIdLazyQueryHookResult = ReturnType<
-  typeof useGetResourceByIdLazyQuery
->;
-export type GetResourceByIdQueryResult = Apollo.QueryResult<
-  GetResourceByIdQuery,
-  GetResourceByIdQueryVariables
->;
+    `;
+export const useGetResourceByIdQuery = <
+  TData = GetResourceByIdQuery,
+  TError = unknown
+>(
+  dataSource: { endpoint: string; fetchParams?: RequestInit },
+  variables: GetResourceByIdQueryVariables,
+  options?: UseQueryOptions<GetResourceByIdQuery, TError, TData>
+) =>
+  useQuery<GetResourceByIdQuery, TError, TData>(
+    ['getResourceById', variables],
+    fetcher<GetResourceByIdQuery, GetResourceByIdQueryVariables>(
+      dataSource.endpoint,
+      dataSource.fetchParams || {},
+      GetResourceByIdDocument,
+      variables
+    ),
+    options
+  );
