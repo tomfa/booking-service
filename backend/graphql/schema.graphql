@@ -150,6 +150,7 @@ input UpdateCustomerInput {
     enabled: Boolean
 }
 
+
 type Query {
     getResourceById(id: String!): Resource
     getBookingById(id: String!): Booking
