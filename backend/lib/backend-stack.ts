@@ -31,7 +31,7 @@ export class BackendStack extends cdk.Stack {
       ),
       defaultDatabaseName: 'vailable_db',
       vpc,
-      scaling: { autoPause: cdk.Duration.seconds(0) },
+      scaling: { autoPause: cdk.Duration.minutes(5) },
     });
 
     // Create the Lambda function that will map GraphQL operations into Postgres
