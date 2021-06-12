@@ -27,7 +27,7 @@ export class BackendStack extends cdk.Stack {
       parameterGroup: rds.ParameterGroup.fromParameterGroupName(
         this,
         'ParamterGroup',
-        'default.aurora.postgresql10'
+        'default.aurora-postgresql10'
       ),
       defaultDatabaseName: 'vailable_db',
       vpc,
