@@ -16,3 +16,4 @@ tsconfig.tsbuildinfo
 api/.serverless/*
 
 yarn-error.log
+cdk-exports.json
