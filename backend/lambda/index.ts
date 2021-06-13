@@ -1,3 +1,6 @@
+// @ts-ignore
+// eslint-disable-next-line import/no-unresolved
+import { Context } from '@types/aws-lambda';
 import getResourceById from './getResourceById';
 import getBookingById from './getBookingById';
 import getCustomerByIssuer from './getCustomerByIssuer';
@@ -42,7 +45,10 @@ type AppSyncEvent = {
   };
 };
 
-exports.handler = async (event: AppSyncEvent) => {
+exports.handler = async (event: AppSyncEvent, context: Context) => {
+  // Set to false to send the response right away when the callback executes, instead of waiting for the Node.js event loop to be empty.
+  context.callbackWaitsForEmptyEventLoop = false;
+
   switch (event.info.fieldName) {
     case 'getResourceById': {
       console.log(`Executing getResourceById with ${event.arguments.id}`);
