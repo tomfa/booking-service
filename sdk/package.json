@@ -29,8 +29,8 @@
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "release": "semantic-release",
-    "schema:generate-document": "gqlg --schemaFilePath ../backend/graphql/schema.graphql --destDirPath ./graphql/generated/documents --depthLimit 5",
-    "schema:generate": "graphql-codegen --config codegen.yml"
+    "schema:generate-document": "gqlg --schemaFilePath ../backend/graphql/schema.graphql --destDirPath ./src/graphql/generated/documents --depthLimit 5",
+    "schema:generate": "npm run schema:generate-document && graphql-codegen --config codegen.yml"
   },
   "author": "Tomas Albertsen <tomas@webutvikling.org> (http://webutvikling.org/)",
   "license": "ISC",
