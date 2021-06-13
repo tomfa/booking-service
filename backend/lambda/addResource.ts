@@ -1,12 +1,12 @@
 import db from './db';
 import { AddResourceInput } from './types';
 import { Tables } from './constants';
+
 const { v4: uuid } = require('uuid');
 
 async function addResource(resource: AddResourceInput) {
-  if (!resource.id) resource.id = uuid();
   const {
-    id,
+    id = uuid(),
     customerId,
     category = null,
     label = null,
@@ -15,7 +15,7 @@ async function addResource(resource: AddResourceInput) {
     schedule,
   } = resource;
   try {
-    const query = `INSERT INTO ${Tables.Resource} (id,customerId,label,seats,enabled,schedule) VALUES(:id,:customerId,:label,:seats,:enabled,:schedule)`;
+    const query = `INSERT INTO ${Tables.Resource} (id,customer_id,label,seats,enabled,schedule) VALUES(:id,:customerId,:label,:seats,:enabled,:schedule)`;
     await db.query(query, {
       id,
       customerId,

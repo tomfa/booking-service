@@ -7,15 +7,26 @@ async function findResources(args: FindResourceInput) {
     const filterValues = Object.keys(args)
       .map(k => `${k} = :${k}`)
       .join(' AND ');
-    const query = `SELECT * FROM ${Tables.Resource} WHERE ${filterValues}`
-    console.log(`Executing ${query}`);
-    const result = await db.query(query);
+    const query = filterValues
+      ? `SELECT * FROM ${Tables.Resource} WHERE ${filterValues}`
+      : `SELECT * FROM ${Tables.Resource}`;
+    console.log(`query: ${query}`);
+    if (!filterValues) {
+      const result = await db.query(`SELECT * FROM ${Tables.Resource}`);
+      console.log(`result: ${JSON.stringify(result)}`);
+      return result.records;
+    }
+
+    const result = await db.query(
+      `SELECT * FROM ${Tables.Resource} WHERE ${filterValues}`,
+      args
+    );
     console.log(`result: ${JSON.stringify(result)}`);
     return result.records;
   } catch (err) {
     console.log('Postgres error: ', err);
-    return null;
+    return { error: String(err) };
   }
 }
 
-export default findResources
+export default findResources;

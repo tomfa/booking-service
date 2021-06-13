@@ -68,7 +68,9 @@ exports.handler = async (event: AppSyncEvent) => {
     }
     case 'findResources': {
       console.log(
-        `Executing findResources with ${event.arguments.filterResource}`
+        `Executing findResources with ${JSON.stringify(
+          event.arguments.filterResource
+        )}`
       );
       return await findResources(event.arguments.filterResource);
     }

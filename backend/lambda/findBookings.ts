@@ -7,12 +7,16 @@ async function findBookings(args: FindBookingInput) {
     const filterValues = Object.keys(args)
       .map(k => `${k} = :${k}`)
       .join(' AND ');
-    const result = await db.query(`SELECT * FROM ${Tables.Booking} WHERE ${filterValues}`);
+    const whereQuery = filterValues ? ` WHERE ${filterValues}` : '';
+    const result = await db.query(
+      `SELECT * FROM ${Tables.Booking} ${whereQuery}`,
+      args
+    );
     return result.records;
   } catch (err) {
     console.log('Postgres error: ', err);
-    return null;
+    return { error: String(err) };
   }
 }
 
-export default findBookings
+export default findBookings;
