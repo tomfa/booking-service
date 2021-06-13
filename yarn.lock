@@ -1754,7 +1754,7 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@graphql-codegen/cli@1.21.5":
+"@graphql-codegen/cli@1.21.5", "@graphql-codegen/cli@^1.21.5":
   version "1.21.5"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/cli/-/cli-1.21.5.tgz#b9041553747cfb2dee7c3473a2e2461ec3e7ada5"
   integrity sha512-w3SovNJ9qtMhFLAdPZeCdGvHXDgfdb53mueWDTyncOt04m+tohVnY4qExvyKLTN5zlGxrA/5ubp2x8Az0xQarA==
@@ -1809,7 +1809,7 @@
     "@graphql-tools/utils" "^7.9.1"
     tslib "~2.2.0"
 
-"@graphql-codegen/introspection@1.18.2":
+"@graphql-codegen/introspection@1.18.2", "@graphql-codegen/introspection@^1.18.2":
   version "1.18.2"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/introspection/-/introspection-1.18.2.tgz#1b4b5e23cc59c2828a073caccf66c556885d5dd6"
   integrity sha512-1SuhWu6nbOIOSZdQLNmHHVN8VsTavUQUD6OWjUuR3Bjpw9jfykNYXPpGGQxdCa5hmiWvn2JQU+qtgtERzz4+rg==
@@ -1828,7 +1828,7 @@
     lodash "~4.17.0"
     tslib "~2.2.0"
 
-"@graphql-codegen/typescript-operations@1.18.0":
+"@graphql-codegen/typescript-operations@1.18.0", "@graphql-codegen/typescript-operations@^1.18.0":
   version "1.18.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-operations/-/typescript-operations-1.18.0.tgz#04c007df476948ff972daed69c73a77a922c8968"
   integrity sha512-Q4b+jySBgU39uYzSWQcHBn/q5j/gs2yUQGNiCXhV8IIHDJJNR0Zfb2ywY6AMwT7N3rgXmFuIzKAA++xBf2yKRw==
