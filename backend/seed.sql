@@ -1,4 +1,3 @@
-export const initialSeed = `
 INSERT INTO CUSTOMER (id, name, email, issuer) VALUES ('kroloftet-free', 'Torbjørn Larssen', 'torbjorn@kroloftet.no', 'auth.kroloftet.no');
 INSERT INTO RESOURCE (id, customer_id, label, seats, schedule) VALUES ('kroloftet-møterom', 'kroloftet-free', 'Møterom', 4, '{
   "mon": { "start": "08:00", "end": "20:00", "slotDuration": 60, "slotInterval": 30 },
@@ -11,12 +10,12 @@ INSERT INTO RESOURCE (id, customer_id, label, seats, schedule) VALUES ('krolofte
   "overriddenDates": {}
 }');
 INSERT INTO BOOKING (
-  id, 
-  customer_id, 
-  user_id, 
-  resource_id, 
-  start_time, 
-  end_time, 
+  id,
+  customer_id,
+  user_id,
+  resource_id,
+  start_time,
+  end_time,
   seat_number
 ) VALUES (
   'kroloftet-booking-1',
@@ -27,4 +26,3 @@ INSERT INTO BOOKING (
   '2021-06-15 10:30:00',
   0
 );
-`;
