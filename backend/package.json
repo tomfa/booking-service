@@ -9,7 +9,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "deploy": "cdk deploy -O ../cdk-exports.json"
+    "deploy": "npm run build && cdk deploy -O ../cdk-exports.json"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.108.1",
