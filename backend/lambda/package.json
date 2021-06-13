@@ -4,13 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prisma:generate-schema": "prisma introspect",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Tomas Fagerbekk <tomas.a.fagerbekk@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@prisma/client": "^2.24.1",
+    "aws-sdk": "^2.927.0",
     "data-api-client": "^1.2.0",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "prisma": "^2.24.1"
   }
 }
