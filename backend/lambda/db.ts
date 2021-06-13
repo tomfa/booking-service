@@ -19,6 +19,7 @@ export const getDB = async (): Promise<PrismaClient> => {
   db = new PrismaClient({
     datasources: { db: { url } },
     __internal: {
+      // @ts-ignore
       useUds: false,
     },
   });
