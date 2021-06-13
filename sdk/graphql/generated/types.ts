@@ -1,3 +1,6 @@
+import { GraphQLClient } from 'graphql-request';
+import * as Dom from 'graphql-request/dist/types.dom';
+import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
@@ -917,3 +920,866 @@ export type GetResourceByIdQuery = { __typename?: 'Query' } & {
       }
   >;
 };
+
+export const AddBookingDocument = gql`
+  mutation addBooking($addBookingInput: AddBookingInput!) {
+    addBooking(addBookingInput: $addBookingInput) {
+      id
+      customer {
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+      }
+      userId
+      resourceId
+      start
+      end
+      canceled
+      comment
+      seatNumber
+    }
+  }
+`;
+export const AddCustomerDocument = gql`
+  mutation addCustomer($addCustomerInput: AddCustomerInput!) {
+    addCustomer(addCustomerInput: $addCustomerInput) {
+      id
+      name
+      email
+      phoneNumber
+      issuer
+      credits
+      enabled
+    }
+  }
+`;
+export const AddResourceDocument = gql`
+  mutation addResource($addResourceInput: AddResourceInput!) {
+    addResource(addResourceInput: $addResourceInput) {
+      id
+      customer {
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+      }
+      category
+      label
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
+  }
+`;
+export const CancelBookingDocument = gql`
+  mutation cancelBooking($id: String!) {
+    cancelBooking(id: $id) {
+      id
+      customer {
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+      }
+      userId
+      resourceId
+      start
+      end
+      canceled
+      comment
+      seatNumber
+    }
+  }
+`;
+export const DisableCustomerDocument = gql`
+  mutation disableCustomer($id: String!) {
+    disableCustomer(id: $id) {
+      id
+      name
+      email
+      phoneNumber
+      issuer
+      credits
+      enabled
+    }
+  }
+`;
+export const DisableResourceDocument = gql`
+  mutation disableResource($id: String!) {
+    disableResource(id: $id) {
+      id
+      customer {
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+      }
+      category
+      label
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
+  }
+`;
+export const UpdateCustomerDocument = gql`
+  mutation updateCustomer($addCustomerInput: UpdateCustomerInput!) {
+    updateCustomer(addCustomerInput: $addCustomerInput) {
+      id
+      name
+      email
+      phoneNumber
+      issuer
+      credits
+      enabled
+    }
+  }
+`;
+export const UpdateResourceDocument = gql`
+  mutation updateResource($input: UpdateResourceInput!) {
+    updateResource(input: $input) {
+      id
+      customer {
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+      }
+      category
+      label
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
+  }
+`;
+export const FindAvailabilityDocument = gql`
+  query findAvailability($filterAvailability: FindAvailabilityInput!) {
+    findAvailability(filterAvailability: $filterAvailability) {
+      availableSeats
+      start
+      end
+    }
+  }
+`;
+export const FindBookingsDocument = gql`
+  query findBookings($filterBookings: FindBookingInput!) {
+    findBookings(filterBookings: $filterBookings) {
+      id
+      customer {
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+      }
+      userId
+      resourceId
+      start
+      end
+      canceled
+      comment
+      seatNumber
+    }
+  }
+`;
+export const FindResourcesDocument = gql`
+  query findResources($filterResource: FindResourceInput!) {
+    findResources(filterResource: $filterResource) {
+      id
+      customer {
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+      }
+      category
+      label
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
+  }
+`;
+export const GetBookedDurationDocument = gql`
+  query getBookedDuration($filterBookings: FindBookingInput!) {
+    getBookedDuration(filterBookings: $filterBookings) {
+      minutes
+      bookingIds
+      numBookings
+    }
+  }
+`;
+export const GetBookingByIdDocument = gql`
+  query getBookingById($id: String!) {
+    getBookingById(id: $id) {
+      id
+      customer {
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+      }
+      userId
+      resourceId
+      start
+      end
+      canceled
+      comment
+      seatNumber
+    }
+  }
+`;
+export const GetCustomerByEmailDocument = gql`
+  query getCustomerByEmail($email: String!) {
+    getCustomerByEmail(email: $email) {
+      id
+      name
+      email
+      phoneNumber
+      issuer
+      credits
+      enabled
+    }
+  }
+`;
+export const GetCustomerByIdDocument = gql`
+  query getCustomerById($id: String!) {
+    getCustomerById(id: $id) {
+      id
+      name
+      email
+      phoneNumber
+      issuer
+      credits
+      enabled
+    }
+  }
+`;
+export const GetCustomerByIssuerDocument = gql`
+  query getCustomerByIssuer($issuer: String!) {
+    getCustomerByIssuer(issuer: $issuer) {
+      id
+      name
+      email
+      phoneNumber
+      issuer
+      credits
+      enabled
+    }
+  }
+`;
+export const GetLatestBookingDocument = gql`
+  query getLatestBooking($filterBookings: FindBookingInput!) {
+    getLatestBooking(filterBookings: $filterBookings) {
+      id
+      customer {
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+      }
+      userId
+      resourceId
+      start
+      end
+      canceled
+      comment
+      seatNumber
+    }
+  }
+`;
+export const GetNextAvailableDocument = gql`
+  query getNextAvailable($id: String!) {
+    getNextAvailable(id: $id) {
+      availableSeats
+      start
+      end
+    }
+  }
+`;
+export const GetResourceByIdDocument = gql`
+  query getResourceById($id: String!) {
+    getResourceById(id: $id) {
+      id
+      customer {
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+      }
+      category
+      label
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
+  }
+`;
+
+export type SdkFunctionWrapper = <T>(
+  action: (requestHeaders?: Record<string, string>) => Promise<T>,
+  operationName: string
+) => Promise<T>;
+
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
+
+export function getSdk(
+  client: GraphQLClient,
+  withWrapper: SdkFunctionWrapper = defaultWrapper
+) {
+  return {
+    addBooking(
+      variables: AddBookingMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<AddBookingMutation> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<AddBookingMutation>(AddBookingDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'addBooking'
+      );
+    },
+    addCustomer(
+      variables: AddCustomerMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<AddCustomerMutation> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<AddCustomerMutation>(AddCustomerDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'addCustomer'
+      );
+    },
+    addResource(
+      variables: AddResourceMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<AddResourceMutation> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<AddResourceMutation>(AddResourceDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'addResource'
+      );
+    },
+    cancelBooking(
+      variables: CancelBookingMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<CancelBookingMutation> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<CancelBookingMutation>(
+            CancelBookingDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'cancelBooking'
+      );
+    },
+    disableCustomer(
+      variables: DisableCustomerMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DisableCustomerMutation> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<DisableCustomerMutation>(
+            DisableCustomerDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'disableCustomer'
+      );
+    },
+    disableResource(
+      variables: DisableResourceMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DisableResourceMutation> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<DisableResourceMutation>(
+            DisableResourceDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'disableResource'
+      );
+    },
+    updateCustomer(
+      variables: UpdateCustomerMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<UpdateCustomerMutation> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<UpdateCustomerMutation>(
+            UpdateCustomerDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'updateCustomer'
+      );
+    },
+    updateResource(
+      variables: UpdateResourceMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<UpdateResourceMutation> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<UpdateResourceMutation>(
+            UpdateResourceDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'updateResource'
+      );
+    },
+    findAvailability(
+      variables: FindAvailabilityQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<FindAvailabilityQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<FindAvailabilityQuery>(
+            FindAvailabilityDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'findAvailability'
+      );
+    },
+    findBookings(
+      variables: FindBookingsQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<FindBookingsQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<FindBookingsQuery>(FindBookingsDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'findBookings'
+      );
+    },
+    findResources(
+      variables: FindResourcesQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<FindResourcesQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<FindResourcesQuery>(FindResourcesDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'findResources'
+      );
+    },
+    getBookedDuration(
+      variables: GetBookedDurationQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<GetBookedDurationQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetBookedDurationQuery>(
+            GetBookedDurationDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'getBookedDuration'
+      );
+    },
+    getBookingById(
+      variables: GetBookingByIdQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<GetBookingByIdQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetBookingByIdQuery>(
+            GetBookingByIdDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'getBookingById'
+      );
+    },
+    getCustomerByEmail(
+      variables: GetCustomerByEmailQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<GetCustomerByEmailQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetCustomerByEmailQuery>(
+            GetCustomerByEmailDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'getCustomerByEmail'
+      );
+    },
+    getCustomerById(
+      variables: GetCustomerByIdQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<GetCustomerByIdQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetCustomerByIdQuery>(
+            GetCustomerByIdDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'getCustomerById'
+      );
+    },
+    getCustomerByIssuer(
+      variables: GetCustomerByIssuerQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<GetCustomerByIssuerQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetCustomerByIssuerQuery>(
+            GetCustomerByIssuerDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'getCustomerByIssuer'
+      );
+    },
+    getLatestBooking(
+      variables: GetLatestBookingQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<GetLatestBookingQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetLatestBookingQuery>(
+            GetLatestBookingDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'getLatestBooking'
+      );
+    },
+    getNextAvailable(
+      variables: GetNextAvailableQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<GetNextAvailableQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetNextAvailableQuery>(
+            GetNextAvailableDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'getNextAvailable'
+      );
+    },
+    getResourceById(
+      variables: GetResourceByIdQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<GetResourceByIdQuery> {
+      return withWrapper(
+        wrappedRequestHeaders =>
+          client.request<GetResourceByIdQuery>(
+            GetResourceByIdDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'getResourceById'
+      );
+    },
+  };
+}
+export type Sdk = ReturnType<typeof getSdk>;
