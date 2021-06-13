@@ -35,10 +35,10 @@
   },
   "scripts": {
     "start": "next dev -p 8000",
-    "build": "next build",
+    "build": "npm run schema:generate && next build",
     "export": "next export",
     "schema:generate-document": "gqlg --schemaFilePath ../backend/graphql/schema.graphql --destDirPath ./graphql/generated/documents --depthLimit 5",
-    "schema:generate": "graphql-codegen --config codegen.yml",
+    "schema:generate": "npm run schema:generate-document && graphql-codegen --config codegen.yml",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "start:production": "next start -p 5000"
