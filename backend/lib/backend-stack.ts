@@ -1,3 +1,5 @@
+/* eslint-disable no-new */
+
 import * as cdk from '@aws-cdk/core';
 import * as appsync from '@aws-cdk/aws-appsync';
 import * as lambda from '@aws-cdk/aws-lambda';
@@ -39,6 +41,7 @@ export class BackendStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: new lambda.AssetCode('lambda'),
       handler: 'index.handler',
+      timeout: cdk.Duration.seconds(15),
       memorySize: 1024,
       environment: {
         CLUSTER_ARN: cluster.clusterArn,
@@ -52,26 +55,65 @@ export class BackendStack extends cdk.Stack {
     // Set the new Lambda function as a data source for the AppSync API
     const lambdaDs = api.addLambdaDataSource('lambdaDatasource', postFn);
 
-    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getResourceById' });
+    lambdaDs.createResolver({
+      typeName: 'Query',
+      fieldName: 'getResourceById',
+    });
     lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getBookingById' });
-    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getCustomerByIssuer' });
+    lambdaDs.createResolver({
+      typeName: 'Query',
+      fieldName: 'getCustomerByIssuer',
+    });
     lambdaDs.createResolver({ typeName: 'Query', fieldName: 'findResources' });
     lambdaDs.createResolver({ typeName: 'Query', fieldName: 'findBookings' });
-    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'findAvailability' });
-    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getNextAvailable' });
-    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getLatestBooking' });
-    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getBookedDuration' });
-    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getCustomerByEmail' });
-    lambdaDs.createResolver({ typeName: 'Query', fieldName: 'getCustomerById' });
+    lambdaDs.createResolver({
+      typeName: 'Query',
+      fieldName: 'findAvailability',
+    });
+    lambdaDs.createResolver({
+      typeName: 'Query',
+      fieldName: 'getNextAvailable',
+    });
+    lambdaDs.createResolver({
+      typeName: 'Query',
+      fieldName: 'getLatestBooking',
+    });
+    lambdaDs.createResolver({
+      typeName: 'Query',
+      fieldName: 'getBookedDuration',
+    });
+    lambdaDs.createResolver({
+      typeName: 'Query',
+      fieldName: 'getCustomerByEmail',
+    });
+    lambdaDs.createResolver({
+      typeName: 'Query',
+      fieldName: 'getCustomerById',
+    });
 
-    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addResource' })
-    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'updateResource' })
-    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'updateCustomer' })
-    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addBooking' })
-    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'disableResource' })
-    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'cancelBooking' })
-    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addCustomer' })
-    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'disableCustomer' })
+    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addResource' });
+    lambdaDs.createResolver({
+      typeName: 'Mutation',
+      fieldName: 'updateResource',
+    });
+    lambdaDs.createResolver({
+      typeName: 'Mutation',
+      fieldName: 'updateCustomer',
+    });
+    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addBooking' });
+    lambdaDs.createResolver({
+      typeName: 'Mutation',
+      fieldName: 'disableResource',
+    });
+    lambdaDs.createResolver({
+      typeName: 'Mutation',
+      fieldName: 'cancelBooking',
+    });
+    lambdaDs.createResolver({ typeName: 'Mutation', fieldName: 'addCustomer' });
+    lambdaDs.createResolver({
+      typeName: 'Mutation',
+      fieldName: 'disableCustomer',
+    });
 
     // CFN Outputs
     new cdk.CfnOutput(this, 'AppSyncAPIURL', {
