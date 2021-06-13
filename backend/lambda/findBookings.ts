@@ -1,18 +1,25 @@
 import { FindBookingInput } from './types';
-import db from './db';
-import { Tables } from './constants';
+import { getDB } from './db';
 
-async function findBookings(args: FindBookingInput) {
+async function findBookings({
+  resourceIds,
+  from,
+  to,
+  includeCanceled,
+  ...args
+}: FindBookingInput) {
   try {
-    const filterValues = Object.keys(args)
-      .map(k => `${k} = :${k}`)
-      .join(' AND ');
-    const whereQuery = filterValues ? ` WHERE ${filterValues}` : '';
-    const result = await db.query(
-      `SELECT * FROM ${Tables.Booking} ${whereQuery}`,
-      args
-    );
-    return result.records;
+    const db = await getDB();
+    return db.booking.findMany({
+      where: {
+        resourceId: resourceIds && { in: resourceIds },
+        startTime: from !== undefined ? { gte: new Date(from) } : undefined,
+        endTime: to !== undefined ? { lte: new Date(to) } : undefined,
+        canceled: includeCanceled,
+        ...args,
+      },
+      include: { resource: true },
+    });
   } catch (err) {
     console.log('Postgres error: ', err);
     return { error: String(err) };

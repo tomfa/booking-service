@@ -9,41 +9,45 @@ datasource db {
 }
 
 model booking {
-  id          String    @id @db.VarChar
-  customer_id String?   @db.VarChar
-  user_id     String?   @db.VarChar
-  resource_id String?   @db.VarChar
-  start_time  DateTime  @db.Timestamp(6)
-  end_time    DateTime  @db.Timestamp(6)
-  canceled    Boolean?  @default(false)
-  comment     String?   @db.VarChar
-  seat_number Int?
-  customer    customer? @relation(fields: [customer_id], references: [id])
-  resource    resource? @relation(fields: [resource_id], references: [id])
+  id         String    @id @db.VarChar
+  createdAt  DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt  DateTime  @default(now()) @db.Timestamp(6)
+  customerId String?   @db.VarChar
+  userId     String?   @db.VarChar
+  resourceId String?   @db.VarChar
+  startTime  DateTime  @db.Timestamp(6)
+  endTime    DateTime  @db.Timestamp(6)
+  canceled   Boolean?  @default(false)
+  comment    String?   @db.VarChar
+  seatNumber Int?
+  customer   customer? @relation(fields: [customerId], references: [id])
+  resource   resource? @relation(fields: [resourceId], references: [id])
 }
 
 model customer {
-  id           String     @id @db.VarChar
-  name         String?    @db.VarChar
-  email        String     @db.VarChar
-  phone_number String?    @db.VarChar
-  issuer       String?    @db.VarChar
-  credits      Int?       @default(0)
-  enabled      Boolean    @default(true)
-  booking      booking[]
-  resource     resource[]
+  id          String     @id @db.VarChar
+  createdAt   DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime   @default(now()) @db.Timestamp(6)
+  name        String?    @db.VarChar
+  email       String     @unique @db.VarChar
+  phoneNumber String?    @db.VarChar
+  issuer      String?    @unique @db.VarChar
+  credits     Int?       @default(0)
+  enabled     Boolean    @default(true)
+  booking     booking[]
+  resource    resource[]
 }
 
 model resource {
-  id          String    @id @db.VarChar
-  customer_id String?   @db.VarChar
-  category    String?   @db.VarChar
-  label       String    @db.VarChar
-  schedule    Json
-  seats       Int
-  enabled     Boolean   @default(true)
-  created_at  DateTime  @default(now()) @db.Timestamp(6)
-  updated_at  DateTime  @default(now()) @db.Timestamp(6)
-  customer    customer? @relation(fields: [customer_id], references: [id])
-  booking     booking[]
+  id         String    @id @db.VarChar
+  createdAt  DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt  DateTime  @default(now()) @db.Timestamp(6)
+  customerId String?   @db.VarChar
+  category   String?   @db.VarChar
+  label      String    @db.VarChar
+  schedule   Json
+  seats      Int
+  enabled    Boolean   @default(true)
+  customer   customer? @relation(fields: [customerId], references: [id])
+  booking    booking[]
 }

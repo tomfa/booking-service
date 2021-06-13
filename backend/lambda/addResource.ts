@@ -1,31 +1,19 @@
-import db from './db';
 import { AddResourceInput } from './types';
-import { Tables } from './constants';
+import { getDB } from './db';
 
 const { v4: uuid } = require('uuid');
 
-async function addResource(resource: AddResourceInput) {
-  const {
-    id = uuid(),
-    customerId,
-    category = null,
-    label = null,
-    seats,
-    enabled = true,
-    schedule,
-  } = resource;
+async function addResource({
+  id = uuid(),
+  enabled = true,
+  label = '',
+  ...resource
+}: AddResourceInput) {
   try {
-    const query = `INSERT INTO ${Tables.Resource} (id,customer_id,label,seats,enabled,schedule) VALUES(:id,:customerId,:label,:seats,:enabled,:schedule)`;
-    await db.query(query, {
-      id,
-      customerId,
-      category,
-      label,
-      seats,
-      enabled,
-      schedule,
+    const db = await getDB();
+    return await db.resource.create({
+      data: { enabled, id, label, ...resource },
     });
-    return resource;
   } catch (err) {
     console.log('Postgres error: ', err);
     return null;

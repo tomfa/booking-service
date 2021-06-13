@@ -1,15 +1,13 @@
-import db from './db';
-import { Tables } from './constants';
+import { getDB } from './db';
 
 async function getCustomerById(id: string) {
   try {
-    const query = `SELECT * FROM ${Tables.Customer} WHERE id = :id`;
-    const results = await db.query(query, { id });
-    return results.records[0];
+    const db = await getDB();
+    return await db.customer.findUnique({ where: { id } });
   } catch (err) {
     console.log('Postgres error: ', err);
     return null;
   }
 }
 
-export default getCustomerById
+export default getCustomerById;
