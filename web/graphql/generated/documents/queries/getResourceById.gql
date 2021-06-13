@@ -1,15 +1,6 @@
 query getResourceById($id: String!){
     getResourceById(id: $id){
         id
-        customer{
-            id
-            name
-            email
-            phoneNumber
-            issuer
-            credits
-            enabled
-        }
         category
         label
         schedule{

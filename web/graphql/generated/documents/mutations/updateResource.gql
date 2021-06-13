@@ -1,15 +1,6 @@
 mutation updateResource($input: UpdateResourceInput!){
     updateResource(input: $input){
         id
-        customer{
-            id
-            name
-            email
-            phoneNumber
-            issuer
-            credits
-            enabled
-        }
         category
         label
         schedule{

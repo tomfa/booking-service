@@ -1,15 +1,6 @@
 mutation disableResource($id: String!){
     disableResource(id: $id){
         id
-        customer{
-            id
-            name
-            email
-            phoneNumber
-            issuer
-            credits
-            enabled
-        }
         category
         label
         schedule{

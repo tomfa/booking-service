@@ -1,15 +1,6 @@
 query getBookingById($id: String!){
     getBookingById(id: $id){
         id
-        customer{
-            id
-            name
-            email
-            phoneNumber
-            issuer
-            credits
-            enabled
-        }
         userId
         resourceId
         start

@@ -1,15 +1,6 @@
 mutation cancelBooking($id: String!){
     cancelBooking(id: $id){
         id
-        customer{
-            id
-            name
-            email
-            phoneNumber
-            issuer
-            credits
-            enabled
-        }
         userId
         resourceId
         start

@@ -74,7 +74,6 @@ export type BookedDuration = {
 export type Booking = {
   __typename?: 'Booking';
   id: Scalars['String'];
-  customer: Customer;
   userId: Scalars['String'];
   resourceId: Scalars['String'];
   start: Scalars['Int'];
@@ -265,7 +264,6 @@ export type QueryGetBookedDurationArgs = {
 export type Resource = {
   __typename?: 'Resource';
   id: Scalars['String'];
-  customer: Customer;
   category?: Maybe<Scalars['String']>;
   label: Scalars['String'];
   schedule: Schedule;
@@ -320,10 +318,6 @@ export type AddBookingMutation = (
   & { addBooking?: Maybe<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
-    & { customer: (
-      { __typename?: 'Customer' }
-      & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
-    ) }
   )> }
 );
 
@@ -350,10 +344,7 @@ export type AddResourceMutation = (
   & { addResource?: Maybe<(
     { __typename?: 'Resource' }
     & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
-    & { customer: (
-      { __typename?: 'Customer' }
-      & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
-    ), schedule: (
+    & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
         { __typename?: 'HourSchedule' }
@@ -398,10 +389,6 @@ export type CancelBookingMutation = (
   & { cancelBooking?: Maybe<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
-    & { customer: (
-      { __typename?: 'Customer' }
-      & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
-    ) }
   )> }
 );
 
@@ -428,10 +415,7 @@ export type DisableResourceMutation = (
   & { disableResource?: Maybe<(
     { __typename?: 'Resource' }
     & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
-    & { customer: (
-      { __typename?: 'Customer' }
-      & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
-    ), schedule: (
+    & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
         { __typename?: 'HourSchedule' }
@@ -489,10 +473,7 @@ export type UpdateResourceMutation = (
   & { updateResource?: Maybe<(
     { __typename?: 'Resource' }
     & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
-    & { customer: (
-      { __typename?: 'Customer' }
-      & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
-    ), schedule: (
+    & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
         { __typename?: 'HourSchedule' }
@@ -550,10 +531,6 @@ export type FindBookingsQuery = (
   & { findBookings?: Maybe<Array<Maybe<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
-    & { customer: (
-      { __typename?: 'Customer' }
-      & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
-    ) }
   )>>> }
 );
 
@@ -567,10 +544,7 @@ export type FindResourcesQuery = (
   & { findResources?: Maybe<Array<Maybe<(
     { __typename?: 'Resource' }
     & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
-    & { customer: (
-      { __typename?: 'Customer' }
-      & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
-    ), schedule: (
+    & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
         { __typename?: 'HourSchedule' }
@@ -628,10 +602,6 @@ export type GetBookingByIdQuery = (
   & { getBookingById?: Maybe<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
-    & { customer: (
-      { __typename?: 'Customer' }
-      & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
-    ) }
   )> }
 );
 
@@ -684,10 +654,6 @@ export type GetLatestBookingQuery = (
   & { getLatestBooking?: Maybe<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
-    & { customer: (
-      { __typename?: 'Customer' }
-      & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
-    ) }
   )> }
 );
 
@@ -714,10 +680,7 @@ export type GetResourceByIdQuery = (
   & { getResourceById?: Maybe<(
     { __typename?: 'Resource' }
     & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
-    & { customer: (
-      { __typename?: 'Customer' }
-      & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
-    ), schedule: (
+    & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
         { __typename?: 'HourSchedule' }
@@ -757,15 +720,6 @@ export const AddBookingDocument = `
     mutation addBooking($addBookingInput: AddBookingInput!) {
   addBooking(addBookingInput: $addBookingInput) {
     id
-    customer {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
     userId
     resourceId
     start
@@ -815,15 +769,6 @@ export const AddResourceDocument = `
     mutation addResource($addResourceInput: AddResourceInput!) {
   addResource(addResourceInput: $addResourceInput) {
     id
-    customer {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
     category
     label
     schedule {
@@ -899,15 +844,6 @@ export const CancelBookingDocument = `
     mutation cancelBooking($id: String!) {
   cancelBooking(id: $id) {
     id
-    customer {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
     userId
     resourceId
     start
@@ -957,15 +893,6 @@ export const DisableResourceDocument = `
     mutation disableResource($id: String!) {
   disableResource(id: $id) {
     id
-    customer {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
     category
     label
     schedule {
@@ -1065,15 +992,6 @@ export const UpdateResourceDocument = `
     mutation updateResource($input: UpdateResourceInput!) {
   updateResource(input: $input) {
     id
-    customer {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
     category
     label
     schedule {
@@ -1171,15 +1089,6 @@ export const FindBookingsDocument = `
     query findBookings($filterBookings: FindBookingInput!) {
   findBookings(filterBookings: $filterBookings) {
     id
-    customer {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
     userId
     resourceId
     start
@@ -1207,15 +1116,6 @@ export const FindResourcesDocument = `
     query findResources($filterResource: FindResourceInput!) {
   findResources(filterResource: $filterResource) {
     id
-    customer {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
     category
     label
     schedule {
@@ -1315,15 +1215,6 @@ export const GetBookingByIdDocument = `
     query getBookingById($id: String!) {
   getBookingById(id: $id) {
     id
-    customer {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
     userId
     resourceId
     start
@@ -1429,15 +1320,6 @@ export const GetLatestBookingDocument = `
     query getLatestBooking($filterBookings: FindBookingInput!) {
   getLatestBooking(filterBookings: $filterBookings) {
     id
-    customer {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
     userId
     resourceId
     start
@@ -1487,15 +1369,6 @@ export const GetResourceByIdDocument = `
     query getResourceById($id: String!) {
   getResourceById(id: $id) {
     id
-    customer {
-      id
-      name
-      email
-      phoneNumber
-      issuer
-      credits
-      enabled
-    }
     category
     label
     schedule {

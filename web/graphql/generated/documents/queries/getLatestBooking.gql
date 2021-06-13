@@ -1,15 +1,6 @@
 query getLatestBooking($filterBookings: FindBookingInput!){
     getLatestBooking(filterBookings: $filterBookings){
         id
-        customer{
-            id
-            name
-            email
-            phoneNumber
-            issuer
-            credits
-            enabled
-        }
         userId
         resourceId
         start

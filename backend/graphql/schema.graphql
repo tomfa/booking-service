@@ -42,7 +42,6 @@ type Customer {
 
 type Resource {
     id: String!
-    customer: Customer!
     category: String
     label: String!
     schedule: Schedule!
@@ -70,7 +69,6 @@ input FindResourceInput {
 
 type Booking {
     id: String!
-    customer: Customer!
     userId: String!
     resourceId: String!
     start: Int!
