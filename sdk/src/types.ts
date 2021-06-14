@@ -23,16 +23,18 @@ export type Schedule = {
 
 export type Resource = {
   id: string;
-  category: string;
+  category?: string;
   label: string;
-  schedule: Schedule;
+  // Schedule is not broken wrt. timezones. Do not use.
+  // schedule: Schedule;
   // TODO: How to solve not available until/after
   seats: number;
   enabled: boolean;
 };
 
-export type CreateResourceArgs = Omit<Resource, 'id' | 'category'> & {
-  category?: string;
+export type CreateResourceArgs = Omit<Resource, 'id'> & {
+  id?: string;
+  schedule: Schedule;
 };
 
 export type Booking = {
@@ -49,8 +51,8 @@ export type Booking = {
 
 export type CreateBookingArgs = Omit<
   Booking,
-  'id' | 'canceled' | 'end' | 'durationMinutes' | 'seatNumber' | 'comment'
-> & { comment?: string };
+  'id' | 'canceled' | 'durationMinutes' | 'seatNumber' | 'comment' | 'end'
+> & { comment?: string; end?: Date };
 
 export type TimeSlot = {
   availableSeats: number;
