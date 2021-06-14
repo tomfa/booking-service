@@ -334,7 +334,8 @@ export default class BookingAPI implements IBookingAPI {
     });
     const bookingIds = matchingBookings.map(b => b.id);
     const minutes = matchingBookings.reduce(
-      (sum, booking) => sum + utils.getBookingDurationMinutes(booking),
+      (sum, booking) =>
+        sum + utils.getDiffInMinutes(booking.start, booking.end),
       0
     );
     return { minutes, bookingIds, numBookings: matchingBookings.length };

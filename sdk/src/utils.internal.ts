@@ -157,8 +157,8 @@ export const reduceAvailability = (
   return updatedSlots;
 };
 
-export const getBookingDurationMinutes = (booking: Booking): number => {
-  const milliDiff = booking.end.getTime() - booking.start.getTime();
+export const getDiffInMinutes = (start: Date, end: Date): number => {
+  const milliDiff = Math.abs(end.getTime() - start.getTime());
   return Math.floor(milliDiff / (60 * 1000));
 };
 
