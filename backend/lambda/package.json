@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prisma:generate-schema": "npx prisma introspect && npx prisma generate",
+    "prisma:generate-schema": "npx prisma validate && npx prisma introspect && npx prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
