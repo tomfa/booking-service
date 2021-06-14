@@ -21,7 +21,7 @@ export function fromDBBooking({
 }
 
 export function fromDBCustomer(customer: DBCustomer): Customer {
-  return customer;
+  return { ...customer, credits: customer.credits || 999999 };
 }
 
 const mapFromDBSchedule = (val: Prisma.JsonValue): Schedule => {

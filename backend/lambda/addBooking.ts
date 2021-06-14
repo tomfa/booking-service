@@ -8,20 +8,17 @@ import { ErrorType } from './utils/types';
 async function addBooking({
   start,
   end,
+  canceled,
   ...booking
 }: AddBookingInput): Promise<Booking | ErrorType> {
   const db = await getDB();
-  const defaultValues: Partial<AddBookingInput> = {
-    canceled: false,
-    comment: '',
-  };
   try {
     // TODO: Error handling
     //  - what if id already exists
     const dbBooking = await db.booking.create({
       data: {
-        ...defaultValues,
         ...booking,
+        canceled: !!canceled,
         id: getId(booking.id),
         startTime: new Date(start),
         endTime: new Date(end),

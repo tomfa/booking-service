@@ -14,10 +14,10 @@ async function findBookings({
     const db = await getDB();
     const bookings = await db.booking.findMany({
       where: {
-        resourceId: resourceIds && { in: resourceIds },
+        resourceId: (resourceIds && { in: resourceIds }) || undefined,
         startTime: from ? { gte: new Date(from) } : undefined,
         endTime: to ? { lte: new Date(to) } : undefined,
-        canceled: includeCanceled,
+        canceled: !includeCanceled ? false : undefined,
         ...args,
       },
       include: { resource: true },
