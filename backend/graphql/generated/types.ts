@@ -15,8 +15,8 @@ export type Scalars = {
 };
 
 export type AddBookingInput = {
-  id: Scalars['String'];
-  customerId: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
+  customerId?: Maybe<Scalars['String']>;
   userId: Scalars['String'];
   resourceId: Scalars['String'];
   start: Scalars['Int'];
@@ -38,7 +38,7 @@ export type AddCustomerInput = {
 
 export type AddResourceInput = {
   id?: Maybe<Scalars['String']>;
-  customerId: Scalars['String'];
+  customerId?: Maybe<Scalars['String']>;
   category?: Maybe<Scalars['String']>;
   label: Scalars['String'];
   seats: Scalars['Int'];

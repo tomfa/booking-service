@@ -8,10 +8,12 @@
       "api",
       "web",
       "shared",
-      "sdk"
+      "sdk",
+      "backend"
     ],
     "nohoist": [
-      "**/api/**"
+      "**/api/**",
+      "**/backend/**"
     ]
   },
   "devDependencies": {
@@ -43,6 +45,7 @@
     "web": "yarn workspace @booking-service/web",
     "sdk": "yarn workspace vailable",
     "api": "yarn workspace @booking-service/api",
+    "backend": "yarn workspace @booking-service/backend",
     "shared": "yarn workspace @booking-service/shared",
     "build": "yarn workspaces run build",
     "start": "concurrently \"yarn web start\" \"yarn api start\"",
@@ -50,6 +53,7 @@
     "test:all": "yarn workspaces run test --ci --coverage",
     "test:api": "yarn api test",
     "test:compile": "tsc -v && tsc --noEmit",
+    "schema:generate": "yarn backend schema:generate && yarn web schema:generate && yarn sdk schema:generate",
     "lint": "eslint .",
     "lint:ignore-warnings": "eslint . --quiet",
     "lint:prettier-check": "prettier --check \"**/*.{js,jsx,ts,tsx,json}\"",

@@ -51,7 +51,7 @@ type Resource {
 
 input AddResourceInput {
     id: String
-    customerId: String!
+    customerId: String
     category: String
     label: String!
     seats: Int!
@@ -89,8 +89,8 @@ input FindBookingInput {
 
 
 input AddBookingInput {
-    id: String!
-    customerId: String!
+    id: String
+    customerId: String
     userId: String!
     resourceId: String!
     start: Int!
