@@ -17,7 +17,7 @@ model booking {
   resourceId String    @db.VarChar
   startTime  DateTime  @db.Timestamp(6)
   endTime    DateTime  @db.Timestamp(6)
-  canceled   Boolean?  @default(false)
+  canceled   Boolean   @default(false)
   comment    String?   @db.VarChar
   seatNumber Int?
   customer   customer? @relation(fields: [customerId], references: [id])

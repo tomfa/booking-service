@@ -36,7 +36,7 @@ CREATE TABLE booking (
   "resourceId" VARCHAR NOT NULL,
   "startTime" TIMESTAMP NOT NULL,
   "endTime" TIMESTAMP NOT NULL,
-  "canceled" BOOLEAN default false,
+  "canceled" BOOLEAN NOT NULL default false,
   "comment" VARCHAR,
   "seatNumber" INTEGER,
   FOREIGN KEY ("customerId") REFERENCES "customer"(id),
