@@ -9,10 +9,20 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "deploy": "npm run build && cdk deploy -O ../cdk-exports.json"
+    "deploy": "npm run schema:generate && npm run build && cdk deploy -O ../cdk-exports.json",
+    "schema:generate-document": "gqlg --schemaFilePath ./graphql/schema.graphql --destDirPath ./graphql/generated/documents --depthLimit 5",
+    "schema:generate": "npm run schema:generate-document && graphql-codegen --config codegen.yml"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.108.1",
+    "@graphql-codegen/cli": "^1.21.5",
+    "@graphql-codegen/introspection": "^1.18.2",
+    "@graphql-codegen/typescript": "^1.22.1",
+    "@graphql-codegen/typescript-graphql-request": "^3.2.1",
+    "@graphql-codegen/typescript-operations": "^1.18.0",
+    "gql-generator": "^1.0.12",
+    "graphql": "^15.5.0",
+    "graphql-request": "^3.4.0",
     "@types/aws-lambda": "^8.10.77",
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",

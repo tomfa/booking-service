@@ -1,0 +1,11 @@
+mutation addCustomer($addCustomerInput: AddCustomerInput!){
+    addCustomer(addCustomerInput: $addCustomerInput){
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+    }
+}
