@@ -5,6 +5,7 @@ import * as appsync from '@aws-cdk/aws-appsync';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as rds from '@aws-cdk/aws-rds';
 import * as ec2 from '@aws-cdk/aws-ec2';
+import * as iam from '@aws-cdk/aws-iam';
 
 export class BackendStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -23,7 +24,43 @@ export class BackendStack extends cdk.Stack {
       },
     });
 
-    const vpc = new ec2.Vpc(this, 'vailable-vpc');
+    const vpc = new ec2.Vpc(this, 'vailable-vpc', {
+      cidr: '10.0.0.0/20',
+      natGateways: 0,
+      maxAzs: 2,
+      enableDnsHostnames: true,
+      enableDnsSupport: true,
+      subnetConfiguration: [
+        {
+          cidrMask: 22,
+          name: 'public',
+          subnetType: ec2.SubnetType.PUBLIC,
+        },
+        {
+          cidrMask: 22,
+          name: 'private',
+          subnetType: ec2.SubnetType.ISOLATED,
+        },
+      ],
+    });
+    const privateSg = new ec2.SecurityGroup(this, 'private-sg', {
+      vpc,
+      securityGroupName: 'private-sg',
+    });
+    privateSg.addIngressRule(
+      privateSg,
+      ec2.Port.allTraffic(),
+      'allow internal SG access'
+    );
+
+    const subnetGroup = new rds.SubnetGroup(this, 'rds-subnet-group', {
+      vpc,
+      subnetGroupName: 'aurora-subnet-group',
+      vpcSubnets: { subnetType: ec2.SubnetType.ISOLATED },
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      description: 'An all private subnets group for the DB',
+    });
+
     const cluster = new rds.ServerlessCluster(this, 'vailable-rds-cluster', {
       engine: rds.DatabaseClusterEngine.AURORA_POSTGRESQL,
       parameterGroup: rds.ParameterGroup.fromParameterGroupName(
@@ -32,12 +69,19 @@ export class BackendStack extends cdk.Stack {
         'default.aurora-postgresql10'
       ),
       defaultDatabaseName: 'vailable_db',
+      enableDataApi: true,
       vpc,
+      subnetGroup,
+      securityGroups: [privateSg],
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
       scaling: { autoPause: cdk.Duration.minutes(5) },
     });
 
     // Create the Lambda function that will map GraphQL operations into Postgres
     const postFn = new lambda.Function(this, 'vailable-api-lambda', {
+      vpc,
+      vpcSubnets: { subnetType: ec2.SubnetType.ISOLATED },
+      securityGroups: [privateSg],
       runtime: lambda.Runtime.NODEJS_12_X,
       code: new lambda.AssetCode('lambda'),
       handler: 'index.handler',
@@ -49,6 +93,20 @@ export class BackendStack extends cdk.Stack {
         DB_NAME: 'vailable_db',
         AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       },
+    });
+    postFn.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['secretsmanager:GetSecretValue'],
+        resources: [cluster.secret?.secretArn || ''],
+      })
+    );
+    new ec2.InterfaceVpcEndpoint(this, 'secrets-manager', {
+      service: ec2.InterfaceVpcEndpointAwsService.SECRETS_MANAGER,
+      vpc,
+      privateDnsEnabled: true,
+      subnets: { subnetType: ec2.SubnetType.ISOLATED },
+      securityGroups: [privateSg],
     });
     // Grant access to the cluster from the Lambda function
     cluster.grantDataApiAccess(postFn);
