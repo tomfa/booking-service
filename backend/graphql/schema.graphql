@@ -140,6 +140,7 @@ input AddCustomerInput {
 }
 
 input UpdateCustomerInput {
+    id: String!
     name: String
     email: String
     phoneNumber: String

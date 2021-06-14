@@ -291,6 +291,7 @@ export type TimeSlot = {
 };
 
 export type UpdateCustomerInput = {
+  id: Scalars['String'];
   name?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
