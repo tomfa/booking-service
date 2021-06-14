@@ -7,5 +7,6 @@ module.exports.updateCustomer = fs.readFileSync(path.join(__dirname, 'updateCust
 module.exports.addBooking = fs.readFileSync(path.join(__dirname, 'addBooking.gql'), 'utf8');
 module.exports.disableResource = fs.readFileSync(path.join(__dirname, 'disableResource.gql'), 'utf8');
 module.exports.cancelBooking = fs.readFileSync(path.join(__dirname, 'cancelBooking.gql'), 'utf8');
+module.exports.setBookingComment = fs.readFileSync(path.join(__dirname, 'setBookingComment.gql'), 'utf8');
 module.exports.addCustomer = fs.readFileSync(path.join(__dirname, 'addCustomer.gql'), 'utf8');
 module.exports.disableCustomer = fs.readFileSync(path.join(__dirname, 'disableCustomer.gql'), 'utf8');

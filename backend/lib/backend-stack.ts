@@ -172,6 +172,10 @@ export class BackendStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'disableCustomer',
     });
+    lambdaDs.createResolver({
+      typeName: 'Mutation',
+      fieldName: 'setBookingComment',
+    });
 
     // CFN Outputs
     new cdk.CfnOutput(this, 'AppSyncAPIURL', {

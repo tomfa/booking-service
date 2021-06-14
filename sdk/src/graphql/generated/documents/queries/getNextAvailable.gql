@@ -1,5 +1,5 @@
-query getNextAvailable($id: String!){
-    getNextAvailable(id: $id){
+query getNextAvailable($id: String!, $afterDate: Int){
+    getNextAvailable(id: $id, afterDate: $afterDate){
         availableSeats
         start
         end

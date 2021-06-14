@@ -60,7 +60,10 @@ export type TimeSlot = {
 
 export interface IBookingAPI {
   getResource(resourceId: string): Promise<Resource | undefined>;
-  addResource(resource: Resource): Promise<Resource>;
+  addResource(
+    resource: CreateResourceArgs,
+    resourceId: string
+  ): Promise<Resource>;
   updateResource(
     resourceId: string,
     resource: Partial<Resource>
@@ -77,7 +80,8 @@ export interface IBookingAPI {
 
   getBooking(bookingId: string): Promise<Booking | undefined>;
   addBooking(booking: Omit<Booking, 'id'>): Promise<Booking>;
-  cancelBooking(bookingId: string): Promise<void>;
+  setBookingComment(bookingId: string, comment: string): Promise<Booking>;
+  cancelBooking(bookingId: string): Promise<Booking>;
   findBookings(props: {
     userId?: string;
     resourceIds?: string[];

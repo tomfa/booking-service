@@ -20,10 +20,8 @@ export type AddBookingInput = {
   userId: Scalars['String'];
   resourceId: Scalars['String'];
   start: Scalars['Int'];
-  end: Scalars['Int'];
-  canceled?: Maybe<Scalars['Boolean']>;
+  end?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  seatNumber: Scalars['Int'];
 };
 
 export type AddCustomerInput = {
@@ -91,7 +89,7 @@ export type DateScheduleInput = {
 };
 
 export type FindAvailabilityInput = {
-  customerId: Scalars['String'];
+  customerId?: Maybe<Scalars['String']>;
   resourceIds: Array<Scalars['String']>;
   from?: Maybe<Scalars['Int']>;
   to?: Maybe<Scalars['Int']>;
@@ -101,12 +99,14 @@ export type FindBookingInput = {
   customerId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
   resourceIds?: Maybe<Array<Scalars['String']>>;
+  resourceCategories?: Maybe<Array<Scalars['String']>>;
   from?: Maybe<Scalars['Int']>;
   to?: Maybe<Scalars['Int']>;
   includeCanceled?: Maybe<Scalars['Boolean']>;
 };
 
 export type FindResourceInput = {
+  resourceIds?: Maybe<Array<Scalars['String']>>;
   customerId?: Maybe<Scalars['String']>;
   category?: Maybe<Scalars['String']>;
   label?: Maybe<Scalars['String']>;
@@ -129,6 +129,7 @@ export type Mutation = {
   addBooking?: Maybe<Booking>;
   disableResource?: Maybe<Resource>;
   cancelBooking?: Maybe<Booking>;
+  setBookingComment?: Maybe<Booking>;
   addCustomer?: Maybe<Customer>;
   disableCustomer?: Maybe<Customer>;
 };
@@ -161,6 +162,12 @@ export type MutationDisableResourceArgs = {
 
 export type MutationCancelBookingArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationSetBookingCommentArgs = {
+  id: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
 };
 
 
@@ -231,6 +238,7 @@ export type QueryFindAvailabilityArgs = {
 
 export type QueryGetNextAvailableArgs = {
   id: Scalars['String'];
+  afterDate?: Maybe<Scalars['Int']>;
 };
 
 
@@ -430,6 +438,20 @@ export type DisableResourceMutation = (
         ) }
       )>>> }
     ) }
+  )> }
+);
+
+export type SetBookingCommentMutationVariables = Exact<{
+  id: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+}>;
+
+
+export type SetBookingCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { setBookingComment?: Maybe<(
+    { __typename?: 'Booking' }
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
   )> }
 );
 
@@ -642,6 +664,7 @@ export type GetLatestBookingQuery = (
 
 export type GetNextAvailableQueryVariables = Exact<{
   id: Scalars['String'];
+  afterDate?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -878,6 +901,20 @@ export const DisableResourceDocument = gql`
     }
     seats
     enabled
+  }
+}
+    `;
+export const SetBookingCommentDocument = gql`
+    mutation setBookingComment($id: String!, $comment: String) {
+  setBookingComment(id: $id, comment: $comment) {
+    id
+    userId
+    resourceId
+    start
+    end
+    canceled
+    comment
+    seatNumber
   }
 }
     `;
@@ -1122,8 +1159,8 @@ export const GetLatestBookingDocument = gql`
 }
     `;
 export const GetNextAvailableDocument = gql`
-    query getNextAvailable($id: String!) {
-  getNextAvailable(id: $id) {
+    query getNextAvailable($id: String!, $afterDate: Int) {
+  getNextAvailable(id: $id, afterDate: $afterDate) {
     availableSeats
     start
     end
@@ -1219,6 +1256,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     disableResource(variables: DisableResourceMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DisableResourceMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DisableResourceMutation>(DisableResourceDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'disableResource');
+    },
+    setBookingComment(variables: SetBookingCommentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SetBookingCommentMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SetBookingCommentMutation>(SetBookingCommentDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'setBookingComment');
     },
     updateCustomer(variables: UpdateCustomerMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateCustomerMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateCustomerMutation>(UpdateCustomerDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateCustomer');
