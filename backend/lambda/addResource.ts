@@ -1,10 +1,9 @@
-import { AddResourceInput } from './types';
+import { AddResourceInput } from '../graphql/generated/types';
 import { getDB } from './db';
-
-const { v4: uuid } = require('uuid');
+import { getId } from './utils/mappers';
 
 async function addResource({
-  id = uuid(),
+  id,
   enabled = true,
   label = '',
   ...resource
@@ -12,7 +11,7 @@ async function addResource({
   try {
     const db = await getDB();
     return await db.resource.create({
-      data: { enabled, id, label, ...resource },
+      data: { enabled, id: getId(id), label, ...resource },
     });
   } catch (err) {
     console.log('Postgres error: ', err);

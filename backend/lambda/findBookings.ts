@@ -1,5 +1,6 @@
-import { FindBookingInput } from './types';
+import { Booking, FindBookingInput } from '../graphql/generated/types';
 import { getDB } from './db';
+import { ErrorType } from './utils/types';
 
 async function findBookings({
   resourceIds,
@@ -7,19 +8,21 @@ async function findBookings({
   to,
   includeCanceled,
   ...args
-}: FindBookingInput) {
+}: FindBookingInput): Promise<Booking[] | ErrorType> {
   try {
     const db = await getDB();
-    return db.booking.findMany({
+    const bookings = await db.booking.findMany({
       where: {
         resourceId: resourceIds && { in: resourceIds },
-        startTime: from !== undefined ? { gte: new Date(from) } : undefined,
-        endTime: to !== undefined ? { lte: new Date(to) } : undefined,
+        startTime: from ? { gte: new Date(from) } : undefined,
+        endTime: to ? { lte: new Date(to) } : undefined,
         canceled: includeCanceled,
         ...args,
       },
       include: { resource: true },
     });
+    console.log('bookings', JSON.stringify(bookings));
+    return [];
   } catch (err) {
     console.log('Postgres error: ', err);
     return { error: String(err) };

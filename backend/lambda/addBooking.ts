@@ -1,5 +1,6 @@
+import { AddBookingInput } from '../graphql/generated/types';
 import { getDB } from './db';
-import { AddBookingInput } from './types';
+import { getId } from './utils/mappers';
 
 const { v4: uuid } = require('uuid');
 
@@ -15,6 +16,7 @@ async function addBooking({ start, end, ...booking }: AddBookingInput) {
       data: {
         ...defaultValues,
         ...booking,
+        id: getId(booking.id),
         startTime: new Date(start),
         endTime: new Date(end),
       },

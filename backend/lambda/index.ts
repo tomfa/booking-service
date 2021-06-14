@@ -1,6 +1,8 @@
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import { Context } from '@types/aws-lambda';
+import * as types from '../graphql/generated/types';
+import { Query, Mutation } from '../graphql/generated/types';
 import getResourceById from './getResourceById';
 import getBookingById from './getBookingById';
 import getCustomerByIssuer from './getCustomerByIssuer';
@@ -19,9 +21,10 @@ import disableResource from './disableResource';
 import cancelBooking from './cancelBooking';
 import addCustomer from './addCustomer';
 import disableCustomer from './disableCustomer';
-import * as types from './types';
 import updateCustomer from './updateCustomer';
-import { MutationType, QueryType } from './types';
+
+type QueryType = keyof Query;
+type MutationType = keyof Mutation;
 
 type AppSyncEvent = {
   info: {

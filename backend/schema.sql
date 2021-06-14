@@ -1,3 +1,7 @@
+DROP TABLE booking;
+DROP TABLE resource;
+DROP TABLE customer;
+
 CREATE TABLE customer (
   "id" VARCHAR PRIMARY KEY NOT NULL,
   "createdAt" TIMESTAMP NOT NULL DEFAULT now(),

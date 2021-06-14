@@ -1,8 +1,10 @@
-import { Booking, FindBookingInput } from './types';
+import { Booking, FindBookingInput } from '../graphql/generated/types';
 
-async function getLatestBooking(args: FindBookingInput): Promise<Booking | undefined> {
+async function getLatestBooking(
+  args: FindBookingInput
+): Promise<Booking | undefined> {
   // TODO
-  return undefined
+  return undefined;
 }
 
-export default getLatestBooking
+export default getLatestBooking;

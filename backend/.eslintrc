@@ -8,6 +8,7 @@
     // While we are testing
     "no-console": 0,
     "no-return-await": 0,
+    "unused-imports/no-unused-vars": 0,
 
     // Use Typescript version to handle enums
     "no-shadow": 0,

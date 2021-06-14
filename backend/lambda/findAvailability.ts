@@ -1,8 +1,8 @@
-import { FindAvailabilityInput } from './types';
+import { FindAvailabilityInput } from '../graphql/generated/types';
 
 async function findAvailability(args: FindAvailabilityInput) {
   // TODO
-  return []
+  return [];
 }
 
-export default findAvailability
+export default findAvailability;

@@ -1,12 +1,14 @@
-import { BookedDuration, FindBookingInput } from './types';
+import { BookedDuration, FindBookingInput } from '../graphql/generated/types';
 
-async function getBookedDuration(args: FindBookingInput): Promise<BookedDuration> {
+async function getBookedDuration(
+  args: FindBookingInput
+): Promise<BookedDuration> {
   // TODO
   return {
     minutes: 0,
     numBookings: 0,
     bookingIds: [],
-  }
+  };
 }
 
-export default getBookedDuration
+export default getBookedDuration;
