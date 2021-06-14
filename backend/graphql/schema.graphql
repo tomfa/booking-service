@@ -35,7 +35,7 @@ type Customer {
     name: String
     email: String
     phoneNumber: String
-    issuer: String!
+    issuer: String
     credits: Int!
     enabled: Boolean!
 }
@@ -69,13 +69,13 @@ input FindResourceInput {
 
 type Booking {
     id: String!
-    userId: String!
+    userId: String
     resourceId: String!
     start: Int!
     end: Int!
     canceled: Boolean!
     comment: String
-    seatNumber: Int!
+    seatNumber: Int
 }
 
 input FindBookingInput {
@@ -126,7 +126,7 @@ input UpdateResourceInput {
     label: String
     seats: Int
     enabled: Boolean
-    schedule: [DateScheduleInput]
+    schedule: [DateScheduleInput!]
 }
 
 input AddCustomerInput {

@@ -56,13 +56,13 @@ export type BookedDuration = {
 export type Booking = {
   __typename?: 'Booking';
   id: Scalars['String'];
-  userId: Scalars['String'];
+  userId?: Maybe<Scalars['String']>;
   resourceId: Scalars['String'];
   start: Scalars['Int'];
   end: Scalars['Int'];
   canceled: Scalars['Boolean'];
   comment?: Maybe<Scalars['String']>;
-  seatNumber: Scalars['Int'];
+  seatNumber?: Maybe<Scalars['Int']>;
 };
 
 export type Customer = {
@@ -71,7 +71,7 @@ export type Customer = {
   name?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
-  issuer: Scalars['String'];
+  issuer?: Maybe<Scalars['String']>;
   credits: Scalars['Int'];
   enabled: Scalars['Boolean'];
 };
@@ -288,7 +288,7 @@ export type UpdateResourceInput = {
   label?: Maybe<Scalars['String']>;
   seats?: Maybe<Scalars['Int']>;
   enabled?: Maybe<Scalars['Boolean']>;
-  schedule?: Maybe<Array<Maybe<DateScheduleInput>>>;
+  schedule?: Maybe<Array<DateScheduleInput>>;
 };
 
 export type AddBookingMutationVariables = Exact<{
