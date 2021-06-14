@@ -1,30 +1,15 @@
-import { Prisma, resource as DBResource } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
   FindResourceInput,
-  HourSchedule,
   Resource,
   Schedule,
 } from '../graphql/generated/types';
 import { getDB } from './db';
-import { removeNull } from './utils/mappers';
+import { removeNull } from './utils/input.mappers';
 import { ErrorType } from './utils/types';
+import { closedSchedule } from './utils/schedule';
+import { fromDBResource } from './utils/db.mappers';
 
-const closed: HourSchedule = {
-  start: '00:00',
-  end: '00:00',
-  slotIntervalMinutes: 0,
-  slotDurationMinutes: 0,
-};
-const closedSchedule: Schedule = {
-  mon: closed,
-  tue: closed,
-  wed: closed,
-  thu: closed,
-  fri: closed,
-  sat: closed,
-  sun: closed,
-  overriddenDates: [],
-};
 const mapSchedule = (val: Prisma.JsonValue): Schedule => {
   if (!val) {
     return closedSchedule;
@@ -44,13 +29,7 @@ async function findResources(
     console.log('resource', JSON.stringify(resource));
     console.log('typeof resource.schedule', typeof resource.schedule);
     console.log('resource.schedule', resource.schedule);
-    const mappedResources: Resource[] = resources.map(
-      (r: DBResource): Resource => ({
-        ...r,
-        schedule: mapSchedule(r.schedule),
-      })
-    );
-    return mappedResources;
+    return resources.map(fromDBResource);
   } catch (err) {
     console.log('Postgres error: ', err);
     return { error: String(err) };

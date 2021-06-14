@@ -52,6 +52,9 @@ exports.handler = async (event: AppSyncEvent, context: Context) => {
   // Set to false to send the response right away when the callback executes, instead of waiting for the Node.js event loop to be empty.
   context.callbackWaitsForEmptyEventLoop = false;
 
+  // TODO: Check for authentication.
+  //   - Then set or filter by customerId
+
   switch (event.info.fieldName) {
     case 'getResourceById': {
       console.log(`Executing getResourceById with ${event.arguments.id}`);

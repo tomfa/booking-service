@@ -1,14 +1,32 @@
-import { UpdateResourceInput } from '../graphql/generated/types';
+import { Prisma } from '@prisma/client';
+import { Resource, UpdateResourceInput } from '../graphql/generated/types';
 import { getDB } from './db';
-import { removeNull } from './utils/mappers';
+import { mapSchedule, removeNull } from './utils/input.mappers';
+import { ErrorType } from './utils/types';
+import { fromDBResource } from './utils/db.mappers';
 
-async function updateResource(args: UpdateResourceInput) {
+const mapResourceUpdate = (
+  args: UpdateResourceInput
+): Prisma.resourceUpdateInput => {
+  if (args.schedule) {
+    return {
+      ...removeNull(args),
+      schedule: mapSchedule(args.schedule),
+    };
+  }
+  return removeNull(args);
+};
+
+async function updateResource(
+  args: UpdateResourceInput
+): Promise<Resource | null | ErrorType> {
   try {
     const db = await getDB();
-    return await db.customer.update({
+    const resource = await db.resource.update({
       where: { id: args.id },
-      data: removeNull(args),
+      data: mapResourceUpdate(args),
     });
+    return fromDBResource(resource);
   } catch (err) {
     console.log('Postgres error: ', err);
     return null;

@@ -1,18 +1,24 @@
-import { AddBookingInput } from '../graphql/generated/types';
+import { AddBookingInput, Booking } from '../graphql/generated/types';
 import { getDB } from './db';
-import { getId } from './utils/mappers';
+import { getId } from './utils/input.mappers';
+import { fromDBBooking } from './utils/db.mappers';
+import { genericErrorResponse } from './utils/response';
+import { ErrorType } from './utils/types';
 
-const { v4: uuid } = require('uuid');
-
-async function addBooking({ start, end, ...booking }: AddBookingInput) {
+async function addBooking({
+  start,
+  end,
+  ...booking
+}: AddBookingInput): Promise<Booking | ErrorType> {
   const db = await getDB();
   const defaultValues: Partial<AddBookingInput> = {
-    id: uuid(),
     canceled: false,
     comment: '',
   };
   try {
-    return await db.booking.create({
+    // TODO: Error handling
+    //  - what if id already exists
+    const dbBooking = await db.booking.create({
       data: {
         ...defaultValues,
         ...booking,
@@ -21,9 +27,10 @@ async function addBooking({ start, end, ...booking }: AddBookingInput) {
         endTime: new Date(end),
       },
     });
+    return fromDBBooking(dbBooking);
   } catch (err) {
     console.log('Postgres error: ', err);
-    return null;
+    return genericErrorResponse;
   }
 }
 

@@ -1,6 +1,7 @@
 import { Booking, FindBookingInput } from '../graphql/generated/types';
 import { getDB } from './db';
 import { ErrorType } from './utils/types';
+import { fromDBBooking } from './utils/db.mappers';
 
 async function findBookings({
   resourceIds,
@@ -22,7 +23,7 @@ async function findBookings({
       include: { resource: true },
     });
     console.log('bookings', JSON.stringify(bookings));
-    return [];
+    return bookings.map(fromDBBooking);
   } catch (err) {
     console.log('Postgres error: ', err);
     return { error: String(err) };

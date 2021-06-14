@@ -1,21 +1,35 @@
-import { AddResourceInput } from '../graphql/generated/types';
+import { AddResourceInput, Resource } from '../graphql/generated/types';
 import { getDB } from './db';
-import { getId } from './utils/mappers';
+import { fromDBResource } from './utils/db.mappers';
+import { getId, mapSchedule } from './utils/input.mappers';
+import { ErrorType } from './utils/types';
+import { genericErrorResponse } from './utils/response';
 
 async function addResource({
   id,
   enabled = true,
   label = '',
+  schedule,
   ...resource
-}: AddResourceInput) {
+}: AddResourceInput): Promise<Resource | ErrorType> {
+  // TODO: Error handling
+  //  - what if id already exists
   try {
+    const mappedSchedule = mapSchedule(schedule);
     const db = await getDB();
-    return await db.resource.create({
-      data: { enabled, id: getId(id), label, ...resource },
+    const result = await db.resource.create({
+      data: {
+        enabled,
+        id: getId(id),
+        label,
+        schedule: mappedSchedule,
+        ...resource,
+      },
     });
+    return fromDBResource(result);
   } catch (err) {
     console.log('Postgres error: ', err);
-    return null;
+    return genericErrorResponse;
   }
 }
 

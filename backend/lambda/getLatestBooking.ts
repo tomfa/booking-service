@@ -2,9 +2,9 @@ import { Booking, FindBookingInput } from '../graphql/generated/types';
 
 async function getLatestBooking(
   args: FindBookingInput
-): Promise<Booking | undefined> {
+): Promise<Booking | null> {
   // TODO
-  return undefined;
+  return null;
 }
 
 export default getLatestBooking;
