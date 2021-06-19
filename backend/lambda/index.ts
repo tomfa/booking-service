@@ -56,6 +56,7 @@ type AppSyncEvent = {
 exports.handler = async (
   event: AppSyncEvent,
   context: Context,
+  callback: unknown,
   db?: PrismaClient
 ): Promise<ErrorReturnTypes | SuccessReturnTypes> => {
   if (!db) {

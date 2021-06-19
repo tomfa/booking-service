@@ -26,7 +26,7 @@ const schema = buildSchema(gqlSchema);
 
 const gqlHandler = (fieldName: string) => async (args: unknown) => {
   const db = await getDB();
-  return handler({ info: { fieldName }, arguments: args }, {}, db);
+  return handler({ info: { fieldName }, arguments: args }, {}, undefined, db);
 };
 
 // The root provides a resolver function for each API endpoint
