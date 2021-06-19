@@ -1,9 +1,17 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+
+// eslint-disable-next-line import/first
+import * as fs from 'fs';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import * as dotenv from 'dotenv';
+import * as express from 'express';
+import { graphqlHTTP } from 'express-graphql';
+import { buildSchema } from 'graphql';
 import { getDB } from './localDb';
 
-const fs = require('fs');
-const express = require('express');
-const { graphqlHTTP } = require('express-graphql');
-const { buildSchema } = require('graphql');
+const env = process.env.NODE_ENV;
+
+dotenv.config({ path: env === 'test' ? '.env.test' : '.env' });
 
 require.extensions['.graphql'] = (module, filename) => {
   // eslint-disable-next-line no-param-reassign
@@ -16,136 +24,30 @@ const { handler } = require('./lambda');
 // Construct a schema, using GraphQL schema language
 const schema = buildSchema(gqlSchema);
 
+const gqlHandler = async (fieldName: string) => (args: unknown) =>
+  getDB().then(db => handler({ info: { fieldName }, arguments: args }, {}, db));
+
 // The root provides a resolver function for each API endpoint
 const root = {
-  getResourceById: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'getResourceById' }, arguments: args },
-        {},
-        db
-      )
-    ),
-  getBookingById: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'getBookingById' }, arguments: args },
-        {},
-        db
-      )
-    ),
-  getCustomerByIssuer: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'getCustomerByIssuer' }, arguments: args },
-        {},
-        db
-      )
-    ),
-  getCustomerByEmail: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'getCustomerByEmail' }, arguments: args },
-        {},
-        db
-      )
-    ),
-  getCustomerById: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'getCustomerById' }, arguments: args },
-        {},
-        db
-      )
-    ),
-  findResources: async (args: unknown) =>
-    getDB().then(db =>
-      handler({ info: { fieldName: 'findResources' }, arguments: args }, {}, db)
-    ),
-  findBookings: async (args: unknown) =>
-    getDB().then(db =>
-      handler({ info: { fieldName: 'findBookings' }, arguments: args }, {}, db)
-    ),
-  findAvailability: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'findAvailability' }, arguments: args },
-        {},
-        db
-      )
-    ),
-  getNextAvailable: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'getNextAvailable' }, arguments: args },
-        {},
-        db
-      )
-    ),
-  getLatestBooking: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'getLatestBooking' }, arguments: args },
-        {},
-        db
-      )
-    ),
-  getBookedDuration: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'getBookedDuration' }, arguments: args },
-        {},
-        db
-      )
-    ),
-  addResource: async (args: unknown) =>
-    getDB().then(db =>
-      handler({ info: { fieldName: 'addResource' }, arguments: args }, {}, db)
-    ),
-  updateResource: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'updateResource' }, arguments: args },
-        {},
-        db
-      )
-    ),
-  updateCustomer: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'updateCustomer' }, arguments: args },
-        {},
-        db
-      )
-    ),
-  addBooking: async (args: unknown) =>
-    getDB().then(db =>
-      handler({ info: { fieldName: 'addBooking' }, arguments: args }, {}, db)
-    ),
-  disableResource: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'disableResource' }, arguments: args },
-        {},
-        db
-      )
-    ),
-  cancelBooking: async (args: unknown) =>
-    getDB().then(db =>
-      handler({ info: { fieldName: 'cancelBooking' }, arguments: args }, {}, db)
-    ),
-  addCustomer: async (args: unknown) =>
-    getDB().then(db =>
-      handler({ info: { fieldName: 'addCustomer' }, arguments: args }, {}, db)
-    ),
-  disableCustomer: async (args: unknown) =>
-    getDB().then(db =>
-      handler(
-        { info: { fieldName: 'disableCustomer' }, arguments: args },
-        {},
-        db
-      )
-    ),
+  getResourceById: gqlHandler('getResourceById'),
+  getBookingById: gqlHandler('getBookingById'),
+  getCustomerByIssuer: gqlHandler('getCustomerByIssuer'),
+  getCustomerByEmail: gqlHandler('getCustomerByEmail'),
+  getCustomerById: gqlHandler('getCustomerById'),
+  findResources: gqlHandler('findResources'),
+  findBookings: gqlHandler('findBookings'),
+  findAvailability: gqlHandler('findAvailability'),
+  getNextAvailable: gqlHandler('getNextAvailable'),
+  getLatestBooking: gqlHandler('getLatestBooking'),
+  getBookedDuration: gqlHandler('getBookedDuration'),
+  addResource: gqlHandler('addResource'),
+  updateResource: gqlHandler('updateResource'),
+  updateCustomer: gqlHandler('updateCustomer'),
+  addBooking: gqlHandler('addBooking'),
+  disableResource: gqlHandler('disableResource'),
+  cancelBooking: gqlHandler('cancelBooking'),
+  addCustomer: gqlHandler('addCustomer'),
+  disableCustomer: gqlHandler('disableCustomer'),
 };
 
 const app = express();
@@ -157,5 +59,9 @@ app.use(
     graphiql: true,
   })
 );
-app.listen(4000);
-console.log('Running a GraphQL API server at http://localhost:4000/graphql');
+const runningApp = app.listen(process.env.GRAPHQL_PORT);
+console.log(
+  `Running a GraphQL API server at http://localhost:${process.env.GRAPHQL_PORT}/graphql`
+);
+
+export default runningApp;
