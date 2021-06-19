@@ -1,18 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 
-let db: PrismaClient;
+let localDb: PrismaClient;
 
 export const getDB = async (): Promise<PrismaClient> => {
-  if (db) return db;
+  if (localDb) return localDb;
 
   const url = process.env.DATABASE_URL;
 
-  db = new PrismaClient({
+  localDb = new PrismaClient({
     datasources: { db: { url } },
     __internal: {
       // @ts-ignore
       useUds: false,
     },
   });
-  return db;
+  return localDb;
 };

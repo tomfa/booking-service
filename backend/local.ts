@@ -1,4 +1,4 @@
-import { getDB } from './db';
+import { getDB } from './localDb';
 
 const fs = require('fs');
 const express = require('express');
@@ -10,8 +10,8 @@ require.extensions['.graphql'] = (module, filename) => {
   module.exports = fs.readFileSync(filename, 'utf8');
 };
 
-const gqlSchema = require('../graphql/schema.graphql');
-const { handler } = require('../lambda/index');
+const gqlSchema = require('./graphql/schema.graphql');
+const { handler } = require('./lambda');
 
 // Construct a schema, using GraphQL schema language
 const schema = buildSchema(gqlSchema);
