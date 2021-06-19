@@ -1,4 +1,7 @@
+import { close } from '../localDb';
+
 module.exports = async () => {
   // @ts-ignore
-  global.httpServer.close();
+  await global.httpServer.close();
+  await close();
 };

@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
+    "test": "jest --forceExit",
     "cdk": "cdk",
     "start": "ts-node local.ts",
     "deploy": "npm run schema:generate && npm run build && cdk deploy -O ../cdk-exports.json",

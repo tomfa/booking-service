@@ -17,3 +17,8 @@ export const getDB = async (): Promise<PrismaClient> => {
   });
   return localDb;
 };
+
+export const close = async () => {
+  const db = await getDB();
+  await db.$disconnect();
+};

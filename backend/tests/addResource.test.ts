@@ -4,16 +4,17 @@ import {
   AddResourceMutationVariables,
   Resource,
 } from '../graphql/generated/types';
-// import { getDB } from '../localDb';
 import { client } from './client';
+import { createCustomer } from './utils';
 
 describe('addResource', () => {
   it('should not signup a user with a password less than 8 characters', async () => {
-    // const db = await getDB()
+    const customer = await createCustomer();
     const addResource = gql`
       mutation {
         addResource(
           addResourceInput: {
+            customerId: "${customer.id}",
             enabled: true
             label: "Chermics"
             seats: 20
@@ -28,22 +29,70 @@ describe('addResource', () => {
             ]
           }
         ) {
-          id
           label
+          seats
+          schedule {
+              mon {
+                  start
+                  end
+                  slotDurationMinutes
+                  slotIntervalMinutes
+              }
+              tue {
+                  start
+                  end
+                  slotDurationMinutes
+                  slotIntervalMinutes
+              }
+              
+              overriddenDates {
+                  isoDate
+                  schedule {
+                      slotDurationMinutes
+                      slotIntervalMinutes
+                      start
+                      end
+                  }
+              }
+          }
+          enabled
+          category
         }
       }
     `;
 
-    const res = await client.mutate<Resource, AddResourceMutationVariables>({
+    const { data } = await client.mutate<
+      { addResource: Resource },
+      AddResourceMutationVariables
+    >({
       mutation: addResource,
     });
-    console.log(res);
-    expect(res).toEqual({ hei: 1 });
-
-    // await expect(
-    //   client.mutate({
-    //     mutation: createUser,
-    //   })
-    // ).rejects.toThrowError('password must be more than 8 characters');
+    expect(data).toEqual({
+      addResource: {
+        label: 'Chermics',
+        seats: 20,
+        schedule: {
+          mon: {
+            start: '08:00',
+            end: '16:00',
+            slotDurationMinutes: 30,
+            slotIntervalMinutes: 15,
+            __typename: 'HourSchedule',
+          },
+          tue: {
+            start: '',
+            end: '',
+            slotDurationMinutes: 0,
+            slotIntervalMinutes: 0,
+            __typename: 'HourSchedule',
+          },
+          overriddenDates: [],
+          __typename: 'Schedule',
+        },
+        enabled: true,
+        category: null,
+        __typename: 'Resource',
+      },
+    });
   });
 });
