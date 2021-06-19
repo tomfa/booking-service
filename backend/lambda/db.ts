@@ -13,8 +13,10 @@ export const getDB = async (): Promise<PrismaClient> => {
     })
     .promise();
 
+  const connectionTimeoutSeconds = 10;
+  const maxConnectionLimit = 1;
   const secretString = JSON.parse(dbURL.SecretString || '{}');
-  const url = `postgresql://${secretString.username}:${secretString.password}@${secretString.host}:${secretString.port}/${secretString.dbname}?connection_limit=1`;
+  const url = `postgresql://${secretString.username}:${secretString.password}@${secretString.host}:${secretString.port}/${secretString.dbname}?connection_limit=${maxConnectionLimit}&connect_timeout=${connectionTimeoutSeconds}`;
 
   db = new PrismaClient({
     datasources: { db: { url } },
