@@ -1,10 +1,14 @@
-import { AddBookingInput, Booking, Resource } from '../graphql/generated/types';
-import { getDB } from './db';
-import { getId } from './utils/input.mappers';
-import { fromDBBooking } from './utils/db.mappers';
-import { ErrorType } from './utils/types';
+import {
+  AddBookingInput,
+  Booking,
+  Resource,
+} from '../../graphql/generated/types';
+import { getDB } from '../db';
+import { getId } from '../utils/input.mappers';
+import { fromDBBooking } from '../utils/db.mappers';
+import { ErrorType } from '../utils/types';
+import { BadRequestError, ErrorCode } from '../utils/errors';
 import getResourceById from './getResourceById';
-import { BadRequestError, ErrorCode } from './utils/errors';
 
 const isResource = (
   object: Resource | null | ErrorType

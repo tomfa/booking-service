@@ -1,6 +1,6 @@
-import { Customer } from '../graphql/generated/types';
-import { getDB } from './db';
-import { fromDBCustomer } from './utils/db.mappers';
+import { Customer } from '../../graphql/generated/types';
+import { getDB } from '../db';
+import { fromDBCustomer } from '../utils/db.mappers';
 
 async function getCustomerById(id: string): Promise<Customer | null> {
   const db = await getDB();

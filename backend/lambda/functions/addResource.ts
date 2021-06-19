@@ -1,7 +1,7 @@
-import { AddResourceInput, Resource } from '../graphql/generated/types';
-import { getDB } from './db';
-import { fromDBResource } from './utils/db.mappers';
-import { getId, mapSchedule } from './utils/input.mappers';
+import { AddResourceInput, Resource } from '../../graphql/generated/types';
+import { getDB } from '../db';
+import { fromDBResource } from '../utils/db.mappers';
+import { getId, mapSchedule } from '../utils/input.mappers';
 
 async function addResource({
   id,

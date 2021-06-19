@@ -1,4 +1,4 @@
-import { FindAvailabilityInput } from '../graphql/generated/types';
+import { FindAvailabilityInput } from '../../graphql/generated/types';
 
 async function findAvailability(args: FindAvailabilityInput) {
   // TODO: This is a different function?

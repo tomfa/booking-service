@@ -3,11 +3,11 @@ import {
   FindResourceInput,
   Resource,
   Schedule,
-} from '../graphql/generated/types';
-import { getDB } from './db';
-import { removeNull } from './utils/input.mappers';
-import { closedSchedule } from './utils/schedule';
-import { fromDBResource } from './utils/db.mappers';
+} from '../../graphql/generated/types';
+import { getDB } from '../db';
+import { removeNull } from '../utils/input.mappers';
+import { closedSchedule } from '../utils/schedule';
+import { fromDBResource } from '../utils/db.mappers';
 
 const mapSchedule = (val: Prisma.JsonValue): Schedule => {
   if (!val) {

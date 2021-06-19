@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client';
-import { Resource, UpdateResourceInput } from '../graphql/generated/types';
-import { getDB } from './db';
-import { mapSchedule, removeNull } from './utils/input.mappers';
-import { fromDBResource } from './utils/db.mappers';
+import { Resource, UpdateResourceInput } from '../../graphql/generated/types';
+import { getDB } from '../db';
+import { mapSchedule, removeNull } from '../utils/input.mappers';
+import { fromDBResource } from '../utils/db.mappers';
 
 const mapResourceUpdate = (
   args: UpdateResourceInput

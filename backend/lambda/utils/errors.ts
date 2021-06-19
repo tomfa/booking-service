@@ -1,5 +1,7 @@
 /* eslint-disable max-classes-per-file, no-useless-constructor */
 
+// TODO: Merge with existing errors in sdk package
+
 import { ErrorType } from './types';
 
 export enum ErrorCode {

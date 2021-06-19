@@ -1,6 +1,6 @@
-import { Booking, FindBookingInput } from '../graphql/generated/types';
-import { getDB } from './db';
-import { fromDBBooking } from './utils/db.mappers';
+import { Booking, FindBookingInput } from '../../graphql/generated/types';
+import { getDB } from '../db';
+import { fromDBBooking } from '../utils/db.mappers';
 
 async function findBookings({
   resourceIds,

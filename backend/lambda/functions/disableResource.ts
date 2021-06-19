@@ -1,6 +1,6 @@
-import { Resource } from '../graphql/generated/types';
-import { getDB } from './db';
-import { fromDBResource } from './utils/db.mappers';
+import { Resource } from '../../graphql/generated/types';
+import { getDB } from '../db';
+import { fromDBResource } from '../utils/db.mappers';
 
 async function disableResource(id: string): Promise<Resource> {
   // TODO: What if id does not exist?

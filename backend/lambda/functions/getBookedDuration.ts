@@ -1,4 +1,7 @@
-import { BookedDuration, FindBookingInput } from '../graphql/generated/types';
+import {
+  BookedDuration,
+  FindBookingInput,
+} from '../../graphql/generated/types';
 
 async function getBookedDuration(
   args: FindBookingInput

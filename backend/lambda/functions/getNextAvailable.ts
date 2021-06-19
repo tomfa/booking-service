@@ -1,4 +1,4 @@
-import { TimeSlot } from '../graphql/generated/types';
+import { TimeSlot } from '../../graphql/generated/types';
 
 async function getNextAvailable(id: string): Promise<TimeSlot> {
   // TODO

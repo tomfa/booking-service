@@ -1,7 +1,7 @@
-import { Customer, UpdateCustomerInput } from '../graphql/generated/types';
-import { getDB } from './db';
-import { removeNull } from './utils/input.mappers';
-import { fromDBCustomer } from './utils/db.mappers';
+import { Customer, UpdateCustomerInput } from '../../graphql/generated/types';
+import { getDB } from '../db';
+import { removeNull } from '../utils/input.mappers';
+import { fromDBCustomer } from '../utils/db.mappers';
 
 async function updateCustomer(args: UpdateCustomerInput): Promise<Customer> {
   // TODO: What if id does not exist?
