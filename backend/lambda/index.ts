@@ -22,6 +22,8 @@ import cancelBooking from './cancelBooking';
 import addCustomer from './addCustomer';
 import disableCustomer from './disableCustomer';
 import updateCustomer from './updateCustomer';
+import { ErrorReturnTypes, SuccessReturnTypes } from './types';
+import { GenericBookingError } from './utils/errors';
 
 type QueryType = keyof Query;
 type MutationType = keyof Mutation;
@@ -48,115 +50,117 @@ type AppSyncEvent = {
   };
 };
 
-exports.handler = async (event: AppSyncEvent, context: Context) => {
+exports.handler = async (
+  event: AppSyncEvent,
+  context: Context
+): Promise<ErrorReturnTypes | SuccessReturnTypes> => {
   // Set to false to send the response right away when the callback executes, instead of waiting for the Node.js event loop to be empty.
   context.callbackWaitsForEmptyEventLoop = false;
+  const {
+    arguments: args,
+    info: { fieldName },
+  } = event;
 
   // TODO: Check for authentication.
   //   - Then set or filter by customerId
-
-  switch (event.info.fieldName) {
-    case 'getResourceById': {
-      console.log(`Executing getResourceById with ${event.arguments.id}`);
-      return await getResourceById(event.arguments.id);
+  try {
+    switch (fieldName) {
+      case 'getResourceById': {
+        console.log(`Executing getResourceById with ${args.id}`);
+        return await getResourceById(args.id);
+      }
+      case 'getBookingById': {
+        console.log(`Executing getBookingById with ${args.id}`);
+        return await getBookingById(args.id);
+      }
+      case 'getCustomerByIssuer': {
+        console.log(`Executing getCustomerByIssuer with ${args.issuer}`);
+        return await getCustomerByIssuer(args.issuer);
+      }
+      case 'getCustomerByEmail': {
+        console.log(`Executing getCustomerByEmail with ${args.email}`);
+        return await getCustomerByEmail(args.email);
+      }
+      case 'getCustomerById': {
+        console.log(`Executing getCustomerById with ${args.id}`);
+        return await getCustomerById(args.id);
+      }
+      case 'findResources': {
+        console.log(
+          `Executing findResources with ${JSON.stringify(args.filterResource)}`
+        );
+        return await findResources(args.filterResource);
+      }
+      case 'findBookings': {
+        console.log(`Executing findBookings with ${args.filterBookings}`);
+        return await findBookings(args.filterBookings);
+      }
+      case 'findAvailability': {
+        console.log(
+          `Executing findAvailability with ${args.filterAvailability}`
+        );
+        return await findAvailability(args.filterAvailability);
+      }
+      case 'getNextAvailable': {
+        console.log(`Executing getNextAvailable with ${args.id}`);
+        return await getNextAvailable(args.id);
+      }
+      case 'getLatestBooking': {
+        console.log(`Executing getLatestBooking with ${args.filterBookings}`);
+        return await getLatestBooking(args.filterBookings);
+      }
+      case 'getBookedDuration': {
+        console.log(`Executing getBookedDuration with ${args.filterBookings}`);
+        return await getBookedDuration(args.filterBookings);
+      }
+      case 'addResource': {
+        console.log(`Executing addResource with ${args.addResourceInput}`);
+        return await addResource(args.addResourceInput);
+      }
+      case 'updateResource': {
+        console.log(
+          `Executing updateResource with ${args.updateResourceInput}`
+        );
+        return await updateResource(args.updateResourceInput);
+      }
+      case 'updateCustomer': {
+        console.log(
+          `Executing updateCustomer with ${args.updateCustomerInput}`
+        );
+        return await updateCustomer(args.updateCustomerInput);
+      }
+      case 'addBooking': {
+        console.log(`Executing addBooking with ${args.addBookingInput}`);
+        return await addBooking(args.addBookingInput);
+      }
+      case 'disableResource': {
+        console.log(`Executing disableResource with ${args.id}`);
+        return await disableResource(args.id);
+      }
+      case 'cancelBooking': {
+        console.log(`Executing cancelBooking with ${args.id}`);
+        return await cancelBooking(args.id);
+      }
+      case 'addCustomer': {
+        console.log(`Executing addCustomer with ${args.addCustomerInput}`);
+        return await addCustomer(args.addCustomerInput);
+      }
+      case 'disableCustomer': {
+        console.log(`Executing disableCustomer with ${args.id}`);
+        return await disableCustomer(args.id);
+      }
+      default:
+        return new GenericBookingError(
+          `Unhandled field ${fieldName}`
+        ).toErrorType();
     }
-    case 'getBookingById': {
-      console.log(`Executing getBookingById with ${event.arguments.id}`);
-      return await getBookingById(event.arguments.id);
+  } catch (err) {
+    if (err instanceof GenericBookingError) {
+      return err.toErrorType();
     }
-    case 'getCustomerByIssuer': {
-      console.log(
-        `Executing getCustomerByIssuer with ${event.arguments.issuer}`
-      );
-      return await getCustomerByIssuer(event.arguments.issuer);
-    }
-    case 'getCustomerByEmail': {
-      console.log(`Executing getCustomerByEmail with ${event.arguments.email}`);
-      return await getCustomerByEmail(event.arguments.email);
-    }
-    case 'getCustomerById': {
-      console.log(`Executing getCustomerById with ${event.arguments.id}`);
-      return await getCustomerById(event.arguments.id);
-    }
-    case 'findResources': {
-      console.log(
-        `Executing findResources with ${JSON.stringify(
-          event.arguments.filterResource
-        )}`
-      );
-      return await findResources(event.arguments.filterResource);
-    }
-    case 'findBookings': {
-      console.log(
-        `Executing findBookings with ${event.arguments.filterBookings}`
-      );
-      return await findBookings(event.arguments.filterBookings);
-    }
-    case 'findAvailability': {
-      console.log(
-        `Executing findAvailability with ${event.arguments.filterAvailability}`
-      );
-      return await findAvailability(event.arguments.filterAvailability);
-    }
-    case 'getNextAvailable': {
-      console.log(`Executing getNextAvailable with ${event.arguments.id}`);
-      return await getNextAvailable(event.arguments.id);
-    }
-    case 'getLatestBooking': {
-      console.log(
-        `Executing getLatestBooking with ${event.arguments.filterBookings}`
-      );
-      return await getLatestBooking(event.arguments.filterBookings);
-    }
-    case 'getBookedDuration': {
-      console.log(
-        `Executing getBookedDuration with ${event.arguments.filterBookings}`
-      );
-      return await getBookedDuration(event.arguments.filterBookings);
-    }
-    case 'addResource': {
-      console.log(
-        `Executing addResource with ${event.arguments.addResourceInput}`
-      );
-      return await addResource(event.arguments.addResourceInput);
-    }
-    case 'updateResource': {
-      console.log(
-        `Executing updateResource with ${event.arguments.updateResourceInput}`
-      );
-      return await updateResource(event.arguments.updateResourceInput);
-    }
-    case 'updateCustomer': {
-      console.log(
-        `Executing updateCustomer with ${event.arguments.updateCustomerInput}`
-      );
-      return await updateCustomer(event.arguments.updateCustomerInput);
-    }
-    case 'addBooking': {
-      console.log(
-        `Executing addBooking with ${event.arguments.addBookingInput}`
-      );
-      return await addBooking(event.arguments.addBookingInput);
-    }
-    case 'disableResource': {
-      console.log(`Executing disableResource with ${event.arguments.id}`);
-      return await disableResource(event.arguments.id);
-    }
-    case 'cancelBooking': {
-      console.log(`Executing cancelBooking with ${event.arguments.id}`);
-      return await cancelBooking(event.arguments.id);
-    }
-    case 'addCustomer': {
-      console.log(
-        `Executing addCustomer with ${event.arguments.addCustomerInput}`
-      );
-      return await addCustomer(event.arguments.addCustomerInput);
-    }
-    case 'disableCustomer': {
-      console.log(`Executing disableCustomer with ${event.arguments.id}`);
-      return await disableCustomer(event.arguments.id);
-    }
-    default:
-      return null;
+    // TODO: Clean error types not to leak anything possibly sensitive
+    return new GenericBookingError(
+      `Unknown error occured: ${err}`
+    ).toErrorType();
   }
 };
