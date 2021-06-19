@@ -1,6 +1,10 @@
+import { PrismaClient } from '@prisma/client/scripts/default-index';
 import { TimeSlot } from '../../graphql/generated/types';
 
-async function getNextAvailable(id: string): Promise<TimeSlot> {
+async function getNextAvailable(
+  db: PrismaClient,
+  id: string
+): Promise<TimeSlot> {
   // TODO
   // const availableSlots = await this.findAvailability({
   //       resourceId,

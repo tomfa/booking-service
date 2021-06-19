@@ -1,15 +1,11 @@
+import { PrismaClient } from '@prisma/client/scripts/default-index';
 import { Booking, FindBookingInput } from '../../graphql/generated/types';
-import { getDB } from '../db';
 import { fromDBBooking } from '../utils/db.mappers';
 
-async function findBookings({
-  resourceIds,
-  from,
-  to,
-  includeCanceled,
-  ...args
-}: FindBookingInput): Promise<Booking[]> {
-  const db = await getDB();
+async function findBookings(
+  db: PrismaClient,
+  { resourceIds, from, to, includeCanceled, ...args }: FindBookingInput
+): Promise<Booking[]> {
   const bookings = await db.booking.findMany({
     where: {
       resourceId: (resourceIds && { in: resourceIds }) || undefined,

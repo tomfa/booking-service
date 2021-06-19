@@ -1,8 +1,8 @@
 import { HourSchedule, Schedule } from '../../graphql/generated/types';
 
 export const closed: HourSchedule = {
-  start: '00:00',
-  end: '00:00',
+  start: '',
+  end: '',
   slotIntervalMinutes: 0,
   slotDurationMinutes: 0,
 };

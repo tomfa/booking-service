@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
+import { PrismaClient } from '@prisma/client/scripts/default-index';
 import { Resource, UpdateResourceInput } from '../../graphql/generated/types';
-import { getDB } from '../db';
 import { mapSchedule, removeNull } from '../utils/input.mappers';
 import { fromDBResource } from '../utils/db.mappers';
 
@@ -18,10 +18,11 @@ const mapResourceUpdate = (
 };
 
 async function updateResource(
+  db: PrismaClient,
   args: UpdateResourceInput
 ): Promise<Resource | null> {
   // TODO: What if id does not exist?
-  const db = await getDB();
+
   const resource = await db.resource.update({
     where: { id: args.id },
     data: mapResourceUpdate(args),

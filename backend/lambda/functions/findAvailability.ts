@@ -1,6 +1,7 @@
+import { PrismaClient } from '@prisma/client/scripts/default-index';
 import { FindAvailabilityInput } from '../../graphql/generated/types';
 
-async function findAvailability(args: FindAvailabilityInput) {
+async function findAvailability(db: PrismaClient, args: FindAvailabilityInput) {
   // TODO: This is a different function?
   //
   // const from = props.from || new Date();

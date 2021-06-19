@@ -1,37 +1,25 @@
+import { PrismaClient } from '@prisma/client/scripts/default-index';
 import {
   AddBookingInput,
   Booking,
   Resource,
 } from '../../graphql/generated/types';
-import { getDB } from '../db';
 import { getId } from '../utils/input.mappers';
 import { fromDBBooking } from '../utils/db.mappers';
-import { ErrorType } from '../utils/types';
 import { BadRequestError, ErrorCode } from '../utils/errors';
 import getResourceById from './getResourceById';
-
-const isResource = (
-  object: Resource | null | ErrorType
-): object is Resource => {
-  if (!object) {
-    return false;
-  }
-  return !!(object as Resource).id;
-};
 
 const getEndTime = (start: Date, resource: Resource): Date => {
   const slotDuration = resource.schedule.mon.slotDurationMinutes;
   return new Date(start.getTime() + slotDuration * 60 * 1000);
 };
 
-async function addBooking({
-  start,
-  end,
-  ...booking
-}: AddBookingInput): Promise<Booking> {
-  const db = await getDB();
+async function addBooking(
+  db: PrismaClient,
+  { start, end, ...booking }: AddBookingInput
+): Promise<Booking> {
   // TODO: what if id already exists
-  const resource = await getResourceById(booking.resourceId);
+  const resource = await getResourceById(db, booking.resourceId);
   if (!resource) {
     throw new BadRequestError(
       `Can not create booking on unknown resource`,

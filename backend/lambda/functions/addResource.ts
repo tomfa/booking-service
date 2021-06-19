@@ -1,15 +1,12 @@
+import { PrismaClient } from '@prisma/client/scripts/default-index';
 import { AddResourceInput, Resource } from '../../graphql/generated/types';
-import { getDB } from '../db';
 import { fromDBResource } from '../utils/db.mappers';
 import { getId, mapSchedule } from '../utils/input.mappers';
 
-async function addResource({
-  id,
-  enabled = true,
-  label = '',
-  schedule,
-  ...resource
-}: AddResourceInput): Promise<Resource> {
+async function addResource(
+  db: PrismaClient,
+  { id, enabled = true, label = '', schedule, ...resource }: AddResourceInput
+): Promise<Resource> {
   // TODO: Error handling
   //  - what if id already exists
   //  - what if same label exists
@@ -32,7 +29,7 @@ async function addResource({
   // }
 
   const mappedSchedule = mapSchedule(schedule);
-  const db = await getDB();
+
   const result = await db.resource.create({
     data: {
       enabled,
