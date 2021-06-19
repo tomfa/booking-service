@@ -24,8 +24,10 @@ const { handler } = require('./lambda');
 // Construct a schema, using GraphQL schema language
 const schema = buildSchema(gqlSchema);
 
-const gqlHandler = async (fieldName: string) => (args: unknown) =>
-  getDB().then(db => handler({ info: { fieldName }, arguments: args }, {}, db));
+const gqlHandler = (fieldName: string) => async (args: unknown) => {
+  const db = await getDB();
+  return handler({ info: { fieldName }, arguments: args }, {}, db);
+};
 
 // The root provides a resolver function for each API endpoint
 const root = {
