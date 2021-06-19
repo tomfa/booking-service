@@ -199,7 +199,10 @@ exports.handler = async (
         ).toErrorType();
     }
   } catch (err) {
+    console.log('error');
+    console.log(err);
     if (err instanceof GenericBookingError) {
+      console.log('generic');
       return err.toErrorType();
     }
     // TODO: Clean error types not to leak anything possibly sensitive

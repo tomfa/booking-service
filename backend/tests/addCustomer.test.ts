@@ -18,6 +18,8 @@ describe('addCustomer', () => {
           name
           enabled
           email
+          issuer
+          credits
         }
       }
     `;
@@ -32,11 +34,23 @@ describe('addCustomer', () => {
       objectContaining({
         __typename: 'Customer',
         email: 'tomas@6040.work',
-        enabled: true,
-        name: null,
-        phoneNumber: null,
       })
     );
     expect(data?.addCustomer.id).toBeTruthy();
   });
+  it('returns an error if email is already taken', async () => {
+    const firstMutation = gql`
+      mutation {
+        addCustomer(addCustomerInput: { email: "tomas@6040.work" }) {
+          id
+        }
+      }
+    `;
+    await client.mutate({ mutation: firstMutation });
+    const { errors } = await client.mutate({ mutation: firstMutation });
+    console.log(errors);
+    expect(errors).toEqual({})
+  });
+  it('returns an error if issuer is already taken', async () => {});
+  it('returns an error if id is already taken', async () => {});
 });
