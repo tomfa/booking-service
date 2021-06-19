@@ -1,0 +1,29 @@
+{
+  "name": "@vailable/api-local",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prisma:generate-schema": "prisma validate && prisma introspect && prisma generate",
+    "prisma:reset": "prisma migrate reset -f"
+  },
+  "keywords": [],
+  "author": "Tomas Fagerbekk <tomas.a.fagerbekk@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^2.24.1",
+    "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.5.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/uuid": "^8.3.0",
+    "dotenv": "^10.0.0",
+    "prisma": "^2.25.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.4"
+  }
+}
