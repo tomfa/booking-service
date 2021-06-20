@@ -1173,7 +1173,7 @@
             "description": null,
             "args": [
               {
-                "name": "input",
+                "name": "updateResourceInput",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -1202,7 +1202,7 @@
             "description": null,
             "args": [
               {
-                "name": "addCustomerInput",
+                "name": "updateCustomerInput",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",

@@ -141,12 +141,12 @@ export type MutationAddResourceArgs = {
 
 
 export type MutationUpdateResourceArgs = {
-  input: UpdateResourceInput;
+  updateResourceInput: UpdateResourceInput;
 };
 
 
 export type MutationUpdateCustomerArgs = {
-  addCustomerInput: UpdateCustomerInput;
+  updateCustomerInput: UpdateCustomerInput;
 };
 
 
@@ -456,7 +456,7 @@ export type SetBookingCommentMutation = (
 );
 
 export type UpdateCustomerMutationVariables = Exact<{
-  addCustomerInput: UpdateCustomerInput;
+  updateCustomerInput: UpdateCustomerInput;
 }>;
 
 
@@ -469,7 +469,7 @@ export type UpdateCustomerMutation = (
 );
 
 export type UpdateResourceMutationVariables = Exact<{
-  input: UpdateResourceInput;
+  updateResourceInput: UpdateResourceInput;
 }>;
 
 
@@ -919,8 +919,8 @@ export const SetBookingCommentDocument = gql`
 }
     `;
 export const UpdateCustomerDocument = gql`
-    mutation updateCustomer($addCustomerInput: UpdateCustomerInput!) {
-  updateCustomer(addCustomerInput: $addCustomerInput) {
+    mutation updateCustomer($updateCustomerInput: UpdateCustomerInput!) {
+  updateCustomer(updateCustomerInput: $updateCustomerInput) {
     id
     name
     email
@@ -932,8 +932,8 @@ export const UpdateCustomerDocument = gql`
 }
     `;
 export const UpdateResourceDocument = gql`
-    mutation updateResource($input: UpdateResourceInput!) {
-  updateResource(input: $input) {
+    mutation updateResource($updateResourceInput: UpdateResourceInput!) {
+  updateResource(updateResourceInput: $updateResourceInput) {
     id
     category
     label

@@ -1,5 +1,5 @@
-mutation updateResource($input: UpdateResourceInput!){
-    updateResource(input: $input){
+mutation updateResource($updateResourceInput: UpdateResourceInput!){
+    updateResource(updateResourceInput: $updateResourceInput){
         id
         category
         label
