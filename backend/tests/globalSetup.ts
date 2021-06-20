@@ -1,7 +1,7 @@
 import createApp from '../app';
 
-module.exports = async () => {
-  const server = await createApp();
+module.exports = () => {
+  const server = createApp();
 
   // @ts-ignore
   global.httpServer = server;

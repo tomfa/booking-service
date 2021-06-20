@@ -6,11 +6,15 @@ import {
 } from '../graphql/generated/types';
 import { client, mutate } from './client';
 
-export const createResource = async (customer: Customer): Promise<Resource> => {
+export const createResource = async (
+  id: string,
+  customer: Customer
+): Promise<Resource> => {
   const resourceInput = gql`
       mutation {
         addResource(
           addResourceInput: {
+            id: "${id}"
             customerId: "${customer.id}",
             enabled: true
             label: "Chermics"

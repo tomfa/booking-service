@@ -1,7 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import * as nock from 'nock';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.test' });
@@ -37,4 +35,6 @@ beforeAll(async () => {
 
 beforeEach(clearDatabase);
 
-afterAll(close);
+afterAll(async () => {
+  await close();
+});
