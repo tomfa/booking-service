@@ -7,7 +7,8 @@
   "scripts": {
     "build": "rm -rf lambda/dist && tsc",
     "watch": "tsc -w",
-    "test": "jest --forceExit",
+    "test": "jest --runInBand",
+    "test:watch": "yarn test --watch",
     "cdk": "cdk",
     "start": "ts-node local.ts",
     "deploy": "npm run schema:generate && npm run build && cdk deploy -O ../cdk-exports.json",
