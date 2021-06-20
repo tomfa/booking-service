@@ -78,10 +78,12 @@ export const createResource = async ({
   return data.addResource;
 };
 
-export const createCustomer = async (): Promise<Customer> => {
+export const createCustomer = async (
+  id: string = 'tomfa'
+): Promise<Customer> => {
   const addCustomerInput = gql`
     mutation {
-      addCustomer(addCustomerInput: { email: "tomas@60401.work" }) {
+      addCustomer(addCustomerInput: { id: "${id}", email: "tomas@60401.work" }) {
         id
         phoneNumber
         name

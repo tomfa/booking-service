@@ -18,10 +18,14 @@ const mapSchedule = (val: Prisma.JsonValue): Schedule => {
 
 async function findResources(
   db: PrismaClient,
-  args: FindResourceInput
+  { resourceIds, ...args }: FindResourceInput
 ): Promise<Resource[]> {
+  const clean = removeNull({ ...args });
   const resources = await db.resource.findMany({
-    where: removeNull(args),
+    where: {
+      id: (resourceIds && { in: resourceIds }) || undefined,
+      ...clean,
+    },
   });
   return resources.map(fromDBResource);
 }
