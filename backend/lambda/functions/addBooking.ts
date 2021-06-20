@@ -27,8 +27,9 @@ async function addBooking(
     );
   }
 
-  const startTime = new Date(start);
-  const endTime = (end && new Date(end)) || getEndTime(startTime, resource);
+  const startTime = new Date(start * 1000);
+  const endTime =
+    (end && new Date(end * 1000)) || getEndTime(startTime, resource);
   const dbBooking = await db.booking.create({
     data: {
       ...booking,

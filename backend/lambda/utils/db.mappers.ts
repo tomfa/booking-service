@@ -17,7 +17,11 @@ export function fromDBBooking({
   endTime,
   ...booking
 }: DBBooking): Booking {
-  return { ...booking, start: startTime.getTime(), end: endTime.getTime() };
+  return {
+    ...booking,
+    start: Math.floor(startTime.getTime() / 1000),
+    end: Math.floor(endTime.getTime() / 1000),
+  };
 }
 
 export function fromDBCustomer(customer: DBCustomer): Customer {
