@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client/scripts/default-index';
+import { PrismaClient } from '@prisma/client';
 import { AddResourceInput, Resource } from '../../graphql/generated/types';
 import { fromDBResource } from '../utils/db.mappers';
 import { getId, mapSchedule } from '../utils/input.mappers';

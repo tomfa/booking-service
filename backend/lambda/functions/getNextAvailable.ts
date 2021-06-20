@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client/scripts/default-index';
+import { PrismaClient } from '@prisma/client';
 import { TimeSlot } from '../../graphql/generated/types';
 
 async function getNextAvailable(

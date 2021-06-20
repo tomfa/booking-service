@@ -1,5 +1,5 @@
-import { Prisma } from '@prisma/client';
-import { PrismaClient } from '@prisma/client/scripts/default-index';
+import { Prisma, PrismaClient } from '@prisma/client';
+
 import {
   FindResourceInput,
   Resource,

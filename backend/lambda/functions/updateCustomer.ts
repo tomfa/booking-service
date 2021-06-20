@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client/scripts/default-index';
+import { PrismaClient } from '@prisma/client';
 import { Customer, UpdateCustomerInput } from '../../graphql/generated/types';
 import { removeNull } from '../utils/input.mappers';
 import { fromDBCustomer } from '../utils/db.mappers';

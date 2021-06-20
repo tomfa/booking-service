@@ -1,7 +1,7 @@
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import { Context } from '@types/aws-lambda';
-import { PrismaClient } from '@prisma/client/scripts/default-index';
+import { PrismaClient } from '@prisma/client';
 import * as types from '../graphql/generated/types';
 import getResourceById from './functions/getResourceById';
 import getBookingById from './functions/getBookingById';

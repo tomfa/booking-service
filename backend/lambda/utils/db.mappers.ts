@@ -7,10 +7,12 @@ import {
 import {
   Booking,
   Customer,
+  FindBookingInput,
   Resource,
   Schedule,
 } from '../../graphql/generated/types';
 import { closedSchedule } from './schedule';
+import { fromGQLDate } from './date.utils';
 
 export function fromDBBooking({
   startTime,
@@ -37,4 +39,22 @@ const mapFromDBSchedule = (val: Prisma.JsonValue): Schedule => {
 
 export function fromDBResource(dbResult: DBResource): Resource {
   return { ...dbResult, schedule: mapFromDBSchedule(dbResult.schedule) };
+}
+
+export function toBookingFilter({
+  resourceIds,
+  from,
+  to,
+  includeCanceled,
+  ...args
+}: FindBookingInput): Prisma.bookingWhereInput {
+  const startTimeFromFilter = from ? { gte: fromGQLDate(from) } : {};
+  const startTimeToFilter = to ? { lt: fromGQLDate(to) } : {};
+  // TODO: filter resourceIds by those accessable by customer
+  return {
+    resourceId: (resourceIds && { in: resourceIds }) || undefined,
+    startTime: { ...startTimeFromFilter, ...startTimeToFilter },
+    canceled: !includeCanceled ? false : undefined,
+    ...args,
+  };
 }

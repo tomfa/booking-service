@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client/scripts/default-index';
+import { PrismaClient } from '@prisma/client';
 import { Customer } from '../../graphql/generated/types';
 import { fromDBCustomer } from '../utils/db.mappers';
 
