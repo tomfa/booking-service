@@ -10,6 +10,7 @@ export enum ErrorCode {
   RESOURCE_IS_DISABLED = 'resource_is_disabled',
   CONFLICTS_WITH_EXISTING_RESOURCE = 'conflicts_with_existing_resource',
   INVALID_BOOKING_ARGUMENTS = 'invalid_booking_arguments',
+  INVALID_RESOURCE_ARGUMENTS = 'invalid_resource_arguments',
   INVALID_CUSTOMER_ARGUMENTS = 'invalid_customer_arguments',
   BOOKING_SLOT_IS_NOT_AVAILABLE = 'booking_slot_is_not_available',
   INVALID_TIMESTAMP = 'invalid_timestamp',

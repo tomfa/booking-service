@@ -10,36 +10,7 @@ import { BadRequestError, ErrorCode } from './errors';
 import { HourMinuteString, IsoDate } from './types';
 import { getOpeningHoursForDate } from './resource.utils';
 import { fromGQLDate, toGQLDate } from './date.utils';
-
-export const validateHourMinute = (hourMinute: string) => {
-  if (!hourMinute.includes(':')) {
-    throw new BadRequestError(
-      `hourMinute "${hourMinute}" must include ":"`,
-      ErrorCode.INVALID_TIMESTAMP
-    );
-  }
-  const [hourStr, minuteStr] = hourMinute.split(':');
-  const hour = parseInt(hourStr);
-  const minute = parseInt(minuteStr);
-  if (Number.isNaN(hour) || Number.isNaN(minute)) {
-    throw new BadRequestError(
-      `hourMinute "${hourMinute}": can not be parsed to integers`,
-      ErrorCode.INVALID_TIMESTAMP
-    );
-  }
-  if (hour > 23 || hour < 0) {
-    throw new BadRequestError(
-      `hourMinute "${hourMinute}": hours must be >= 0 and < 24.`,
-      ErrorCode.INVALID_TIMESTAMP
-    );
-  }
-  if (minute > 59 || minute < 0) {
-    throw new BadRequestError(
-      `hourMinute "${hourMinute}": minute must be >= 0 and < 60.`,
-      ErrorCode.INVALID_TIMESTAMP
-    );
-  }
-};
+import { validateHourMinute } from './validation.utils';
 
 export const constructAllSlots = ({
   resource,

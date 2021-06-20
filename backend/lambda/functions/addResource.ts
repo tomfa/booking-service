@@ -9,24 +9,6 @@ async function addResource(
 ): Promise<Resource> {
   // TODO: Error handling
   //  - what if id already exists
-  //  - what if same label exists
-  // const resourceWithSameLabel = this.resources.find(
-  //   r => r.label === resource.label
-  // );
-  // if (resourceWithSameLabel) {
-  //   throw new ConflictingObjectExists(
-  //     `Resource with label ${resource.label} already exists`,
-  //     ErrorCode.CONFLICTS_WITH_EXISTING_RESOURCE
-  //   );
-  // }
-
-  // const resourceWithSameId = this.resources.find(r => r.id === resourceId);
-  // if (resourceWithSameId) {
-  //   throw new ConflictingObjectExists(
-  //     `Resource with id ${id} already exists`,
-  //     ErrorCode.CONFLICTS_WITH_EXISTING_RESOURCE
-  //   );
-  // }
 
   const mappedSchedule = mapSchedule(schedule);
 
