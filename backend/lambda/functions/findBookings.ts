@@ -7,10 +7,12 @@ async function findBookings(
   db: PrismaClient,
   { resourceIds, from, to, includeCanceled, ...args }: FindBookingInput
 ): Promise<Booking[]> {
+  const startTimeFromFilter = from ? { gte: fromGQLDate(from) } : {};
+  const startTimeToFilter = to ? { lt: fromGQLDate(to) } : {};
+  // TODO: filter resourceIds by those accessable by customer
   const where = {
     resourceId: (resourceIds && { in: resourceIds }) || undefined,
-    startTime: from ? { gte: fromGQLDate(from) } : undefined,
-    endTime: to ? { lte: fromGQLDate(to) } : undefined,
+    startTime: { ...startTimeFromFilter, ...startTimeToFilter },
     canceled: !includeCanceled ? false : undefined,
     ...args,
   };

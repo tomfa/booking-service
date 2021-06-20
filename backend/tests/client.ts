@@ -2,7 +2,9 @@ import ApolloClient, { DocumentNode } from 'apollo-boost';
 
 export const client = new ApolloClient({
   uri: `http://${process.env.GRAPHQL_ENDPOINT}:${process.env.GRAPHQL_PORT}/graphql`,
-  onError: () => {},
+  onError: e => {
+    console.log(e);
+  },
 });
 
 client.defaultOptions = {
@@ -11,4 +13,5 @@ client.defaultOptions = {
 };
 
 export const mutate = (mutation: DocumentNode) => client.mutate({ mutation });
-export const query = (q: DocumentNode) => client.query({ query: q });
+export const query = (q: DocumentNode, variables?: unknown) =>
+  client.query({ query: q, variables });
