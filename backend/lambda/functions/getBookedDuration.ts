@@ -3,16 +3,19 @@ import {
   BookedDuration,
   FindBookingInput,
 } from '../../graphql/generated/types';
+import { sumArray } from '../utils/array.utils';
+import { getBookingDurationMinutes } from '../utils/booking.utils';
+import findBookings from './findBookings';
 
 async function getBookedDuration(
   db: PrismaClient,
   args: FindBookingInput
 ): Promise<BookedDuration> {
-  // TODO
+  const bookings = await findBookings(db, args);
   return {
-    minutes: 0,
-    numBookings: 0,
-    bookingIds: [],
+    minutes: sumArray(bookings.map(getBookingDurationMinutes)),
+    numBookings: bookings.length,
+    bookingIds: bookings.map(b => b.id),
   };
 }
 
