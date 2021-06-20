@@ -17,6 +17,7 @@ module.exports = {
     'ts-jest': {
       diagnostics: {
         warnOnly: true,
+        ignoreCodes: [2339, 2532],
       },
     },
   },
