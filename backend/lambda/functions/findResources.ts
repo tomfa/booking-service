@@ -23,10 +23,6 @@ async function findResources(
   const resources = await db.resource.findMany({
     where: removeNull(args),
   });
-  const resource = resources[0];
-  console.log('resource', JSON.stringify(resource));
-  console.log('typeof resource.schedule', typeof resource.schedule);
-  console.log('resource.schedule', resource.schedule);
   return resources.map(fromDBResource);
 }
 
