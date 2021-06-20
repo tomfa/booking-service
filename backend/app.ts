@@ -7,19 +7,15 @@ import * as dotenv from 'dotenv';
 import * as express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import { buildSchema, GraphQLError } from 'graphql';
-import { getDB } from './localDb';
 
 const env = process.env.NODE_ENV;
 
 dotenv.config({ path: env === 'test' ? '.env.test' : '.env' });
 
-require.extensions['.graphql'] = (module, filename) => {
-  // eslint-disable-next-line no-param-reassign
-  module.exports = fs.readFileSync(filename, 'utf8');
-};
-
-const gqlSchema = require('./graphql/schema.graphql');
+const { getDB } = require('./localDb');
 const { handler } = require('./lambda');
+
+const gqlSchema = fs.readFileSync('./graphql/schema.graphql', 'utf8');
 
 // Construct a schema, using GraphQL schema language
 const schema = buildSchema(gqlSchema);
