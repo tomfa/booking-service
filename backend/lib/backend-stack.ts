@@ -18,6 +18,7 @@ export class BackendStack extends cdk.Stack {
         defaultAuthorization: {
           authorizationType: appsync.AuthorizationType.API_KEY,
           apiKeyConfig: {
+            // @ts-ignore
             expires: cdk.Expiration.after(cdk.Duration.days(365)),
           },
         },
@@ -74,6 +75,7 @@ export class BackendStack extends cdk.Stack {
       subnetGroup,
       securityGroups: [privateSg],
       removalPolicy: cdk.RemovalPolicy.DESTROY,
+      // @ts-ignore
       scaling: { autoPause: cdk.Duration.minutes(5) },
     });
 
@@ -85,6 +87,7 @@ export class BackendStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: new lambda.AssetCode('lambda'),
       handler: 'index.handler',
+      // @ts-ignore
       timeout: cdk.Duration.seconds(15),
       memorySize: 1024,
       environment: {
