@@ -1,6 +1,8 @@
 import { gql } from 'apollo-boost';
 import {
+  AddBookingMutationVariables,
   AddCustomerMutationVariables,
+  Booking,
   Customer,
   Resource,
 } from '../graphql/generated/types';
@@ -91,4 +93,37 @@ export const createCustomer = async (): Promise<Customer> => {
     throw new Error(`Unable to create customer`);
   }
   return data.addCustomer;
+};
+
+export const createBooking = async ({
+  start,
+  resourceId,
+  userId,
+}: {
+  start: number;
+  resourceId: string;
+  userId: string;
+}) => {
+  const bookingMutation = gql`
+      mutation {
+          addBooking(addBookingInput: {
+              resourceId: "${resourceId}"
+              userId: "${userId}"
+              start: ${start}
+          }) {
+              id
+              canceled
+              comment
+              start
+              end
+              seatNumber
+              userId
+              resourceId
+          }
+      }
+  `;
+
+  return client.mutate<{ addBooking: Booking }, AddBookingMutationVariables>({
+    mutation: bookingMutation,
+  });
 };

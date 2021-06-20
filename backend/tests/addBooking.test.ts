@@ -1,48 +1,8 @@
 import 'cross-fetch/polyfill';
-import { gql } from 'apollo-boost';
-import {
-  AddBookingMutationVariables,
-  Booking,
-  Customer,
-  Resource,
-} from '../graphql/generated/types';
+import { Customer, Resource } from '../graphql/generated/types';
 import { toGQLDate } from '../lambda/utils/date.utils';
-import { client } from './client';
-import { createCustomer, createResource } from './utils';
+import { createBooking, createCustomer, createResource } from './utils';
 import objectContaining = jasmine.objectContaining;
-
-const addBooking = async ({
-  start,
-  resourceId,
-  userId,
-}: {
-  start: number;
-  resourceId: string;
-  userId: string;
-}) => {
-  const bookingMutation = gql`
-      mutation {
-          addBooking(addBookingInput: {
-              resourceId: "${resourceId}"
-              userId: "${userId}"
-              start: ${start}
-          }) {
-              id
-              canceled
-              comment
-              start
-              end
-              seatNumber
-              userId
-              resourceId
-          }
-      }
-  `;
-
-  return client.mutate<{ addBooking: Booking }, AddBookingMutationVariables>({
-    mutation: bookingMutation,
-  });
-};
 
 describe('addBooking', () => {
   const resourceId = 'resource-1';
@@ -58,7 +18,11 @@ describe('addBooking', () => {
   });
 
   it('creates a booking', async () => {
-    const { data } = await addBooking({ start: openTime, resourceId, userId });
+    const { data } = await createBooking({
+      start: openTime,
+      resourceId,
+      userId,
+    });
 
     expect(data?.addBooking).toEqual(
       objectContaining({
@@ -74,7 +38,7 @@ describe('addBooking', () => {
     );
   });
   it('fails if start is outside resource opening hours', async () => {
-    const { data, errors } = await addBooking({
+    const { data, errors } = await createBooking({
       start: closedTime,
       resourceId,
       userId,
@@ -91,7 +55,7 @@ describe('addBooking', () => {
   });
   it('fails if start does not align with schedule', async () => {
     const invalidTime = openTime - 1;
-    const { data, errors } = await addBooking({
+    const { data, errors } = await createBooking({
       start: invalidTime,
       resourceId,
       userId,
