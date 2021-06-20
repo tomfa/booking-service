@@ -49,7 +49,7 @@ describe('getBookingById', () => {
     const { data } = await getBookingByIdTest(booking.id);
     expect(data?.getBookingById).toEqual(objectContaining(booking));
   });
-  it('returns booking', async () => {
+  it('returns null if not found', async () => {
     const { data } = await getBookingByIdTest('does-not-exist');
     expect(data.getBookingById).toEqual(null);
   });
