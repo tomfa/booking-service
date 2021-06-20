@@ -244,11 +244,17 @@ const getNextTimeslotAfter = (
     return firstSlotOfDay(openingHours, getIsoDate(date));
   }
   const cleanedDate = roundUpToNextSlotStart(openingHours, date);
+  const nextDay = startOfNextDay(date);
   if (isAfterOpeningHours(openingHours, cleanedDate)) {
-    const nextDay = startOfNextDay(date);
     if (nextDay > max) {
       return undefined;
     }
+    return getNextTimeslotAfter(resource, nextDay, max);
+  }
+  const end = new Date(
+    cleanedDate.getTime() + openingHours.slotDurationMinutes * 60 * 1000 - 60
+  );
+  if (isAfterOpeningHours(openingHours, end)) {
     return getNextTimeslotAfter(resource, nextDay, max);
   }
   return cleanedDate;
