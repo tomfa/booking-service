@@ -27,6 +27,8 @@ async function addBooking(
   { start, end, ...data }: AddBookingInput
 ): Promise<Booking> {
   // TODO: what if id already exists
+  // TODO: Check that customer has credits
+  // TODO: Reduce customer credits
   const resource = await getResourceById(db, data.resourceId);
   if (!resource) {
     throw new BadRequestError(

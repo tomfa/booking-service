@@ -13,6 +13,7 @@ client.defaultOptions = {
   query: { errorPolicy: 'all' },
 };
 
-export const mutate = (mutation: DocumentNode) => client.mutate({ mutation });
+export const mutate = (mutation: DocumentNode, variables?: unknown) =>
+  client.mutate({ mutation, variables });
 export const query = (q: DocumentNode, variables?: unknown) =>
   client.query({ query: q, variables });

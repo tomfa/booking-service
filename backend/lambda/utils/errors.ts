@@ -7,6 +7,7 @@ import { ErrorType } from './types';
 export enum ErrorCode {
   BOOKING_DOES_NOT_EXIST = 'booking_does_not_exist',
   RESOURCE_DOES_NOT_EXIST = 'resource_does_not_exist',
+  CUSTOMER_DOES_NOT_EXIST = 'customer_does_not_exist',
   RESOURCE_IS_DISABLED = 'resource_is_disabled',
   CONFLICTS_WITH_EXISTING_RESOURCE = 'conflicts_with_existing_resource',
   INVALID_BOOKING_ARGUMENTS = 'invalid_booking_arguments',

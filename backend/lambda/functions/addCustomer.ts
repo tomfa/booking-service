@@ -13,6 +13,9 @@ async function addCustomer(
   { id, ...rest }: AddCustomerInput
 ): Promise<Customer> {
   // TODO: what if id already exists
+  // TODO: validate more input: issuer, phoneNumber...
+  // TODO:
+
   try {
     const customer = await db.customer.create(
       removeNull({ data: { id: getId(id), ...rest } })
