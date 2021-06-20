@@ -1,11 +1,6 @@
 import 'cross-fetch/polyfill';
 import { gql } from 'apollo-boost';
-import {
-  AddCustomerMutationVariables,
-  Customer,
-} from '../graphql/generated/types';
-// import { getDB } from '../localDb';
-import { client } from './client';
+import { mutate } from './client';
 import objectContaining = jasmine.objectContaining;
 
 describe('addCustomer', () => {
@@ -24,12 +19,7 @@ describe('addCustomer', () => {
       }
     `;
 
-    const { data } = await client.mutate<
-      { addCustomer: Customer },
-      AddCustomerMutationVariables
-    >({
-      mutation: addCustomerInput,
-    });
+    const { data } = await mutate(addCustomerInput);
     expect(data?.addCustomer).toEqual(
       objectContaining({
         __typename: 'Customer',
@@ -46,11 +36,15 @@ describe('addCustomer', () => {
         }
       }
     `;
-    await client.mutate({ mutation: firstMutation });
-    const { errors } = await client.mutate({ mutation: firstMutation });
-    console.log(errors);
-    expect(errors).toEqual({})
+    await mutate(firstMutation);
+    const { errors } = await mutate(firstMutation);
+    expect(errors.length).toBe(1);
+    expect(errors[0].message).toBe(
+      'Customer already exists with same values for fields: email'
+    );
+    expect(errors[0].extensions).toEqual({
+      code: 400,
+      type: 'conflicts_with_existing_resource',
+    });
   });
-  it('returns an error if issuer is already taken', async () => {});
-  it('returns an error if id is already taken', async () => {});
 });

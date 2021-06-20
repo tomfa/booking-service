@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 import * as express from 'express';
 import { graphqlHTTP } from 'express-graphql';
-import { buildSchema } from 'graphql';
+import { buildSchema, GraphQLError } from 'graphql';
 import { getDB } from './localDb';
 
 const env = process.env.NODE_ENV;
@@ -26,7 +26,19 @@ const schema = buildSchema(gqlSchema);
 
 const gqlHandler = (fieldName: string) => async (args: unknown) => {
   const db = await getDB();
-  return handler({ info: { fieldName }, arguments: args }, {}, undefined, db);
+  try {
+    return await handler(
+      { info: { fieldName }, arguments: args },
+      {},
+      undefined,
+      db
+    );
+  } catch (err) {
+    throw new GraphQLError(err.message, null, null, null, null, err, {
+      code: err.code || err.httpCode || 'unknown',
+      type: err.errorCode,
+    });
+  }
 };
 
 // The root provides a resolver function for each API endpoint

@@ -10,6 +10,7 @@ export enum ErrorCode {
   RESOURCE_IS_DISABLED = 'resource_is_disabled',
   CONFLICTS_WITH_EXISTING_RESOURCE = 'conflicts_with_existing_resource',
   INVALID_BOOKING_ARGUMENTS = 'invalid_booking_arguments',
+  INVALID_CUSTOMER_ARGUMENTS = 'invalid_customer_arguments',
   BOOKING_SLOT_IS_NOT_AVAILABLE = 'booking_slot_is_not_available',
   INVALID_TIMESTAMP = 'invalid_timestamp',
   UNKNOWN_ERROR = 'unknown_error',
@@ -17,9 +18,12 @@ export enum ErrorCode {
 
 export class GenericBookingError extends Error {
   httpCode: number = 500;
-  errorCode: ErrorCode;
+  errorCode: string;
 
-  constructor(message: string, errorCode = ErrorCode.UNKNOWN_ERROR) {
+  constructor(
+    message: string,
+    errorCode: ErrorCode | string = ErrorCode.UNKNOWN_ERROR
+  ) {
     super(message);
     this.errorCode = errorCode;
   }
