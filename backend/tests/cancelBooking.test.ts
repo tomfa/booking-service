@@ -15,7 +15,7 @@ describe('cancelBooking', () => {
 
   beforeEach(async () => {
     customer = await createCustomer();
-    resource = await createResource(resourceId, customer);
+    resource = await createResource({ id: resourceId, customer });
   });
 
   it('changes canceled to true', async () => {

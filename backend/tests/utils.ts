@@ -8,19 +8,26 @@ import {
 } from '../graphql/generated/types';
 import { client, mutate } from './client';
 
-export const createResource = async (
-  id: string,
-  customer: Customer
-): Promise<Resource> => {
+export const createResource = async ({
+  id = 'anything',
+  customer,
+  enabled = true,
+  seats = 20,
+}: {
+  id?: string;
+  customer: Customer;
+  enabled?: boolean;
+  seats?: number;
+}): Promise<Resource> => {
   const resourceInput = gql`
       mutation {
         addResource(
           addResourceInput: {
             id: "${id}"
             customerId: "${customer.id}",
-            enabled: true
+            enabled: ${enabled}
             label: "Chermics"
-            seats: 20
+            seats: ${seats}
             schedule: [
               {
                 slotDurationMinutes: 30
@@ -64,7 +71,10 @@ export const createResource = async (
         }
       }
     `;
-  const { data } = await mutate(resourceInput);
+  const { data, errors } = await mutate(resourceInput);
+  if (errors) {
+    console.log('createResource errors', JSON.stringify(errors));
+  }
   return data.addResource;
 };
 
