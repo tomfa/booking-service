@@ -2,13 +2,18 @@ import { PrismaClient } from '@prisma/client';
 import { AddResourceInput, Resource } from '../../graphql/generated/types';
 import { fromDBResource } from '../utils/db.mappers';
 import { getId, mapSchedule } from '../utils/input.mappers';
+import { BadRequestError, ErrorCode } from '../utils/errors';
 
 async function addResource(
   db: PrismaClient,
   { id, enabled = true, label = '', schedule, ...resource }: AddResourceInput
 ): Promise<Resource> {
-  // TODO: Error handling
-  //  - what if id already exists
+  if (resource.seats && resource.seats < 0) {
+    throw new BadRequestError(
+      `Can not create a resource with less than 0 seats`,
+      ErrorCode.INVALID_RESOURCE_ARGUMENTS
+    );
+  }
 
   const mappedSchedule = mapSchedule(schedule);
 
