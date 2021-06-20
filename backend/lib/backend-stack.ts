@@ -85,7 +85,7 @@ export class BackendStack extends cdk.Stack {
       vpcSubnets: { subnetType: ec2.SubnetType.ISOLATED },
       securityGroups: [privateSg],
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: new lambda.AssetCode('lambda'),
+      code: new lambda.AssetCode('lambda', { exclude: ['*.ts'] }),
       handler: 'index.handler',
       // @ts-ignore
       timeout: cdk.Duration.seconds(15),

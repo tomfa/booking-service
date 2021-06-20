@@ -2,7 +2,7 @@
   "name": "@vailable/lambda",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/lambda/index.js",
   "scripts": {
     "prisma:generate-schema": "npx prisma validate && npx prisma introspect && npx prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
