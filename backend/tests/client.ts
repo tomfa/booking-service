@@ -10,6 +10,7 @@ export const client = new ApolloClient({
 client.defaultOptions = {
   watchQuery: { errorPolicy: 'all' },
   mutate: { errorPolicy: 'all' },
+  query: { errorPolicy: 'all' },
 };
 
 export const mutate = (mutation: DocumentNode) => client.mutate({ mutation });

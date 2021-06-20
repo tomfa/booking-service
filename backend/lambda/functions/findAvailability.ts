@@ -47,6 +47,7 @@ async function findAvailability(
       customerId: args.customerId || undefined,
     },
   });
+
   const foundResourceIds = resources.map(r => r.id);
   const missingResources = args.resourceIds.filter(
     id => !foundResourceIds.includes(id)
@@ -65,7 +66,7 @@ async function findAvailability(
 
   const bookingFilter = {
     resourceId: { in: args.resourceIds },
-    startTime: { gt: from },
+    startTime: { gt: from }, // TODO: This filter will be wrong? Swap endTime and startTime filter?
     endTime: { lt: to },
     canceled: false,
   };

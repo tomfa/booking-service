@@ -35,6 +35,7 @@ type AppSyncEvent = {
     resource: types.Resource;
     customer: types.Customer;
     id: string;
+    afterDate: number;
     filterResource: types.FindResourceInput;
     filterBookings: types.FindBookingInput;
     filterAvailability: types.FindAvailabilityInput;
@@ -114,7 +115,7 @@ exports.handler = async (
     }
     case 'getNextAvailable': {
       console.log(`Executing getNextAvailable with ${JSON.stringify(args.id)}`);
-      return await getNextAvailable(db, args.id);
+      return await getNextAvailable(db, args.id, args.afterDate);
     }
     case 'getLatestBooking': {
       console.log(

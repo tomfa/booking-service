@@ -6,7 +6,7 @@ import { query } from './client';
 import objectContaining = jasmine.objectContaining;
 
 describe('findAvailability', () => {
-  it('changes enabled to false', async () => {
+  it('returns available slots', async () => {
     const customer = await createCustomer();
     const resource = await createResource({ customer });
     const from = new Date('2021-06-21');
