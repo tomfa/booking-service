@@ -11,3 +11,4 @@ client.defaultOptions = {
 };
 
 export const mutate = (mutation: DocumentNode) => client.mutate({ mutation });
+export const query = (q: DocumentNode) => client.query({ query: q });
