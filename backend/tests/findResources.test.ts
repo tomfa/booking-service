@@ -6,7 +6,10 @@ import { query } from './client';
 import objectContaining = jasmine.objectContaining;
 
 const createResourceForFiltering = async (): Promise<Resource> => {
-  const customer = await createCustomer('tomfa');
+  const customer = await createCustomer({
+    id: 'tomfa',
+    email: 'tomfa@github.io',
+  });
   return await createResource({ customer });
 };
 

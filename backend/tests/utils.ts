@@ -1,6 +1,7 @@
 import { gql } from 'apollo-boost';
 import {
   AddBookingMutationVariables,
+  AddCustomerInput,
   AddCustomerMutationVariables,
   Booking,
   Customer,
@@ -79,11 +80,13 @@ export const createResource = async ({
 };
 
 export const createCustomer = async (
-  id: string = 'tomfa'
+  addCustomerInput: AddCustomerInput = {
+    email: 'tomas@60401.work',
+  }
 ): Promise<Customer> => {
-  const addCustomerInput = gql`
-    mutation {
-      addCustomer(addCustomerInput: { id: "${id}", email: "tomas@60401.work" }) {
+  const addCustomerInputMutation = gql`
+    mutation AddCustomerMutation($addCustomerInput: AddCustomerInput!) {
+      addCustomer(addCustomerInput: $addCustomerInput) {
         id
         phoneNumber
         name
@@ -99,7 +102,10 @@ export const createCustomer = async (
     { addCustomer: Customer },
     AddCustomerMutationVariables
   >({
-    mutation: addCustomerInput,
+    mutation: addCustomerInputMutation,
+    variables: {
+      addCustomerInput,
+    },
   });
   if (!data) {
     throw new Error(`Unable to create customer`);
