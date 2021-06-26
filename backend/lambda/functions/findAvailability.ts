@@ -66,8 +66,8 @@ async function findAvailability(
 
   const bookingFilter = {
     resourceId: { in: args.resourceIds },
-    startTime: { gt: from }, // TODO: This filter will be wrong? Swap endTime and startTime filter?
-    endTime: { lt: to },
+    startTime: { lt: to },
+    endTime: { gt: from },
     canceled: false,
   };
   const bookings = await db.booking.findMany({ where: bookingFilter });
