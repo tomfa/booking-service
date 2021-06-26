@@ -1,7 +1,7 @@
 import { DateScheduleInput } from '../../graphql/generated/types';
 import { BadRequestError, ErrorCode } from './errors';
 import { getIsoDate } from './date.utils';
-import { splitHourMinute } from './schedule';
+import { splitHourMinute } from './schedule.utils';
 
 export const validateHourMinute = (hourMinute: string) => {
   if (!hourMinute.includes(':')) {

@@ -6,9 +6,8 @@ import {
   Maybe,
   Schedule,
 } from '../../graphql/generated/types';
-import { closed } from './schedule';
-import { isIsoDateFormat } from './validators';
-import { validateDaySchedule } from './validation.utils';
+import { closed } from './schedule.utils';
+import { isISODay, validateDaySchedule } from './validation.utils';
 
 export function removeNull<T extends Record<string, unknown>>(
   args: Record<string, unknown>
@@ -53,7 +52,7 @@ export function mapSchedule(scheduleList: DateScheduleInput[]): Schedule {
   scheduleList.forEach(validateDaySchedule);
   const weekdaysShort = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
   const overriddenDates = scheduleList
-    .filter(s => !weekdaysShort.includes(s.day) && isIsoDateFormat(s.day))
+    .filter(s => !weekdaysShort.includes(s.day) && isISODay(s.day))
     .map(mapDateSchedule);
   return {
     mon: mapDaySchedule(scheduleList.find(s => s.day === 'mon')),

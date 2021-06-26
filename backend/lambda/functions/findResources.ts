@@ -6,7 +6,7 @@ import {
   Schedule,
 } from '../../graphql/generated/types';
 import { removeNull } from '../utils/input.mappers';
-import { closedSchedule } from '../utils/schedule';
+import { closedSchedule } from '../utils/schedule.utils';
 import { fromDBResource } from '../utils/db.mappers';
 
 const mapSchedule = (val: Prisma.JsonValue): Schedule => {

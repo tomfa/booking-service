@@ -11,7 +11,7 @@ import {
   Resource,
   Schedule,
 } from '../../graphql/generated/types';
-import { closedSchedule } from './schedule';
+import { closedSchedule } from './schedule.utils';
 import { fromGQLDate } from './date.utils';
 
 export function fromDBBooking({

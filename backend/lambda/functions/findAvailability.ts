@@ -12,7 +12,7 @@ import {
 } from '../utils/errors';
 import { fromGQLDate, reduceAvailability } from '../utils/date.utils';
 import { fromDBBooking, fromDBResource } from '../utils/db.mappers';
-import { constructAllSlots } from '../utils/schedule';
+import { constructAllSlots } from '../utils/schedule.utils';
 
 const findAvailabilityForSingleResource = (
   resource: Resource,

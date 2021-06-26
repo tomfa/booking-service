@@ -6,7 +6,7 @@ import { fromGQLDate } from './date.utils';
 import {
   bookingSlotFitsInResourceSlots,
   isWithinOpeningHours,
-} from './schedule';
+} from './schedule.utils';
 
 const generateSeatNumbersForResource = (resource: Resource): number[] => {
   return Array(resource.seats)
