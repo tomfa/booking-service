@@ -4,8 +4,8 @@
 
 ## API
 
-| method | url                       | description                                              | docs                                                                                                                         |
-| ------ | ------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| method | url                       | description                                              | docs                                                                                                                           |
+| ------ | ------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | `GET`  | `/generate/from_html`     | Generates PDF from passed base64 encoded template string | [fromHtml.test.ts](https://github.com/tomfa/booking-service-api/blob/master/src/endpoints/generate/fromHtml.test.ts)           |
 | `POST` | `/generate/from_html`     | Generates PDF from passed base64 encoded template string | [fromHtml.test.ts](https://github.com/tomfa/booking-service-api/blob/master/src/endpoints/generate/fromHtml.test.ts)           |
 | `GET`  | `/generate/from_template` | Generates PDF from template                              | [fromTemplate.test.ts](https://github.com/tomfa/booking-service-api/blob/master/src/endpoints/generate/fromTemplate.test.ts)   |
