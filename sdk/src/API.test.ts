@@ -1,4 +1,4 @@
-import BookingAPI from './API.mock';
+import BookingAPI from './API';
 import { Booking, CreateBookingArgs, Resource, Schedule } from './types';
 import { addMinutes, openingHourGenerator } from './utils.internal';
 import {
@@ -32,7 +32,6 @@ const dummyResourceId = 'dummy-resource';
 const dummyResource: Omit<Resource, 'id'> = {
   category: '',
   label: 'Dummy resource',
-  schedule: dummySchedule,
   seats: 12,
   enabled: true,
 };
@@ -50,6 +49,7 @@ const dummyBooking: Omit<Booking, 'id' | 'seatNumber'> = {
   canceled: false,
   comment: '',
 };
+const dummyResourceWithSchedule = { ...dummyResource, schedule: dummySchedule };
 
 describe('BookingAPI', () => {
   let api: BookingAPI = new BookingAPI({ token: 'dummy-key' });
@@ -58,7 +58,10 @@ describe('BookingAPI', () => {
 
   beforeEach(async () => {
     api = new BookingAPI({ token: 'dummy-key' });
-    resource = await api.addResource(dummyResource, dummyResourceId);
+    resource = await api.addResource(
+      dummyResourceWithSchedule,
+      dummyResourceId
+    );
     booking = await api.addBooking(dummyBookingInput);
   });
 
@@ -78,7 +81,10 @@ describe('BookingAPI', () => {
   });
   describe('addResource', () => {
     it('adds a new resource with a random id', async () => {
-      const newResource = { ...dummyResource, label: 'A new resource' };
+      const newResource = {
+        ...dummyResourceWithSchedule,
+        label: 'A new resource',
+      };
 
       const response = await api.addResource(newResource);
 
@@ -86,7 +92,10 @@ describe('BookingAPI', () => {
       expect(response.id).toBeTruthy();
     });
     it('can optionally have id specified by caller', async () => {
-      const newResource = { ...dummyResource, label: 'A new resource' };
+      const newResource = {
+        ...dummyResourceWithSchedule,
+        label: 'A new resource',
+      };
       const predeterminedId = 'cheesedoodles';
 
       const response = await api.addResource(newResource, predeterminedId);
@@ -96,7 +105,7 @@ describe('BookingAPI', () => {
     });
     it('can optionally have category specified by caller', async () => {
       const newResource = {
-        ...dummyResource,
+        ...dummyResourceWithSchedule,
         label: 'MeetingRoom A',
         category: 'meeting-room',
       };
@@ -107,7 +116,10 @@ describe('BookingAPI', () => {
       expect(response.category).toBe('meeting-room');
     });
     it('throws ConflictingObjectExists if label is already taken', async () => {
-      const newResource = { ...dummyResource, label: dummyResource.label };
+      const newResource = {
+        ...dummyResourceWithSchedule,
+        label: dummyResource.label,
+      };
 
       await expect(api.addResource(newResource)).rejects.toThrow(
         new ConflictingObjectExists(
@@ -170,17 +182,17 @@ describe('BookingAPI', () => {
     });
     it('returns all resources matching category if category specified', async () => {
       const roomResourceA = await api.addResource({
-        ...dummyResource,
+        ...dummyResourceWithSchedule,
         label: 'Room A',
         category: 'room',
       });
       const roomResourceB = await api.addResource({
-        ...dummyResource,
+        ...dummyResourceWithSchedule,
         label: 'Room B',
         category: 'room',
       });
       const deskResource = await api.addResource({
-        ...dummyResource,
+        ...dummyResourceWithSchedule,
         label: 'Desk B',
         category: 'desk',
       });
@@ -697,7 +709,7 @@ describe('BookingAPI', () => {
     });
     it('includes bookings with resource.category == category filter', async () => {
       const meetingRoom = await api.addResource({
-        ...dummyResource,
+        ...dummyResourceWithSchedule,
         label: 'MeetingRoom A',
         category: 'room',
       });
@@ -736,7 +748,7 @@ describe('BookingAPI', () => {
     });
     it('filters by resourceId if specified', async () => {
       const differentResource = await api.addResource({
-        ...dummyResource,
+        ...dummyResourceWithSchedule,
         label: 'New resource',
       });
       await api.addBooking(newBooking);
