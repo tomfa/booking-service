@@ -51,6 +51,12 @@ jobs:
     - name: Upload codecov
       uses: codecov/codecov-action@v1
       with:
+        flags: backend
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./backend/coverage/coverage-final.json
+    - name: Upload codecov
+      uses: codecov/codecov-action@v1
+      with:
         flags: sdk
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./sdk/coverage/coverage-final.json
