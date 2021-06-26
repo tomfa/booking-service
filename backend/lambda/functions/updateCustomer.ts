@@ -12,7 +12,6 @@ async function updateCustomer(
   db: PrismaClient,
   args: UpdateCustomerInput
 ): Promise<Customer> {
-  // TODO: What if id does not exist?
   // TODO: Stop invalid updates, see addCustomer
 
   try {
@@ -23,7 +22,6 @@ async function updateCustomer(
     return fromDBCustomer(customer);
   } catch (err) {
     if (err.code === 'P2025') {
-      console.log(err.meta);
       throw new ObjectDoesNotExist(
         `Customer with id ${args.id} not found`,
         ErrorCode.CUSTOMER_DOES_NOT_EXIST

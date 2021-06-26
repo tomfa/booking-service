@@ -1,11 +1,12 @@
 import { HourSchedule, Resource } from '../../graphql/generated/types';
 import { GenericBookingError } from './errors';
+import { getIsoDate } from './date.utils';
 
 export const getOpeningHoursForDate = (
   resource: Resource,
   date: Date
 ): HourSchedule => {
-  const isoDate = date.toISOString().substr(0, 10);
+  const isoDate = getIsoDate(date);
   const overridenTime = resource.schedule.overriddenDates?.find(
     r => r?.isoDate === isoDate
   );

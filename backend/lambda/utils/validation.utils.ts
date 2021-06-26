@@ -1,6 +1,7 @@
 import { DateScheduleInput } from '../../graphql/generated/types';
 import { BadRequestError, ErrorCode } from './errors';
-import { splitHourMinute } from './sdk.utils';
+import { getIsoDate } from './date.utils';
+import { splitHourMinute } from './schedule';
 
 export const validateHourMinute = (hourMinute: string) => {
   if (!hourMinute.includes(':')) {
@@ -37,7 +38,7 @@ export const isISODay = (dateString: string): boolean => {
   if (Number.isNaN(date.getTime())) {
     return false;
   }
-  if (dateString !== date.toISOString().substr(0, 10)) {
+  if (dateString !== getIsoDate(date)) {
     return false;
   }
   return true;

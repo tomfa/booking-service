@@ -10,9 +10,9 @@ import {
   ErrorCode,
   ObjectDoesNotExist,
 } from '../utils/errors';
-import { fromGQLDate } from '../utils/date.utils';
-import { constructAllSlots, reduceAvailability } from '../utils/sdk.utils';
+import { fromGQLDate, reduceAvailability } from '../utils/date.utils';
 import { fromDBBooking, fromDBResource } from '../utils/db.mappers';
+import { constructAllSlots } from '../utils/schedule';
 
 const findAvailabilityForSingleResource = (
   resource: Resource,

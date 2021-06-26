@@ -1,8 +1,5 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-
-// eslint-disable-next-line import/first
+/* eslint-disable import/no-extraneous-dependencies */
 import * as fs from 'fs';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import * as dotenv from 'dotenv';
 import * as express from 'express';
 import { graphqlHTTP } from 'express-graphql';
@@ -16,8 +13,6 @@ const { getDB } = require('./localDb');
 const { handler } = require('./lambda');
 
 const gqlSchema = fs.readFileSync('./graphql/schema.graphql', 'utf8');
-
-// Construct a schema, using GraphQL schema language
 const schema = buildSchema(gqlSchema);
 
 const gqlHandler = (fieldName: string) => async (args: unknown) => {

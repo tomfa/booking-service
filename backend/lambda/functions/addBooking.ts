@@ -14,7 +14,8 @@ import {
 } from '../utils/errors';
 import { getOpeningHoursForDate } from '../utils/resource.utils';
 import { fromGQLDate, toGQLDate } from '../utils/date.utils';
-import { getAvailableSeatNumbers, isOpen } from '../utils/sdk.utils';
+import { getAvailableSeatNumbers } from '../utils/seating.utils';
+import { isOpen } from '../utils/schedule';
 import getResourceById from './getResourceById';
 
 const getEndTime = (start: Date, resource: Resource): Date => {
