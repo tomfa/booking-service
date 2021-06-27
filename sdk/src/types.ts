@@ -26,7 +26,7 @@ export type Resource = {
   category?: string;
   label: string;
   // Schedule is not broken wrt. timezones. Do not use.
-  // schedule: Schedule;
+  schedule: Schedule;
   // TODO: How to solve not available until/after
   seats: number;
   enabled: boolean;

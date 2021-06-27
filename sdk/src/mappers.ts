@@ -1,10 +1,21 @@
-import { fromGQLDate , fromGQLDate } from './utils';
 import {
   TimeSlot as GQLTimeSLot,
   Booking as GQLBooking,
+  Schedule as GQLSchedule,
+  Resource as GQLResource,
   DateScheduleInput,
+  DateSchedule,
 } from './graphql/generated/types';
-import { Booking, HourSchedule, Schedule, TimeSlot } from './types';
+import {
+  Booking,
+  HourSchedule,
+  IsoDate,
+  OpeningHour,
+  Resource,
+  Schedule,
+  TimeSlot,
+} from './types';
+import { fromGQLDate } from './utils';
 
 export const mapToTimeSlot = (slot: GQLTimeSLot): TimeSlot | undefined => {
   if (!slot) {
@@ -17,11 +28,9 @@ export const mapToTimeSlot = (slot: GQLTimeSLot): TimeSlot | undefined => {
   };
 };
 
-export const mapToBooking = (booking: GQLBooking): Booking => {
-  const start = new Date(booking.start);
-  const end = new Date(booking.end);
-  const msDiff = booking.end - booking.start;
-  const durationMinutes = Math.floor(msDiff / 60000);
+export const fromGQLBooking = (booking: GQLBooking): Booking => {
+  const secondsDiff = booking.end - booking.start;
+  const durationMinutes = Math.floor(secondsDiff / 60);
   return {
     ...booking,
     start: fromGQLDate(booking.start),
@@ -29,7 +38,7 @@ export const mapToBooking = (booking: GQLBooking): Booking => {
     durationMinutes,
     userId: booking.userId || '',
     comment: booking.comment || '',
-    seatNumber: booking.seatNumber || -1,
+    seatNumber: booking.seatNumber,
   };
 };
 
@@ -40,7 +49,57 @@ export const closedSchedule: HourSchedule = {
   slotDurationMinutes: 0,
 };
 
-export const mapSchedule = (schedule: Schedule): DateScheduleInput[] => {
+function fromGQLDateSchedule(
+  dateSchedule: DateSchedule
+): [IsoDate, OpeningHour] {
+  if (dateSchedule.schedule.start === '') {
+    return [dateSchedule.isoDate, 'closed'];
+  }
+  return [
+    dateSchedule.isoDate,
+    {
+      start: dateSchedule.schedule.start,
+      end: dateSchedule.schedule.end,
+      slotIntervalMinutes: dateSchedule.schedule.slotIntervalMinutes,
+      slotDurationMinutes: dateSchedule.schedule.slotDurationMinutes,
+    },
+  ];
+}
+
+export function fromGQLResource(resource: GQLResource): Resource {
+  return {
+    ...resource,
+    schedule: fromGQLSchedule(resource.schedule),
+  };
+}
+
+export const isClosed = (schedule: HourSchedule): boolean => {
+  return schedule.start === '';
+};
+
+export function fromGQLSchedule(scheduleList: GQLSchedule): Schedule {
+  const overriddenDatesList = scheduleList.overriddenDates.map(
+    fromGQLDateSchedule
+  );
+
+  return {
+    mon: isClosed(scheduleList.mon) ? 'closed' : scheduleList.mon,
+    tue: isClosed(scheduleList.tue) ? 'closed' : scheduleList.tue,
+    wed: isClosed(scheduleList.wed) ? 'closed' : scheduleList.wed,
+    thu: isClosed(scheduleList.thu) ? 'closed' : scheduleList.thu,
+    fri: isClosed(scheduleList.fri) ? 'closed' : scheduleList.fri,
+    sat: isClosed(scheduleList.sat) ? 'closed' : scheduleList.sat,
+    sun: isClosed(scheduleList.sun) ? 'closed' : scheduleList.sun,
+    overriddenDates: Object.fromEntries(overriddenDatesList),
+  };
+}
+
+export const toGQLSchedule = (
+  schedule?: Schedule
+): DateScheduleInput[] | undefined => {
+  if (!schedule) {
+    return undefined;
+  }
   const weekSchedule = Object.entries(schedule)
     .filter(([k]) => k !== 'overriddenDates')
     .map(

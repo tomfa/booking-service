@@ -10,7 +10,12 @@ import {
 
 import { ErrorCode, ObjectDoesNotExist } from './errors';
 import { getSdk } from './graphql/generated/types';
-import { mapSchedule, mapToBooking, mapToTimeSlot } from './mappers';
+import {
+  toGQLSchedule,
+  fromGQLBooking,
+  mapToTimeSlot,
+  fromGQLResource,
+} from './mappers';
 import { toGQLDate } from './utils';
 
 export default class BookingAPI implements IBookingAPI {
@@ -49,7 +54,7 @@ export default class BookingAPI implements IBookingAPI {
         ErrorCode.RESOURCE_DOES_NOT_EXIST
       );
     }
-    return resource;
+    return fromGQLResource(resource);
   }
 
   async addResource(
@@ -59,11 +64,11 @@ export default class BookingAPI implements IBookingAPI {
     const result = await this.client.addResource({
       addResourceInput: {
         id: resourceId,
-        schedule: mapSchedule(schedule),
+        schedule: toGQLSchedule(schedule),
         ...resource,
       },
     });
-    return result.addResource;
+    return fromGQLResource(result.addResource);
   }
 
   async updateResource(
@@ -74,7 +79,7 @@ export default class BookingAPI implements IBookingAPI {
       updateResourceInput: {
         ...updatedResource,
         id: resourceId,
-        schedule: mapSchedule(schedule),
+        schedule: toGQLSchedule(schedule),
       },
     });
     if (!resource) {
@@ -83,7 +88,7 @@ export default class BookingAPI implements IBookingAPI {
         ErrorCode.RESOURCE_DOES_NOT_EXIST
       );
     }
-    return resource;
+    return fromGQLResource(resource);
   }
 
   async deleteResource(resourceId: string): Promise<void> {
@@ -92,9 +97,9 @@ export default class BookingAPI implements IBookingAPI {
 
   async findResources(filters?: Partial<Resource>): Promise<Resource[]> {
     const { findResources } = await this.client.findResources({
-      filterResource: filters,
+      filterResource: filters || {},
     });
-    return findResources as Resource[];
+    return findResources.map(fromGQLResource);
   }
 
   async getNextAvailable(
@@ -136,7 +141,7 @@ export default class BookingAPI implements IBookingAPI {
         ErrorCode.BOOKING_DOES_NOT_EXIST
       );
     }
-    return mapToBooking(booking);
+    return fromGQLBooking(booking);
   }
 
   async addBooking(booking: CreateBookingArgs): Promise<Booking> {
@@ -147,7 +152,7 @@ export default class BookingAPI implements IBookingAPI {
         end: booking.end && toGQLDate(booking.end),
       },
     });
-    return mapToBooking(addBooking);
+    return fromGQLBooking(addBooking);
   }
 
   async setBookingComment(
@@ -158,7 +163,7 @@ export default class BookingAPI implements IBookingAPI {
       id: bookingId,
       comment,
     });
-    return mapToBooking(booking);
+    return fromGQLBooking(booking);
   }
 
   async cancelBooking(bookingId: string): Promise<Booking> {
@@ -173,7 +178,7 @@ export default class BookingAPI implements IBookingAPI {
       );
     }
 
-    return mapToBooking(existingBooking);
+    return fromGQLBooking(existingBooking);
   }
 
   async findBookings({
@@ -201,7 +206,7 @@ export default class BookingAPI implements IBookingAPI {
         resourceCategories,
       },
     });
-    return findBookings.map(mapToBooking);
+    return findBookings.map(fromGQLBooking);
   }
 
   async getLatestBooking({
@@ -219,7 +224,7 @@ export default class BookingAPI implements IBookingAPI {
     if (!booking) {
       return undefined;
     }
-    return mapToBooking(booking);
+    return fromGQLBooking(booking);
   }
 
   async getBookedDuration({
