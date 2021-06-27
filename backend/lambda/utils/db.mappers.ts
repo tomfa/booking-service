@@ -58,3 +58,23 @@ export function toBookingFilter({
     ...args,
   };
 }
+
+export function conflictingBookingFilter({
+  resourceId,
+  from,
+  to,
+}: {
+  resourceId: string;
+  from: Date;
+  to: Date;
+}): Prisma.bookingWhereInput {
+  const endTimeFilter = { gt: from };
+  const startTimeFilter = { lt: to };
+  // TODO: filter resourceIds by those accessable by customer
+  return {
+    resourceId,
+    startTime: startTimeFilter,
+    endTime: endTimeFilter,
+    canceled: false,
+  };
+}

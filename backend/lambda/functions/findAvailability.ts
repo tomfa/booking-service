@@ -11,7 +11,11 @@ import {
   ObjectDoesNotExist,
 } from '../utils/errors';
 import { fromGQLDate, reduceAvailability } from '../utils/date.utils';
-import { fromDBBooking, fromDBResource } from '../utils/db.mappers';
+import {
+  conflictingBookingFilter,
+  fromDBBooking,
+  fromDBResource,
+} from '../utils/db.mappers';
 import { constructAllSlots } from '../utils/schedule.utils';
 import { AuthToken } from '../auth/types';
 
@@ -66,21 +70,21 @@ async function findAvailability(
     (args.to && fromGQLDate(args.to)) ||
     new Date(from.getTime() + 31 * 24 * 3600 * 1000);
 
-  const bookingFilter = {
-    resourceId: { in: args.resourceIds },
-    startTime: { lt: to },
-    endTime: { gt: from },
-    canceled: false,
-  };
-  const bookings = await db.booking.findMany({ where: bookingFilter });
-
   // TODO: Support multiple resources
   if (resources.length > 1) {
     throw new BadRequestError(
-      `findAvailability is not yet supported with multiple resources.`,
+      `findAvailability is not yet supported with multiple resources`,
       ErrorCode.UNKNOWN_ERROR
     );
   }
+
+  const bookings = await db.booking.findMany({
+    where: conflictingBookingFilter({
+      resourceId: resources[0].id,
+      from,
+      to,
+    }),
+  });
 
   return findAvailabilityForSingleResource(
     fromDBResource(resources[0]),

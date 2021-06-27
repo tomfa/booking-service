@@ -1,7 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { Booking, Resource } from '../../graphql/generated/types';
-import findBookings from '../functions/findBookings';
 import { BadRequestError, ErrorCode } from './errors';
+import { conflictingBookingFilter, fromDBBooking } from './db.mappers';
+import { fromGQLDate } from './date.utils';
 
 const generateSeatNumbersForResource = (resource: Resource): number[] => {
   return Array(resource.seats)
@@ -13,12 +14,14 @@ export const getAvailableSeatNumbers = async (
   resource: Resource,
   booking: Booking
 ): Promise<number[]> => {
-  const overLappingBookings = await findBookings(db, {
-    resourceIds: [booking.resourceId],
-    from: booking.start,
-    to: booking.end,
-    includeCanceled: false,
+  const dbBookings = await db.booking.findMany({
+    where: conflictingBookingFilter({
+      resourceId: booking.resourceId,
+      from: fromGQLDate(booking.start),
+      to: fromGQLDate(booking.end),
+    }),
   });
+  const overLappingBookings = dbBookings.map(fromDBBooking);
   if (overLappingBookings.length >= resource.seats) {
     throw new BadRequestError(
       `No available slots in requested period for resource ${resource.id}`,

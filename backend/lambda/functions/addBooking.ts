@@ -20,6 +20,7 @@ import {
   isOpen,
 } from '../utils/schedule.utils';
 import { AuthToken } from '../auth/types';
+import { minArray } from '../utils/array.utils';
 import getResourceById from './getResourceById';
 
 const getEndTime = (start: Date, resource: Resource): Date => {
@@ -75,10 +76,10 @@ async function addBooking(
   }
 
   const seatNumbers = await getAvailableSeatNumbers(db, resource, booking);
-
   if (seatNumbers.length === 0) {
     throw new GenericBookingError(`Unable to find available seat number`);
   }
+
   const args = {
     id: booking.id,
     customerId: data.customerId || null,
@@ -88,7 +89,7 @@ async function addBooking(
     userId: data.userId || null,
     startTime,
     endTime,
-    seatNumber: Math.min(...seatNumbers),
+    seatNumber: minArray(seatNumbers),
   };
   const dbBooking = await db.booking.create({
     data: args,
