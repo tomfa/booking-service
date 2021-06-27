@@ -13,7 +13,7 @@ export const getOpeningHoursForDate = (
   if (overridenTime) {
     return overridenTime.schedule;
   }
-  const dayOfWeek = date.getDay();
+  const dayOfWeek = date.getUTCDay();
   if (dayOfWeek === 0) {
     return resource.schedule.sun;
   }
