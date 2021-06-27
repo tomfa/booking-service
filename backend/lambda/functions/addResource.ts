@@ -26,7 +26,7 @@ async function addResource(
       label,
       schedule: mappedSchedule,
       ...resource,
-      customerId: resource.customerId || 'tomfa', // TODO
+      customerId: resource.customerId || token.customerId,
     },
   });
   return fromDBResource(result);
