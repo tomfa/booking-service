@@ -39,8 +39,8 @@ export const closedSchedule: HourSchedule = {
   slotDurationMinutes: 0,
 };
 
-export const mapSchedule = (schedule: Schedule): DateScheduleInput[] =>
-  Object.entries(schedule)
+export const mapSchedule = (schedule: Schedule): DateScheduleInput[] => {
+  const weekSchedule = Object.entries(schedule)
     .filter(([k]) => k !== 'overriddenDates')
     .map(
       ([k, v]): DateScheduleInput => {
@@ -50,3 +50,13 @@ export const mapSchedule = (schedule: Schedule): DateScheduleInput[] =>
         return { ...(v as HourSchedule), day: k };
       }
     );
+  const overrideSchedule = Object.entries(schedule.overriddenDates).map(
+    ([k, v]): DateScheduleInput => {
+      if (v === 'closed') {
+        return { day: k, ...closedSchedule };
+      }
+      return { ...(v as HourSchedule), day: k };
+    }
+  );
+  return [].concat(weekSchedule, overrideSchedule);
+};
