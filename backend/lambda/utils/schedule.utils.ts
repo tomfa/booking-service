@@ -37,47 +37,13 @@ export const closedSchedule: Schedule = {
 export const convertDateToTimeSlot = (
   resource: Resource,
   time: Date
-): TimeSlot | undefined => {
-  if (!isWithinOpeningHours(resource, time)) {
-    return undefined;
-  }
+): TimeSlot => {
   const schedule = getOpeningHoursForDate(resource, time);
-  if (!isOpen(schedule)) {
-    return undefined;
-  }
   return {
     availableSeats: resource.seats,
     start: toGQLDate(time),
     end: toGQLDate(time) + 60 * schedule.slotDurationMinutes,
   };
-};
-export const isWithinOpeningHours = (
-  resource: Resource,
-  time: Date
-): boolean => {
-  const openingHours = getOpeningHoursForDate(resource, time);
-  if (!isOpen(openingHours)) {
-    return false;
-  }
-  if (openingHours.start === openingHours.end) {
-    return false;
-  }
-  const { hour: startHour, minute: startMinute } = splitHourMinute(
-    openingHours.start
-  );
-  const { hour: endHour, minute: endMinute } = splitHourMinute(
-    openingHours.end
-  );
-  const { hour: bookHour, minute: bookMinute } = splitHourMinuteOfDay(time);
-  // Note: Able to book _at_ opening hour
-  if (bookHour * 60 + bookMinute < startHour * 60 + startMinute) {
-    return false;
-  }
-  // Note: Not able to book _at_ closing hour
-  if (bookHour * 60 + bookMinute >= endHour * 60 + endMinute) {
-    return false;
-  }
-  return true;
 };
 export const splitHourMinute = (
   hourMinute: HourMinuteString
@@ -116,10 +82,17 @@ export const msUntilClosing = (
   const { hour: endHour, minute: endMinute } = splitHourMinute(
     openingHours.end
   );
-  const closingTimeMs = endHour * 3600 * 1000 + endMinute * 60 * 1000;
+  let closingTimeMs = endHour * 3600 * 1000 + endMinute * 60 * 1000;
+  const isMidnight = closingTimeMs === 0;
+  if (isMidnight) {
+    closingTimeMs = 24 * 3600 * 1000;
+  }
   return closingTimeMs - msOfDay(date);
 };
-const roundUpToSlotStart = (openingHours: HourSchedule, date: Date): Date => {
+const diffMsUntilSlotStart = (
+  openingHours: HourSchedule,
+  date: Date
+): number => {
   const { hour: startHour, minute: startMinute } = splitHourMinute(
     openingHours.start
   );
@@ -130,20 +103,14 @@ const roundUpToSlotStart = (openingHours: HourSchedule, date: Date): Date => {
   const diffFromStartOfBookingDay = dayMS - bookingStartAsMsOfDay;
   const offsetFromSlotStart = diffFromStartOfBookingDay % slotIntervalMs;
   if (offsetFromSlotStart === 0) {
-    return date;
+    return 0;
   }
-  const msToAdd = slotIntervalMs - offsetFromSlotStart;
-  const cleanedDate = new Date(date.getTime() + msToAdd);
-  return cleanedDate;
+  return slotIntervalMs - offsetFromSlotStart;
 };
 const startOfNextDay = (date: Date): Date => {
   const isoDay = getIsoDate(date);
   const thisDay = new Date(`${isoDay}T00:00:00Z`);
   return new Date(thisDay.getTime() + 24 * 3600 * 1000);
-};
-const endOfDate = (date: Date): Date => {
-  const tomorrow = startOfNextDay(date);
-  return new Date(tomorrow.getTime() - 1);
 };
 export const isOpen = (scheudle: HourSchedule): scheudle is HourSchedule => {
   return scheudle.start !== '';
@@ -169,15 +136,19 @@ const findNextValidTimeSlot = (
   if (isBeforeOpeningHours(openingHours, date)) {
     return firstSlotOfDay(openingHours, getIsoDate(date));
   }
-  const start = roundUpToSlotStart(openingHours, date);
-  if (msUntilClosing(openingHours, start) <= 0) {
+  const diffMsUntilSlot = diffMsUntilSlotStart(openingHours, date);
+  if (diffMsUntilSlot > 0) {
+    return findNextValidTimeSlot(
+      resource,
+      new Date(date.getTime() + diffMsUntilSlot),
+      max
+    );
+  }
+  if (msUntilClosing(openingHours, date) <= 0) {
     const nextDay = startOfNextDay(date);
-    if (nextDay > max) {
-      return undefined;
-    }
     return findNextValidTimeSlot(resource, nextDay, max);
   }
-  return start;
+  return date;
 };
 export const bookingSlotFitsInResourceSlots = (
   resource: Resource,
@@ -238,12 +209,7 @@ export const constructAllSlots = ({
   let cursor = findNextValidTimeSlot(resource, from, to);
   while (cursor && cursor < to) {
     const currentTimeSlot = convertDateToTimeSlot(resource, cursor);
-    if (currentTimeSlot) {
-      timeslots.push(currentTimeSlot);
-    } else {
-      // TODO: This smells
-      // throw new Error(`Timeslot ${cursor} was not valid??`);
-    }
+    timeslots.push(currentTimeSlot);
     cursor = findNextValidTimeSlot(
       resource,
       new Date(cursor.getTime() + 1),

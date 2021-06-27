@@ -111,11 +111,11 @@ describe('addBooking', () => {
     expect(data?.addBooking).toBe(null);
     expect(errors?.length).toBe(1);
     expect(errors[0].message).toBe(
-      `Unable to add booking: resource ${resourceId} is closed`
+      `Unable to add booking to disabled resource ${resourceId}`
     );
     expect(errors[0].extensions).toEqual({
       code: 400,
-      type: 'booking_slot_is_not_available',
+      type: 'resource_is_disabled',
     });
   });
   it('fails if no slots left', async () => {

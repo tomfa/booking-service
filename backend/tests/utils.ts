@@ -14,11 +14,15 @@ export const createResource = async ({
   customer,
   enabled = true,
   seats = 20,
+  start = '08:00',
+  end = '16:00',
 }: {
   id?: string;
   customer: Customer;
   enabled?: boolean;
   seats?: number;
+  start?: string;
+  end?: string;
 }): Promise<Resource> => {
   const resourceInput = gql`
       mutation {
@@ -34,8 +38,8 @@ export const createResource = async ({
                 slotDurationMinutes: 30
                 slotIntervalMinutes: 15
                 day: "mon"
-                start: "08:00"
-                end: "16:00"
+                start: "${start}"
+                end: "${end}"
               }
             ]
           }
@@ -81,6 +85,7 @@ export const createResource = async ({
 
 export const createCustomer = async (
   addCustomerInput: AddCustomerInput = {
+    id: 'testUser',
     email: 'tomas@60401.work',
   }
 ): Promise<Customer> => {
@@ -98,7 +103,7 @@ export const createCustomer = async (
     }
   `;
 
-  const { data } = await client.mutate<
+  const { data, errors } = await client.mutate<
     { addCustomer: Customer },
     AddCustomerMutationVariables
   >({
@@ -107,8 +112,8 @@ export const createCustomer = async (
       addCustomerInput,
     },
   });
-  if (!data) {
-    throw new Error(`Unable to create customer`);
+  if (!data?.addCustomer) {
+    throw new Error(`Unable to create customer: ${JSON.stringify(errors)}`);
   }
   return data.addCustomer;
 };

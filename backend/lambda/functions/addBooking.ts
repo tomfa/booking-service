@@ -15,7 +15,10 @@ import {
 import { getOpeningHoursForDate } from '../utils/resource.utils';
 import { fromGQLDate, toGQLDate } from '../utils/date.utils';
 import { getAvailableSeatNumbers } from '../utils/seating.utils';
-import { isOpen } from '../utils/schedule.utils';
+import {
+  bookingSlotFitsInResourceSlots,
+  isOpen,
+} from '../utils/schedule.utils';
 import { AuthToken } from '../auth/types';
 import getResourceById from './getResourceById';
 
@@ -39,6 +42,12 @@ async function addBooking(
       ErrorCode.RESOURCE_DOES_NOT_EXIST
     );
   }
+  if (!resource.enabled) {
+    throw new BadRequestError(
+      `Unable to add booking to disabled resource ${resource.id}`,
+      ErrorCode.RESOURCE_IS_DISABLED
+    );
+  }
 
   const openingHours = getOpeningHoursForDate(resource, fromGQLDate(start));
   if (!isOpen(openingHours)) {
@@ -57,6 +66,13 @@ async function addBooking(
     start: toGQLDate(startTime),
     end: toGQLDate(endTime),
   };
+
+  if (!bookingSlotFitsInResourceSlots(resource, booking)) {
+    throw new BadRequestError(
+      `Booked time ${booking.start} does not fit into resource ${resource.id} time slots`,
+      ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
+    );
+  }
 
   const seatNumbers = await getAvailableSeatNumbers(db, resource, booking);
 
