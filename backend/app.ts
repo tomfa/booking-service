@@ -65,6 +65,7 @@ const createApp = () => {
     addBooking: gqlHandler('addBooking'),
     disableResource: gqlHandler('disableResource'),
     cancelBooking: gqlHandler('cancelBooking'),
+    setBookingComment: gqlHandler('setBookingComment'),
     addCustomer: gqlHandler('addCustomer'),
     disableCustomer: gqlHandler('disableCustomer'),
     deleteCustomer: gqlHandler('deleteCustomer'),

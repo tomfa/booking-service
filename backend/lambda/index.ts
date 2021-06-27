@@ -19,6 +19,7 @@ import updateResource from './functions/updateResource';
 import addBooking from './functions/addBooking';
 import disableResource from './functions/disableResource';
 import cancelBooking from './functions/cancelBooking';
+import setBookingComment from './functions/setBookingComment';
 import addCustomer from './functions/addCustomer';
 import disableCustomer from './functions/disableCustomer';
 import deleteCustomer from './functions/deleteCustomer';
@@ -46,6 +47,7 @@ type AppSyncEvent = {
     addCustomerInput: types.AddCustomerInput;
     updateResourceInput: types.UpdateResourceInput;
     updateCustomerInput: types.UpdateCustomerInput;
+    comment: string;
     issuer: string;
     email: string;
   };
@@ -172,6 +174,10 @@ exports.handler = async (
     case 'cancelBooking': {
       console.log(`Executing cancelBooking with ${JSON.stringify(args.id)}`);
       return await cancelBooking(db, args.id, token);
+    }
+    case 'setBookingComment': {
+      console.log(`Executing setBookingComment with ${JSON.stringify(args)}`);
+      return await setBookingComment(db, args.id, args.comment, token);
     }
     case 'addCustomer': {
       console.log(
