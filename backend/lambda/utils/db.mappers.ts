@@ -46,16 +46,24 @@ export function toBookingFilter({
   from,
   to,
   includeCanceled,
+  resourceCategories,
   ...args
 }: FindBookingInput): Prisma.bookingWhereInput {
   const startTimeFromFilter = from ? { gte: fromGQLDate(from) } : {};
   const startTimeToFilter = to ? { lt: fromGQLDate(to) } : {};
   // TODO: filter resourceIds by those accessable by customer
-  return {
+  const bookingWhereFilter = {
     resourceId: (resourceIds && { in: resourceIds }) || undefined,
     startTime: { ...startTimeFromFilter, ...startTimeToFilter },
     canceled: !includeCanceled ? false : undefined,
     ...args,
+  };
+  if (!resourceCategories) {
+    return bookingWhereFilter;
+  }
+  return {
+    ...bookingWhereFilter,
+    resource: { category: { in: resourceCategories } },
   };
 }
 
