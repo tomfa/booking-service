@@ -10,13 +10,15 @@
     "test": "jest --runInBand",
     "test:watch": "yarn test --watch",
     "cdk": "cdk",
-    "start:test": "export NODE_ENV=test && ts-node ./local.ts",
+    "start:test": "npm run prisma:migrate && export NODE_ENV=test && ts-node ./local.ts",
     "start": "nodemon",
     "deploy": "npm run build && cdk deploy -O ../cdk-exports.json",
     "schema:generate-document": "gqlg --schemaFilePath ./graphql/schema.graphql --destDirPath ./graphql/generated/documents --depthLimit 5",
     "schema:generate": "npm run schema:generate-document && graphql-codegen --config codegen.yml",
     "prisma:generate-schema": "npx prisma validate && npx prisma introspect && npx prisma generate",
-    "prisma:reset": "npx prisma migrate reset -f"
+    "prisma:reset": "npx prisma migrate reset -f",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:migrate:dev": "export DATABASE_URL=postgresql://postgres:postgres_pass@localhost:5432/vailable_test && npx prisma migrate dev"
   },
   "prisma": {
     "schema": "lambda/prisma/schema.prisma"

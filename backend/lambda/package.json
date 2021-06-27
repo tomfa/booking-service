@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/lambda/index.js",
   "scripts": {
-    "prisma:generate-schema": "export DATABASE_URL=postgresql://postgres:postgres_pass@localhost:5432/vailable_test npx prisma validate && npx prisma introspect && npx prisma generate",
+    "prisma:migrate:dev": "export DATABASE_URL=postgresql://postgres:postgres_pass@localhost:5432/vailable_test && npx prisma migrate dev",
+    "prisma:migrate": "npx prisma migrate deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
