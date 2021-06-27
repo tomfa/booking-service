@@ -24,8 +24,10 @@ import { minArray } from '../utils/array.utils';
 import getResourceById from './getResourceById';
 
 const getEndTime = (start: Date, resource: Resource): Date => {
-  const slotDuration = resource.schedule.mon.slotDurationMinutes;
-  return new Date(start.getTime() + slotDuration * 60 * 1000);
+  const openingHours = getOpeningHoursForDate(resource, start);
+  return new Date(
+    start.getTime() + openingHours.slotDurationMinutes * 60 * 1000
+  );
 };
 
 async function addBooking(
