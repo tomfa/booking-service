@@ -2,6 +2,11 @@ import { PrismaClient } from '@prisma/client';
 import { Customer } from '../../graphql/generated/types';
 import { fromDBCustomer } from '../utils/db.mappers';
 import { AuthToken } from '../auth/types';
+import {
+  ErrorCode,
+  GenericBookingError,
+  ObjectDoesNotExist,
+} from '../utils/errors';
 
 async function disableCustomer(
   db: PrismaClient,
@@ -10,11 +15,25 @@ async function disableCustomer(
 ): Promise<Customer> {
   // TODO: What if id does not exist?
 
-  const customer = await db.customer.update({
-    where: { id },
-    data: { enabled: false },
-  });
-  return fromDBCustomer(customer);
+  try {
+    const customer = await db.customer.update({
+      where: { id },
+      data: { enabled: false },
+    });
+    return fromDBCustomer(customer);
+  } catch (err) {
+    if (err.code === 'P2025') {
+      throw new ObjectDoesNotExist(
+        `Customer with id ${id} not found`,
+        ErrorCode.CUSTOMER_DOES_NOT_EXIST
+      );
+    }
+    console.log(`Unhandled error: ${err}`);
+    throw new GenericBookingError(
+      `disableCustomer failed with unknown error`,
+      err.code || ErrorCode.UNKNOWN_ERROR
+    );
+  }
 }
 
 export default disableCustomer;
