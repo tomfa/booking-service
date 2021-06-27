@@ -33,13 +33,13 @@ describe('deleteCustomer', () => {
     expect(beforeCount.bookings).toBe(1);
 
     const deleteCustomer = gql`
-        mutation {
-            deleteCustomer(id: "${customer.id}") {
-                id
-                email
-                enabled
-            }
+      mutation {
+        deleteCustomer(id: "${customer.id}") {
+          id
+          email
+          enabled
         }
+      }
     `;
 
     const { data, errors } = await mutate(deleteCustomer);
@@ -48,5 +48,26 @@ describe('deleteCustomer', () => {
     expect(afterCount.resources).toBe(0);
     expect(afterCount.bookings).toBe(0);
     expect(data?.deleteCustomer).toEqual(objectContaining({ id: customer.id }));
+  });
+  it('returns null if customer is unknown', async () => {
+    const deleteCustomer = gql`
+      mutation {
+        deleteCustomer(id: "jumbofish") {
+          id
+          email
+          enabled
+        }
+      }
+    `;
+
+    const { data, errors } = await mutate(deleteCustomer);
+    expect(data?.deleteCustomer).toBe(null);
+    expect(errors?.length).toBe(1);
+    const error = errors && errors[0];
+    expect(error?.message).toEqual(`Customer with id jumbofish not found`);
+    expect(error?.extensions).toEqual({
+      code: 404,
+      type: 'customer_does_not_exist',
+    });
   });
 });
