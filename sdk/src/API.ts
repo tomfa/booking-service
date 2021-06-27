@@ -11,11 +11,12 @@ import {
 import { ErrorCode, ObjectDoesNotExist } from './errors';
 import { getSdk } from './graphql/generated/types';
 import { mapSchedule, mapToBooking, mapToTimeSlot } from './mappers';
+import { toGQLDate } from './utils';
 
 export default class BookingAPI implements IBookingAPI {
   private token: string;
   private baseUrl: string;
-  private client: ReturnType<typeof getSdk>;
+  public client: ReturnType<typeof getSdk>;
 
   constructor({
     token,
@@ -99,7 +100,7 @@ export default class BookingAPI implements IBookingAPI {
   ): Promise<TimeSlot | undefined> {
     const { getNextAvailable } = await this.client.getNextAvailable({
       id: resourceId,
-      afterDate: after.getTime(),
+      afterDate: toGQLDate(after),
     });
     return mapToTimeSlot(getNextAvailable);
   }
@@ -115,8 +116,8 @@ export default class BookingAPI implements IBookingAPI {
     const { findAvailability } = await this.client.findAvailability({
       filterAvailability: {
         resourceIds: [resourceId],
-        from: props.from && props.from.getTime(),
-        to: props.to && props.to.getTime(),
+        from: props.from && toGQLDate(props.from),
+        to: props.to && toGQLDate(props.to),
       },
     });
     return findAvailability.map(mapToTimeSlot);
@@ -139,8 +140,8 @@ export default class BookingAPI implements IBookingAPI {
     const { addBooking } = await this.client.addBooking({
       addBookingInput: {
         ...booking,
-        start: booking.start.getTime(),
-        end: booking.end && booking.end.getTime(),
+        start: toGQLDate(booking.start),
+        end: booking.end && toGQLDate(booking.end),
       },
     });
     return mapToBooking(addBooking);
@@ -191,8 +192,8 @@ export default class BookingAPI implements IBookingAPI {
       filterBookings: {
         userId,
         resourceIds,
-        from: from && from.getTime(),
-        to: to && to.getTime(),
+        from: from && toGQLDate(from),
+        to: to && toGQLDate(to),
         includeCanceled,
         resourceCategories,
       },
@@ -210,7 +211,7 @@ export default class BookingAPI implements IBookingAPI {
     before?: Date;
   } = {}): Promise<Booking | undefined> {
     const { getLatestBooking: booking } = await this.client.getLatestBooking({
-      filterBookings: { to: before && before.getTime(), resourceIds, userId },
+      filterBookings: { to: before && toGQLDate(before), resourceIds, userId },
     });
     if (!booking) {
       return undefined;
@@ -237,8 +238,8 @@ export default class BookingAPI implements IBookingAPI {
       getBookedDuration: bookedDuration,
     } = await this.client.getBookedDuration({
       filterBookings: {
-        to: to && to.getTime(),
-        from: from && from.getTime(),
+        to: to && toGQLDate(to),
+        from: from && toGQLDate(from),
         resourceIds,
         userId,
       },
