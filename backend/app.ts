@@ -54,6 +54,7 @@ const createApp = () => {
     cancelBooking: gqlHandler('cancelBooking'),
     addCustomer: gqlHandler('addCustomer'),
     disableCustomer: gqlHandler('disableCustomer'),
+    deleteCustomer: gqlHandler('deleteCustomer'),
   };
 
   const app = express();
