@@ -12,6 +12,19 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    container: node:14
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postres
+          POSTGRES_PASSWORD: postgres_pass
+          POSTGRES_DB: vailable_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
