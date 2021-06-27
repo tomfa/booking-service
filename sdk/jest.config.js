@@ -8,6 +8,7 @@ module.exports = {
       },
     },
   },
+  globalSetup: './tests/globalSetup.ts',
   collectCoverageFrom: [
     '**/*.{js,ts}',
     '!**/node_modules/**',

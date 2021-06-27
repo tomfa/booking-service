@@ -10,6 +10,7 @@
     "test": "jest --runInBand",
     "test:watch": "yarn test --watch",
     "cdk": "cdk",
+    "start:test": "export NODE_ENV=test && ts-node ./local.ts",
     "start": "nodemon",
     "deploy": "npm run build && cdk deploy -O ../cdk-exports.json",
     "schema:generate-document": "gqlg --schemaFilePath ./graphql/schema.graphql --destDirPath ./graphql/generated/documents --depthLimit 5",

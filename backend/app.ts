@@ -81,6 +81,7 @@ const createApp = () => {
       context: () => context(req),
     }))
   );
+  app.use('/', (req, res) => res.send('OK'));
   const runningApp = app.listen(process.env.GRAPHQL_PORT);
   console.log(
     `Running a GraphQL API server at http://localhost:${process.env.GRAPHQL_PORT}/graphql`

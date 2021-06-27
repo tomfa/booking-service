@@ -4,7 +4,6 @@ module.exports = {
   roots: ['<rootDir>'],
   testMatch: ['**/*.test.ts'],
   globalSetup: './tests/globalSetup.ts',
-  globalTeardown: './tests/globalTeardown.ts',
   setupFilesAfterEnv: ['./tests/testSetup.ts'],
   collectCoverageFrom: [
     'lambda/**/*.ts',
