@@ -160,6 +160,9 @@ const getNextTimeslotAfter = (
   if (Number.isNaN(date.getTime())) {
     throw new Error(`nextBookingSlotHour: Invalid date passed.`);
   }
+  if (date > max) {
+    return undefined;
+  }
   const openingHours = getOpeningHoursForDate(resource, date);
   if (!isOpen(openingHours)) {
     const nextDay = startOfNextDay(date);
