@@ -26,8 +26,8 @@
   },
   "scripts": {
     "build": "npm run schema:generate && tsc -pretty -p .",
-    "test": "jest --passWithNoTests",
-    "test:watch": "jest --watch",
+    "test": "jest --runInBand --passWithNoTests",
+    "test:watch": "jest --runInBand  --watch",
     "release": "semantic-release",
     "schema:generate-document": "gqlg --schemaFilePath ../backend/graphql/schema.graphql --destDirPath ./src/graphql/generated/documents --depthLimit 5",
     "schema:generate": "npm run schema:generate-document && graphql-codegen --config codegen.yml"
