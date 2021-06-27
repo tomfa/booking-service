@@ -17,7 +17,7 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_USER: postres
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres_pass
           POSTGRES_DB: vailable_test
         options: >-
