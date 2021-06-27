@@ -68,7 +68,7 @@ export default class BookingAPI implements IBookingAPI {
     { schedule, ...updatedResource }: Partial<Omit<CreateResourceArgs, 'id'>>
   ): Promise<Resource> {
     const { updateResource: resource } = await this.client.updateResource({
-      input: {
+      updateResourceInput: {
         ...updatedResource,
         id: resourceId,
         schedule: mapSchedule(schedule),
