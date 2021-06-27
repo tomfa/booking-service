@@ -12,6 +12,7 @@ module.exports = {
     '!**/dist/**',
     '!**/build/**',
     '!**/coverage/**',
+    '!**/generated/**',
   ],
   globals: {
     'ts-jest': {

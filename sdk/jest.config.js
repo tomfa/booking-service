@@ -16,6 +16,7 @@ module.exports = {
     '!**/dist/**',
     '!**/build/**',
     '!**/coverage/**',
+    '!**/generated/**',
   ],
   modulePathIgnorePatterns: ['dist'],
 };
