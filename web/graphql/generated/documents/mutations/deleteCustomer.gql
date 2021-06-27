@@ -1,0 +1,11 @@
+mutation deleteCustomer($id: String!){
+    deleteCustomer(id: $id){
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+    }
+}

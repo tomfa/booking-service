@@ -150,6 +150,7 @@ export type Mutation = {
   setBookingComment?: Maybe<Booking>;
   addCustomer?: Maybe<Customer>;
   disableCustomer?: Maybe<Customer>;
+  deleteCustomer?: Maybe<Customer>;
 };
 
 
@@ -195,6 +196,11 @@ export type MutationAddCustomerArgs = {
 
 
 export type MutationDisableCustomerArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteCustomerArgs = {
   id: Scalars['String'];
 };
 
@@ -398,6 +404,19 @@ export type CancelBookingMutation = (
   & { cancelBooking?: Maybe<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
+  )> }
+);
+
+export type DeleteCustomerMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteCustomerMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteCustomer?: Maybe<(
+    { __typename?: 'Customer' }
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
   )> }
 );
 
@@ -887,6 +906,30 @@ export const useCancelBookingMutation = <
     ) => 
     useMutation<CancelBookingMutation, TError, CancelBookingMutationVariables, TContext>(
       (variables?: CancelBookingMutationVariables) => fetcher<CancelBookingMutation, CancelBookingMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CancelBookingDocument, variables)(),
+      options
+    );
+export const DeleteCustomerDocument = `
+    mutation deleteCustomer($id: String!) {
+  deleteCustomer(id: $id) {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
+  }
+}
+    `;
+export const useDeleteCustomerMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit }, 
+      options?: UseMutationOptions<DeleteCustomerMutation, TError, DeleteCustomerMutationVariables, TContext>
+    ) => 
+    useMutation<DeleteCustomerMutation, TError, DeleteCustomerMutationVariables, TContext>(
+      (variables?: DeleteCustomerMutationVariables) => fetcher<DeleteCustomerMutation, DeleteCustomerMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, DeleteCustomerDocument, variables)(),
       options
     );
 export const DisableCustomerDocument = `

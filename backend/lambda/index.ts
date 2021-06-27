@@ -21,6 +21,7 @@ import disableResource from './functions/disableResource';
 import cancelBooking from './functions/cancelBooking';
 import addCustomer from './functions/addCustomer';
 import disableCustomer from './functions/disableCustomer';
+import deleteCustomer from './functions/deleteCustomer';
 import updateCustomer from './functions/updateCustomer';
 import { MutationType, QueryType, SuccessReturnTypes } from './types';
 import { GenericBookingError } from './utils/errors';
@@ -176,6 +177,10 @@ exports.handler = async (
     case 'disableCustomer': {
       console.log(`Executing disableCustomer with ${JSON.stringify(args.id)}`);
       return await disableCustomer(db, args.id);
+    }
+    case 'deleteCustomer': {
+      console.log(`Executing deleteCustomer with ${JSON.stringify(args.id)}`);
+      return await deleteCustomer(db, args.id);
     }
     default:
       throw new GenericBookingError(`Unhandled field ${fieldName}`);
