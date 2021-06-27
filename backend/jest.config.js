@@ -5,6 +5,7 @@ module.exports = {
   testMatch: ['**/*.test.ts'],
   globalSetup: './tests/globalSetup.ts',
   setupFilesAfterEnv: ['./tests/testSetup.ts'],
+  coverageDirectory: '../public/backend/coverage',
   collectCoverageFrom: [
     'lambda/**/*.ts',
     '!**/node_modules/**',

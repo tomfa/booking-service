@@ -8,6 +8,7 @@ module.exports = {
       },
     },
   },
+  coverageDirectory: '../public/shared/coverage',
   collectCoverageFrom: [
     '**/*.{js,ts}',
     '!**/node_modules/**',

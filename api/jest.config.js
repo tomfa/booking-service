@@ -9,6 +9,7 @@ module.exports = {
     },
   },
   setupFilesAfterEnv: ['./src/testUtils/testSetup.ts'],
+  coverageDirectory: '../public/api/coverage',
   collectCoverageFrom: [
     '**/*.{js,ts}',
     '!**/node_modules/**',
