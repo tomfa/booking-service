@@ -15,12 +15,15 @@ const { handler } = require('./lambda');
 const gqlSchema = fs.readFileSync('./graphql/schema.graphql', 'utf8');
 const schema = buildSchema(gqlSchema);
 
-const gqlHandler = (fieldName: string) => async (args: unknown) => {
+const gqlHandler = (fieldName: string) => async (
+  args: unknown,
+  context: () => unknown
+) => {
   const db = await getDB();
   try {
     return await handler(
       { info: { fieldName }, arguments: args },
-      {},
+      context(),
       undefined,
       db
     );
@@ -30,6 +33,16 @@ const gqlHandler = (fieldName: string) => async (args: unknown) => {
       type: err.errorCode,
     });
   }
+};
+
+const context = (req: unknown) => {
+  // @ts-ignore
+  const authHeader = req.headers.authorization;
+  return {
+    headers: {
+      authorization: authHeader,
+    },
+  };
 };
 
 const createApp = () => {
@@ -60,11 +73,12 @@ const createApp = () => {
   const app = express();
   app.use(
     '/graphql',
-    graphqlHTTP({
+    graphqlHTTP(req => ({
       schema,
       rootValue: root,
       graphiql: true,
-    })
+      context: () => context(req),
+    }))
   );
   const runningApp = app.listen(process.env.GRAPHQL_PORT);
   console.log(
