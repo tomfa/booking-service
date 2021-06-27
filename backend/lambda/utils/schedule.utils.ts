@@ -142,7 +142,8 @@ const roundUpToNextSlotStart = (
   return cleanedDate;
 };
 const startOfNextDay = (date: Date): Date => {
-  const thisDay = new Date(getIsoDate(date));
+  const isoDay = getIsoDate(date);
+  const thisDay = new Date(`${isoDay}T00:00:00Z`);
   return new Date(thisDay.getTime() + 24 * 3600 * 1000);
 };
 export const isOpen = (scheudle: HourSchedule): scheudle is HourSchedule => {
