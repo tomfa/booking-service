@@ -26,6 +26,7 @@ import updateCustomer from './functions/updateCustomer';
 import { MutationType, QueryType, SuccessReturnTypes } from './types';
 import { GenericBookingError } from './utils/errors';
 import { getDB } from './db';
+import { getVerifiedTokenData } from './auth/jwt';
 
 type AppSyncEvent = {
   info: {
@@ -56,6 +57,10 @@ exports.handler = async (
   callback: unknown,
   db?: PrismaClient
 ): Promise<SuccessReturnTypes> => {
+  console.log(context);
+  // @ts-ignore
+  const token = getVerifiedTokenData(context?.headers?.authorization);
+
   if (!db) {
     // eslint-disable-next-line no-param-reassign
     db = await getDB();
@@ -72,39 +77,39 @@ exports.handler = async (
   switch (fieldName) {
     case 'getResourceById': {
       console.log(`Executing getResourceById with ${JSON.stringify(args.id)}`);
-      return await getResourceById(db, args.id);
+      return await getResourceById(db, args.id, token);
     }
     case 'getBookingById': {
       console.log(`Executing getBookingById with ${JSON.stringify(args.id)}`);
-      return await getBookingById(db, args.id);
+      return await getBookingById(db, args.id, token);
     }
     case 'getCustomerByIssuer': {
       console.log(
         `Executing getCustomerByIssuer with ${JSON.stringify(args.issuer)}`
       );
-      return await getCustomerByIssuer(db, args.issuer);
+      return await getCustomerByIssuer(db, args.issuer, token);
     }
     case 'getCustomerByEmail': {
       console.log(
         `Executing getCustomerByEmail with ${JSON.stringify(args.email)}`
       );
-      return await getCustomerByEmail(db, args.email);
+      return await getCustomerByEmail(db, args.email, token);
     }
     case 'getCustomerById': {
       console.log(`Executing getCustomerById with ${JSON.stringify(args.id)}`);
-      return await getCustomerById(db, args.id);
+      return await getCustomerById(db, args.id, token);
     }
     case 'findResources': {
       console.log(
         `Executing findResources with ${JSON.stringify(args.filterResource)}`
       );
-      return await findResources(db, args.filterResource);
+      return await findResources(db, args.filterResource, token);
     }
     case 'findBookings': {
       console.log(
         `Executing findBookings with ${JSON.stringify(args.filterBookings)}`
       );
-      return await findBookings(db, args.filterBookings);
+      return await findBookings(db, args.filterBookings, token);
     }
     case 'findAvailability': {
       console.log(
@@ -112,17 +117,17 @@ exports.handler = async (
           args.filterAvailability
         )}`
       );
-      return await findAvailability(db, args.filterAvailability);
+      return await findAvailability(db, args.filterAvailability, token);
     }
     case 'getNextAvailable': {
       console.log(`Executing getNextAvailable with ${JSON.stringify(args.id)}`);
-      return await getNextAvailable(db, args.id, args.afterDate);
+      return await getNextAvailable(db, args.id, args.afterDate, token);
     }
     case 'getLatestBooking': {
       console.log(
         `Executing getLatestBooking with ${JSON.stringify(args.filterBookings)}`
       );
-      return await getLatestBooking(db, args.filterBookings);
+      return await getLatestBooking(db, args.filterBookings, token);
     }
     case 'getBookedDuration': {
       console.log(
@@ -130,13 +135,13 @@ exports.handler = async (
           args.filterBookings
         )}`
       );
-      return await getBookedDuration(db, args.filterBookings);
+      return await getBookedDuration(db, args.filterBookings, token);
     }
     case 'addResource': {
       console.log(
         `Executing addResource with ${JSON.stringify(args.addResourceInput)}`
       );
-      return await addResource(db, args.addResourceInput);
+      return await addResource(db, args.addResourceInput, token);
     }
     case 'updateResource': {
       console.log(
@@ -144,7 +149,7 @@ exports.handler = async (
           args.updateResourceInput
         )}`
       );
-      return await updateResource(db, args.updateResourceInput);
+      return await updateResource(db, args.updateResourceInput, token);
     }
     case 'updateCustomer': {
       console.log(
@@ -152,35 +157,35 @@ exports.handler = async (
           args.updateCustomerInput
         )}`
       );
-      return await updateCustomer(db, args.updateCustomerInput);
+      return await updateCustomer(db, args.updateCustomerInput, token);
     }
     case 'addBooking': {
       console.log(
         `Executing addBooking with ${JSON.stringify(args.addBookingInput)}`
       );
-      return await addBooking(db, args.addBookingInput);
+      return await addBooking(db, args.addBookingInput, token);
     }
     case 'disableResource': {
       console.log(`Executing disableResource with ${JSON.stringify(args.id)}`);
-      return await disableResource(db, args.id);
+      return await disableResource(db, args.id, token);
     }
     case 'cancelBooking': {
       console.log(`Executing cancelBooking with ${JSON.stringify(args.id)}`);
-      return await cancelBooking(db, args.id);
+      return await cancelBooking(db, args.id, token);
     }
     case 'addCustomer': {
       console.log(
         `Executing addCustomer with ${JSON.stringify(args.addCustomerInput)}`
       );
-      return await addCustomer(db, args.addCustomerInput);
+      return await addCustomer(db, args.addCustomerInput, token);
     }
     case 'disableCustomer': {
       console.log(`Executing disableCustomer with ${JSON.stringify(args.id)}`);
-      return await disableCustomer(db, args.id);
+      return await disableCustomer(db, args.id, token);
     }
     case 'deleteCustomer': {
       console.log(`Executing deleteCustomer with ${JSON.stringify(args.id)}`);
-      return await deleteCustomer(db, args.id);
+      return await deleteCustomer(db, args.id, token);
     }
     default:
       throw new GenericBookingError(`Unhandled field ${fieldName}`);

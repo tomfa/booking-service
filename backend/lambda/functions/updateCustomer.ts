@@ -7,10 +7,12 @@ import {
   GenericBookingError,
   ObjectDoesNotExist,
 } from '../utils/errors';
+import { AuthToken } from '../auth/types';
 
 async function updateCustomer(
   db: PrismaClient,
-  args: UpdateCustomerInput
+  args: UpdateCustomerInput,
+  token: AuthToken
 ): Promise<Customer> {
   // TODO: Stop invalid updates, see addCustomer
 

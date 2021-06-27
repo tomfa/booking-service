@@ -1,10 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 import { Booking, FindBookingInput } from '../../graphql/generated/types';
 import { fromDBBooking, toBookingFilter } from '../utils/db.mappers';
+import { AuthToken } from '../auth/types';
 
 async function getLatestBooking(
   db: PrismaClient,
-  args: FindBookingInput
+  args: FindBookingInput,
+  token: AuthToken
 ): Promise<Booking | null> {
   const filter = toBookingFilter(args);
   const bookings = await db.booking.findMany({

@@ -1,16 +1,22 @@
 import { PrismaClient } from '@prisma/client';
 import { TimeSlot } from '../../graphql/generated/types';
+import { AuthToken } from '../auth/types';
 import findAvailability from './findAvailability';
 
 async function getNextAvailable(
   db: PrismaClient,
   id: string,
-  afterDate: number
+  afterDate: number,
+  token: AuthToken
 ): Promise<TimeSlot | null> {
-  const slots = await findAvailability(db, {
-    from: afterDate,
-    resourceIds: [id],
-  });
+  const slots = await findAvailability(
+    db,
+    {
+      from: afterDate,
+      resourceIds: [id],
+    },
+    token
+  );
 
   const firstAvailableSlot = slots
     .sort((a, b) => {

@@ -8,6 +8,7 @@ import {
   GenericBookingError,
   ObjectDoesNotExist,
 } from '../utils/errors';
+import { AuthToken } from '../auth/types';
 
 const mapResourceUpdate = (
   args: UpdateResourceInput
@@ -24,7 +25,8 @@ const mapResourceUpdate = (
 
 async function updateResource(
   db: PrismaClient,
-  args: UpdateResourceInput
+  args: UpdateResourceInput,
+  token: AuthToken
 ): Promise<Resource | null> {
   // TODO: What if id does not exist?
   try {

@@ -3,10 +3,12 @@ import { AddResourceInput, Resource } from '../../graphql/generated/types';
 import { fromDBResource } from '../utils/db.mappers';
 import { getId, mapSchedule } from '../utils/input.mappers';
 import { BadRequestError, ErrorCode } from '../utils/errors';
+import { AuthToken } from '../auth/types';
 
 async function addResource(
   db: PrismaClient,
-  { id, enabled = true, label = '', schedule, ...resource }: AddResourceInput
+  { id, enabled = true, label = '', schedule, ...resource }: AddResourceInput,
+  token: AuthToken
 ): Promise<Resource> {
   if (resource.seats && resource.seats < 0) {
     throw new BadRequestError(

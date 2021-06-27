@@ -13,6 +13,7 @@ import {
 import { fromGQLDate, reduceAvailability } from '../utils/date.utils';
 import { fromDBBooking, fromDBResource } from '../utils/db.mappers';
 import { constructAllSlots } from '../utils/schedule.utils';
+import { AuthToken } from '../auth/types';
 
 const findAvailabilityForSingleResource = (
   resource: Resource,
@@ -35,7 +36,8 @@ const findAvailabilityForSingleResource = (
 
 async function findAvailability(
   db: PrismaClient,
-  args: FindAvailabilityInput
+  args: FindAvailabilityInput,
+  token: AuthToken
 ): Promise<TimeSlot[]> {
   if (args.resourceIds.length === 0) {
     return [];

@@ -7,10 +7,12 @@ import {
   ErrorCode,
   GenericBookingError,
 } from '../utils/errors';
+import { AuthToken } from '../auth/types';
 
 async function addCustomer(
   db: PrismaClient,
-  { id, ...rest }: AddCustomerInput
+  { id, ...rest }: AddCustomerInput,
+  token: AuthToken
 ): Promise<Customer> {
   // TODO: what if id already exists
   // TODO: validate more input: issuer, phoneNumber...

@@ -8,6 +8,7 @@ import {
 import { removeNull } from '../utils/input.mappers';
 import { closedSchedule } from '../utils/schedule.utils';
 import { fromDBResource } from '../utils/db.mappers';
+import { AuthToken } from '../auth/types';
 
 const mapSchedule = (val: Prisma.JsonValue): Schedule => {
   if (!val) {
@@ -18,7 +19,8 @@ const mapSchedule = (val: Prisma.JsonValue): Schedule => {
 
 async function findResources(
   db: PrismaClient,
-  { resourceIds, ...args }: FindResourceInput
+  { resourceIds, ...args }: FindResourceInput,
+  token: AuthToken
 ): Promise<Resource[]> {
   const clean = removeNull({ ...args });
   const resources = await db.resource.findMany({

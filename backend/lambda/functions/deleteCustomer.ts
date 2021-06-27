@@ -1,8 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import { Customer } from '../../graphql/generated/types';
 import { fromDBCustomer } from '../utils/db.mappers';
+import { AuthToken } from '../auth/types';
 
-async function deleteCustomer(db: PrismaClient, id: string): Promise<Customer> {
+async function deleteCustomer(
+  db: PrismaClient,
+  id: string,
+  token: AuthToken
+): Promise<Customer> {
   const resources = await db.resource.findMany({
     where: { customerId: id },
     select: { id: true },

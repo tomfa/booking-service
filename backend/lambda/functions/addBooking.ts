@@ -16,6 +16,7 @@ import { getOpeningHoursForDate } from '../utils/resource.utils';
 import { fromGQLDate, toGQLDate } from '../utils/date.utils';
 import { getAvailableSeatNumbers } from '../utils/seating.utils';
 import { isOpen } from '../utils/schedule.utils';
+import { AuthToken } from '../auth/types';
 import getResourceById from './getResourceById';
 
 const getEndTime = (start: Date, resource: Resource): Date => {
@@ -25,12 +26,13 @@ const getEndTime = (start: Date, resource: Resource): Date => {
 
 async function addBooking(
   db: PrismaClient,
-  { start, end, ...data }: AddBookingInput
+  { start, end, ...data }: AddBookingInput,
+  token: AuthToken
 ): Promise<Booking> {
   // TODO: what if id already exists
   // TODO: Check that customer has credits
   // TODO: Reduce customer credits
-  const resource = await getResourceById(db, data.resourceId);
+  const resource = await getResourceById(db, data.resourceId, token);
   if (!resource) {
     throw new BadRequestError(
       `Can not create booking on unknown resource`,
