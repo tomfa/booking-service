@@ -16,7 +16,7 @@ import {
 } from './date.utils';
 import { HourMinuteString, IsoDate } from './types';
 import { validateHourMinute } from './validation.utils';
-import { BadRequestError, ErrorCode, GenericBookingError } from './errors';
+import { GenericBookingError } from './errors';
 
 export const closed: HourSchedule = {
   start: '',
@@ -178,14 +178,15 @@ export const bookingSlotFitsInResourceSlots = (
   if (bookingDiffFromOpeningMinutes % openingHours.slotIntervalMinutes !== 0) {
     return false;
   }
-  if (bookingDurationMinutes !== openingHours.slotDurationMinutes) {
-    throw new BadRequestError(
-      `Booking length ${bookingDurationMinutes}min does not fit into opening hours at ${getIsoDate(
-        fromGQLDate(booking.start)
-      )} for resource ${resource.id}`,
-      ErrorCode.INVALID_BOOKING_ARGUMENTS
-    );
-  }
+  // Do this check for non-admin users
+  // if (bookingDurationMinutes !== openingHours.slotDurationMinutes) {
+  //   throw new BadRequestError(
+  //     `Booking length ${bookingDurationMinutes}min does not fit into opening hours at ${getIsoDate(
+  //       fromGQLDate(booking.start)
+  //     )} for resource ${resource.id}`,
+  //     ErrorCode.INVALID_BOOKING_ARGUMENTS
+  //   );
+  // }
   return true;
 };
 export const constructAllSlots = ({
