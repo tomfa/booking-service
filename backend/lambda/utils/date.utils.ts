@@ -12,6 +12,14 @@ export const splitHourMinuteOfDay = (
 ): { hour: number; minute: number } => {
   return { hour: date.getUTCHours(), minute: date.getUTCMinutes() };
 };
+export const msOfDay = (date: Date): number => {
+  return (
+    date.getUTCHours() * 3600 * 1000 +
+    date.getUTCMinutes() * 60 * 1000 +
+    date.getUTCSeconds() * 1000 +
+    date.getUTCMilliseconds()
+  );
+};
 export const reduceAvailability = (
   tempSlots: TimeSlot[],
   bookings: Booking[]
@@ -36,3 +44,5 @@ export const getDiffInMinutes = (start: Date, end: Date): number => {
 export const addMinutes = (date: Date, numMinutes: number): Date => {
   return new Date(date.getTime() + numMinutes * 60 * 1000);
 };
+export const isValidDate = (date: Date): boolean =>
+  !Number.isNaN(date.getTime());

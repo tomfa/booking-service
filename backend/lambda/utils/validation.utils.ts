@@ -65,7 +65,7 @@ const validateStartAndEndTimestamp = ({
 }: DateScheduleInput) => {
   if (start === '' || end === '') {
     throw new BadRequestError(
-      `Schedule for ${day}: start and end must eithr both or none be blank`,
+      `Schedule for ${day}: start and end must either both or none be blank`,
       ErrorCode.INVALID_TIMESTAMP
     );
   }

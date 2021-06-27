@@ -9,12 +9,14 @@ import { getOpeningHoursForDate } from './resource.utils';
 import {
   fromGQLDate,
   getIsoDate,
+  isValidDate,
+  msOfDay,
   splitHourMinuteOfDay,
   toGQLDate,
 } from './date.utils';
 import { HourMinuteString, IsoDate } from './types';
 import { validateHourMinute } from './validation.utils';
-import { BadRequestError, ErrorCode } from './errors';
+import { BadRequestError, ErrorCode, GenericBookingError } from './errors';
 
 export const closed: HourSchedule = {
   start: '',
@@ -32,7 +34,7 @@ export const closedSchedule: Schedule = {
   sun: closed,
   overriddenDates: [],
 };
-export const getCurrentTimeSlot = (
+export const convertDateToTimeSlot = (
   resource: Resource,
   time: Date
 ): TimeSlot | undefined => {
@@ -107,38 +109,31 @@ export const isBeforeOpeningHours = (
     hour * 60 + minute - (startHour * 60 + startMinute);
   return bookingDiffFromOpeningMinutes < 0;
 };
-export const isAfterOpeningHours = (
+export const msUntilClosing = (
   openingHours: HourSchedule,
   date: Date
-): boolean => {
+): number => {
   const { hour: endHour, minute: endMinute } = splitHourMinute(
     openingHours.end
   );
-  const { hour, minute } = splitHourMinuteOfDay(date);
-  const minutesUntilClosing = endHour * 60 + endMinute - (hour * 60 + minute);
-  // Note: _at_ closing time will be considered closed
-  return minutesUntilClosing <= 0;
+  const closingTimeMs = endHour * 3600 * 1000 + endMinute * 60 * 1000;
+  return closingTimeMs - msOfDay(date);
 };
-const roundUpToNextSlotStart = (
-  openingHours: HourSchedule,
-  date: Date
-): Date => {
+const roundUpToSlotStart = (openingHours: HourSchedule, date: Date): Date => {
   const { hour: startHour, minute: startMinute } = splitHourMinute(
     openingHours.start
   );
-  const { hour, minute } = splitHourMinuteOfDay(date);
-  const bookingDiffFromOpeningMinutes =
-    hour * 60 + minute - (startHour * 60 + startMinute);
-  const remainder =
-    bookingDiffFromOpeningMinutes % openingHours.slotIntervalMinutes;
-  if (remainder === 0) {
-    return new Date(
-      date.getTime() + openingHours.slotIntervalMinutes * 60 * 1000
-    );
+  const slotIntervalMs = openingHours.slotIntervalMinutes * 60 * 1000;
+  const dayMS = msOfDay(date);
+  const bookingStartAsMsOfDay =
+    startHour * 3600 * 1000 - startMinute * 60 * 1000;
+  const diffFromStartOfBookingDay = dayMS - bookingStartAsMsOfDay;
+  const offsetFromSlotStart = diffFromStartOfBookingDay % slotIntervalMs;
+  if (offsetFromSlotStart === 0) {
+    return date;
   }
-  const minutesToAdd = openingHours.slotIntervalMinutes - remainder;
-  const cleanedDate = new Date(date.getTime() + minutesToAdd * 60 * 1000);
-  cleanedDate.setSeconds(0, 0);
+  const msToAdd = slotIntervalMs - offsetFromSlotStart;
+  const cleanedDate = new Date(date.getTime() + msToAdd);
   return cleanedDate;
 };
 const startOfNextDay = (date: Date): Date => {
@@ -146,10 +141,14 @@ const startOfNextDay = (date: Date): Date => {
   const thisDay = new Date(`${isoDay}T00:00:00Z`);
   return new Date(thisDay.getTime() + 24 * 3600 * 1000);
 };
+const endOfDate = (date: Date): Date => {
+  const tomorrow = startOfNextDay(date);
+  return new Date(tomorrow.getTime() - 1);
+};
 export const isOpen = (scheudle: HourSchedule): scheudle is HourSchedule => {
   return scheudle.start !== '';
 };
-const getNextTimeslotAfter = (
+const findNextValidTimeSlot = (
   resource: Resource,
   date: Date,
   max: Date
@@ -157,7 +156,7 @@ const getNextTimeslotAfter = (
   if (!resource.enabled) {
     return undefined;
   }
-  if (Number.isNaN(date.getTime())) {
+  if (!isValidDate(date) || !isValidDate(max)) {
     throw new Error(`nextBookingSlotHour: Invalid date passed.`);
   }
   if (date > max) {
@@ -165,30 +164,20 @@ const getNextTimeslotAfter = (
   }
   const openingHours = getOpeningHoursForDate(resource, date);
   if (!isOpen(openingHours)) {
-    const nextDay = startOfNextDay(date);
-    if (nextDay > max) {
-      return undefined;
-    }
-    return getNextTimeslotAfter(resource, nextDay, max);
+    return findNextValidTimeSlot(resource, startOfNextDay(date), max);
   }
   if (isBeforeOpeningHours(openingHours, date)) {
     return firstSlotOfDay(openingHours, getIsoDate(date));
   }
-  const cleanedDate = roundUpToNextSlotStart(openingHours, date);
-  const nextDay = startOfNextDay(date);
-  if (isAfterOpeningHours(openingHours, cleanedDate)) {
+  const start = roundUpToSlotStart(openingHours, date);
+  if (msUntilClosing(openingHours, start) <= 0) {
+    const nextDay = startOfNextDay(date);
     if (nextDay > max) {
       return undefined;
     }
-    return getNextTimeslotAfter(resource, nextDay, max);
+    return findNextValidTimeSlot(resource, nextDay, max);
   }
-  const end = new Date(
-    cleanedDate.getTime() + openingHours.slotDurationMinutes * 60 * 1000 - 60
-  );
-  if (isAfterOpeningHours(openingHours, end)) {
-    return getNextTimeslotAfter(resource, nextDay, max);
-  }
-  return cleanedDate;
+  return start;
 };
 export const bookingSlotFitsInResourceSlots = (
   resource: Resource,
@@ -237,19 +226,29 @@ export const constructAllSlots = ({
   from: Date;
   to: Date;
 }): TimeSlot[] => {
+  if (!isValidDate(from) || !isValidDate(to)) {
+    throw new GenericBookingError(
+      `Received invalid date range to construct slots form`
+    );
+  }
   if (!resource.enabled) {
     return [];
   }
   const timeslots: TimeSlot[] = [];
-  const immediatlyBeforeFrom = new Date(from.getTime() - 1);
-  let cursor = getNextTimeslotAfter(resource, immediatlyBeforeFrom, to);
-
+  let cursor = findNextValidTimeSlot(resource, from, to);
   while (cursor && cursor < to) {
-    const currentTimeSlot = getCurrentTimeSlot(resource, cursor);
+    const currentTimeSlot = convertDateToTimeSlot(resource, cursor);
     if (currentTimeSlot) {
       timeslots.push(currentTimeSlot);
+    } else {
+      // TODO: This smells
+      // throw new Error(`Timeslot ${cursor} was not valid??`);
     }
-    cursor = getNextTimeslotAfter(resource, cursor, to);
+    cursor = findNextValidTimeSlot(
+      resource,
+      new Date(cursor.getTime() + 1),
+      to
+    );
   }
   return timeslots;
 };
