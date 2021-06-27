@@ -17,7 +17,7 @@
     "schema:generate": "npm run schema:generate-document && graphql-codegen --config codegen.yml",
     "prisma:generate-schema": "npx prisma validate && npx prisma introspect && npx prisma generate",
     "prisma:reset": "npx prisma migrate reset -f",
-    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:migrate": "npx prisma migrate deploy",
     "prisma:migrate:dev": "export DATABASE_URL=postgresql://postgres:postgres_pass@localhost:5432/vailable_test && npx prisma migrate dev"
   },
   "prisma": {
