@@ -19,7 +19,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres_pass
-          POSTGRES_DB: vailable_test
+          POSTGRES_DB: vailable
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
