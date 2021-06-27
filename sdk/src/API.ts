@@ -21,16 +21,19 @@ export default class BookingAPI implements IBookingAPI {
   constructor({
     token,
     baseUrl = 'https://api.vailable.eu/graphql',
+    serviceApiKey = 'da2-cmjgalw5rfdc3lqwe46hrqsi5m',
   }: {
     token: string;
     baseUrl?: string;
+    serviceApiKey?: string;
   }) {
     this.token = token;
     this.baseUrl = baseUrl;
     this.client = getSdk(
       new GraphQLClient(baseUrl, {
         headers: {
-          'x-api-key': token,
+          'x-api-key': serviceApiKey,
+          Authorization: `Bearer ${token}`,
         },
       })
     );
