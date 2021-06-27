@@ -1,3 +1,4 @@
+import { fromGQLDate , fromGQLDate } from './utils';
 import {
   TimeSlot as GQLTimeSLot,
   Booking as GQLBooking,
@@ -10,8 +11,8 @@ export const mapToTimeSlot = (slot: GQLTimeSLot): TimeSlot | undefined => {
     return undefined;
   }
   return {
-    start: new Date(slot.start),
-    end: new Date(slot.end),
+    start: fromGQLDate(slot.start),
+    end: fromGQLDate(slot.end),
     availableSeats: slot.availableSeats,
   };
 };
@@ -23,8 +24,8 @@ export const mapToBooking = (booking: GQLBooking): Booking => {
   const durationMinutes = Math.floor(msDiff / 60000);
   return {
     ...booking,
-    start,
-    end,
+    start: fromGQLDate(booking.start),
+    end: fromGQLDate(booking.end),
     durationMinutes,
     userId: booking.userId || '',
     comment: booking.comment || '',

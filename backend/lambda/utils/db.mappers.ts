@@ -12,7 +12,7 @@ import {
   Schedule,
 } from '../../graphql/generated/types';
 import { closedSchedule } from './schedule.utils';
-import { fromGQLDate } from './date.utils';
+import { fromGQLDate, toGQLDate } from './date.utils';
 
 export function fromDBBooking({
   startTime,
@@ -21,8 +21,8 @@ export function fromDBBooking({
 }: DBBooking): Booking {
   return {
     ...booking,
-    start: Math.floor(startTime.getTime() / 1000),
-    end: Math.floor(endTime.getTime() / 1000),
+    start: toGQLDate(startTime),
+    end: toGQLDate(endTime),
   };
 }
 
