@@ -58,7 +58,7 @@ const isClosed = (date: DateScheduleInput): boolean => {
   return date.start === '' && date.end === '';
 };
 
-const validateStartAndEndTimestamp = ({
+const validateOpenStartAndEndTimestamp = ({
   start,
   end,
   day,
@@ -71,15 +71,18 @@ const validateStartAndEndTimestamp = ({
   }
   const { hour: startHour, minute: startMinute } = splitHourMinute(start);
   const { hour: endHour, minute: endMinute } = splitHourMinute(end);
-  if (startHour * 60 + startMinute > endHour * 60 + endMinute) {
+
+  validateHourMinute(start);
+  validateHourMinute(end);
+  const endsAtMidnight = end === '00:00';
+  if (
+    !endsAtMidnight &&
+    startHour * 60 + startMinute > endHour * 60 + endMinute
+  ) {
     throw new BadRequestError(
       `Start time '${start}' is after end time '${end}'`,
       ErrorCode.INVALID_TIMESTAMP
     );
-  }
-  if (start !== '') {
-    validateHourMinute(start);
-    validateHourMinute(end);
   }
 };
 
@@ -87,7 +90,7 @@ export const validateDaySchedule = (schedule: DateScheduleInput) => {
   const { day, slotDurationMinutes, slotIntervalMinutes } = schedule;
   validateDayScheduleDay(day);
   if (!isClosed(schedule)) {
-    validateStartAndEndTimestamp(schedule);
+    validateOpenStartAndEndTimestamp(schedule);
     if (slotDurationMinutes <= 0) {
       throw new BadRequestError(
         `Schedule for ${day}: slotDurationMinutes must be bigger than 0`,
