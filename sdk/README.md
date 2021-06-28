@@ -45,7 +45,7 @@ const bookings = await API.findBookings({
 ### Add resource
 
 ```ts
-import { types, createSchedule } from 'vailalbe';
+import { types, createSchedule } from 'vailable';
 
 // 1 hour long sessions, bookable at 08:00, 08:30, 09:00, ..., 19:30
 const schedule = createSchedule({
