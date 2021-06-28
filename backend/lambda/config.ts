@@ -2,6 +2,7 @@ import {
   getUsersFromEnv,
   getOriginsFromEnv,
   getAcceptedIssuersFromEnv,
+  getIssuerFromEnv,
 } from './utils/env.utils';
 
 export const config = {
@@ -17,7 +18,7 @@ export const config = {
       process.env.JWT_ISSUER as string,
       ...getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
     ],
-    issuer: 'vailable.au',
+    issuer: getIssuerFromEnv(process.env.JWT_ISSUER || 'vailable.au'),
     permissionPrefix: 'vailable:',
   },
 };

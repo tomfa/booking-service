@@ -6,7 +6,7 @@ import * as nock from 'nock';
 import config from '../config';
 import { cache } from '../utils/cache/memoryCache';
 import * as b64 from '../utils/encoding/base64';
-import { BadAuthenticationError } from '../utils/errors';
+import { BadAuthenticationError, ErrorCode } from '../utils/errors';
 import { JSONObject } from '../types';
 import { sign, verify } from './jwt';
 
@@ -157,7 +157,9 @@ describe('verify', () => {
       fail('Fetching keys from server should return 404');
     } catch (err) {
       expect(err instanceof BadAuthenticationError).toBe(true);
-      expect(err.displayMessage).toBe(
+      expect(err.httpCode).toBe(403);
+      expect(err.errorCode).toBe(ErrorCode.BAD_AUTHENTICATION);
+      expect(err.message).toBe(
         `Unable to get key store. https://thirdparty.com/.well-known/jwks.json returned HTTP status 404`
       );
     }
@@ -178,7 +180,9 @@ describe('verify', () => {
       fail('Verifying invalid token should throw an error');
     } catch (err) {
       expect(err instanceof BadAuthenticationError).toBe(true);
-      expect(err.displayMessage).toBe(
+      expect(err.httpCode).toBe(403);
+      expect(err.errorCode).toBe(ErrorCode.BAD_AUTHENTICATION);
+      expect(err.message).toBe(
         `Unable to get key store. https://thirdparty.com/.well-known/jwks.json returned HTTP status 404`
       );
     }
@@ -199,7 +203,9 @@ describe('verify', () => {
       fail('Verifying invalid token should throw an error');
     } catch (err) {
       expect(err instanceof BadAuthenticationError).toBe(true);
-      expect(err.displayMessage).toBe(
+      expect(err.httpCode).toBe(403);
+      expect(err.errorCode).toBe(ErrorCode.BAD_AUTHENTICATION);
+      expect(err.message).toBe(
         `Issuer 'iamnotreal.com' is not authorized for this API`
       );
     }

@@ -27,13 +27,14 @@ const getCustomerByIssuerTest = async (
 
 describe('getCustomerByIssuer', () => {
   it('returns customer', async () => {
+    const issuer = 'henrik;';
     const customer = await createCustomer({
       id: 'fish',
-      issuer: 'henrik',
+      issuer,
       email: 'tomfa@github.io',
     });
 
-    const { data } = await getCustomerByIssuerTest({ issuer: customer.issuer });
+    const { data } = await getCustomerByIssuerTest({ issuer });
 
     expect(data?.getCustomerByIssuer).toEqual(objectContaining(customer));
   });
