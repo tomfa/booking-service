@@ -1,4 +1,3 @@
-import { cleanIssuer } from './auth/jwt';
 import {
   getUsersFromEnv,
   getOriginsFromEnv,
@@ -18,7 +17,7 @@ export const config = {
       process.env.JWT_ISSUER as string,
       ...getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
     ],
-    issuer: cleanIssuer(process.env.JWT_ISSUER || 'vailable.au'),
+    issuer: 'vailable.au',
     permissionPrefix: 'vailable:',
   },
 };
