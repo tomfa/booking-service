@@ -97,8 +97,7 @@ export class BackendStack extends cdk.Stack {
         DB_NAME: 'vailable_db',
         AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
         UUID_NAMESPACE: '016c09f7-962a-416c-b65f-de4a81d622c6',
-        ALLOWED_ORIGINS:
-          'http://localhost:8000,http://localhost:5000,https://vailable.eu',
+        ALLOWED_ORIGINS: '*',
         JWT_ISSUER: 'api.vailable.eu',
         ACCEPTED_ISSUERS: 'auth.kroloftet.no',
       },
