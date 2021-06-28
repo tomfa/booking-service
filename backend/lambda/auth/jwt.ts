@@ -8,9 +8,17 @@ import { BadAuthenticationError, GenericBookingError } from '../utils/errors';
 import { JSONObject } from '../types';
 import { APITokenData, TokenData, AuthToken } from './types';
 
-export const getVerifiedTokenData = (authHeader: string): AuthToken => {
-  const token = authHeader.split(' ').reverse()[0];
+export const getVerifiedTokenData = (
+  authHeader: string | undefined
+): AuthToken => {
   // TODO: Implement
+  if (!authHeader) {
+    return {
+      sub: null,
+      customerId: null,
+    };
+  }
+  const token = authHeader.split(' ').reverse()[0];
   const customerId: string = token.split('-')[0];
 
   return {

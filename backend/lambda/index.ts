@@ -55,9 +55,7 @@ exports.handler = async (
   db?: PrismaClient
 ): Promise<SuccessReturnTypes> => {
   const fieldName = event.info.fieldName as MutationType | QueryType;
-
-  // @ts-ignore
-  const token = getVerifiedTokenData(context?.headers?.authorization);
+  const token = getVerifiedTokenData(event.request.headers.authorization);
 
   if (!db) {
     // eslint-disable-next-line no-param-reassign
@@ -67,8 +65,6 @@ exports.handler = async (
   context.callbackWaitsForEmptyEventLoop = false;
   const { arguments: args } = event;
 
-  // TODO: Check for authentication.
-  //   - Then set or filter by customerId
   switch (fieldName) {
     case 'getResourceById': {
       console.log(`Executing getResourceById with ${JSON.stringify(args.id)}`);

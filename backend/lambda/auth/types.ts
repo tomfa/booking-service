@@ -1,7 +1,7 @@
 export type AuthToken = {
   // TODO: This is wrong
   sub: null | string;
-  customerId: string;
+  customerId: string | null;
 };
 
 export type Role = 'user';

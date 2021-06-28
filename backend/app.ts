@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import * as express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import { buildSchema, GraphQLError } from 'graphql';
+import { Request } from 'express';
 
 const env = process.env.NODE_ENV;
 
@@ -17,13 +18,13 @@ const schema = buildSchema(gqlSchema);
 
 const gqlHandler = (fieldName: string) => async (
   args: unknown,
-  context: () => unknown
+  getRequest: () => Request
 ) => {
   const db = await getDB();
   try {
     return await handler(
-      { info: { fieldName }, arguments: args },
-      context(),
+      { info: { fieldName }, arguments: args, request: getRequest() },
+      {},
       undefined,
       db
     );
@@ -33,16 +34,6 @@ const gqlHandler = (fieldName: string) => async (
       type: err.errorCode,
     });
   }
-};
-
-const context = (req: unknown) => {
-  // @ts-ignore
-  const authHeader = req.headers.authorization;
-  return {
-    headers: {
-      authorization: authHeader,
-    },
-  };
 };
 
 const createApp = () => {
@@ -78,7 +69,7 @@ const createApp = () => {
       schema,
       rootValue: root,
       graphiql: true,
-      context: () => context(req),
+      context: () => req,
     }))
   );
   app.use('/', (req, res) => res.send('OK'));
