@@ -1,6 +1,6 @@
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
-import { Context, AppSyncResolverEvent } from '@types/aws-lambda';
+import { Context, AppSyncResolverEvent, Callback } from '@types/aws-lambda';
 import { PrismaClient } from '@prisma/client';
 import * as types from '../graphql/generated/types';
 import getResourceById from './functions/getResourceById';
@@ -29,7 +29,7 @@ import { GenericBookingError } from './utils/errors';
 import { getDB } from './db';
 import { getVerifiedTokenData } from './auth/jwt';
 
-type AppSyncEvent = AppSyncResolverEvent<{
+type ArgumentType = {
   booking: types.Booking;
   resource: types.Resource;
   customer: types.Customer;
@@ -46,27 +46,57 @@ type AppSyncEvent = AppSyncResolverEvent<{
   comment: string;
   issuer: string;
   email: string;
-}>;
+};
+type AppSyncEvent = AppSyncResolverEvent<ArgumentType>;
 
 exports.handler = async (
   event: AppSyncEvent,
   context: Context,
-  callback: unknown,
+  callback: Callback,
   db?: PrismaClient
-): Promise<SuccessReturnTypes> => {
-  const fieldName = event.info.fieldName as MutationType | QueryType;
+) => {
+  // Set to false to send the response right away when the callback executes, instead of waiting for the Node.js event loop to be empty.
+  context.callbackWaitsForEmptyEventLoop = false;
 
   if (!db) {
     // eslint-disable-next-line no-param-reassign
     db = await getDB();
   }
-  const token = await getVerifiedTokenData(
-    event.request.headers['x-authorization'],
-    db
-  );
-  // Set to false to send the response right away when the callback executes, instead of waiting for the Node.js event loop to be empty.
-  context.callbackWaitsForEmptyEventLoop = false;
-  const { arguments: args } = event;
+
+  try {
+    const response = handleEvent(
+      db,
+      event.info.fieldName as MutationType | QueryType,
+      event.arguments,
+      event.request.headers['x-authorization']
+    );
+    callback(
+      null,
+      JSON.stringify({
+        body: response,
+        statusCode: 200,
+        headers: { 'Access-Control-Allow-Origin': '*' },
+      })
+    );
+  } catch (err) {
+    callback(
+      err,
+      JSON.stringify({
+        body: null,
+        statusCode: err.httpCode || 500,
+        headers: { 'Access-Control-Allow-Origin': '*' },
+      })
+    );
+  }
+};
+
+const handleEvent = async (
+  db: PrismaClient,
+  fieldName: MutationType | QueryType,
+  args: ArgumentType,
+  authHeader?: string
+): Promise<SuccessReturnTypes> => {
+  const token = await getVerifiedTokenData(authHeader, db);
 
   switch (fieldName) {
     case 'getResourceById': {
