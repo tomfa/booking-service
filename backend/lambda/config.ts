@@ -18,7 +18,7 @@ export const config = {
       process.env.JWT_ISSUER as string,
       ...getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
     ],
-    issuer: cleanIssuer(process.env.JWT_ISSUER),
+    issuer: cleanIssuer(process.env.JWT_ISSUER || 'vailable.au'),
     permissionPrefix: 'vailable:',
   },
 };
@@ -49,6 +49,6 @@ const checkHasKeyValues = (conf: Record<string, unknown>, prefix?: string) => {
     );
   });
 };
-checkHasKeyValues(config);
+// checkHasKeyValues(config);
 export type Config = typeof config;
 export default config;
