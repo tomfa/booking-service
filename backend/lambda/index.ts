@@ -55,12 +55,12 @@ exports.handler = async (
   db?: PrismaClient
 ): Promise<SuccessReturnTypes> => {
   const fieldName = event.info.fieldName as MutationType | QueryType;
-  const token = getVerifiedTokenData(event.request.headers.authorization);
 
   if (!db) {
     // eslint-disable-next-line no-param-reassign
     db = await getDB();
   }
+  const token = getVerifiedTokenData(event.request.headers.authorization, db);
   // Set to false to send the response right away when the callback executes, instead of waiting for the Node.js event loop to be empty.
   context.callbackWaitsForEmptyEventLoop = false;
   const { arguments: args } = event;

@@ -1,29 +1,32 @@
 import * as jwt from 'jsonwebtoken';
 import * as jose from 'node-jose';
 import fetch from 'node-fetch';
+import { PrismaClient } from '@prisma/client';
 
 import config from '../config';
 import { cache } from '../utils/cache/memoryCache';
-import { BadAuthenticationError, GenericBookingError } from '../utils/errors';
+import {
+  BadAuthenticationError,
+  GenericBookingError,
+  NotAuthenticatedError,
+} from '../utils/errors';
 import { JSONObject } from '../types';
+import { getAuth } from '../utils/token';
 import { APITokenData, TokenData, AuthToken } from './types';
 
-export const getVerifiedTokenData = (
-  authHeader: string | undefined
-): AuthToken => {
-  // TODO: Implement
+export const getVerifiedTokenData = async (
+  authHeader: string | undefined,
+  db: PrismaClient
+): Promise<AuthToken> => {
   if (!authHeader) {
-    return {
-      sub: null,
-      customerId: null,
-    };
+    throw new NotAuthenticatedError(`Authentication header missing`);
   }
-  const token = authHeader.split(' ').reverse()[0];
-  const customerId: string = token.split('-')[0];
+  const authToken = authHeader.split(' ').reverse()[0];
+  const token = await getAuth(authToken);
 
   return {
-    sub: (token.includes('-') && token.split('-').reverse()[0]) || null,
-    customerId,
+    sub: token.username || null,
+    customerId: 'kroloftet',
   };
 };
 
@@ -166,6 +169,19 @@ function mapToTokenData(apiToken: string): TokenData {
 }
 
 async function getKeyStore(issuer: string): Promise<jose.JWK.KeyStore> {
+  if (issuer === 'auth.kroloftet.no') {
+    return jose.JWK.asKeyStore({
+      keys: [
+        {
+          kty: 'RSA',
+          kid: 'i5-QxjomQhRsjJZ_mvXN3SVoc_YmsDse-h2N4VrTk7A',
+          n:
+            '1ge5Qk10USuqgvti5yVf79T3CnkvjF8Rty6aYMxC7mZcPu052QXscBzmidsiKYo-fvdVu1eLN8nwRJCRNJ4LlIHJour2YJthuEse2nru9hJYjUzrjjWg6QISfJBlTzBh2DyMt7Dq1z-GW8bxO_Q9yAu7joKSYhd8sPJipI5YTAz0yNzg8g1Ifx6AGbBWToTz2PDR4_EoASwALEsPxmg-lsd7_Feemoi5oS0mNU2rBlb8I-g7oJX_wwTCOFSwgUi4fLpTJBIJKaSg14v4zP6c4GsmJoTwfyJDr2iBE3UFUsPNaAUvcW-udM8T4oJhb3xUd0-gyfhXlPBmcpNQRX_N35xFsFnG_g4i_z0bivxt_shpNdj9P57ajIlv7eEU9n2F-pg4WMzm9TNeT7zAn3gynuf4uJTYwZrP0YyoQebN4cskN-7YoVElY_YhhROJKLT4eFWvaieutnDTTtiUYlPveaM0SF_lhiBKO_zb8A9RFyT7nglWadkzNvQtux_AULf73RzeqscuHDcrfwk8T562XE2MzOWjFnqYUAildfewLri_f4bAnJXdv8K1CI8ghJnz7O91cbdbGCyiN5YbytzRCk17GJHnQXuWb2NfC7pdRD4-io3_Ms7HcnGAXSJ3QjYQ53-mqeu2tGvvqVl36vgjLqXeI-lBrnNSlZJ7AMfjMuM',
+          e: 'AQAB',
+        },
+      ],
+    });
+  }
   const url = `https://${issuer}/.well-known/jwks.json`;
   const cacheValue = cache.get(url);
   if (cacheValue) {

@@ -17,6 +17,7 @@ export enum ErrorCode {
   INVALID_TIMESTAMP = 'invalid_timestamp',
   UNKNOWN_ERROR = 'unknown_error',
   BAD_AUTHENTICATION = 'bad_authentication',
+  NO_AUTHENTICATION = 'no_authentication',
 }
 
 export class GenericBookingError extends Error {
@@ -70,6 +71,17 @@ export class BadAuthenticationError extends GenericBookingError {
   constructor(
     message: string,
     errorCode: ErrorCode = ErrorCode.BAD_AUTHENTICATION
+  ) {
+    super(message, errorCode);
+  }
+}
+
+export class NotAuthenticatedError extends GenericBookingError {
+  httpCode = 401;
+
+  constructor(
+    message: string,
+    errorCode: ErrorCode = ErrorCode.NO_AUTHENTICATION
   ) {
     super(message, errorCode);
   }
