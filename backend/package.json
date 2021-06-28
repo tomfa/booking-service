@@ -44,6 +44,7 @@
     "graphql-request": "^3.4.0",
     "jest": "^26.4.2",
     "nock": "^13.1.0",
+    "node-jose": "^2.0.0",
     "nodemon": "^2.0.7",
     "prisma": "^2.25.0",
     "ts-jest": "^26.2.0",
