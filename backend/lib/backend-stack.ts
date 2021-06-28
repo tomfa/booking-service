@@ -8,6 +8,7 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import * as iam from '@aws-cdk/aws-iam';
 import * as origins from '@aws-cdk/aws-cloudfront-origins';
 import * as cloudfront from '@aws-cdk/aws-cloudfront';
+import * as acm from '@aws-cdk/aws-certificatemanager';
 import { AllowedMethods } from '@aws-cdk/aws-cloudfront';
 
 export class BackendStack extends cdk.Stack {
@@ -33,12 +34,20 @@ export class BackendStack extends cdk.Stack {
       cdk.Fn.split('/', api.graphqlUrl)
     );
     const origin = new origins.HttpOrigin(graphqlDomainName);
+    const arn =
+      'arn:aws:acm:us-east-1:026205934924:certificate/9adf1f37-f4a6-4e9e-8552-155645b78e89';
+    const certificate = acm.Certificate.fromCertificateArn(
+      this,
+      'Certificate',
+      arn
+    );
     const distribution = new cloudfront.Distribution(
       this,
       'VailableDistribution',
       {
         defaultBehavior: { origin, allowedMethods: AllowedMethods.ALLOW_ALL },
         domainNames: ['api.vailable.eu'],
+        certificate,
       }
     );
 

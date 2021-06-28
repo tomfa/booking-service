@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@aws-cdk/aws-appsync": "^1.108.1",
+    "@aws-cdk/aws-certificatemanager": "^1.110.0",
     "@aws-cdk/aws-cloudfront": "^1.110.0",
     "@aws-cdk/aws-cloudfront-origins": "^1.110.0",
     "@aws-cdk/aws-ec2": "^1.108.1",
