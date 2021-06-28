@@ -6,6 +6,9 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as rds from '@aws-cdk/aws-rds';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as iam from '@aws-cdk/aws-iam';
+import * as origins from '@aws-cdk/aws-cloudfront-origins';
+import * as cloudfront from '@aws-cdk/aws-cloudfront';
+import { AllowedMethods } from '@aws-cdk/aws-cloudfront';
 
 export class BackendStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -25,6 +28,19 @@ export class BackendStack extends cdk.Stack {
         },
       },
     });
+    const graphqlDomainName = cdk.Fn.select(
+      2,
+      cdk.Fn.split('/', api.graphqlUrl)
+    );
+    const origin = new origins.HttpOrigin(graphqlDomainName);
+    const distribution = new cloudfront.Distribution(
+      this,
+      'VailableDistribution',
+      {
+        defaultBehavior: { origin, allowedMethods: AllowedMethods.ALLOW_ALL },
+        domainNames: ['api.vailable.eu'],
+      }
+    );
 
     const vpc = new ec2.Vpc(this, 'vailable-vpc', {
       cidr: '10.0.0.0/20',
