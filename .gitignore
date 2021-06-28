@@ -6,7 +6,6 @@ build/
 dist/
 out/
 .env.*local
-!api/.env.test
 
 .terraform/
 *.tfstate*

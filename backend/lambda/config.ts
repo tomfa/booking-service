@@ -1,4 +1,4 @@
-import { cleanIssuer } from './utils/auth/jwt';
+import { cleanIssuer } from './auth/jwt';
 import {
   getUsersFromEnv,
   getOriginsFromEnv,
@@ -10,29 +10,21 @@ export const config = {
   isTest: process.env.NODE_ENV === 'test',
   users: getUsersFromEnv(process.env.USER_DATA),
   allowedOrigins: getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
-  uuidNameSpace: process.env.UUID_NAMESPACE,
+  uuidNameSpace: process.env.UUID_NAMESPACE as string,
   jwt: {
     acceptedIssuers: getAcceptedIssuersFromEnv(process.env.ACCEPTED_ISSUERS),
-    secret: process.env.JWT_SECRET,
+    secret: process.env.JWT_SECRET as string,
     audience: [
-      process.env.JWT_ISSUER,
+      process.env.JWT_ISSUER as string,
       ...getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
     ],
-    issuer: process.env.JWT_ISSUER && cleanIssuer(process.env.JWT_ISSUER),
+    issuer: cleanIssuer(process.env.JWT_ISSUER),
     permissionPrefix: 'vailable:',
-  },
-  services: {
-    s3: {
-      region: process.env.AWS_BUCKET_REGION as string,
-      bucketName: process.env.S3_BUCKET_NAME as string,
-      endpointUrl: process.env.FILE_ENDPOINT_URL as string,
-      s3BucketUrl: `https://s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${process.env.S3_BUCKET_NAME}`,
-    },
   },
 };
 
 const checkHasKeyValues = (conf: Record<string, unknown>, prefix?: string) => {
-  const ignoreableKeys = [];
+  const ignoreableKeys: string[] = [];
 
   Object.entries(conf).forEach(([key, value]) => {
     if (['string', 'boolean', 'number'].includes(typeof value)) {

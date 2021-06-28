@@ -54,12 +54,6 @@ jobs:
       env:
         DATABASE_URL: postgresql://postgres:postgres_pass@postgres:5432/vailable
 
-    - name: Upload api codecov
-      uses: codecov/codecov-action@v1
-      with:
-        flags: api
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./public/api/coverage/coverage-final.json
     - name: Upload web codecov
       uses: codecov/codecov-action@v1
       with:

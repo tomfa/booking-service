@@ -1,7 +1,6 @@
-import { encodeUrlSafeBase64 } from '../base64';
-import config from '../../config';
-import { sign, verify } from './jwt';
-import { Auth, TokenData } from './types';
+import config from '../config';
+import { Auth, TokenData } from '../auth/types';
+import { sign, verify } from '../auth/jwt';
 
 export const createJWTtoken = (
   username: string,
@@ -15,15 +14,6 @@ export const createJWTtoken = (
     role: 'user',
   };
   return sign(data);
-};
-
-export const createApiKey = (
-  username: string,
-  permissions: string[] = ['api:generate:from_template']
-): string => {
-  const token = createJWTtoken(username, permissions);
-  const apiKey = encodeUrlSafeBase64(token);
-  return apiKey;
 };
 
 export async function getAuth(key: string): Promise<Auth> {
@@ -50,7 +40,8 @@ const isPermissionGranted = ({
 }): boolean => {
   const requested = addPermissionPrefixIfNeeded(requestedPermission);
   const allowed = addPermissionPrefixIfNeeded(allowedPermission);
-  return requested.match(allowed.replace('*', '(.*)')).length > 0;
+  const matches = requested.match(allowed.replace('*', '(.*)'));
+  return !!matches && matches.length > 0;
 };
 
 export function hasPermission(auth: Auth, permission: string): boolean {

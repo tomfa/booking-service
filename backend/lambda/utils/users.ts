@@ -1,7 +1,7 @@
-import config from '../../config';
-import { BadAuthenticationError } from '../errors/BadAuthenticatedError';
-import { UserWithTokenData } from './types';
-import { createApiKey, createJWTtoken } from './token';
+import { UserWithTokenData } from '../auth/types';
+import config from '../config';
+import { createJWTtoken } from './token';
+import { BadAuthenticationError } from './errors';
 
 export const findUserAuthData = ({
   username,
@@ -19,6 +19,5 @@ export const findUserAuthData = ({
   return {
     username: user.username,
     jwt: createJWTtoken(username),
-    apiKey: createApiKey(username),
   };
 };

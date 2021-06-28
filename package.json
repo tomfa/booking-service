@@ -1,18 +1,16 @@
 {
   "name": "booking-service",
   "version": "1.0.0",
-  "description": "Serverless API for generating PDFs",
+  "description": "Booking GraphQL API",
   "private": true,
   "workspaces": {
     "packages": [
-      "api",
       "web",
       "shared",
       "sdk",
       "backend"
     ],
     "nohoist": [
-      "**/api/**",
       "**/backend/**"
     ]
   },
@@ -45,13 +43,12 @@
   "scripts": {
     "web": "yarn workspace @booking-service/web",
     "sdk": "yarn workspace vailable",
-    "api": "yarn workspace @booking-service/api",
     "backend": "yarn workspace @booking-service/backend",
     "shared": "yarn workspace @booking-service/shared",
     "build": "yarn workspaces run build",
     "start": "yarn backend start",
     "start:test": "yarn backend start:test",
-    "test:ci": "yarn sdk test --ci --coverage && yarn backend test --ci --coverage && yarn shared test --ci --coverage && yarn web test --ci --coverage && yarn api test --ci --coverage",
+    "test:ci": "yarn sdk test --ci --coverage && yarn backend test --ci --coverage && yarn shared test --ci --coverage && yarn web test --ci --coverage",
     "test:all": "start-server-and-test start:test http://localhost:4000 test:ci",
     "test:compile": "tsc -v && tsc --noEmit",
     "schema:generate": "yarn backend schema:generate && yarn web schema:generate && yarn sdk schema:generate",

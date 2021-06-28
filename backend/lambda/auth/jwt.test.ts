@@ -1,14 +1,13 @@
 /* eslint-disable unused-imports/no-unused-vars */
 import * as jwt from 'jsonwebtoken';
 import * as jose from 'node-jose';
-import nock from 'nock';
+import * as nock from 'nock';
 
-import { JSONObject } from '@booking-service/shared';
-
-import * as b64 from '../base64';
-import config from '../../config';
-import { BadAuthenticationError } from '../errors/BadAuthenticatedError';
-import { cache } from '../cache/memoryCache';
+import config from '../config';
+import { cache } from '../utils/cache/memoryCache';
+import * as b64 from '../utils/encoding/base64';
+import { BadAuthenticationError } from '../utils/errors';
+import { JSONObject } from '../types';
 import { sign, verify } from './jwt';
 
 describe('sign', () => {

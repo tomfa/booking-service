@@ -1,6 +1,6 @@
-import { UserWithPassword } from './auth/types';
-
 // TODO: Make an actual user system
+import { UserWithPassword } from '../auth/types';
+
 export const getUsersFromEnv = (
   envString: string | undefined
 ): UserWithPassword[] => {
