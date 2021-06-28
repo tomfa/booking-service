@@ -1,6 +1,6 @@
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
-import { Context } from '@types/aws-lambda';
+import { Context, AppSyncResolverEvent } from '@types/aws-lambda';
 import { PrismaClient } from '@prisma/client';
 import * as types from '../graphql/generated/types';
 import getResourceById from './functions/getResourceById';
@@ -29,29 +29,24 @@ import { GenericBookingError } from './utils/errors';
 import { getDB } from './db';
 import { getVerifiedTokenData } from './auth/jwt';
 
-type AppSyncEvent = {
-  info: {
-    fieldName: QueryType | MutationType;
-  };
-  arguments: {
-    booking: types.Booking;
-    resource: types.Resource;
-    customer: types.Customer;
-    id: string;
-    afterDate: number;
-    filterResource: types.FindResourceInput;
-    filterBookings: types.FindBookingInput;
-    filterAvailability: types.FindAvailabilityInput;
-    addResourceInput: types.AddResourceInput;
-    addBookingInput: types.AddBookingInput;
-    addCustomerInput: types.AddCustomerInput;
-    updateResourceInput: types.UpdateResourceInput;
-    updateCustomerInput: types.UpdateCustomerInput;
-    comment: string;
-    issuer: string;
-    email: string;
-  };
-};
+type AppSyncEvent = AppSyncResolverEvent<{
+  booking: types.Booking;
+  resource: types.Resource;
+  customer: types.Customer;
+  id: string;
+  afterDate: number;
+  filterResource: types.FindResourceInput;
+  filterBookings: types.FindBookingInput;
+  filterAvailability: types.FindAvailabilityInput;
+  addResourceInput: types.AddResourceInput;
+  addBookingInput: types.AddBookingInput;
+  addCustomerInput: types.AddCustomerInput;
+  updateResourceInput: types.UpdateResourceInput;
+  updateCustomerInput: types.UpdateCustomerInput;
+  comment: string;
+  issuer: string;
+  email: string;
+}>;
 
 exports.handler = async (
   event: AppSyncEvent,
@@ -59,7 +54,8 @@ exports.handler = async (
   callback: unknown,
   db?: PrismaClient
 ): Promise<SuccessReturnTypes> => {
-  console.log(context);
+  const fieldName = event.info.fieldName as MutationType | QueryType;
+
   // @ts-ignore
   const token = getVerifiedTokenData(context?.headers?.authorization);
 
@@ -69,10 +65,7 @@ exports.handler = async (
   }
   // Set to false to send the response right away when the callback executes, instead of waiting for the Node.js event loop to be empty.
   context.callbackWaitsForEmptyEventLoop = false;
-  const {
-    arguments: args,
-    info: { fieldName },
-  } = event;
+  const { arguments: args } = event;
 
   // TODO: Check for authentication.
   //   - Then set or filter by customerId
