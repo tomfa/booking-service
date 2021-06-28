@@ -61,7 +61,7 @@ exports.handler = async (
     db = await getDB();
   }
   const token = await getVerifiedTokenData(
-    event.request.headers.authorization,
+    event.request.headers['x-authorization'],
     db
   );
   // Set to false to send the response right away when the callback executes, instead of waiting for the Node.js event loop to be empty.

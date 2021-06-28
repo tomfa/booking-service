@@ -38,7 +38,7 @@ export default class BookingAPI implements IBookingAPI {
       new GraphQLClient(baseUrl, {
         headers: {
           'x-api-key': serviceApiKey,
-          Authorization: `Bearer ${token}`,
+          'x-authorization': `Bearer ${token}`,
         },
       })
     );
