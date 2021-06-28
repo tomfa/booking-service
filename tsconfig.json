@@ -1,8 +1,9 @@
 {
   "references": [
     { "path": "./shared" },
-    { "path": "./api" },
-    { "path": "./web" }
+    { "path": "./web" },
+    { "path": "./backend" },
+    { "path": "./sdk" }
   ],
   "files": [],
   "include": [],
