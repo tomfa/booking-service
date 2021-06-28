@@ -88,7 +88,7 @@ export class BackendStack extends cdk.Stack {
       code: new lambda.AssetCode('lambda', { exclude: ['*.ts'] }),
       handler: 'lambda.handler',
       // @ts-ignore
-      timeout: cdk.Duration.seconds(15),
+      timeout: cdk.Duration.seconds(30),
       memorySize: 1024,
       environment: {
         CLUSTER_ARN: cluster.clusterArn,
