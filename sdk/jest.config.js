@@ -8,12 +8,15 @@ module.exports = {
       },
     },
   },
+  globalSetup: './tests/globalSetup.ts',
+  coverageDirectory: '../public/sdk/coverage',
   collectCoverageFrom: [
     '**/*.{js,ts}',
     '!**/node_modules/**',
     '!**/dist/**',
     '!**/build/**',
     '!**/coverage/**',
+    '!**/generated/**',
   ],
   modulePathIgnorePatterns: ['dist'],
 };

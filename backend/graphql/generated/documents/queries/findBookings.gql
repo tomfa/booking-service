@@ -1,0 +1,12 @@
+query findBookings($filterBookings: FindBookingInput!){
+    findBookings(filterBookings: $filterBookings){
+        id
+        userId
+        resourceId
+        start
+        end
+        canceled
+        comment
+        seatNumber
+    }
+}

@@ -6,7 +6,6 @@ build/
 dist/
 out/
 .env.*local
-!api/.env.test
 
 .terraform/
 *.tfstate*
@@ -16,3 +15,6 @@ tsconfig.tsbuildinfo
 api/.serverless/*
 
 yarn-error.log
+cdk-exports.json
+
+*.env.local

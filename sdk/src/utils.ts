@@ -1,12 +1,4 @@
 import { HourSchedule, IsoDate, OpeningHour, Schedule } from './types';
-import * as utils from './utils.internal';
-
-export const getIsoDate = utils.getIsoDate;
-export const getOpeningHoursForDate = utils.getOpeningHoursForDate;
-export const isWithinOpeningHours = utils.isWithinOpeningHours;
-export const isBeforeOpeningHours = utils.isBeforeOpeningHours;
-export const isAfterOpeningHours = utils.isAfterOpeningHours;
-export const isOpen = utils.isOpen;
 
 export const createSchedule = (
   defaultSchedule: OpeningHour,
@@ -67,4 +59,13 @@ const isValidHourSchedule = (
     schedule.slotDurationMinutes !== undefined &&
     schedule.slotIntervalMinutes !== undefined
   );
+};
+
+// DUplicate. TODO: Move to shared
+export const fromGQLDate = (seconds: number): Date => new Date(seconds * 1000);
+export const toGQLDate = (date: Date): number =>
+  Math.floor(date.getTime() / 1000);
+
+export const getIsoDate = (date: Date): IsoDate => {
+  return date.toISOString().substr(0, 10);
 };

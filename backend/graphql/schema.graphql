@@ -1,0 +1,177 @@
+type HourSchedule {
+    start: String!
+    end: String!
+    slotIntervalMinutes: Int!
+    slotDurationMinutes: Int!
+}
+
+input DateScheduleInput {
+    day: String!
+    start: String!
+    end: String!
+    slotIntervalMinutes: Int!
+    slotDurationMinutes: Int!
+}
+
+
+type DateSchedule {
+    isoDate: String!
+    schedule: HourSchedule!
+}
+
+type Schedule {
+    mon: HourSchedule!
+    tue: HourSchedule!
+    wed: HourSchedule!
+    thu: HourSchedule!
+    fri: HourSchedule!
+    sat: HourSchedule!
+    sun: HourSchedule!
+    overriddenDates: [DateSchedule]
+}
+
+type Customer {
+    id: String!
+    name: String
+    email: String
+    phoneNumber: String
+    issuer: String
+    credits: Int!
+    enabled: Boolean!
+}
+
+type Resource {
+    id: String!
+    category: String
+    label: String!
+    schedule: Schedule!
+    seats: Int!
+    enabled: Boolean!
+}
+
+input AddResourceInput {
+    id: String
+    customerId: String
+    category: String
+    label: String!
+    seats: Int!
+    enabled: Boolean!
+    schedule: [DateScheduleInput!]!
+}
+
+input FindResourceInput {
+    resourceIds: [String!]
+    customerId: String
+    category: String
+    label: String
+    enabled: Boolean
+}
+
+
+type Booking {
+    id: String!
+    userId: String
+    resourceId: String!
+    start: Int!
+    end: Int!
+    canceled: Boolean!
+    comment: String
+    seatNumber: Int
+}
+
+input FindBookingInput {
+    customerId: String
+    userId: String
+    resourceIds: [String!]
+    resourceCategories: [String!]
+    from: Int
+    to: Int
+    includeCanceled: Boolean
+}
+
+
+input AddBookingInput {
+    id: String
+    customerId: String
+    userId: String!
+    resourceId: String!
+    start: Int!
+    end: Int
+    comment: String
+}
+
+type TimeSlot {
+    availableSeats: Int!
+    start: Int!
+    end: Int!
+}
+
+input FindAvailabilityInput {
+    customerId: String
+    resourceIds: [String!]!
+    from: Int
+    to: Int
+}
+
+type BookedDuration {
+    minutes: Int!
+    bookingIds: [String!]!
+    numBookings: Int!
+}
+
+
+input UpdateResourceInput {
+    id: String!
+    category: String
+    label: String
+    seats: Int
+    enabled: Boolean
+    schedule: [DateScheduleInput!]
+}
+
+input AddCustomerInput {
+    id: String
+    name: String
+    email: String!
+    phoneNumber: String
+    issuer: String
+    credits: Int
+    enabled: Boolean
+}
+
+input UpdateCustomerInput {
+    id: String!
+    name: String
+    email: String
+    phoneNumber: String
+    issuer: String
+    credits: Int
+    enabled: Boolean
+}
+
+type Query {
+    getResourceById(id: String!): Resource
+    getBookingById(id: String!): Booking
+    getCustomerByIssuer(issuer: String!): Customer
+    getCustomerByEmail(email: String!): Customer
+    getCustomerById(id: String!): Customer
+    findResources(filterResource: FindResourceInput!): [Resource]
+    findBookings(filterBookings: FindBookingInput!): [Booking]
+    findAvailability(filterAvailability: FindAvailabilityInput!): [TimeSlot]
+    getNextAvailable(id: String!, afterDate: Int): TimeSlot
+    getLatestBooking(filterBookings: FindBookingInput!): Booking
+    getBookedDuration(filterBookings: FindBookingInput!): BookedDuration
+}
+
+type Mutation {
+    addResource(addResourceInput: AddResourceInput!): Resource
+    updateResource(updateResourceInput: UpdateResourceInput!): Resource
+    updateCustomer(updateCustomerInput: UpdateCustomerInput!): Customer
+    addBooking(addBookingInput: AddBookingInput!): Booking
+    disableResource(id: String!): Resource
+    cancelBooking(id: String!): Booking
+    setBookingComment(id: String!, comment: String): Booking
+    addCustomer(addCustomerInput: AddCustomerInput!): Customer
+    disableCustomer(id: String!): Customer
+    deleteCustomer(id: String!): Customer
+}
