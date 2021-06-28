@@ -2,7 +2,11 @@ import { PrismaClient } from '@prisma/client';
 import { AddResourceInput, Resource } from '../../graphql/generated/types';
 import { fromDBResource } from '../utils/db.mappers';
 import { getId, mapSchedule } from '../utils/input.mappers';
-import { BadRequestError, ErrorCode } from '../utils/errors';
+import {
+  BadAuthenticationError,
+  BadRequestError,
+  ErrorCode,
+} from '../utils/errors';
 import { AuthToken } from '../auth/types';
 
 async function addResource(
@@ -16,6 +20,13 @@ async function addResource(
       ErrorCode.INVALID_RESOURCE_ARGUMENTS
     );
   }
+  const customerId = resource.customerId || token.customerId;
+  if (!customerId) {
+    throw new BadAuthenticationError(
+      `Can not create a resource without being authenticated as customer`,
+      ErrorCode.BAD_AUTHENTICATION
+    );
+  }
 
   const mappedSchedule = mapSchedule(schedule);
 
@@ -26,7 +37,7 @@ async function addResource(
       label,
       schedule: mappedSchedule,
       ...resource,
-      customerId: resource.customerId || token.customerId,
+      customerId,
     },
   });
   return fromDBResource(result);
