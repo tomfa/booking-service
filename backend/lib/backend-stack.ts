@@ -86,7 +86,7 @@ export class BackendStack extends cdk.Stack {
       securityGroups: [privateSg],
       runtime: lambda.Runtime.NODEJS_12_X,
       code: new lambda.AssetCode('lambda', { exclude: ['*.ts'] }),
-      handler: 'index.handler',
+      handler: 'lambda.handler',
       // @ts-ignore
       timeout: cdk.Duration.seconds(15),
       memorySize: 1024,
