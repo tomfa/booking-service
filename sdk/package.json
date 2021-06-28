@@ -9,7 +9,8 @@
   "description": "Shared types and utils for web and api",
   "dependencies": {
     "graphql": "^15.5.0",
-    "graphql-request": "^3.4.0"
+    "graphql-request": "^3.4.0",
+    "graphql-tag": "^2.12.5"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.21.5",
