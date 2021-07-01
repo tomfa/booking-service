@@ -7,9 +7,9 @@ export const client = new ApolloClient({
 });
 
 client.defaultOptions = {
-  watchQuery: { errorPolicy: 'all' },
-  mutate: { errorPolicy: 'all' },
-  query: { errorPolicy: 'all' },
+  watchQuery: { errorPolicy: 'all', fetchPolicy: 'no-cache' },
+  mutate: { errorPolicy: 'all', fetchPolicy: 'no-cache' },
+  query: { errorPolicy: 'all', fetchPolicy: 'no-cache' },
 };
 
 export const mutate = (mutation: DocumentNode, variables?: unknown) =>
