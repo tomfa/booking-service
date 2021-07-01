@@ -1,21 +1,9 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
-import {
-  FindResourceInput,
-  Resource,
-  Schedule,
-} from '../../graphql/generated/types';
+import { FindResourceInput, Resource } from '../../graphql/generated/types';
 import { removeNull } from '../utils/input.mappers';
-import { closedSchedule } from '../utils/schedule.utils';
 import { fromDBResource } from '../utils/db.mappers';
 import { AuthToken } from '../auth/types';
-
-const mapSchedule = (val: Prisma.JsonValue): Schedule => {
-  if (!val) {
-    return closedSchedule;
-  }
-  return val as Schedule;
-};
 
 async function findResources(
   db: PrismaClient,
@@ -23,10 +11,12 @@ async function findResources(
   token: AuthToken
 ): Promise<Resource[]> {
   const clean = removeNull({ ...args });
+  const enabled = clean.enabled === false ? clean.enabled : true;
   const resources = await db.resource.findMany({
     where: {
-      id: (resourceIds && { in: resourceIds }) || undefined,
       ...clean,
+      id: (resourceIds && { in: resourceIds }) || undefined,
+      enabled,
     },
   });
   return resources.map(fromDBResource);

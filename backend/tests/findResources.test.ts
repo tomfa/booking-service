@@ -46,11 +46,18 @@ describe('findResources', () => {
     );
   });
   it('can be filtered by enabled', async () => {
-    const resource = await createResourceForFiltering();
-    const noResult = await findResources({ enabled: false });
-    expect(noResult.length).toBe(0);
-    const result = await findResources({ enabled: true });
-    expect(result.length).toBe(1);
+    const customer = await createCustomer({
+      id: 'tomfa',
+      email: 'tomfa@github.io',
+    });
+    const resource = await createResource({ customer, enabled: false });
+    const disabledResult = await findResources({ enabled: false });
+    const enabledResult = await findResources({ enabled: true });
+    const defaultResult = await findResources();
+
+    expect(disabledResult.length).toBe(1);
+    expect(enabledResult.length).toBe(0);
+    expect(defaultResult.length).toBe(0);
   });
   it('can be filtered by resourceId', async () => {
     const resource = await createResourceForFiltering();
