@@ -1,8 +1,9 @@
 import ApolloClient, { DocumentNode } from 'apollo-boost';
+import { createJWTtoken } from '../lambda/utils/token';
 
 export const client = new ApolloClient({
   uri: `http://${process.env.GRAPHQL_ENDPOINT}:${process.env.GRAPHQL_PORT}/graphql`,
-  headers: { authorization: 'testUser' },
+  headers: { 'x-authorization': `Bearer ${createJWTtoken('tomas')}` },
   onError: () => {},
 });
 
