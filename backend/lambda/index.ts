@@ -74,7 +74,9 @@ exports.handler = async (
     return handleEvent(fieldName, args, token, db);
   } finally {
     if (closeDbConnection) {
-      await db.$disconnect();
+      // https://www.prisma.io/docs/guides/performance-and-optimization/connection-management#do-not-explicitly-disconnect
+      // Disconnecting explicitly is discouraged in lambda environments.
+      // await db.$disconnect();
     }
   }
 };
