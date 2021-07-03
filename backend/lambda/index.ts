@@ -72,6 +72,10 @@ exports.handler = async (
     );
     const { arguments: args } = event;
     return handleEvent(fieldName, args, token, db);
+  } catch (err) {
+    console.log(`Invocation threw error`);
+    console.log(err);
+    throw err;
   } finally {
     if (closeDbConnection) {
       // https://www.prisma.io/docs/guides/performance-and-optimization/connection-management#do-not-explicitly-disconnect

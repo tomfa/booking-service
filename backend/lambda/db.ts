@@ -5,7 +5,11 @@ const sm = new SecretsManager();
 let db: PrismaClient;
 
 export const getDB = async (): Promise<PrismaClient> => {
-  if (db) return db;
+  if (db) {
+    console.log('Reusing existing prisma client.');
+    return db;
+  }
+  console.log('Creating new prisma client.');
 
   const dbURL = await sm
     .getSecretValue({
