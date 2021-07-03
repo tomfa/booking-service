@@ -29,5 +29,8 @@ export const getDB = async (): Promise<PrismaClient> => {
       useUds: false,
     },
   });
+  console.log('Connecting');
+  await db.$connect();
+  console.log('Connected');
   return db;
 };
