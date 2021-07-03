@@ -1,0 +1,10 @@
+**/dist/*
+**/out/*
+**/build/*
+**/node_modules/*
+**/ios/*
+**/android/*
+**/fastlane/*
+**/coverage/*
+**/generated/*
+**/cdk.out/*
