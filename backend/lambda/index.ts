@@ -1,6 +1,6 @@
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
-import { Context, AppSyncResolverEvent } from '@types/aws-lambda';
+import { Context, AppSyncResolverEvent, Callback } from '@types/aws-lambda';
 import { PrismaClient } from '@prisma/client';
 import * as types from '../graphql/generated/types';
 import getResourceById from './functions/getResourceById';
@@ -28,8 +28,9 @@ import { MutationType, QueryType, SuccessReturnTypes } from './types';
 import { GenericBookingError } from './utils/errors';
 import { getDB } from './db';
 import { getVerifiedTokenData } from './auth/jwt';
+import { AuthToken } from './auth/types';
 
-type AppSyncEvent = AppSyncResolverEvent<{
+type Arguments = {
   booking: types.Booking;
   resource: types.Resource;
   customer: types.Customer;
@@ -46,28 +47,44 @@ type AppSyncEvent = AppSyncResolverEvent<{
   comment: string;
   issuer: string;
   email: string;
-}>;
+};
+type AppSyncEvent = AppSyncResolverEvent<Arguments>;
 
 exports.handler = async (
   event: AppSyncEvent,
   context: Context,
-  callback: unknown,
+  callback: Callback,
   db?: PrismaClient
 ): Promise<SuccessReturnTypes> => {
+  const closeDbConnection = !!db;
   const fieldName = event.info.fieldName as MutationType | QueryType;
-
   if (!db) {
     // eslint-disable-next-line no-param-reassign
     db = await getDB();
   }
-  const token = await getVerifiedTokenData(
-    event.request.headers['x-authorization'],
-    db
-  );
-  // Set to false to send the response right away when the callback executes, instead of waiting for the Node.js event loop to be empty.
+  // Set to false to send the response right away when the callback executes
+  // instead of waiting for the Node.js event loop to be empty.
   context.callbackWaitsForEmptyEventLoop = false;
-  const { arguments: args } = event;
+  try {
+    const token = await getVerifiedTokenData(
+      event.request.headers['x-authorization'],
+      db
+    );
+    const { arguments: args } = event;
+    return handleEvent(fieldName, args, token, db);
+  } finally {
+    if (closeDbConnection) {
+      await db.$disconnect();
+    }
+  }
+};
 
+async function handleEvent(
+  fieldName: MutationType | QueryType,
+  args: Arguments,
+  token: AuthToken,
+  db: PrismaClient
+): Promise<SuccessReturnTypes> {
   switch (fieldName) {
     case 'getResourceById': {
       console.log(`Executing getResourceById with ${JSON.stringify(args.id)}`);
@@ -188,4 +205,4 @@ exports.handler = async (
     default:
       throw new GenericBookingError(`Unhandled field ${fieldName}`);
   }
-};
+}
