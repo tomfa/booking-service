@@ -18,10 +18,12 @@
     "express": "^4.17.1",
     "firebase-admin": "^9.8.0",
     "firebase-functions": "^3.14.1",
+    "fireorm": "^0.22.0",
     "graphql": "^15.5.1",
     "jsonwebtoken": "^8.5.1",
     "node-fetch": "^2.6.1",
     "node-jose": "^2.0.0",
+    "reflect-metadata": "^0.1.13",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

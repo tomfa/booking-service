@@ -21,7 +21,7 @@ export function removeNull<T extends Record<string, unknown>>(
   return whereInput as T;
 }
 
-export function getId(id: Maybe<string> | undefined): string {
+export function getId(id: Maybe<string> | undefined = undefined): string {
   return id || uuid.v4();
 }
 

@@ -1,6 +1,6 @@
 import { db } from '../db/client';
 import { Customer, MutationAddCustomerArgs } from '../graphql/generated/types';
-import { getId, removeNull } from '../utils/input.mappers';
+import { getId } from '../utils/input.mappers';
 import { fromDBCustomer } from '../utils/db.mappers';
 import {
   BadRequestError,
@@ -19,9 +19,7 @@ async function addCustomer(
   // TODO:
 
   try {
-    const customer = await db.customer.create(
-      removeNull({ data: { id: getId(id), ...rest } })
-    );
+    const customer = await db.customer.create({ id: getId(id), ...rest });
     return fromDBCustomer(customer);
   } catch (err) {
     if (err.code === 'P2002') {

@@ -25,9 +25,8 @@ async function deleteCustomer(
     await db.resource.deleteMany({ where: { id: { in: resourceIds } } });
   }
   try {
-    const customer = await db.customer.delete({
-      where: { id },
-    });
+    const customer = await db.customer.findById(id);
+    await db.customer.repository.delete(id);
     return fromDBCustomer(customer);
   } catch (err) {
     if (err.code === 'P2025') {

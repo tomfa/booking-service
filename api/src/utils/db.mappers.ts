@@ -23,7 +23,7 @@ export function fromDBBooking({
 }
 
 export function fromDBCustomer(customer: DBCustomer): Customer {
-  return { ...customer, credits: customer.credits || 999999 };
+  return { ...customer, credits: customer.credits };
 }
 
 const mapFromDBSchedule = (val: JSONObject): Schedule => {

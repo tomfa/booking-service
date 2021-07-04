@@ -18,10 +18,8 @@ async function disableCustomer(
   // TODO: What if id does not exist?
 
   try {
-    const customer = await db.customer.update({
-      where: { id },
-      data: { enabled: false },
-    });
+    const existing = await db.customer.findById(id);
+    const customer = await db.customer.update({ ...existing, enabled: false });
     return fromDBCustomer(customer);
   } catch (err) {
     if (err.code === 'P2025') {

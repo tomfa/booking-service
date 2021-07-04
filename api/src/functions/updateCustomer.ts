@@ -3,7 +3,6 @@ import {
   Customer,
   MutationUpdateCustomerArgs,
 } from '../graphql/generated/types';
-import { removeNull } from '../utils/input.mappers';
 import { fromDBCustomer } from '../utils/db.mappers';
 import {
   ErrorCode,
@@ -19,9 +18,10 @@ async function updateCustomer(
   // TODO: Stop invalid updates, see addCustomer
 
   try {
+    const existing = await db.customer.findById(args.id);
     const customer = await db.customer.update({
-      where: { id: args.id },
-      data: removeNull(args),
+      ...existing,
+      ...args,
     });
     return fromDBCustomer(customer);
   } catch (err) {

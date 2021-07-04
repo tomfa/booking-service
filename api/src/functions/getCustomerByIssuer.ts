@@ -10,7 +10,9 @@ async function getCustomerByIssuer(
   { issuer }: QueryGetCustomerByIssuerArgs,
   token: AuthToken
 ): Promise<Customer | null> {
-  const customer = await db.customer.findUnique({ where: { issuer } });
+  const customer = await db.customer.repository
+    .whereEqualTo('issuer', issuer)
+    .findOne();
   return customer && fromDBCustomer(customer);
 }
 
