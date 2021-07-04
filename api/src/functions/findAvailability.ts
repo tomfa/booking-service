@@ -45,13 +45,12 @@ async function findAvailability(
   if (args.resourceIds.length === 0) {
     return [];
   }
-  const resources = await db.resource.findMany({
-    where: {
-      id: { in: args.resourceIds },
-      enabled: true,
-      customerId: args.customerId || undefined,
-    },
-  });
+  const resources = await db.resource
+    .getRepository()
+    .whereIn('id', args.resourceIds)
+    .whereEqualTo('enabled', true)
+    .whereEqualTo('customerId', args.customerId || null)
+    .find();
 
   const foundResourceIds = resources.map(r => r.id);
   const missingResources = args.resourceIds.filter(

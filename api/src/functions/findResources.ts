@@ -12,14 +12,28 @@ async function findResources(
   const { resourceIds, ...args } = filterResource;
   const clean = removeNull({ ...args });
   const enabled = clean.enabled === false ? clean.enabled : true;
-  const resources = await db.resource.findMany({
-    where: {
-      ...clean,
-      id: (resourceIds && { in: resourceIds }) || undefined,
-      enabled,
-    },
-  });
-  console.log('resources', resources);
+  let resourceQuery = await db.resource
+    .getRepository()
+    .whereEqualTo('enabled', enabled);
+
+  if (resourceIds) {
+    resourceQuery = resourceQuery.whereIn('id', resourceIds);
+  }
+
+  if (args.customerId) {
+    resourceQuery = resourceQuery.whereEqualTo('customerId', args.customerId);
+  }
+
+  if (args.category) {
+    resourceQuery = resourceQuery.whereEqualTo('category', args.category);
+  }
+
+  if (args.label) {
+    resourceQuery = resourceQuery.whereEqualTo('label', args.label);
+  }
+
+  const resources = await resourceQuery.find();
+
   return resources.map(fromDBResource);
 }
 

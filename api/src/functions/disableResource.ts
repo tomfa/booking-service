@@ -18,9 +18,10 @@ async function disableResource(
   // TODO: What if id does not exist?
 
   try {
+    const existing = await db.resource.findById(id);
     const resource = await db.resource.update({
-      where: { id },
-      data: { enabled: false },
+      ...existing,
+      enabled: false,
     });
     return fromDBResource(resource);
   } catch (err) {

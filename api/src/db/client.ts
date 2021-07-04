@@ -1,21 +1,9 @@
 // TODO: This shitfest
 import { getRepository } from 'fireorm';
-import { Resource } from '../graphql/generated/types';
 import { getId } from '../utils/input.mappers';
-import { DBBooking, DBResource } from './types';
 import { Customer } from './collections/Customer';
 import { Booking } from './collections/Booking';
-
-function dbHandler<T, D>(tableName: string) {
-  return {
-    create: (data: unknown): Promise<D> => Promise.resolve(data as D),
-    update: (data: unknown): Promise<D> => Promise.resolve(data as D),
-    findMany: (data: unknown): Promise<D[]> => Promise.resolve([]),
-    deleteMany: (data: unknown) => {},
-    delete: (data: unknown): Promise<D> => Promise.resolve(data as D),
-    findUnique: (data: unknown): Promise<D | null> => Promise.resolve(null),
-  };
-}
+import { Resource } from './collections/Resource';
 
 const customerDB = {
   create: async (
@@ -78,17 +66,42 @@ const bookingDB = {
     const document = await repository.findById(id);
     return document;
   },
-  findMany: (data: unknown): Promise<DBBooking[]> => Promise.resolve([]),
-  deleteMany: (data: unknown) => {},
-  delete: (data: unknown): Promise<DBBooking> =>
-    Promise.resolve(data as DBBooking),
-  findUnique: (data: unknown): Promise<DBBooking | null> =>
-    Promise.resolve(null),
+};
+
+const resourceDB = {
+  getRepository: () => getRepository(Resource),
+  create: async (
+    partialResource: Omit<Resource, 'id' | 'canceled'> & {
+      id?: string;
+      canceled?: boolean;
+    }
+  ): Promise<Resource> => {
+    const defaultValues = {
+      id: getId(),
+      canceled: false,
+    };
+    const repository = getRepository(Resource);
+    const document = await repository.create({
+      ...defaultValues,
+      ...partialResource,
+    });
+    return document;
+  },
+  update: async (resource: Resource): Promise<Resource> => {
+    const repository = getRepository(Resource);
+    const document = await repository.update(resource);
+    return document;
+  },
+  findById: async (id: string): Promise<Resource> => {
+    const repository = getRepository(Resource);
+    const document = await repository.findById(id);
+    return document;
+  },
 };
 
 export const db = {
   booking: bookingDB,
-  resource: dbHandler<Resource, DBResource>('resource'),
+  resource: resourceDB,
   customer: customerDB,
 };
 export type PrismaClient = typeof db;

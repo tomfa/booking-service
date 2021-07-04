@@ -9,7 +9,7 @@ async function getResourceById(
 ): Promise<Resource | null> {
   // TODO: What if id does not exist?
 
-  const resource = await db.resource.findUnique({ where: { id } });
+  const resource = await db.resource.findById(id);
   return resource && fromDBResource(resource);
 }
 

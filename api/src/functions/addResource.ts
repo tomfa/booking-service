@@ -37,14 +37,12 @@ async function addResource(
   const mappedSchedule = mapSchedule(schedule);
 
   const result = await db.resource.create({
-    data: {
-      enabled,
-      id: getId(id),
-      label,
-      schedule: mappedSchedule,
-      ...resource,
-      customerId,
-    },
+    enabled,
+    id: getId(id),
+    label,
+    schedule: mappedSchedule,
+    ...resource,
+    customerId,
   });
   return fromDBResource(result);
 }

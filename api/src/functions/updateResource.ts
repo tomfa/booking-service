@@ -31,9 +31,10 @@ async function updateResource(
 ): Promise<Resource | null> {
   // TODO: What if id does not exist?
   try {
+    const existing = await db.resource.findById(args.id);
     const resource = await db.resource.update({
-      where: { id: args.id },
-      data: mapResourceUpdate(args),
+      ...existing,
+      ...mapResourceUpdate(args),
     });
     return fromDBResource(resource);
   } catch (err) {
