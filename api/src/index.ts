@@ -12,7 +12,7 @@ admin.initializeApp();
 const firestore = admin.firestore();
 fireorm.initialize(firestore);
 
-const schemaPath = path.join(__dirname, './graphql/schema.graphql');
+const schemaPath = path.join(__dirname, '../schema.graphql');
 const gqlSchema = fs.readFileSync(schemaPath, 'utf8');
 
 const server = new ApolloServer({

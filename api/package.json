@@ -1,9 +1,9 @@
 {
   "name": "functions",
   "scripts": {
-    "build": "tsc -b && cp src/graphql/schema.graphql lib/graphql/",
+    "build": "tsc -b",
     "start": "npm run build && node local.js",
-    "schema:generate-document": "gqlg --schemaFilePath ./src/graphql/schema.graphql --destDirPath ./src/graphql/generated/documents --depthLimit 5",
+    "schema:generate-document": "gqlg --schemaFilePath schema.graphql --destDirPath ./src/graphql/generated/documents --depthLimit 5",
     "schema:generate": "npm run schema:generate-document && graphql-codegen --config codegen.yml",
     "deploy": "npm run build && gcloud functions deploy graphql --entry-point handler --runtime nodejs14 --trigger-http --region=europe-central2 --allow-unauthenticated"
   },
