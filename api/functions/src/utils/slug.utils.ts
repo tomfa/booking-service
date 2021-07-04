@@ -1,4 +1,7 @@
-export const slugify = (value: string): string => {
+export const slugify = (value: string | undefined): string => {
+  if (!value) {
+    return '';
+  }
   let str = value.replace(/^\s+|\s+$/g, ''); // trim
   str = str.toLowerCase();
 
