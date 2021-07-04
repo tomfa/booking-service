@@ -10,7 +10,8 @@ async function getCustomerByEmail(
   { email }: QueryGetCustomerByEmailArgs,
   token: AuthToken
 ): Promise<Customer | null> {
-  const customer = await db.customer.repository
+  const customer = await db.customer
+    .getRepository()
     .whereEqualTo('email', email)
     .findOne();
   return customer && fromDBCustomer(customer);

@@ -26,7 +26,7 @@ async function deleteCustomer(
   }
   try {
     const customer = await db.customer.findById(id);
-    await db.customer.repository.delete(id);
+    await db.customer.getRepository().delete(id);
     return fromDBCustomer(customer);
   } catch (err) {
     if (err.code === 'P2025') {

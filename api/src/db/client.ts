@@ -45,7 +45,7 @@ export const db = {
       const document = await repository.findById(id);
       return document;
     },
-    repository: getRepository(Customer),
+    getRepository: () => getRepository(Customer),
   },
 };
 export type PrismaClient = typeof db;
