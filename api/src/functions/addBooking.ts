@@ -89,13 +89,11 @@ async function addBooking(
     comment: data.comment || null,
     resourceId: data.resourceId,
     userId: data.userId || null,
-    startTime,
-    endTime,
+    start: startTime,
+    end: endTime,
     seatNumber: minArray(seatNumbers),
   };
-  const dbBooking = await db.booking.create({
-    data: args,
-  });
+  const dbBooking = await db.booking.create(args);
   return fromDBBooking(dbBooking);
 }
 

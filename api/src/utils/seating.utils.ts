@@ -1,7 +1,7 @@
 import { PrismaClient } from '../db/client';
 import { Booking, Resource } from '../graphql/generated/types';
 import { BadRequestError, ErrorCode } from './errors';
-import { conflictingBookingFilter } from './db.mappers';
+import { getConflictingBookings } from './db.mappers';
 import { fromGQLDate } from './date.utils';
 
 const generateSeatNumbersForResource = (resource: Resource): number[] => {
@@ -14,12 +14,10 @@ export const getAvailableSeatNumbers = async (
   resource: Resource,
   booking: Booking
 ): Promise<number[]> => {
-  const overLappingBookings = await db.booking.findMany({
-    where: conflictingBookingFilter({
-      resourceId: booking.resourceId,
-      from: fromGQLDate(booking.start),
-      to: fromGQLDate(booking.end),
-    }),
+  const overLappingBookings = await getConflictingBookings({
+    resourceId: booking.resourceId,
+    from: fromGQLDate(booking.start),
+    to: fromGQLDate(booking.end),
   });
   if (overLappingBookings.length >= resource.seats) {
     throw new BadRequestError(

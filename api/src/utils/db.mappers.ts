@@ -1,5 +1,6 @@
+import { IQueryBuilder } from 'fireorm';
 import {
-  Booking,
+  Booking as GQLBooking,
   Customer,
   FindBookingInput,
   Resource,
@@ -7,18 +8,19 @@ import {
 } from '../graphql/generated/types';
 import { DBBooking, DBCustomer, DBResource } from '../db/types';
 import { JSONObject } from '../types';
+import { db } from '../db/client';
 import { closedSchedule } from './schedule.utils';
-import { fromGQLDate, toGQLDate } from './date.utils';
+import { toGQLDate } from './date.utils';
 
 export function fromDBBooking({
-  startTime,
-  endTime,
+  start,
+  end,
   ...booking
-}: DBBooking): Booking {
+}: DBBooking): GQLBooking {
   return {
     ...booking,
-    start: toGQLDate(startTime),
-    end: toGQLDate(endTime),
+    start: toGQLDate(start),
+    end: toGQLDate(end),
   };
 }
 
@@ -37,33 +39,40 @@ export function fromDBResource(dbResult: DBResource): Resource {
   return { ...dbResult, schedule: mapFromDBSchedule(dbResult.schedule) };
 }
 
-export function toBookingFilter({
-  resourceIds,
-  from,
-  to,
-  includeCanceled,
-  resourceCategories,
-  ...args
-}: FindBookingInput) {
-  const startTimeFromFilter = from ? { gte: fromGQLDate(from) } : {};
-  const startTimeToFilter = to ? { lt: fromGQLDate(to) } : {};
-  // TODO: filter resourceIds by those accessable by customer
-  const bookingWhereFilter = {
-    resourceId: (resourceIds && { in: resourceIds }) || undefined,
-    startTime: { ...startTimeFromFilter, ...startTimeToFilter },
-    canceled: !includeCanceled ? false : undefined,
-    ...args,
-  };
-  if (!resourceCategories) {
-    return bookingWhereFilter;
+export function getFilteredBookings(
+  args: FindBookingInput
+): IQueryBuilder<DBBooking> {
+  const repository = db.booking.getRepository();
+
+  // @ts-ignore
+  let queryBuilder: IQueryBuilder<DBBooking> = repository;
+
+  if (args.customerId) {
+    queryBuilder = queryBuilder.whereEqualTo('customerId', args.customerId);
   }
-  return {
-    ...bookingWhereFilter,
-    resource: { category: { in: resourceCategories } },
-  };
+  if (args.userId) {
+    queryBuilder = queryBuilder.whereEqualTo('userId', args.userId);
+  }
+  if (args.resourceIds) {
+    queryBuilder = queryBuilder.whereIn('resourceId', args.resourceIds);
+  }
+  if (args.resourceCategories) {
+    // TODO: Implement
+    // queryBuilder = queryBuilder.whereIn('resourceCategory', args.resourceCategories);
+  }
+  if (args.from) {
+    queryBuilder = queryBuilder.whereGreaterOrEqualThan('start', args.from);
+  }
+  if (args.to) {
+    queryBuilder = queryBuilder.whereLessThan('end', args.to);
+  }
+  if (args.includeCanceled !== false) {
+    queryBuilder = queryBuilder.whereEqualTo('canceled', false);
+  }
+  return queryBuilder;
 }
 
-export function conflictingBookingFilter({
+export async function getConflictingBookings({
   resourceId,
   from,
   to,
@@ -72,13 +81,11 @@ export function conflictingBookingFilter({
   from: Date;
   to: Date;
 }) {
-  const endTimeFilter = { gt: from };
-  const startTimeFilter = { lt: to };
-  // TODO: filter resourceIds by those accessable by customer
-  return {
-    resourceId,
-    startTime: startTimeFilter,
-    endTime: endTimeFilter,
-    canceled: false,
-  };
+  return await db.booking
+    .getRepository()
+    .whereEqualTo('resourceId', resourceId)
+    .whereGreaterThan('end', from)
+    .whereLessThan('start', to)
+    .whereEqualTo('canceled', false)
+    .find();
 }

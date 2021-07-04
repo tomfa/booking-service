@@ -21,9 +21,10 @@ async function setBookingComment(
 ): Promise<Booking> {
   // TODO: What if ID does not exits
   try {
+    const existing = await db.booking.findById(id);
     const booking = await db.booking.update({
-      where: { id },
-      data: { comment },
+      ...existing,
+      comment,
     });
     return fromDBBooking(booking);
   } catch (e) {

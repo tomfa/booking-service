@@ -12,7 +12,7 @@ import {
 } from '../utils/errors';
 import { fromGQLDate, reduceAvailability } from '../utils/date.utils';
 import {
-  conflictingBookingFilter,
+  getConflictingBookings,
   fromDBBooking,
   fromDBResource,
 } from '../utils/db.mappers';
@@ -77,12 +77,10 @@ async function findAvailability(
     );
   }
 
-  const bookings = await db.booking.findMany({
-    where: conflictingBookingFilter({
-      resourceId: resources[0].id,
-      from,
-      to,
-    }),
+  const bookings = await getConflictingBookings({
+    resourceId: resources[0].id,
+    from,
+    to,
   });
 
   return findAvailabilityForSingleResource(

@@ -8,10 +8,7 @@ async function getBookingById(
   token: AuthToken
 ): Promise<Booking | null> {
   // TODO: What if id does not exist?
-  const booking = await db.booking.findUnique({
-    where: { id },
-    include: { resource: true },
-  });
+  const booking = await db.booking.findById(id);
   return booking && fromDBBooking(booking);
 }
 

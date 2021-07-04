@@ -21,7 +21,8 @@ async function deleteCustomer(
   });
   if (resources.length) {
     const resourceIds = resources.map(r => r.id);
-    await db.booking.deleteMany({ where: { resourceId: { in: resourceIds } } });
+    // TODO:
+    // await db.booking.deleteMany({ where: { resourceId: { in: resourceIds } } });
     await db.resource.deleteMany({ where: { id: { in: resourceIds } } });
   }
   try {
