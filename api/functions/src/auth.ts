@@ -3,8 +3,6 @@ import * as admin from 'firebase-admin';
 import { slugify } from './utils/slug.utils';
 import { getRandomUserName } from './utils/profile.utils';
 
-admin.initializeApp();
-
 const db = admin.firestore();
 
 export const createUserRecord = functions.auth
@@ -15,6 +13,7 @@ export const createUserRecord = functions.auth
     return userRef.update({
       name: user.displayName,
       createdAt: context.timestamp,
-      nickname: user.displayName && slugify(user.displayName) || getRandomUserName(),
+      nickname:
+        (user.displayName && slugify(user.displayName)) || getRandomUserName(),
     });
   });
