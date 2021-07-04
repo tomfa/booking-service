@@ -81,11 +81,11 @@ export async function getConflictingBookings({
   from: Date;
   to: Date;
 }) {
-  return await db.booking
+  const bookings = await db.booking
     .getRepository()
     .whereEqualTo('resourceId', resourceId)
     .whereGreaterThan('end', from)
-    .whereLessThan('start', to)
     .whereEqualTo('canceled', false)
     .find();
+  return bookings.filter(b => b.start < to);
 }
