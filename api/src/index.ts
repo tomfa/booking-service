@@ -1,11 +1,16 @@
 import fs from 'fs';
 import path from 'path';
+import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import * as admin from 'firebase-admin';
 import * as fireorm from 'fireorm';
 import { ApolloServer } from 'apollo-server-cloud-functions';
 import { resolvers } from './graphql/resolvers';
 import { RequestContext } from './types';
+
+dotenv.config({
+  path: process.env.NODE_ENV === 'test' ? '../.env.test' : '../.env',
+});
 
 admin.initializeApp();
 
