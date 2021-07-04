@@ -48,19 +48,11 @@ function resolverWrapper<T>(
   fun: (args: T, token: AuthToken) => Promise<unknown>
 ) {
   return async (parent: unknown, args: T, context: RequestContext) => {
-    console.log(context.config);
-    try {
-      const token = await getVerifiedTokenData(
-        // @ts-ignore
-        context.headers['x-authorization']
-      );
-      return fun(args as T, token);
-    } catch (err) {
-      return fun(args, {
-        sub: 'test',
-        customerId: 'kroloftet',
-      });
-    }
+    const token = await getVerifiedTokenData(
+      // @ts-ignore
+      context.headers['x-authorization']
+    );
+    return fun(args as T, token);
   };
 }
 
