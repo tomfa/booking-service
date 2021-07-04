@@ -132,7 +132,6 @@ export type Mutation = {
   setBookingComment?: Maybe<Booking>;
   addCustomer?: Maybe<Customer>;
   disableCustomer?: Maybe<Customer>;
-  deleteCustomer?: Maybe<Customer>;
 };
 
 
@@ -178,11 +177,6 @@ export type MutationAddCustomerArgs = {
 
 
 export type MutationDisableCustomerArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteCustomerArgs = {
   id: Scalars['String'];
 };
 
@@ -386,19 +380,6 @@ export type CancelBookingMutation = (
   & { cancelBooking?: Maybe<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
-  )> }
-);
-
-export type DeleteCustomerMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteCustomerMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteCustomer?: Maybe<(
-    { __typename?: 'Customer' }
-    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
   )> }
 );
 
@@ -846,19 +827,6 @@ export const CancelBookingDocument = gql`
   }
 }
     `;
-export const DeleteCustomerDocument = gql`
-    mutation deleteCustomer($id: String!) {
-  deleteCustomer(id: $id) {
-    id
-    name
-    email
-    phoneNumber
-    issuer
-    credits
-    enabled
-  }
-}
-    `;
 export const DisableCustomerDocument = gql`
     mutation disableCustomer($id: String!) {
   disableCustomer(id: $id) {
@@ -1282,9 +1250,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     cancelBooking(variables: CancelBookingMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CancelBookingMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CancelBookingMutation>(CancelBookingDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'cancelBooking');
-    },
-    deleteCustomer(variables: DeleteCustomerMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeleteCustomerMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<DeleteCustomerMutation>(DeleteCustomerDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteCustomer');
     },
     disableCustomer(variables: DisableCustomerMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DisableCustomerMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DisableCustomerMutation>(DisableCustomerDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'disableCustomer');

@@ -10,4 +10,3 @@ module.exports.cancelBooking = fs.readFileSync(path.join(__dirname, 'cancelBooki
 module.exports.setBookingComment = fs.readFileSync(path.join(__dirname, 'setBookingComment.gql'), 'utf8');
 module.exports.addCustomer = fs.readFileSync(path.join(__dirname, 'addCustomer.gql'), 'utf8');
 module.exports.disableCustomer = fs.readFileSync(path.join(__dirname, 'disableCustomer.gql'), 'utf8');
-module.exports.deleteCustomer = fs.readFileSync(path.join(__dirname, 'deleteCustomer.gql'), 'utf8');
