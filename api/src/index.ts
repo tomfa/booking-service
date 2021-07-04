@@ -1,11 +1,13 @@
 import fs from 'fs';
+import path from 'path';
 import * as admin from 'firebase-admin';
 import { ApolloServer } from 'apollo-server-cloud-functions';
 import { resolvers } from './graphql/resolvers';
 
 admin.initializeApp();
 
-const gqlSchema = fs.readFileSync('./graphql/schema.graphql', 'utf8');
+const schemaPath = path.join(__dirname, './graphql/schema.graphql');
+const gqlSchema = fs.readFileSync(schemaPath, 'utf8');
 
 const server = new ApolloServer({
   typeDefs: gqlSchema,

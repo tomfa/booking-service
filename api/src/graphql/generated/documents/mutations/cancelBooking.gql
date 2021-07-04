@@ -1,0 +1,12 @@
+mutation cancelBooking($id: String!){
+    cancelBooking(id: $id){
+        id
+        userId
+        resourceId
+        start
+        end
+        canceled
+        comment
+        seatNumber
+    }
+}

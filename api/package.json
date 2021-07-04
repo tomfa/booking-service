@@ -1,8 +1,9 @@
 {
   "name": "functions",
   "scripts": {
-    "build": "tsc -b",
-    "start:local": "tsc -b && node lib/index.js",
+    "build": "tsc -b && cp src/graphql/schema.graphql lib/graphql/",
+    "start": "npm run build && node lib/index.js",
+    "schema:generate-document": "gqlg --schemaFilePath ./src/graphql/schema.graphql --destDirPath ./src/graphql/generated/documents --depthLimit 5",
     "deploy": "npm run build && gcloud functions deploy graphql --entry-point handler --runtime nodejs14 --trigger-http --region=europe-central2 --allow-unauthenticated"
   },
   "engines": {
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.10",
     "firebase-functions-test": "^0.2.0",
+    "gql-generator": "^1.0.12",
     "typescript": "^3.8.0"
   },
   "private": true
