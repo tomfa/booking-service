@@ -1,5 +1,8 @@
 import { db } from '../db/client';
-import { Customer } from '../graphql/generated/types';
+import {
+  Customer,
+  MutationDisableCustomerArgs,
+} from '../graphql/generated/types';
 import { fromDBCustomer } from '../utils/db.mappers';
 import { AuthToken } from '../auth/types';
 import {
@@ -9,7 +12,7 @@ import {
 } from '../utils/errors';
 
 async function disableCustomer(
-  id: string,
+  { id }: MutationDisableCustomerArgs,
   token: AuthToken
 ): Promise<Customer> {
   // TODO: What if id does not exist?

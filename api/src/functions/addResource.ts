@@ -1,5 +1,5 @@
 import { db } from '../db/client';
-import { AddResourceInput, Resource } from '../graphql/generated/types';
+import { MutationAddResourceArgs, Resource } from '../graphql/generated/types';
 import { fromDBResource } from '../utils/db.mappers';
 import { getId, mapSchedule } from '../utils/input.mappers';
 import {
@@ -10,9 +10,16 @@ import {
 import { AuthToken } from '../auth/types';
 
 async function addResource(
-  { id, enabled = true, label = '', schedule, ...resource }: AddResourceInput,
+  { addResourceInput }: MutationAddResourceArgs,
   token: AuthToken
 ): Promise<Resource> {
+  const {
+    id,
+    enabled = true,
+    label = '',
+    schedule,
+    ...resource
+  } = addResourceInput;
   if (resource.seats && resource.seats < 0) {
     throw new BadRequestError(
       `Can not create a resource with less than 0 seats`,

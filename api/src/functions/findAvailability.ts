@@ -1,7 +1,7 @@
 import { db } from '../db/client';
 import {
   Booking,
-  FindAvailabilityInput,
+  QueryFindAvailabilityArgs,
   Resource,
   TimeSlot,
 } from '../graphql/generated/types';
@@ -39,7 +39,7 @@ const findAvailabilityForSingleResource = (
 };
 
 async function findAvailability(
-  args: FindAvailabilityInput,
+  { filterAvailability: args }: QueryFindAvailabilityArgs,
   token: AuthToken
 ): Promise<TimeSlot[]> {
   if (args.resourceIds.length === 0) {

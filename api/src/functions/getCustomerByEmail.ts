@@ -1,10 +1,13 @@
 import { db } from '../db/client';
-import { Customer } from '../graphql/generated/types';
+import {
+  Customer,
+  QueryGetCustomerByEmailArgs,
+} from '../graphql/generated/types';
 import { fromDBCustomer } from '../utils/db.mappers';
 import { AuthToken } from '../auth/types';
 
 async function getCustomerByEmail(
-  email: string,
+  { email }: QueryGetCustomerByEmailArgs,
   token: AuthToken
 ): Promise<Customer | null> {
   const customer = await db.customer.findUnique({ where: { email } });

@@ -1,5 +1,8 @@
 import { db } from '../db/client';
-import { Customer } from '../graphql/generated/types';
+import {
+  Customer,
+  MutationDeleteCustomerArgs,
+} from '../graphql/generated/types';
 import { fromDBCustomer } from '../utils/db.mappers';
 import { AuthToken } from '../auth/types';
 import {
@@ -8,7 +11,10 @@ import {
   ObjectDoesNotExist,
 } from '../utils/errors';
 
-async function deleteCustomer(id: string, token: AuthToken): Promise<Customer> {
+async function deleteCustomer(
+  { id }: MutationDeleteCustomerArgs,
+  token: AuthToken
+): Promise<Customer> {
   const resources = await db.resource.findMany({
     where: { customerId: id },
     select: { id: true },

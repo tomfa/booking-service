@@ -1,5 +1,8 @@
 import { db } from '../db/client';
-import { Customer, UpdateCustomerInput } from '../graphql/generated/types';
+import {
+  Customer,
+  MutationUpdateCustomerArgs,
+} from '../graphql/generated/types';
 import { removeNull } from '../utils/input.mappers';
 import { fromDBCustomer } from '../utils/db.mappers';
 import {
@@ -10,7 +13,7 @@ import {
 import { AuthToken } from '../auth/types';
 
 async function updateCustomer(
-  args: UpdateCustomerInput,
+  { updateCustomerInput: args }: MutationUpdateCustomerArgs,
   token: AuthToken
 ): Promise<Customer> {
   // TODO: Stop invalid updates, see addCustomer

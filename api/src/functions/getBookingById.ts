@@ -1,10 +1,10 @@
 import { db } from '../db/client';
-import { Booking } from '../graphql/generated/types';
+import { Booking, QueryGetBookingByIdArgs } from '../graphql/generated/types';
 import { fromDBBooking } from '../utils/db.mappers';
 import { AuthToken } from '../auth/types';
 
 async function getBookingById(
-  id: string,
+  { id }: QueryGetBookingByIdArgs,
   token: AuthToken
 ): Promise<Booking | null> {
   // TODO: What if id does not exist?

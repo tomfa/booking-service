@@ -1,14 +1,15 @@
 import { db } from '../db/client';
 
-import { FindResourceInput, Resource } from '../graphql/generated/types';
+import { QueryFindResourcesArgs, Resource } from '../graphql/generated/types';
 import { removeNull } from '../utils/input.mappers';
 import { fromDBResource } from '../utils/db.mappers';
 import { AuthToken } from '../auth/types';
 
 async function findResources(
-  { resourceIds, ...args }: FindResourceInput,
+  { filterResource }: QueryFindResourcesArgs,
   token: AuthToken
 ): Promise<Resource[]> {
+  const { resourceIds, ...args } = filterResource;
   const clean = removeNull({ ...args });
   const enabled = clean.enabled === false ? clean.enabled : true;
   const resources = await db.resource.findMany({

@@ -1,5 +1,8 @@
 import { db } from '../db/client';
-import { Booking } from '../graphql/generated/types';
+import {
+  Booking,
+  MutationSetBookingCommentArgs,
+} from '../graphql/generated/types';
 import { fromDBBooking } from '../utils/db.mappers';
 import { AuthToken } from '../auth/types';
 import {
@@ -13,7 +16,7 @@ export type SetBookingCommentInput = {
   comment: string | null;
 };
 async function setBookingComment(
-  { id, comment }: SetBookingCommentInput,
+  { id, comment }: MutationSetBookingCommentArgs,
   token: AuthToken
 ): Promise<Booking> {
   // TODO: What if ID does not exits

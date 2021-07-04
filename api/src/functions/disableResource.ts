@@ -1,5 +1,8 @@
 import { db } from '../db/client';
-import { Resource } from '../graphql/generated/types';
+import {
+  MutationDisableResourceArgs,
+  Resource,
+} from '../graphql/generated/types';
 import { fromDBResource } from '../utils/db.mappers';
 import { AuthToken } from '../auth/types';
 import {
@@ -9,7 +12,7 @@ import {
 } from '../utils/errors';
 
 async function disableResource(
-  id: string,
+  { id }: MutationDisableResourceArgs,
   token: AuthToken
 ): Promise<Resource> {
   // TODO: What if id does not exist?

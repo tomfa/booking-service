@@ -1,6 +1,10 @@
 import { db } from '../db/client';
 
-import { Resource, UpdateResourceInput } from '../graphql/generated/types';
+import {
+  MutationUpdateResourceArgs,
+  Resource,
+  UpdateResourceInput,
+} from '../graphql/generated/types';
 import { mapSchedule, removeNull } from '../utils/input.mappers';
 import { fromDBResource } from '../utils/db.mappers';
 import {
@@ -22,7 +26,7 @@ const mapResourceUpdate = (args: UpdateResourceInput) => {
 };
 
 async function updateResource(
-  args: UpdateResourceInput,
+  { updateResourceInput: args }: MutationUpdateResourceArgs,
   token: AuthToken
 ): Promise<Resource | null> {
   // TODO: What if id does not exist?

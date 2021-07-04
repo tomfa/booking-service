@@ -1,5 +1,5 @@
 import { db } from '../db/client';
-import { AddCustomerInput, Customer } from '../graphql/generated/types';
+import { Customer, MutationAddCustomerArgs } from '../graphql/generated/types';
 import { getId, removeNull } from '../utils/input.mappers';
 import { fromDBCustomer } from '../utils/db.mappers';
 import {
@@ -10,9 +10,10 @@ import {
 import { AuthToken } from '../auth/types';
 
 async function addCustomer(
-  { id, ...rest }: AddCustomerInput,
+  { addCustomerInput }: MutationAddCustomerArgs,
   token: AuthToken
 ): Promise<Customer> {
+  const { id, ...rest } = addCustomerInput;
   // TODO: what if id already exists
   // TODO: validate more input: issuer, phoneNumber...
   // TODO:

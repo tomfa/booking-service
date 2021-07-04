@@ -8,7 +8,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/graphql', async (req, res) => {
-  console.log('HI');
   try {
     return server.handler(req, res);
   } catch (e) {

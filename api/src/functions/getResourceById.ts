@@ -1,10 +1,10 @@
 import { db } from '../db/client';
-import { Resource } from '../graphql/generated/types';
+import { QueryGetResourceByIdArgs, Resource } from '../graphql/generated/types';
 import { fromDBResource } from '../utils/db.mappers';
 import { AuthToken } from '../auth/types';
 
 async function getResourceById(
-  id: string,
+  { id }: QueryGetResourceByIdArgs,
   token: AuthToken
 ): Promise<Resource | null> {
   // TODO: What if id does not exist?

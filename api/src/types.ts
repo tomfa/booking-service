@@ -1,7 +1,13 @@
+import { IncomingHttpHeaders } from 'http';
 import * as types from './graphql/generated/types';
 import { BookedDuration, Mutation, Query } from './graphql/generated/types';
 import { ErrorType } from './utils/types';
 
+export type RequestContext = {
+  headers: IncomingHttpHeaders;
+  // eslint-disable-next-line no-undef
+  config: NodeJS.ProcessEnv;
+};
 export type EntityTypes =
   | types.Resource
   | types.Booking

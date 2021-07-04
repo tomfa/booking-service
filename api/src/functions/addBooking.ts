@@ -1,6 +1,10 @@
 import { db } from '../db/client';
 
-import { AddBookingInput, Booking, Resource } from '../graphql/generated/types';
+import {
+  Booking,
+  MutationAddBookingArgs,
+  Resource,
+} from '../graphql/generated/types';
 import { getId } from '../utils/input.mappers';
 import { fromDBBooking } from '../utils/db.mappers';
 import {
@@ -27,13 +31,14 @@ const getEndTime = (start: Date, resource: Resource): Date => {
 };
 
 async function addBooking(
-  { start, end, ...data }: AddBookingInput,
+  { addBookingInput }: MutationAddBookingArgs,
   token: AuthToken
 ): Promise<Booking> {
+  const { start, end, ...data } = addBookingInput;
   // TODO: what if id already exists
   // TODO: Check that customer has credits
   // TODO: Reduce customer credits
-  const resource = await getResourceById(data.resourceId, token);
+  const resource = await getResourceById({ id: data.resourceId }, token);
   if (!resource) {
     throw new BadRequestError(
       `Can not create booking on unknown resource`,

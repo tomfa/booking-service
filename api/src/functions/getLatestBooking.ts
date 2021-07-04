@@ -1,10 +1,10 @@
 import { db } from '../db/client';
-import { Booking, FindBookingInput } from '../graphql/generated/types';
+import { Booking, QueryGetLatestBookingArgs } from '../graphql/generated/types';
 import { fromDBBooking, toBookingFilter } from '../utils/db.mappers';
 import { AuthToken } from '../auth/types';
 
 async function getLatestBooking(
-  args: FindBookingInput,
+  { filterBookings: args }: QueryGetLatestBookingArgs,
   token: AuthToken
 ): Promise<Booking | null> {
   const filter = toBookingFilter(args);

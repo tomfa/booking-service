@@ -1,7 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import * as jose from 'node-jose';
 import fetch from 'node-fetch';
-import { PrismaClient } from '../db/client';
 
 import config from '../config';
 import { cache } from '../utils/cache/memoryCache';
@@ -15,8 +14,7 @@ import { getAuth } from '../utils/token';
 import { APITokenData, TokenData, AuthToken } from './types';
 
 export const getVerifiedTokenData = async (
-  authHeader: string | undefined,
-  db: PrismaClient
+  authHeader: string | undefined
 ): Promise<AuthToken> => {
   if (!authHeader) {
     throw new NotAuthenticatedError(`Authentication header missing`);

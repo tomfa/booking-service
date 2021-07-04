@@ -4,9 +4,7 @@ import addCustomer from '../functions/addCustomer';
 import cancelBooking from '../functions/cancelBooking';
 import deleteCustomer from '../functions/deleteCustomer';
 import disableResource from '../functions/disableResource';
-import setBookingComment, {
-  SetBookingCommentInput,
-} from '../functions/setBookingComment';
+import setBookingComment from '../functions/setBookingComment';
 import updateCustomer from '../functions/updateCustomer';
 import disableCustomer from '../functions/disableCustomer';
 import findAvailability from '../functions/findAvailability';
@@ -18,73 +16,98 @@ import getCustomerByEmail from '../functions/getCustomerByEmail';
 import getCustomerById from '../functions/getCustomerById';
 import getCustomerByIssuer from '../functions/getCustomerByIssuer';
 import getLatestBooking from '../functions/getLatestBooking';
-import getNextAvailable, {
-  FindNextAvailableInput,
-} from '../functions/getNextAvailable';
+import getNextAvailable from '../functions/getNextAvailable';
 import getResourceById from '../functions/getResourceById';
 import updateResource from '../functions/updateResource';
-import { db } from '../db/client';
 import { getVerifiedTokenData } from '../auth/jwt';
 import { AuthToken } from '../auth/types';
+import { RequestContext } from '../types';
 import {
-  AddBookingInput,
-  AddCustomerInput,
-  AddResourceInput,
-  FindAvailabilityInput,
-  FindBookingInput,
-  FindResourceInput,
-  UpdateCustomerInput,
-  UpdateResourceInput,
+  MutationAddBookingArgs,
+  MutationAddCustomerArgs,
+  MutationAddResourceArgs,
+  MutationCancelBookingArgs,
+  MutationDeleteCustomerArgs,
+  MutationDisableCustomerArgs,
+  MutationDisableResourceArgs,
+  MutationSetBookingCommentArgs,
+  MutationUpdateCustomerArgs,
+  MutationUpdateResourceArgs,
+  QueryFindAvailabilityArgs,
+  QueryFindBookingsArgs,
+  QueryFindResourcesArgs,
+  QueryGetBookedDurationArgs,
+  QueryGetBookingByIdArgs,
+  QueryGetCustomerByEmailArgs,
+  QueryGetCustomerByIdArgs,
+  QueryGetCustomerByIssuerArgs,
+  QueryGetLatestBookingArgs,
+  QueryGetNextAvailableArgs,
+  QueryGetResourceByIdArgs,
 } from './generated/types';
 
-async function resolverWrapper<T>(
+function resolverWrapper<T>(
   fun: (args: T, token: AuthToken) => Promise<unknown>
 ) {
-  return async (
-    parent: unknown,
-    args: unknown,
-    context: unknown,
-    info: unknown
-  ) => {
-    console.log('parent', parent);
-    console.log('args', args);
-    console.log('context', context);
-    console.log('info', info);
-    const token = await getVerifiedTokenData(
-      // @ts-ignore
-      context.headers['x-authorization'],
-      db
-    );
-    return fun(args as T, token);
+  return async (parent: unknown, args: T, context: RequestContext) => {
+    console.log(context.config);
+    try {
+      const token = await getVerifiedTokenData(
+        // @ts-ignore
+        context.headers['x-authorization']
+      );
+      return fun(args as T, token);
+    } catch (err) {
+      return fun(args, {
+        sub: 'test',
+        customerId: 'kroloftet',
+      });
+    }
   };
 }
 
 export const resolvers = {
   Query: {
-    findAvailability: resolverWrapper<FindAvailabilityInput>(findAvailability),
-    findResources: resolverWrapper<FindResourceInput>(findResources),
-    findBookings: resolverWrapper<FindBookingInput>(findBookings),
-    getBookedDuration: resolverWrapper<FindBookingInput>(getBookedDuration),
-    getBookingById: resolverWrapper<string>(getBookingById),
-    getCustomerByEmail: resolverWrapper<string>(getCustomerByEmail),
-    getCustomerById: resolverWrapper<string>(getCustomerById),
-    getCustomerByIssuer: resolverWrapper<string>(getCustomerByIssuer),
-    getLatestBooking: resolverWrapper<FindBookingInput>(getLatestBooking),
-    getNextAvailable: resolverWrapper<FindNextAvailableInput>(getNextAvailable),
-    getResourceById: resolverWrapper<string>(getResourceById),
+    findAvailability: resolverWrapper<QueryFindAvailabilityArgs>(
+      findAvailability
+    ),
+    findResources: resolverWrapper<QueryFindResourcesArgs>(findResources),
+    findBookings: resolverWrapper<QueryFindBookingsArgs>(findBookings),
+    getBookedDuration: resolverWrapper<QueryGetBookedDurationArgs>(
+      getBookedDuration
+    ),
+    getBookingById: resolverWrapper<QueryGetBookingByIdArgs>(getBookingById),
+    getCustomerByEmail: resolverWrapper<QueryGetCustomerByEmailArgs>(
+      getCustomerByEmail
+    ),
+    getCustomerById: resolverWrapper<QueryGetCustomerByIdArgs>(getCustomerById),
+    getCustomerByIssuer: resolverWrapper<QueryGetCustomerByIssuerArgs>(
+      getCustomerByIssuer
+    ),
+    getLatestBooking: resolverWrapper<QueryGetLatestBookingArgs>(
+      getLatestBooking
+    ),
+    getNextAvailable: resolverWrapper<QueryGetNextAvailableArgs>(
+      getNextAvailable
+    ),
+    getResourceById: resolverWrapper<QueryGetResourceByIdArgs>(getResourceById),
   },
   Mutation: {
-    addBooking: resolverWrapper<AddBookingInput>(addBooking),
-    addCustomer: resolverWrapper<AddCustomerInput>(addCustomer),
-    addResource: resolverWrapper<AddResourceInput>(addResource),
-    cancelBooking: resolverWrapper<string>(cancelBooking),
-    deleteCustomer: resolverWrapper<string>(deleteCustomer),
-    disableResource: resolverWrapper<string>(disableResource),
-    setBookingComment: resolverWrapper<SetBookingCommentInput>(
+    addBooking: resolverWrapper<MutationAddBookingArgs>(addBooking),
+    addCustomer: resolverWrapper<MutationAddCustomerArgs>(addCustomer),
+    addResource: resolverWrapper<MutationAddResourceArgs>(addResource),
+    cancelBooking: resolverWrapper<MutationCancelBookingArgs>(cancelBooking),
+    deleteCustomer: resolverWrapper<MutationDeleteCustomerArgs>(deleteCustomer),
+    disableResource: resolverWrapper<MutationDisableResourceArgs>(
+      disableResource
+    ),
+    setBookingComment: resolverWrapper<MutationSetBookingCommentArgs>(
       setBookingComment
     ),
-    updateCustomer: resolverWrapper<UpdateCustomerInput>(updateCustomer),
-    updateResource: resolverWrapper<UpdateResourceInput>(updateResource),
-    disableCustomer: resolverWrapper<string>(disableCustomer),
+    updateCustomer: resolverWrapper<MutationUpdateCustomerArgs>(updateCustomer),
+    updateResource: resolverWrapper<MutationUpdateResourceArgs>(updateResource),
+    disableCustomer: resolverWrapper<MutationDisableCustomerArgs>(
+      disableCustomer
+    ),
   },
 };

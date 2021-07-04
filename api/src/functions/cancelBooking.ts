@@ -1,5 +1,5 @@
 import { db } from '../db/client';
-import { Booking } from '../graphql/generated/types';
+import { Booking, MutationCancelBookingArgs } from '../graphql/generated/types';
 import { fromDBBooking } from '../utils/db.mappers';
 import { AuthToken } from '../auth/types';
 import {
@@ -8,7 +8,10 @@ import {
   ObjectDoesNotExist,
 } from '../utils/errors';
 
-async function cancelBooking(id: string, token: AuthToken): Promise<Booking> {
+async function cancelBooking(
+  { id }: MutationCancelBookingArgs,
+  token: AuthToken
+): Promise<Booking> {
   // TODO: What if ID does not exits
   try {
     const booking = await db.booking.update({

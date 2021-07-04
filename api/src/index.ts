@@ -1,8 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+import { Request, Response } from 'express';
 import * as admin from 'firebase-admin';
 import { ApolloServer } from 'apollo-server-cloud-functions';
 import { resolvers } from './graphql/resolvers';
+import { RequestContext } from './types';
 
 admin.initializeApp();
 
@@ -15,10 +17,9 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
   playground: true,
-  context: ({ req, res }) => ({
+  context: ({ req, res }: { req: Request; res: Response }): RequestContext => ({
     headers: req.headers,
-    req,
-    res,
+    config: process.env,
   }),
 });
 
