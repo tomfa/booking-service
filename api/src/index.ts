@@ -11,6 +11,7 @@ const gqlSchema = fs.readFileSync(schemaPath, 'utf8');
 
 const server = new ApolloServer({
   typeDefs: gqlSchema,
+  // @ts-ignore
   resolvers,
   introspection: true,
   playground: true,
