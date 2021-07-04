@@ -18,7 +18,6 @@ node_modules
 
 src
 !lib
-!service-account.json
 
 .eslint*
 *.md

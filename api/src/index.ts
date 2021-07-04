@@ -3,9 +3,7 @@ import { ApolloServer } from 'apollo-server-cloud-functions';
 import { typeDefs } from './graphql/typedefs';
 import { resolvers } from './graphql/resolvers';
 
-const serviceAccount = require('../service-account.json');
-
-admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+admin.initializeApp();
 
 const server = new ApolloServer({
   typeDefs,
