@@ -38,6 +38,7 @@ type Customer {
     issuer: String
     credits: Int!
     enabled: Boolean!
+    publicKeys: [String!]
 }
 
 type Resource {

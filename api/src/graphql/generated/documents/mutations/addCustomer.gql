@@ -7,5 +7,6 @@ mutation addCustomer($addCustomerInput: AddCustomerInput!){
         issuer
         credits
         enabled
+        publicKeys
     }
 }

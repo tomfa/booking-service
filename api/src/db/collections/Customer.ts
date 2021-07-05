@@ -9,4 +9,5 @@ export class Customer {
   issuer?: string | null;
   credits: number;
   enabled: boolean;
+  publicKeys: string[];
 }
