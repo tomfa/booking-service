@@ -11,6 +11,7 @@ import {
 } from '../utils/errors';
 import { JSONObject } from '../types';
 import { getAuth } from '../utils/token';
+import getCustomerByIssuer from '../functions/getCustomerByIssuer';
 import { APITokenData, TokenData, AuthToken } from './types';
 
 export const getVerifiedTokenData = async (
@@ -21,10 +22,18 @@ export const getVerifiedTokenData = async (
   }
   const authToken = authHeader.split(' ').reverse()[0];
   const token = await getAuth(authToken);
-
+  const customer = await getCustomerByIssuer({ issuer: token.issuer });
+  if (!customer) {
+    throw new BadAuthenticationError(
+      `Unable to find customer with issuer: ${token.issuer}`
+    );
+  }
+  if (!customer.enabled) {
+    throw new BadAuthenticationError(`Customer ${customer.id} is disabled`);
+  }
   return {
     sub: token.username || null,
-    customerId: 'kroloftet',
+    customerId: customer.id,
   };
 };
 
@@ -161,13 +170,18 @@ function mapToTokenData(apiToken: string): TokenData {
   return {
     ...data,
     iss: cleanIssuer(data.iss),
-    role: 'user',
+    role: 'user', // TODO: Clean data.role
     aud: data.aud || config.jwt.audience,
   };
 }
 
 async function getKeyStore(issuer: string): Promise<jose.JWK.KeyStore> {
+  const cacheValue = cache.get(issuer);
+  if (cacheValue) {
+    return jose.JWK.asKeyStore(cacheValue);
+  }
   if (issuer === 'auth.kroloftet.no') {
+    // TODO: Remove this hardcoded key
     return jose.JWK.asKeyStore({
       keys: [
         {
@@ -180,11 +194,18 @@ async function getKeyStore(issuer: string): Promise<jose.JWK.KeyStore> {
       ],
     });
   }
-  const url = `https://${issuer}/.well-known/jwks.json`;
-  const cacheValue = cache.get(url);
-  if (cacheValue) {
-    return jose.JWK.asKeyStore(cacheValue);
+  const customer = await getCustomerByIssuer({ issuer });
+  if (!customer) {
+    throw new BadAuthenticationError(
+      `Unable to find customer with issuer: ${issuer}`
+    );
   }
+  if (!customer.enabled) {
+    throw new BadAuthenticationError(`Customer ${customer.id} is disabled`);
+  }
+
+  const url = `https://${issuer}/.well-known/jwks.json`;
+
   try {
     const response = await fetch(url);
     if (response.status >= 400) {

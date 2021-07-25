@@ -8,7 +8,7 @@ import { AuthToken } from '../auth/types';
 
 async function getCustomerByIssuer(
   { issuer }: QueryGetCustomerByIssuerArgs,
-  token: AuthToken
+  token?: AuthToken
 ): Promise<Customer | null> {
   const customer = await db.customer
     .getRepository()

@@ -7,6 +7,7 @@ export type AuthToken = {
 export type Role = 'user';
 
 export type Auth = {
+  issuer: string;
   isExpired: boolean;
   username: string;
   permissions: string[];

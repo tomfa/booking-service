@@ -19,6 +19,7 @@ export const createJWTtoken = (
 export async function getAuth(key: string): Promise<Auth> {
   const data = await verify(key);
   return {
+    issuer: data.iss,
     username: data.sub,
     role: data.role,
     isExpired: false,
