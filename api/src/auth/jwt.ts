@@ -125,17 +125,6 @@ const validateTokenIssuer = (iss: unknown) => {
       `Token claim 'iss' must be of type string`
     );
   }
-
-  if (iss === config.jwt.issuer) {
-    return;
-  }
-
-  const isKnownIssuer = config.jwt.acceptedIssuers.includes(iss);
-  if (!isKnownIssuer) {
-    throw new BadAuthenticationError(
-      `Issuer '${iss}' is not authorized for this API`
-    );
-  }
 };
 
 const validateExpiry = (val: unknown) => {
