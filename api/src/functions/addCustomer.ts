@@ -13,13 +13,17 @@ async function addCustomer(
   { addCustomerInput }: MutationAddCustomerArgs,
   token: AuthToken
 ): Promise<Customer> {
-  const { id, ...rest } = addCustomerInput;
+  const { id, publicKeys = [], ...rest } = addCustomerInput;
   // TODO: what if id already exists
   // TODO: validate more input: issuer, phoneNumber...
   // TODO:
 
   try {
-    const customer = await db.customer.create({ id: getId(id), ...rest });
+    const customer = await db.customer.create({
+      id: getId(id),
+      publicKeys,
+      ...rest,
+    });
     return fromDBCustomer(customer);
   } catch (err) {
     if (err.code === 'P2002') {

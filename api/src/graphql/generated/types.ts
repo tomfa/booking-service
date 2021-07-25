@@ -32,6 +32,7 @@ export type AddCustomerInput = {
   issuer?: Maybe<Scalars['String']>;
   credits?: Maybe<Scalars['Int']>;
   enabled?: Maybe<Scalars['Boolean']>;
+  publicKeys?: Maybe<Array<Scalars['String']>>;
 };
 
 export type AddResourceInput = {

@@ -32,6 +32,7 @@ export type AddCustomerInput = {
   issuer?: Maybe<Scalars['String']>;
   credits?: Maybe<Scalars['Int']>;
   enabled?: Maybe<Scalars['Boolean']>;
+  publicKeys?: Maybe<Array<Scalars['String']>>;
 };
 
 export type AddResourceInput = {
@@ -328,7 +329,7 @@ export type AddCustomerMutation = (
   { __typename?: 'Mutation' }
   & { addCustomer?: Maybe<(
     { __typename?: 'Customer' }
-    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
   )> }
 );
 
@@ -399,7 +400,7 @@ export type DeleteCustomerMutation = (
   { __typename?: 'Mutation' }
   & { deleteCustomer?: Maybe<(
     { __typename?: 'Customer' }
-    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
   )> }
 );
 
@@ -412,7 +413,7 @@ export type DisableCustomerMutation = (
   { __typename?: 'Mutation' }
   & { disableCustomer?: Maybe<(
     { __typename?: 'Customer' }
-    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
   )> }
 );
 
@@ -484,7 +485,7 @@ export type UpdateCustomerMutation = (
   { __typename?: 'Mutation' }
   & { updateCustomer?: Maybe<(
     { __typename?: 'Customer' }
-    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
   )> }
 );
 
@@ -639,7 +640,7 @@ export type GetCustomerByEmailQuery = (
   { __typename?: 'Query' }
   & { getCustomerByEmail?: Maybe<(
     { __typename?: 'Customer' }
-    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
   )> }
 );
 
@@ -652,7 +653,7 @@ export type GetCustomerByIdQuery = (
   { __typename?: 'Query' }
   & { getCustomerById?: Maybe<(
     { __typename?: 'Customer' }
-    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
   )> }
 );
 
@@ -665,7 +666,7 @@ export type GetCustomerByIssuerQuery = (
   { __typename?: 'Query' }
   & { getCustomerByIssuer?: Maybe<(
     { __typename?: 'Customer' }
-    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
   )> }
 );
 
@@ -766,6 +767,7 @@ export const AddCustomerDocument = gql`
     issuer
     credits
     enabled
+    publicKeys
   }
 }
     `;
@@ -857,6 +859,7 @@ export const DeleteCustomerDocument = gql`
     issuer
     credits
     enabled
+    publicKeys
   }
 }
     `;
@@ -870,6 +873,7 @@ export const DisableCustomerDocument = gql`
     issuer
     credits
     enabled
+    publicKeys
   }
 }
     `;
@@ -961,6 +965,7 @@ export const UpdateCustomerDocument = gql`
     issuer
     credits
     enabled
+    publicKeys
   }
 }
     `;
@@ -1148,6 +1153,7 @@ export const GetCustomerByEmailDocument = gql`
     issuer
     credits
     enabled
+    publicKeys
   }
 }
     `;
@@ -1161,6 +1167,7 @@ export const GetCustomerByIdDocument = gql`
     issuer
     credits
     enabled
+    publicKeys
   }
 }
     `;
@@ -1174,6 +1181,7 @@ export const GetCustomerByIssuerDocument = gql`
     issuer
     credits
     enabled
+    publicKeys
   }
 }
     `;

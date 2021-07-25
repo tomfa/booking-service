@@ -7,5 +7,6 @@ query getCustomerByIssuer($issuer: String!){
         issuer
         credits
         enabled
+        publicKeys
     }
 }

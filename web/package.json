@@ -37,7 +37,7 @@
     "start": "next dev -p 8000",
     "build": "npm run schema:generate && next build",
     "export": "next export",
-    "schema:generate-document": "gqlg --schemaFilePath ../backend/graphql/schema.graphql --destDirPath ./graphql/generated/documents --depthLimit 5",
+    "schema:generate-document": "gqlg --schemaFilePath ../api/schema.graphql --destDirPath ./graphql/generated/documents --depthLimit 5",
     "schema:generate": "npm run schema:generate-document && graphql-codegen --config codegen.yml",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",

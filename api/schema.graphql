@@ -138,6 +138,7 @@ input AddCustomerInput {
     issuer: String
     credits: Int
     enabled: Boolean
+    publicKeys: [String!]
 }
 
 input UpdateCustomerInput {
