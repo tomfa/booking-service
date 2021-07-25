@@ -1,7 +1,0 @@
-query getBookedDuration($filterBookings: FindBookingInput!){
-    getBookedDuration(filterBookings: $filterBookings){
-        minutes
-        bookingIds
-        numBookings
-    }
-}

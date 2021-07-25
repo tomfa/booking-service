@@ -1,7 +1,0 @@
-query findAvailability($filterAvailability: FindAvailabilityInput!){
-    findAvailability(filterAvailability: $filterAvailability){
-        availableSeats
-        start
-        end
-    }
-}
