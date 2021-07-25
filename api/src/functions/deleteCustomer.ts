@@ -6,8 +6,7 @@ import { AuthToken } from '../auth/types';
 
 import { db } from '../db/client';
 import { fromDBCustomer } from '../utils/db.mappers';
-import { ObjectDoesNotExist } from '../utils/errors';
-import { ErrorCode } from '../../../backend/lambda/utils/errors';
+import { ErrorCode, ObjectDoesNotExist } from '../utils/errors';
 
 async function deleteCustomer(
   { id }: MutationDeleteCustomerArgs,
