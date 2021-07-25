@@ -19,18 +19,18 @@ async function disableResource(
 
   try {
     const existing = await db.resource.findById(id);
+    if (!existing) {
+      throw new ObjectDoesNotExist(
+        `Resource with id ${id} not found`,
+        ErrorCode.RESOURCE_DOES_NOT_EXIST
+      );
+    }
     const resource = await db.resource.update({
       ...existing,
       enabled: false,
     });
     return fromDBResource(resource);
   } catch (err) {
-    if (err.code === 'P2025') {
-      throw new ObjectDoesNotExist(
-        `Resource with id ${id} not found`,
-        ErrorCode.RESOURCE_DOES_NOT_EXIST
-      );
-    }
     console.log(`Unhandled error: ${err}`);
     throw new GenericBookingError(
       `disableResource failed with unknown error`,
