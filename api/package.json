@@ -1,5 +1,6 @@
 {
-  "name": "functions",
+  "name": "@vailable/api",
+  "version": "1.0.0",
   "scripts": {
     "build": "tsc -b",
     "start": "npm run build && node local.js",

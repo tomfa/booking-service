@@ -399,7 +399,7 @@ export type DeleteCustomerMutation = (
   { __typename?: 'Mutation' }
   & { deleteCustomer?: Maybe<(
     { __typename?: 'Customer' }
-    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled'>
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
   )> }
 );
 
@@ -858,6 +858,7 @@ export const DeleteCustomerDocument = gql`
     issuer
     credits
     enabled
+    publicKeys
   }
 }
     `;

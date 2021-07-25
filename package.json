@@ -8,10 +8,10 @@
       "web",
       "shared",
       "sdk",
-      "backend"
+      "api"
     ],
     "nohoist": [
-      "**/backend/**"
+      "**/api/**"
     ]
   },
   "devDependencies": {
@@ -43,15 +43,15 @@
   "scripts": {
     "web": "yarn workspace @booking-service/web",
     "sdk": "yarn workspace vailable",
-    "backend": "yarn workspace @booking-service/backend",
+    "api": "yarn workspace @vailable/api",
     "shared": "yarn workspace @booking-service/shared",
     "build": "yarn workspaces run build",
-    "start": "yarn backend start",
-    "start:test": "yarn backend start:test",
-    "test:ci": "yarn sdk test --ci --coverage && yarn backend test --ci --coverage && yarn shared test --ci --coverage && yarn web test --ci --coverage",
+    "start": "yarn api start",
+    "start:test": "yarn api start:test",
+    "test:ci": "yarn sdk test --ci --coverage && yarn api test --ci --coverage && yarn shared test --ci --coverage && yarn web test --ci --coverage",
     "test:all": "start-server-and-test start:test http://localhost:4000 test:ci",
     "test:compile": "tsc -v && tsc --noEmit",
-    "schema:generate": "yarn backend schema:generate && yarn web schema:generate && yarn sdk schema:generate",
+    "schema:generate": "yarn api schema:generate && yarn web schema:generate && yarn sdk schema:generate",
     "lint": "eslint .",
     "lint:ignore-warnings": "eslint . --quiet",
     "lint:prettier-check": "prettier --check \"**/*.{js,jsx,ts,tsx,json}\"",

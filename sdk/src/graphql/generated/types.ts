@@ -72,6 +72,7 @@ export type Customer = {
   issuer?: Maybe<Scalars['String']>;
   credits: Scalars['Int'];
   enabled: Scalars['Boolean'];
+  publicKeys?: Maybe<Array<Scalars['String']>>;
 };
 
 export type DateSchedule = {
