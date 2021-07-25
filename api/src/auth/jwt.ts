@@ -203,6 +203,12 @@ async function getKeyStore(issuer: string): Promise<jose.JWK.KeyStore> {
   if (!customer.enabled) {
     throw new BadAuthenticationError(`Customer ${customer.id} is disabled`);
   }
+  if (customer.publicKeys.length) {
+    // Note: URL is not checked when keys are specified
+    const keystore = jose.JWK.createKeyStore();
+    await Promise.all(customer.publicKeys.map(key => keystore.add(key)));
+    return keystore;
+  }
 
   const url = `https://${issuer}/.well-known/jwks.json`;
 
