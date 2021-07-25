@@ -2,6 +2,7 @@ import addBooking from '../functions/addBooking';
 import addResource from '../functions/addResource';
 import addCustomer from '../functions/addCustomer';
 import cancelBooking from '../functions/cancelBooking';
+import deleteCustomer from '../functions/deleteCustomer';
 import disableResource from '../functions/disableResource';
 import setBookingComment from '../functions/setBookingComment';
 import updateCustomer from '../functions/updateCustomer';
@@ -26,6 +27,7 @@ import {
   MutationAddCustomerArgs,
   MutationAddResourceArgs,
   MutationCancelBookingArgs,
+  MutationDeleteCustomerArgs,
   MutationDisableCustomerArgs,
   MutationDisableResourceArgs,
   MutationSetBookingCommentArgs,
@@ -87,6 +89,7 @@ export const resolvers = {
     addCustomer: resolverWrapper<MutationAddCustomerArgs>(addCustomer),
     addResource: resolverWrapper<MutationAddResourceArgs>(addResource),
     cancelBooking: resolverWrapper<MutationCancelBookingArgs>(cancelBooking),
+    deleteCustomer: resolverWrapper<MutationDeleteCustomerArgs>(deleteCustomer),
     disableResource: resolverWrapper<MutationDisableResourceArgs>(
       disableResource
     ),

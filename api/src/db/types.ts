@@ -1,3 +1,4 @@
+import { Resource } from '../graphql/generated/types';
 import { Customer } from './collections/Customer';
 import { Booking } from './collections/Booking';
 import { Resource } from './collections/Resource';

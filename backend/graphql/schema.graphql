@@ -173,4 +173,5 @@ type Mutation {
     setBookingComment(id: String!, comment: String): Booking
     addCustomer(addCustomerInput: AddCustomerInput!): Customer
     disableCustomer(id: String!): Customer
+    deleteCustomer(id: String!): Customer
 }
