@@ -195,7 +195,10 @@ async function getKeyStore(issuer: string): Promise<jose.JWK.KeyStore> {
   if (customer.publicKeys.length) {
     // Note: URL is not checked when keys are specified
     const keystore = jose.JWK.createKeyStore();
-    await Promise.all(customer.publicKeys.map(key => keystore.add(key)));
+    const keys = await Promise.all(
+      customer.publicKeys.map(key => jose.JWK.asKey(key, 'pem'))
+    );
+    await Promise.all(keys.map(key => keystore.add(key)));
     return keystore;
   }
 
