@@ -24,6 +24,10 @@ const server = new ApolloServer({
   typeDefs: gqlSchema,
   // @ts-ignore
   resolvers,
+  formatError: err => {
+    console.log(err);
+    return err;
+  },
   introspection: true,
   playground: true,
   context: ({ req, res }: { req: Request; res: Response }): RequestContext => ({
