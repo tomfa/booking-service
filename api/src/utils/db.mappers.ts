@@ -53,7 +53,7 @@ export function getFilteredBookings(
   if (args.userId) {
     queryBuilder = queryBuilder.whereEqualTo('userId', args.userId);
   }
-  if (args.resourceIds) {
+  if (args.resourceIds && args.resourceIds.length > 0) {
     queryBuilder = queryBuilder.whereIn('resourceId', args.resourceIds);
   }
   if (args.resourceCategories) {
