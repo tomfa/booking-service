@@ -6,7 +6,7 @@ import {
   Resource,
 } from '../graphql/generated/types';
 import { getId } from '../utils/input.mappers';
-import { fromDBBooking } from '../utils/db.mappers';
+import { fromDBBooking, fromDBResource } from '../utils/db.mappers';
 import {
   BadRequestError,
   ErrorCode,
@@ -21,7 +21,6 @@ import {
 } from '../utils/schedule.utils';
 import { AuthToken } from '../auth/types';
 import { minArray } from '../utils/array.utils';
-import getResourceById from './getResourceById';
 
 const getEndTime = (start: Date, resource: Resource): Date => {
   const openingHours = getOpeningHoursForDate(resource, start);
@@ -34,17 +33,18 @@ async function addBooking(
   { addBookingInput }: MutationAddBookingArgs,
   token: AuthToken
 ): Promise<Booking> {
+  // TODO: Remove customerId from MutationAddBookingArgs
   const { start, end, ...data } = addBookingInput;
-  // TODO: what if id already exists
   // TODO: Check that customer has credits
   // TODO: Reduce customer credits
-  const resource = await getResourceById({ id: data.resourceId }, token);
-  if (!resource) {
+  const dbResource = await db.resource.findById(data.resourceId);
+  if (!dbResource) {
     throw new BadRequestError(
       `Can not create booking on unknown resource`,
       ErrorCode.RESOURCE_DOES_NOT_EXIST
     );
   }
+  const resource = fromDBResource(dbResource);
   if (!resource.enabled) {
     throw new BadRequestError(
       `Unable to add booking to disabled resource ${resource.id}`,
@@ -84,7 +84,7 @@ async function addBooking(
 
   const args = {
     id: booking.id,
-    customerId: data.customerId || null,
+    customerId: dbResource.customerId,
     canceled: false,
     comment: data.comment || null,
     resourceId: data.resourceId,
