@@ -42,6 +42,8 @@ async function findAvailability(
   { filterAvailability: args }: QueryFindAvailabilityArgs,
   token: AuthToken
 ): Promise<TimeSlot[]> {
+  // TODO: Support searching for any resource availability by superuser
+  const customerId = token.customerId;
   if (args.resourceIds.length === 0) {
     return [];
   }
@@ -49,7 +51,7 @@ async function findAvailability(
     .getRepository()
     .whereIn('id', args.resourceIds)
     .whereEqualTo('enabled', true)
-    .whereEqualTo('customerId', args.customerId || null)
+    .whereEqualTo('customerId', customerId)
     .find();
 
   const foundResourceIds = resources.map(r => r.id);
@@ -59,7 +61,7 @@ async function findAvailability(
   if (missingResources.length) {
     const missingIdStrings = missingResources.join(',');
     throw new ObjectDoesNotExist(
-      `Unable to find enabled resources with ids: ${missingIdStrings}`,
+      `Unable to find enabled resources with ids: ${missingIdStrings} for customer ${customerId}`,
       ErrorCode.RESOURCE_DOES_NOT_EXIST
     );
   }
