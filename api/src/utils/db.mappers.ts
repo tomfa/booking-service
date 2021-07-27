@@ -77,7 +77,7 @@ export async function getFilteredBookings(
   if (args.to) {
     queryBuilder = queryBuilder.whereLessThan('end', args.to);
   }
-  if (args.includeCanceled !== false) {
+  if (args.includeCanceled !== true) {
     queryBuilder = queryBuilder.whereEqualTo('canceled', false);
   }
   return queryBuilder;
