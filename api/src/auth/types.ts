@@ -4,7 +4,7 @@ export type AuthToken = {
   customerId: string | null;
 };
 
-export type Role = 'user';
+export type Role = 'user' | 'admin' | 'superuser';
 
 export type Auth = {
   issuer: string;
