@@ -40,7 +40,7 @@ async function addBooking(
   const dbResource = await db.resource.findById(data.resourceId);
   if (!dbResource) {
     throw new BadRequestError(
-      `Can not create booking on unknown resource`,
+      `Can not create booking on unknown resource ${data.resourceId}`,
       ErrorCode.RESOURCE_DOES_NOT_EXIST
     );
   }
@@ -72,7 +72,9 @@ async function addBooking(
 
   if (!bookingSlotFitsInResourceSlots(resource, booking)) {
     throw new BadRequestError(
-      `Booked time ${booking.start} does not fit into resource ${resource.id} time slots`,
+      `Booked time ${startTime.toISOString()} does not fit into resource ${
+        resource.id
+      } time slots`,
       ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
     );
   }
