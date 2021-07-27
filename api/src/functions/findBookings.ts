@@ -6,9 +6,10 @@ async function findBookings(
   { filterBookings: args }: QueryFindBookingsArgs,
   token?: AuthToken
 ): Promise<Booking[]> {
-  const customerId = token.customerId;
   // TODO: Support querying for any customerId by superuser
-  const bookings = await getFilteredBookings({ ...args, customerId }).find();
+  const customerId = token.customerId;
+  const bookingsQuery = await getFilteredBookings({ ...args, customerId });
+  const bookings = await bookingsQuery.find();
   return bookings.map(fromDBBooking);
 }
 

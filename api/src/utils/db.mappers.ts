@@ -39,26 +39,37 @@ export function fromDBResource(dbResult: DBResource): Resource {
   return { ...dbResult, schedule: mapFromDBSchedule(dbResult.schedule) };
 }
 
-export function getFilteredBookings(
-  args: FindBookingInput
-): IQueryBuilder<DBBooking> {
-  const repository = db.booking.getRepository();
-
+export async function getFilteredBookings(
+  args: FindBookingInput & { customerId: string }
+): Promise<IQueryBuilder<DBBooking>> {
   // @ts-ignore
-  let queryBuilder: IQueryBuilder<DBBooking> = repository;
+  let queryBuilder: IQueryBuilder<DBBooking> = db.booking.getRepository();
+
+  let resources = db.resource
+    .getRepository()
+    .whereEqualTo('customerId', args.customerId);
+
+  if (args.resourceIds?.length) {
+    resources = resources.whereIn('id', args.resourceIds);
+  }
+
+  if (args.resourceCategories?.length) {
+    resources = resources.whereIn('category', args.resourceCategories);
+  }
+  const matchingResources = await resources.find();
+  if (!matchingResources.length) {
+    return queryBuilder.whereEqualTo('id', '_'); // No result
+  }
+  queryBuilder = queryBuilder.whereIn(
+    'resourceId',
+    matchingResources.map(r => r.id)
+  );
 
   if (args.customerId) {
     queryBuilder = queryBuilder.whereEqualTo('customerId', args.customerId);
   }
   if (args.userId) {
     queryBuilder = queryBuilder.whereEqualTo('userId', args.userId);
-  }
-  if (args.resourceIds && args.resourceIds.length > 0) {
-    queryBuilder = queryBuilder.whereIn('resourceId', args.resourceIds);
-  }
-  if (args.resourceCategories) {
-    // TODO: Implement
-    // queryBuilder = queryBuilder.whereIn('resourceCategory', args.resourceCategories);
   }
   if (args.from) {
     queryBuilder = queryBuilder.whereGreaterOrEqualThan('start', args.from);

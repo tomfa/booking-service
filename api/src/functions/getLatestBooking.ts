@@ -6,8 +6,12 @@ async function getLatestBooking(
   { filterBookings: args }: QueryGetLatestBookingArgs,
   token: AuthToken
 ): Promise<Booking | null> {
-  const queryBuilder = getFilteredBookings(args).orderByDescending('start');
-  const booking = await queryBuilder.findOne();
+  // TODO: Support searching for any customerId for superuser
+  const queryBuilder = await getFilteredBookings({
+    ...args,
+    customerId: token.customerId,
+  });
+  const booking = await queryBuilder.orderByDescending('start').findOne();
   if (!booking) {
     return null;
   }
