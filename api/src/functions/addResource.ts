@@ -8,11 +8,13 @@ import {
   ErrorCode,
 } from '../utils/errors';
 import { Auth } from '../auth/types';
+import { permissions, verifyPermission } from '../auth/permissions';
 
 async function addResource(
   { addResourceInput }: MutationAddResourceArgs,
   token: Auth
 ): Promise<Resource> {
+  verifyPermission(token, permissions.ADD_RESOURCE);
   const {
     id,
     enabled = true,
@@ -27,6 +29,9 @@ async function addResource(
     );
   }
   const customerId = resource.customerId || token.customerId;
+  if (customerId !== token.customerId) {
+    verifyPermission(token, permissions.ALL);
+  }
   if (!customerId) {
     throw new BadAuthenticationError(
       `Can not create a resource without being authenticated as customer`,

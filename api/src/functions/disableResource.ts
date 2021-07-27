@@ -10,12 +10,13 @@ import {
   GenericBookingError,
   ObjectDoesNotExist,
 } from '../utils/errors';
+import { permissions, verifyPermission } from '../auth/permissions';
 
 async function disableResource(
   { id }: MutationDisableResourceArgs,
   token: Auth
 ): Promise<Resource> {
-  // TODO: What if id does not exist?
+  verifyPermission(token, permissions.DELETE_RESOURCE);
 
   try {
     const existing = await db.resource.findById(id);

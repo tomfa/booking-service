@@ -5,7 +5,6 @@ import {
 import { Auth } from '../auth/types';
 import findAvailability from './findAvailability';
 
-export type FindNextAvailableInput = { id: string; afterDate: number };
 async function getNextAvailable(
   { id, afterDate }: QueryGetNextAvailableArgs,
   token: Auth

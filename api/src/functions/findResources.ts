@@ -4,11 +4,13 @@ import { QueryFindResourcesArgs, Resource } from '../graphql/generated/types';
 import { removeNull } from '../utils/input.mappers';
 import { fromDBResource } from '../utils/db.mappers';
 import { Auth } from '../auth/types';
+import { permissions, verifyPermission } from '../auth/permissions';
 
 async function findResources(
   { filterResource }: QueryFindResourcesArgs,
   token: Auth
 ): Promise<Resource[]> {
+  verifyPermission(token, permissions.GET_RESOURCE);
   const { resourceIds, ...args } = filterResource;
   const clean = removeNull({ ...args });
   const enabled = clean.enabled === false ? clean.enabled : true;
@@ -20,8 +22,11 @@ async function findResources(
     resourceQuery = resourceQuery.whereIn('id', resourceIds);
   }
 
-  // TODO: Allow superuser to search for any resource
-  resourceQuery = resourceQuery.whereEqualTo('customerId', token.customerId);
+  const customerId = args.customerId || token.customerId;
+  if (customerId !== token.customerId) {
+    verifyPermission(token, permissions.ALL);
+  }
+  resourceQuery = resourceQuery.whereEqualTo('customerId', customerId);
 
   if (args.category) {
     resourceQuery = resourceQuery.whereEqualTo('category', args.category);

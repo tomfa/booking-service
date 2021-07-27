@@ -13,6 +13,7 @@ import {
   ObjectDoesNotExist,
 } from '../utils/errors';
 import { Auth } from '../auth/types';
+import { permissions, verifyPermission } from '../auth/permissions';
 
 const mapResourceUpdate = (args: UpdateResourceInput) => {
   // TODO: Check how one can set null, and how we handle it.
@@ -29,21 +30,26 @@ async function updateResource(
   { updateResourceInput: args }: MutationUpdateResourceArgs,
   token: Auth
 ): Promise<Resource | null> {
+  verifyPermission(token, permissions.UPDATE_RESOURCE);
+
   // TODO: What if id does not exist?
   try {
     const existing = await db.resource.findById(args.id);
+    if (!existing) {
+      throw new ObjectDoesNotExist(
+        `Resource with id ${args.id} not found`,
+        ErrorCode.RESOURCE_DOES_NOT_EXIST
+      );
+    }
+    if (existing.customerId !== token.customerId) {
+      verifyPermission(token, permissions.ALL);
+    }
     const resource = await db.resource.update({
       ...existing,
       ...mapResourceUpdate(args),
     });
     return fromDBResource(resource);
   } catch (err) {
-    if (err.code === 'P2025') {
-      throw new ObjectDoesNotExist(
-        `Resource with id ${args.id} not found`,
-        ErrorCode.RESOURCE_DOES_NOT_EXIST
-      );
-    }
     console.log(`Unhandled error: ${err}`);
     throw new GenericBookingError(
       `updateResource failed with unknown error`,

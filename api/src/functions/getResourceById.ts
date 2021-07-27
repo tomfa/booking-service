@@ -2,14 +2,18 @@ import { db } from '../db/client';
 import { QueryGetResourceByIdArgs, Resource } from '../graphql/generated/types';
 import { fromDBResource } from '../utils/db.mappers';
 import { Auth } from '../auth/types';
+import { permissions, verifyPermission } from '../auth/permissions';
 
 async function getResourceById(
   { id }: QueryGetResourceByIdArgs,
   token: Auth
 ): Promise<Resource | null> {
-  // TODO: What if id does not exist?
+  verifyPermission(token, permissions.GET_RESOURCE);
 
   const resource = await db.resource.findById(id);
+  if (resource.customerId !== token.customerId) {
+    verifyPermission(token, permissions.ALL);
+  }
   return resource && fromDBResource(resource);
 }
 

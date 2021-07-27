@@ -10,6 +10,7 @@ import {
   GenericBookingError,
   ObjectDoesNotExist,
 } from '../utils/errors';
+import { permissions, verifyPermission } from '../auth/permissions';
 
 export type SetBookingCommentInput = {
   id: string;
@@ -19,9 +20,16 @@ async function setBookingComment(
   { id, comment }: MutationSetBookingCommentArgs,
   token: Auth
 ): Promise<Booking> {
-  // TODO: What if ID does not exits
+  verifyPermission(token, permissions.SET_OWN_BOOKING_COMMENT);
+
   try {
     const existing = await db.booking.findById(id);
+    if (existing.customerId !== token.customerId) {
+      verifyPermission(token, permissions.ALL);
+    }
+    if (existing.userId !== token.sub) {
+      verifyPermission(token, permissions.SET_ANY_BOOKING_COMMENT);
+    }
     const booking = await db.booking.update({
       ...existing,
       comment,

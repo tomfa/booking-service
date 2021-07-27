@@ -10,12 +10,13 @@ import {
   GenericBookingError,
   ObjectDoesNotExist,
 } from '../utils/errors';
+import { permissions, verifyPermission } from '../auth/permissions';
 
 async function disableCustomer(
   { id }: MutationDisableCustomerArgs,
   token: Auth
 ): Promise<Customer> {
-  // TODO: What if id does not exist?
+  verifyPermission(token, permissions.DELETE_CUSTOMER);
 
   try {
     const existing = await db.customer.findById(id);

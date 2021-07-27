@@ -1,30 +1,31 @@
 import config from '../config';
+import { BadAuthenticationError } from '../utils/errors';
 import { Auth, AuthTokenData, Role, ValueOf } from './types';
 
 export const permissions = {
   // Superuser
   ALL: '*',
-  ADD_CUSTOMER: 'ADD_CUSTOMER',
-  DELETE_CUSTOMER: 'DELETE_CUSTOMER',
-  GET_CUSTOMER: 'GET_CUSTOMER',
-  UPDATE_CUSTOMER: 'UPDATE_CUSTOMER',
+  ADD_CUSTOMER: 'customer:add',
+  DELETE_CUSTOMER: 'customer:delete',
+  GET_CUSTOMER: 'customer:get',
+  UPDATE_CUSTOMER: 'customer:update',
 
   // Customer admin
-  ADD_RESOURCE: 'ADD_RESOURCE',
-  UPDATE_RESOURCE: 'UPDATE_RESOURCE',
-  DELETE_RESOURCE: 'DELETE_RESOURCE',
-  GET_ANY_BOOKING: 'GET_ANY_BOOKING',
-  ADD_ANY_BOOKING: 'ADD_ANY_BOOKING',
-  SET_ANY_BOOKING_COMMENT: 'SET_ANY_BOOKING_COMMENT',
-  CANCEL_ANY_BOOKING: 'CANCEL_ANY_BOOKING',
+  ADD_RESOURCE: 'resource:add',
+  UPDATE_RESOURCE: 'resource:update',
+  DELETE_RESOURCE: 'resource:delete',
+  GET_ANY_BOOKING: 'booking:any:get',
+  ADD_ANY_BOOKING: 'booking:any:add',
+  SET_ANY_BOOKING_COMMENT: 'booking:own:update-comment',
+  CANCEL_ANY_BOOKING: 'booking:any:cancel',
 
   // End user
-  GET_RESOURCE: 'GET_RESOURCE',
-  GET_OWN_BOOKING: 'GET_OWN_BOOKING',
-  ADD_OWN_BOOKING: 'ADD_OWN_BOOKING',
-  SET_OWN_BOOKING_COMMENT: 'SET_OWN_BOOKING_COMMENT',
-  CANCEL_OWN_BOOKING: 'CANCEL_OWN_BOOKING',
-  FIND_RESOURCE_AVAILABILITY: 'FIND_RESOURCE_AVAILABILITY',
+  GET_RESOURCE: 'resource:get',
+  GET_OWN_BOOKING: 'booking:own:get',
+  ADD_OWN_BOOKING: 'booking:own:add',
+  SET_OWN_BOOKING_COMMENT: 'booking:own:update-comment',
+  CANCEL_OWN_BOOKING: 'booking:own:cancel',
+  FIND_RESOURCE_AVAILABILITY: 'availability:get',
 };
 
 const userPerms = [
@@ -106,7 +107,7 @@ const isPermissionGranted = ({
   requestedPermission,
 }: {
   allowedPermission: string;
-  requestedPermission: string;
+  requestedPermission: Permission;
 }): boolean => {
   const requested = addPermissionPrefixIfNeeded(requestedPermission);
   const allowed = addPermissionPrefixIfNeeded(allowedPermission);
@@ -121,4 +122,12 @@ export function hasPermission(auth: Auth, permission: Permission): boolean {
       requestedPermission: permission,
     })
   );
+}
+
+export function verifyPermission(auth: Auth, permission: Permission) {
+  if (!hasPermission(auth, permission)) {
+    throw new BadAuthenticationError(
+      `You do not have the required access '${permission}'`
+    );
+  }
 }

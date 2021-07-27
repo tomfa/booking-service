@@ -21,6 +21,7 @@ import {
 } from '../utils/schedule.utils';
 import { Auth } from '../auth/types';
 import { minArray } from '../utils/array.utils';
+import { permissions, verifyPermission } from '../auth/permissions';
 
 const getEndTime = (start: Date, resource: Resource): Date => {
   const openingHours = getOpeningHoursForDate(resource, start);
@@ -33,6 +34,10 @@ async function addBooking(
   { addBookingInput }: MutationAddBookingArgs,
   token: Auth
 ): Promise<Booking> {
+  verifyPermission(token, permissions.ADD_OWN_BOOKING);
+  if (addBookingInput.userId !== token.sub) {
+    verifyPermission(token, permissions.ADD_ANY_BOOKING);
+  }
   // TODO: Remove customerId from MutationAddBookingArgs
   const { start, end, ...data } = addBookingInput;
   // TODO: Check that customer has credits

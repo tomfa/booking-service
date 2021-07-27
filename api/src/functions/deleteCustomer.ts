@@ -7,11 +7,13 @@ import { Auth } from '../auth/types';
 import { db } from '../db/client';
 import { fromDBCustomer } from '../utils/db.mappers';
 import { ErrorCode, ObjectDoesNotExist } from '../utils/errors';
+import { permissions, verifyPermission } from '../auth/permissions';
 
 async function deleteCustomer(
   { id }: MutationDeleteCustomerArgs,
   token: Auth
 ): Promise<Customer> {
+  verifyPermission(token, permissions.DELETE_CUSTOMER);
   // TODO: Disable in prod, this is just a test method
   // TODO: Optimize this method, using createBatch.
   const customer = await db.customer.findById(id);

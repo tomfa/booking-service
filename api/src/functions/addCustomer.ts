@@ -8,11 +8,13 @@ import {
   GenericBookingError,
 } from '../utils/errors';
 import { Auth } from '../auth/types';
+import { permissions, verifyPermission } from '../auth/permissions';
 
 async function addCustomer(
   { addCustomerInput }: MutationAddCustomerArgs,
   token: Auth
 ): Promise<Customer> {
+  verifyPermission(token, permissions.ADD_CUSTOMER);
   const { id, publicKeys = [], ...rest } = addCustomerInput;
   // TODO: what if id already exists
   // TODO: validate more input: issuer, phoneNumber...

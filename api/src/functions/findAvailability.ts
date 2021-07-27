@@ -18,6 +18,7 @@ import {
 } from '../utils/db.mappers';
 import { constructAllSlots } from '../utils/schedule.utils';
 import { Auth } from '../auth/types';
+import { permissions, verifyPermission } from '../auth/permissions';
 
 const findAvailabilityForSingleResource = (
   resource: Resource,
@@ -42,8 +43,11 @@ async function findAvailability(
   { filterAvailability: args }: QueryFindAvailabilityArgs,
   token: Auth
 ): Promise<TimeSlot[]> {
-  // TODO: Support searching for any resource availability by superuser
-  const customerId = token.customerId;
+  verifyPermission(token, permissions.FIND_RESOURCE_AVAILABILITY);
+  const customerId = args.customerId || token.customerId;
+  if (customerId !== token.customerId) {
+    verifyPermission(token, permissions.ALL);
+  }
   if (args.resourceIds.length === 0) {
     return [];
   }
