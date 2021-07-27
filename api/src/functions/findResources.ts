@@ -20,9 +20,8 @@ async function findResources(
     resourceQuery = resourceQuery.whereIn('id', resourceIds);
   }
 
-  if (args.customerId) {
-    resourceQuery = resourceQuery.whereEqualTo('customerId', args.customerId);
-  }
+  // TODO: Allow superuser to search for any resource
+  resourceQuery = resourceQuery.whereEqualTo('customerId', token.customerId);
 
   if (args.category) {
     resourceQuery = resourceQuery.whereEqualTo('category', args.category);
