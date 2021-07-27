@@ -44,6 +44,13 @@ async function addBooking(
       ErrorCode.RESOURCE_DOES_NOT_EXIST
     );
   }
+  if (dbResource.customerId !== token.customerId) {
+    // TODO: Allow superuser to add bookings for any customer
+    throw new BadRequestError(
+      `Can not create booking on unknown resource ${data.resourceId}`,
+      ErrorCode.RESOURCE_DOES_NOT_EXIST
+    );
+  }
   const resource = fromDBResource(dbResource);
   if (!resource.enabled) {
     throw new BadRequestError(
