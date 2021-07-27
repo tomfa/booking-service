@@ -7,7 +7,10 @@ async function getLatestBooking(
   token: AuthToken
 ): Promise<Booking | null> {
   const queryBuilder = getFilteredBookings(args).orderByDescending('start');
-  const bookings = await queryBuilder.findOne();
-  return fromDBBooking(bookings);
+  const booking = await queryBuilder.findOne();
+  if (!booking) {
+    return null;
+  }
+  return fromDBBooking(booking);
 }
 export default getLatestBooking;
