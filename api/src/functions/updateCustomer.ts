@@ -9,11 +9,11 @@ import {
   GenericBookingError,
   ObjectDoesNotExist,
 } from '../utils/errors';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 
 async function updateCustomer(
   { updateCustomerInput: args }: MutationUpdateCustomerArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<Customer> {
   // TODO: Stop invalid updates, see addCustomer
 

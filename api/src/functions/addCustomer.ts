@@ -7,11 +7,11 @@ import {
   ErrorCode,
   GenericBookingError,
 } from '../utils/errors';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 
 async function addCustomer(
   { addCustomerInput }: MutationAddCustomerArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<Customer> {
   const { id, publicKeys = [], ...rest } = addCustomerInput;
   // TODO: what if id already exists

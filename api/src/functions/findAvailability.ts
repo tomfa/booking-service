@@ -17,7 +17,7 @@ import {
   fromDBResource,
 } from '../utils/db.mappers';
 import { constructAllSlots } from '../utils/schedule.utils';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 
 const findAvailabilityForSingleResource = (
   resource: Resource,
@@ -40,7 +40,7 @@ const findAvailabilityForSingleResource = (
 
 async function findAvailability(
   { filterAvailability: args }: QueryFindAvailabilityArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<TimeSlot[]> {
   // TODO: Support searching for any resource availability by superuser
   const customerId = token.customerId;

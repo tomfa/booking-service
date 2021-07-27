@@ -1,11 +1,11 @@
 import { db } from '../db/client';
 import { Customer, QueryGetCustomerByIdArgs } from '../graphql/generated/types';
 import { fromDBCustomer } from '../utils/db.mappers';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 
 async function getCustomerById(
   { id }: QueryGetCustomerByIdArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<Customer | null> {
   const customer = await db.customer
     .getRepository()

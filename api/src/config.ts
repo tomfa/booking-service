@@ -18,7 +18,7 @@ export const config = {
       process.env.JWT_ISSUER as string,
       ...getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
     ],
-    issuer: getIssuerFromEnv(process.env.JWT_ISSUER || 'vailable.au'),
+    issuer: getIssuerFromEnv(process.env.JWT_ISSUER || 'api.vailable.eu'),
     permissionPrefix: 'vailable:',
   },
 };

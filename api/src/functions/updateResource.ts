@@ -12,7 +12,7 @@ import {
   GenericBookingError,
   ObjectDoesNotExist,
 } from '../utils/errors';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 
 const mapResourceUpdate = (args: UpdateResourceInput) => {
   // TODO: Check how one can set null, and how we handle it.
@@ -27,7 +27,7 @@ const mapResourceUpdate = (args: UpdateResourceInput) => {
 
 async function updateResource(
   { updateResourceInput: args }: MutationUpdateResourceArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<Resource | null> {
   // TODO: What if id does not exist?
   try {

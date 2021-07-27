@@ -10,30 +10,31 @@ import {
   NotAuthenticatedError,
 } from '../utils/errors';
 import { JSONObject } from '../types';
-import { getAuth } from '../utils/token';
 import getCustomerByIssuer from '../functions/getCustomerByIssuer';
-import { APITokenData, TokenData, AuthToken } from './types';
+import { APITokenData, TokenData, Auth, AuthTokenData } from './types';
+import { getPermissionsFromToken } from './permissions';
 
 export const getVerifiedTokenData = async (
   authHeader: string | undefined
-): Promise<AuthToken> => {
+): Promise<Auth> => {
   if (!authHeader) {
     throw new NotAuthenticatedError(`Authentication header missing`);
   }
   const authToken = authHeader.split(' ').reverse()[0];
-  const token = await getAuth(authToken);
-  const customer = await getCustomerByIssuer({ issuer: token.issuer });
+  const token = await getAuthTokenData(authToken);
+  const customer = await getCustomerByIssuer({ issuer: token.iss });
   if (!customer) {
     throw new BadAuthenticationError(
-      `Unable to find customer with issuer: ${token.issuer}`
+      `Unable to find customer with issuer: ${token.iss}`
     );
   }
   if (!customer.enabled) {
     throw new BadAuthenticationError(`Customer ${customer.id} is disabled`);
   }
   return {
-    sub: token.username || null,
+    sub: token.sub || null,
     customerId: customer.id,
+    permissions: getPermissionsFromToken(token),
   };
 };
 
@@ -244,4 +245,14 @@ async function getAPITokenData(
       `Non-JSON API token format: ${verifiedTokenData}`
     );
   }
+}
+
+export async function getAuthTokenData(key: string): Promise<AuthTokenData> {
+  const data = await verify(key);
+  return {
+    iss: data.iss,
+    sub: data.sub,
+    role: data.role,
+    permissions: data.permissions,
+  };
 }

@@ -1,10 +1,10 @@
 import { Booking, QueryFindBookingsArgs } from '../graphql/generated/types';
 import { fromDBBooking, getFilteredBookings } from '../utils/db.mappers';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 
 async function findBookings(
   { filterBookings: args }: QueryFindBookingsArgs,
-  token?: AuthToken
+  token?: Auth
 ): Promise<Booking[]> {
   // TODO: Support querying for any customerId by superuser
   const customerId = token.customerId;

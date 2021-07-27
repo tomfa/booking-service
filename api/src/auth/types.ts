@@ -1,15 +1,16 @@
-export type AuthToken = {
-  // TODO: This is wrong
+import { Permission } from './permissions';
+
+export type Auth = {
   sub: null | string;
   customerId: string | null;
+  permissions: Permission[];
 };
 
 export type Role = 'user' | 'admin' | 'superuser';
 
-export type Auth = {
-  issuer: string;
-  isExpired: boolean;
-  username: string;
+export type AuthTokenData = {
+  iss: string;
+  sub: string;
   permissions: string[];
   role: Role;
 };
@@ -37,4 +38,4 @@ export interface TokenData extends APITokenData {
   role: Role;
 }
 
-export type UserWithTokenData = User & { jwt: string };
+export type ValueOf<T> = T[keyof T];

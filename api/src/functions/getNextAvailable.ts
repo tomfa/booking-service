@@ -2,13 +2,13 @@ import {
   QueryGetNextAvailableArgs,
   TimeSlot,
 } from '../graphql/generated/types';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 import findAvailability from './findAvailability';
 
 export type FindNextAvailableInput = { id: string; afterDate: number };
 async function getNextAvailable(
   { id, afterDate }: QueryGetNextAvailableArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<TimeSlot | null> {
   const slots = await findAvailability(
     {

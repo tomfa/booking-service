@@ -4,11 +4,11 @@ import {
   QueryGetCustomerByEmailArgs,
 } from '../graphql/generated/types';
 import { fromDBCustomer } from '../utils/db.mappers';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 
 async function getCustomerByEmail(
   { email }: QueryGetCustomerByEmailArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<Customer | null> {
   const customer = await db.customer
     .getRepository()

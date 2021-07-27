@@ -4,12 +4,12 @@ import {
 } from '../graphql/generated/types';
 import { sumArray } from '../utils/array.utils';
 import { getBookingDurationMinutes } from '../utils/booking.utils';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 import findBookings from './findBookings';
 
 async function getBookedDuration(
   { filterBookings: args }: QueryGetBookedDurationArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<BookedDuration> {
   const bookings = await findBookings({ filterBookings: args }, token);
   return {

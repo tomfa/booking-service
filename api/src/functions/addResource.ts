@@ -7,11 +7,11 @@ import {
   BadRequestError,
   ErrorCode,
 } from '../utils/errors';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 
 async function addResource(
   { addResourceInput }: MutationAddResourceArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<Resource> {
   const {
     id,

@@ -19,7 +19,7 @@ import {
   bookingSlotFitsInResourceSlots,
   isOpen,
 } from '../utils/schedule.utils';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 import { minArray } from '../utils/array.utils';
 
 const getEndTime = (start: Date, resource: Resource): Date => {
@@ -31,7 +31,7 @@ const getEndTime = (start: Date, resource: Resource): Date => {
 
 async function addBooking(
   { addBookingInput }: MutationAddBookingArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<Booking> {
   // TODO: Remove customerId from MutationAddBookingArgs
   const { start, end, ...data } = addBookingInput;

@@ -4,7 +4,7 @@ import {
   Resource,
 } from '../graphql/generated/types';
 import { fromDBResource } from '../utils/db.mappers';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 import {
   ErrorCode,
   GenericBookingError,
@@ -13,7 +13,7 @@ import {
 
 async function disableResource(
   { id }: MutationDisableResourceArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<Resource> {
   // TODO: What if id does not exist?
 

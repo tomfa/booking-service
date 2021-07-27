@@ -4,7 +4,7 @@ import {
   MutationSetBookingCommentArgs,
 } from '../graphql/generated/types';
 import { fromDBBooking } from '../utils/db.mappers';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 import {
   ErrorCode,
   GenericBookingError,
@@ -17,7 +17,7 @@ export type SetBookingCommentInput = {
 };
 async function setBookingComment(
   { id, comment }: MutationSetBookingCommentArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<Booking> {
   // TODO: What if ID does not exits
   try {

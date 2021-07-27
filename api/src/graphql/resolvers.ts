@@ -20,7 +20,7 @@ import getNextAvailable from '../functions/getNextAvailable';
 import getResourceById from '../functions/getResourceById';
 import updateResource from '../functions/updateResource';
 import { getVerifiedTokenData } from '../auth/jwt';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 import { RequestContext } from '../types';
 import {
   MutationAddBookingArgs,
@@ -46,9 +46,7 @@ import {
   QueryGetResourceByIdArgs,
 } from './generated/types';
 
-function resolverWrapper<T>(
-  fun: (args: T, token: AuthToken) => Promise<unknown>
-) {
+function resolverWrapper<T>(fun: (args: T, token: Auth) => Promise<unknown>) {
   return async (parent: unknown, args: T, context: RequestContext) => {
     const token = await getVerifiedTokenData(
       // @ts-ignore

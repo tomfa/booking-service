@@ -3,11 +3,11 @@ import { db } from '../db/client';
 import { QueryFindResourcesArgs, Resource } from '../graphql/generated/types';
 import { removeNull } from '../utils/input.mappers';
 import { fromDBResource } from '../utils/db.mappers';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 
 async function findResources(
   { filterResource }: QueryFindResourcesArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<Resource[]> {
   const { resourceIds, ...args } = filterResource;
   const clean = removeNull({ ...args });

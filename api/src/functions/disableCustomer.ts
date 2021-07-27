@@ -4,7 +4,7 @@ import {
   MutationDisableCustomerArgs,
 } from '../graphql/generated/types';
 import { fromDBCustomer } from '../utils/db.mappers';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 import {
   ErrorCode,
   GenericBookingError,
@@ -13,7 +13,7 @@ import {
 
 async function disableCustomer(
   { id }: MutationDisableCustomerArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<Customer> {
   // TODO: What if id does not exist?
 

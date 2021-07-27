@@ -1,7 +1,7 @@
 import { db } from '../db/client';
 import { Booking, MutationCancelBookingArgs } from '../graphql/generated/types';
 import { fromDBBooking } from '../utils/db.mappers';
-import { AuthToken } from '../auth/types';
+import { Auth } from '../auth/types';
 import {
   ErrorCode,
   GenericBookingError,
@@ -10,7 +10,7 @@ import {
 
 async function cancelBooking(
   { id }: MutationCancelBookingArgs,
-  token: AuthToken
+  token: Auth
 ): Promise<Booking> {
   // TODO: What if ID does not exits
   try {
