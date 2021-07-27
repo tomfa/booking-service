@@ -53,8 +53,7 @@ const addSeconds = (date: Date, numSeconds: number) =>
 describe('BookingAPI', () => {
   const customerId = 'fishstickstests';
   const api: BookingAPI = new BookingAPI({
-    baseUrl: 'http://localhost:4000/graphql',
-    token: customerId,
+    baseUrl: process.env.GRAPHQL_URL,
   });
   let booking: Booking;
   let resource: Resource;
