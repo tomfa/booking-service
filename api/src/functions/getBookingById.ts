@@ -10,6 +10,9 @@ async function getBookingById(
 ): Promise<Booking | null> {
   verifyPermission(token, permissions.GET_OWN_BOOKING);
   const booking = await db.booking.findById(id);
+  if (!booking) {
+    return null;
+  }
   if (token.sub !== booking.userId) {
     verifyPermission(token, permissions.GET_ANY_BOOKING);
   }
