@@ -2,6 +2,16 @@ import config from '../config';
 import { BadAuthenticationError } from '../utils/errors';
 import { Auth, AuthTokenData, Role, ValueOf } from './types';
 
+export const addPermissionPrefixIfNeeded = (permission: string) => {
+  const prefix = config.jwt.permissionPrefix;
+  return permission.startsWith(prefix) ? permission : `${prefix}${permission}`;
+};
+
+const roles = {
+  user: addPermissionPrefixIfNeeded('role:user'),
+  admin: addPermissionPrefixIfNeeded('role:admin'),
+};
+
 export const permissions = {
   // Superuser
   ALL: '*',
@@ -16,7 +26,7 @@ export const permissions = {
   DELETE_RESOURCE: 'resource:delete',
   GET_ANY_BOOKING: 'booking:any:get',
   ADD_ANY_BOOKING: 'booking:any:add',
-  SET_ANY_BOOKING_COMMENT: 'booking:own:update-comment',
+  SET_ANY_BOOKING_COMMENT: 'booking:any:update-comment',
   CANCEL_ANY_BOOKING: 'booking:any:cancel',
 
   // End user
@@ -61,15 +71,15 @@ export const removeSuperuserPermissions = (perms: Permission[]) => {
 
 const getPermissionsForRole = (role: Role): Permission[] => {
   if (role === 'user') {
-    return userPerms;
+    return userPerms.map(addPermissionPrefixIfNeeded);
   }
 
   if (role === 'admin') {
-    return userPerms.concat(adminPerms);
+    return userPerms.concat(adminPerms).map(addPermissionPrefixIfNeeded);
   }
 
   if (role === 'superuser') {
-    return [permissions.ALL];
+    return [permissions.ALL].map(addPermissionPrefixIfNeeded);
   }
   return [];
 };
@@ -97,11 +107,6 @@ export const getPermissionsFromToken = (token: AuthTokenData): Permission[] => {
 
 export type Permission = ValueOf<typeof permissions>;
 
-export const addPermissionPrefixIfNeeded = (permission: string) => {
-  const prefix = config.jwt.permissionPrefix;
-  return permission.startsWith(prefix) ? permission : `${prefix}${permission}`;
-};
-
 const isPermissionGranted = ({
   allowedPermission,
   requestedPermission,
@@ -112,7 +117,23 @@ const isPermissionGranted = ({
   const requested = addPermissionPrefixIfNeeded(requestedPermission);
   const allowed = addPermissionPrefixIfNeeded(allowedPermission);
   const matches = requested.match(allowed.replace('*', '(.*)'));
-  return !!matches && matches.length > 0;
+  const isMatching = !!matches && matches.length > 0;
+  if (isMatching) {
+    return true;
+  }
+  if (
+    allowed === roles.admin &&
+    getPermissionsForRole('admin').includes(requested)
+  ) {
+    return true;
+  }
+  if (
+    allowed === roles.user &&
+    getPermissionsForRole('user').includes(requested)
+  ) {
+    return true;
+  }
+  return false;
 };
 
 export function hasPermission(auth: Auth, permission: Permission): boolean {
