@@ -1,5 +1,5 @@
 import { Auth } from './types';
-import { hasPermission } from './permissions';
+import { hasPermission, permissions } from './permissions';
 
 describe('hasPermission', () => {
   it('returns true if having permission', async () => {
@@ -35,6 +35,18 @@ describe('hasPermission', () => {
     };
 
     const isGranted = hasPermission(auth, 'api:generate:from_template');
+
+    expect(isGranted).toBe(true);
+  });
+  it('handles vailable: prefix', async () => {
+    const permission = `vailable:${permissions.UPDATE_RESOURCE}`;
+    const auth: Auth = {
+      sub: null,
+      customerId: null,
+      permissions: [permission],
+    };
+
+    const isGranted = hasPermission(auth, permissions.UPDATE_RESOURCE);
 
     expect(isGranted).toBe(true);
   });
