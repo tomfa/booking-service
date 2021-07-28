@@ -61,7 +61,7 @@ const bookingDB = {
     const document = await repository.update(booking);
     return document;
   },
-  findById: async (id: string): Promise<Booking> => {
+  findById: async (id: string): Promise<Booking | null> => {
     const repository = getRepository(Booking);
     const document = await repository.findById(id);
     return document;
