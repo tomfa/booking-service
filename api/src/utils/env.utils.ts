@@ -23,7 +23,7 @@ export const getAcceptedIssuersFromEnv = (
 ): string[] => {
   if (!envString) {
     // eslint-disable-next-line no-console
-    console.log(`No issuers found found`);
+    console.log(`No issuers found`);
     return [];
   }
   return envString.split(',');

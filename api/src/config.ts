@@ -49,6 +49,6 @@ const checkHasKeyValues = (conf: Record<string, unknown>, prefix?: string) => {
     );
   });
 };
-// checkHasKeyValues(config);
+checkHasKeyValues(config);
 export type Config = typeof config;
 export default config;
