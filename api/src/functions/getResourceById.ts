@@ -11,10 +11,13 @@ async function getResourceById(
   verifyPermission(token, permissions.GET_RESOURCE);
 
   const resource = await db.resource.findById(id);
+  if (!resource) {
+    return null;
+  }
   if (resource.customerId !== token.customerId) {
     verifyPermission(token, permissions.ALL);
   }
-  return resource && fromDBResource(resource);
+  return fromDBResource(resource);
 }
 
 export default getResourceById;
