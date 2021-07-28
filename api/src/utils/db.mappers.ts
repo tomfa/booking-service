@@ -10,7 +10,7 @@ import { DBBooking, DBCustomer, DBResource } from '../db/types';
 import { JSONObject } from '../types';
 import { db } from '../db/client';
 import { closedSchedule } from './schedule.utils';
-import { toGQLDate } from './date.utils';
+import { fromGQLDate, toGQLDate } from './date.utils';
 
 export function fromDBBooking({
   start,
@@ -72,10 +72,13 @@ export async function getFilteredBookings(
     queryBuilder = queryBuilder.whereEqualTo('userId', args.userId);
   }
   if (args.from) {
-    queryBuilder = queryBuilder.whereGreaterOrEqualThan('start', args.from);
+    queryBuilder = queryBuilder.whereGreaterOrEqualThan(
+      'start',
+      fromGQLDate(args.from)
+    );
   }
   if (args.to) {
-    queryBuilder = queryBuilder.whereLessThan('start', args.to);
+    queryBuilder = queryBuilder.whereLessThan('start', fromGQLDate(args.to));
   }
   if (args.includeCanceled !== true) {
     queryBuilder = queryBuilder.whereEqualTo('canceled', false);
