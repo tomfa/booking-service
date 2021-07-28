@@ -1,18 +1,11 @@
-import {
-  getUsersFromEnv,
-  getOriginsFromEnv,
-  getAcceptedIssuersFromEnv,
-  getIssuerFromEnv,
-} from './utils/env.utils';
+import { getOriginsFromEnv, getIssuerFromEnv } from './utils/env.utils';
 
 export const config = {
   isDevelopment: process.env.ENVIRONMENT === 'development',
   isTest: process.env.NODE_ENV === 'test',
-  users: getUsersFromEnv(process.env.USER_DATA),
   allowedOrigins: getOriginsFromEnv(process.env.ALLOWED_ORIGINS),
   uuidNameSpace: process.env.UUID_NAMESPACE as string,
   jwt: {
-    acceptedIssuers: getAcceptedIssuersFromEnv(process.env.ACCEPTED_ISSUERS),
     secret: process.env.JWT_SECRET as string,
     audience: [
       process.env.JWT_ISSUER as string,
