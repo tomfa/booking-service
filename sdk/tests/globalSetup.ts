@@ -38,6 +38,4 @@ const awaitUntilAPIStarts = async () => {
   }
 };
 
-module.exports = async () => {
-  await awaitUntilAPIStarts();
-};
+module.exports = async () => {};

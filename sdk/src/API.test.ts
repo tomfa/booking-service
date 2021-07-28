@@ -126,13 +126,15 @@ const getPublicPrivateKeyCombo = () => ({
 const generateTemporaryToken = ({
   key,
   issuer,
-  sub,
-  permissions = ['vailable:api:*'],
+  sub = null,
+  permissions = ['vailable:*'],
+  options = { algorithm: 'RS256', expiresIn: '1 hour' },
 }: {
   issuer: string;
   key: string;
-  sub: string;
+  sub?: string | null;
   permissions?: string[];
+  options?: jwt.SignOptions;
 }) => {
   const payload = {
     iss: issuer,
@@ -146,12 +148,15 @@ const generateTemporaryToken = ({
     permissions,
     role: 'user',
   };
-  return jwt.sign(payload, key, { algorithm: 'RS256', expiresIn: '1 hour' });
+  return jwt.sign(payload, key, options);
 };
 
 describe('BookingAPI', () => {
-  const rootToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGkudmFpbGFibGUuZXUiLCJhdWQiOlsiYXBpLnZhaWxhYmxlLmV1IiwiaHR0cDovL2xvY2FsaG9zdDo4MDAwIiwiaHR0cDovL2xvY2FsaG9zdDo1MDAwIiwiaHR0cHM6Ly92YWlsYWJsZS5ldSJdLCJzdWIiOiJ0b21hcyIsInBlcm1pc3Npb25zIjpbInZhaWxhYmxlOmFwaToqIl0sInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjI1NDM5MjA3LCJleHAiOjE2MjgxMTc2MDd9.NWaNrs3QKwotIpaIqJYkV07yGhQbxlQ7oUeu7x1Tr6w';
+  const rootToken = generateTemporaryToken({
+    key: process.env.JWT_SECRET as string,
+    issuer: 'api.vailable.eu',
+    options: { expiresIn: '1 hour' },
+  });
   const api: BookingAPI = new BookingAPI({
     baseUrl: process.env.GRAPHQL_URL,
   });
@@ -318,7 +323,7 @@ describe('BookingAPI', () => {
     });
     it('returns all resources if no filter is passed', async () => {
       const resources = await api.findResources();
-      expect(resources.length).toBe(1);
+      expect(resources.length).toBe(4);
       expect(resources[0]).toEqual({ ...dummyResource, id: dummyResourceId });
     });
     it('returns all resources matching category if category specified', async () => {
@@ -336,7 +341,7 @@ describe('BookingAPI', () => {
       expect(desks.map(r => r.label)).toEqual([deskResource.label]);
     });
   });
-  describe.skip('getNextAvailable', () => {
+  describe('getNextAvailable', () => {
     afterEach(resetTestResource);
     it('returns first available slot after now', async () => {
       const now = new Date('2021-05-17T00:00:00Z');
@@ -426,7 +431,7 @@ describe('BookingAPI', () => {
       expect(slot).toBe(undefined);
     });
   });
-  describe.skip('findAvailability', () => {
+  describe('findAvailability', () => {
     afterEach(resetTestResource);
     it('returns bookable timeslots ordered by start time', async () => {
       const from = new Date('2021-05-17T00:00:00Z'); // Open from 08 to 20
@@ -796,8 +801,7 @@ describe('BookingAPI', () => {
 
       const bookings = await api.findBookings({ includeCanceled: true });
 
-      expect(bookings.length).toBe(1);
-      expect(bookings[0].canceled).toBe(true);
+      expect(bookings.find(b => b.id === booking.id).canceled).toBe(true);
     });
     it('excludes bookings with start < from filter', async () => {
       const bookings = await api.findBookings({
@@ -870,7 +874,7 @@ describe('BookingAPI', () => {
       expect(roomBookings[0].id).toBe(roomBooking.id);
     });
   });
-  describe.skip('getLatestBooking', () => {
+  describe('getLatestBooking', () => {
     const oldBooking = {
       ...dummyBookingInput,
       start: new Date(dummyBooking.start.getTime() - 30 * 60 * 1000),
