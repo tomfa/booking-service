@@ -158,7 +158,7 @@ describe('BookingAPI', () => {
   let booking: Booking;
   let resource: Resource;
 
-  beforeAll(async () => {
+  const testSetup = async () => {
     const issuer = 'test-issuer-a1';
     const keys = getPublicPrivateKeyCombo();
     api.setToken(rootToken);
@@ -186,6 +186,17 @@ describe('BookingAPI', () => {
       dummyResourceId
     );
     booking = await api.addBooking(dummyBookingInput);
+  };
+  const resetTestResource = async () => {
+    await api.updateResource(dummyResourceId, dummyResourceWithSchedule);
+  };
+  const resetTestBooking = async () => {
+    await api.cancelBooking(booking.id);
+    booking = await api.addBooking(dummyBookingInput);
+  };
+
+  beforeAll(async () => {
+    await testSetup();
   });
 
   describe('getResource', () => {
@@ -202,7 +213,7 @@ describe('BookingAPI', () => {
       );
     });
   });
-  describe.skip('addResource', () => {
+  describe('addResource', () => {
     it('adds a new resource with a random id', async () => {
       const newResource = {
         ...dummyResourceWithSchedule,
@@ -241,7 +252,8 @@ describe('BookingAPI', () => {
       expect(response.category).toBe('meeting-room');
     });
   });
-  describe.skip('updateResource', () => {
+  describe('updateResource', () => {
+    afterEach(resetTestResource);
     it('updates the resource', async () => {
       expect((await api.getResource(dummyResourceId)).enabled).toBe(true);
 
@@ -255,7 +267,8 @@ describe('BookingAPI', () => {
       expect((await api.getResource(dummyResourceId)).enabled).toBe(false);
     });
   });
-  describe.skip('deleteResource', () => {
+  describe('deleteResource', () => {
+    afterAll(resetTestResource);
     it('deletes the resource', async () => {
       expect(await api.getResource(dummyResourceId)).toBeTruthy();
 
@@ -273,7 +286,27 @@ describe('BookingAPI', () => {
       // );
     });
   });
-  describe.skip('findResources', () => {
+  describe('findResources', () => {
+    let roomResourceA;
+    let roomResourceB;
+    let deskResource;
+    beforeAll(async () => {
+      roomResourceA = await api.addResource({
+        ...dummyResourceWithSchedule,
+        label: 'Room A',
+        category: 'room',
+      });
+      roomResourceB = await api.addResource({
+        ...dummyResourceWithSchedule,
+        label: 'Room B',
+        category: 'room',
+      });
+      deskResource = await api.addResource({
+        ...dummyResourceWithSchedule,
+        label: 'Desk B',
+        category: 'desk',
+      });
+    });
     it('returns a list of matching resources', async () => {
       const resources = await api.findResources({ label: dummyResource.label });
       expect(resources.length).toBe(1);
@@ -289,22 +322,6 @@ describe('BookingAPI', () => {
       expect(resources[0]).toEqual({ ...dummyResource, id: dummyResourceId });
     });
     it('returns all resources matching category if category specified', async () => {
-      const roomResourceA = await api.addResource({
-        ...dummyResourceWithSchedule,
-        label: 'Room A',
-        category: 'room',
-      });
-      const roomResourceB = await api.addResource({
-        ...dummyResourceWithSchedule,
-        label: 'Room B',
-        category: 'room',
-      });
-      const deskResource = await api.addResource({
-        ...dummyResourceWithSchedule,
-        label: 'Desk B',
-        category: 'desk',
-      });
-
       const rooms = await api.findResources({ category: 'room' });
       const desks = await api.findResources({ category: 'desk' });
 
@@ -320,6 +337,7 @@ describe('BookingAPI', () => {
     });
   });
   describe.skip('getNextAvailable', () => {
+    afterEach(resetTestResource);
     it('returns first available slot after now', async () => {
       const now = new Date('2021-05-17T00:00:00Z');
 
@@ -409,6 +427,7 @@ describe('BookingAPI', () => {
     });
   });
   describe.skip('findAvailability', () => {
+    afterEach(resetTestResource);
     it('returns bookable timeslots ordered by start time', async () => {
       const from = new Date('2021-05-17T00:00:00Z'); // Open from 08 to 20
       const to = new Date('2021-05-18T00:00:00Z');
@@ -551,7 +570,7 @@ describe('BookingAPI', () => {
       ]);
     });
   });
-  describe.skip('getBooking', () => {
+  describe('getBooking', () => {
     it('returns booking', async () => {
       const response = await api.getBooking(booking.id);
       expect(response).toEqual(booking);
@@ -565,7 +584,10 @@ describe('BookingAPI', () => {
       );
     });
   });
-  describe.skip('addBooking', () => {
+  describe('addBooking', () => {
+    afterEach(async () => {
+      await Promise.all([resetTestResource(), resetTestBooking()]);
+    });
     it('returns new booking', async () => {
       const response = await api.addBooking(dummyBookingInput);
 
@@ -578,11 +600,10 @@ describe('BookingAPI', () => {
     });
     it('increments seatNumber from 0 to Resource.seats', async () => {
       expect(booking.seatNumber).toBe(0);
-      for (let i = 1; i < resource.seats; i++) {
-        // eslint-disable-next-line no-await-in-loop
-        const nextBooking = await api.addBooking(dummyBookingInput);
-        expect(nextBooking.seatNumber).toBe(i);
-      }
+      const secondBooking = await api.addBooking(dummyBookingInput);
+      const thirdBooking = await api.addBooking(dummyBookingInput);
+      expect(secondBooking.seatNumber).toBe(1);
+      expect(thirdBooking.seatNumber).toBe(2);
     });
     it('sets duration to equal resource.slotDuration', async () => {
       const response = await api.addBooking(dummyBookingInput);
@@ -604,11 +625,11 @@ describe('BookingAPI', () => {
       expect(bookingWithcomment.comment).toEqual('Cheese please');
     });
     it('throws ObjectDoesNotExist if resource id is unknown', async () => {
-      const invalidBooking = { ...booking, resourceId: 'unknown-id' };
+      const invalidBooking = { ...dummyBookingInput, resourceId: 'unknown-id' };
 
       await expect(api.addBooking(invalidBooking)).rejects.toThrow();
       //   new ObjectDoesNotExist(
-      //     'Resource unknown-id not found',
+      //     'Can not create booking on unknown resource',
       //     ErrorCode.RESOURCE_DOES_NOT_EXIST
       //   )
       // );
@@ -650,19 +671,15 @@ describe('BookingAPI', () => {
     });
     it('throws BadRequestError if resource is closed at requested time', async () => {
       const mondayAtMidnightUTC = new Date('2021-05-17T00:00:00Z');
-      const oneHourLater = new Date(
-        mondayAtMidnightUTC.getTime() + 3600 * 1000
-      );
 
-      const invalidBookingPayload: Booking = {
-        ...booking,
+      const invalidBookingPayload: CreateBookingArgs = {
+        ...dummyBookingInput,
         start: mondayAtMidnightUTC,
-        end: oneHourLater,
       };
 
       await expect(api.addBooking(invalidBookingPayload)).rejects.toThrow();
       //   new BadRequestError(
-      //     `Resource ${resource.id} is not open at requested time`,
+      //     `Booked time ${mondayAtMidnightUTC.toISOString()} does not fit into resource ${resource.id} time slots`,
       //     ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
       //   )
       // );
@@ -672,7 +689,7 @@ describe('BookingAPI', () => {
       const addToValidHour = (minutes: number) =>
         new Date(validMondayHour.getTime() + minutes * 60 * 1000);
 
-      const validBookingPayload = {
+      const validBookingPayload: CreateBookingArgs = {
         resourceId: booking.resourceId,
         userId: booking.resourceId,
         start: validMondayHour,
@@ -687,13 +704,14 @@ describe('BookingAPI', () => {
       };
       await expect(api.addBooking(invalidBooking)).rejects.toThrow();
       //   new BadRequestError(
-      //     `Booked time 2021-05-17T13:01:00.000Z does not fit into resource ${resource.id} time slots`,
+      //     `Booked time ${validMondayHour.toISOString()} does not fit into resource ${resource.id} time slots`,
       //     ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
       //   )
       // );
     });
   });
-  describe.skip('cancelBooking', () => {
+  describe('cancelBooking', () => {
+    afterAll(resetTestBooking);
     it('changes canceled attribute to true', async () => {
       expect(booking.canceled).toBe(false);
 
@@ -710,7 +728,8 @@ describe('BookingAPI', () => {
       // );
     });
   });
-  describe.skip('setBookingComment', () => {
+  describe('setBookingComment', () => {
+    afterAll(resetTestBooking);
     it('updates comment', async () => {
       expect(booking.comment).toBe('');
 
@@ -729,7 +748,8 @@ describe('BookingAPI', () => {
       // );
     });
   });
-  describe.skip('findBookings', () => {
+  describe('findBookings', () => {
+    afterEach(resetTestBooking);
     it('returns a list of bookings matching filter', async () => {
       const bookings = await api.findBookings({ resourceIds: [resource.id] });
 
@@ -740,15 +760,14 @@ describe('BookingAPI', () => {
       await api.cancelBooking(booking.id);
       const bookings = await api.findBookings({
         resourceIds: [resource.id],
-        includeCanceled: false,
       });
 
       expect(bookings.length).toBe(0);
     });
-    it('returns empty list if resourceId filter is empty list', async () => {
+    it('returns all bookings if resourceId filter is empty list', async () => {
       const bookings = await api.findBookings({ resourceIds: [] });
 
-      expect(bookings.length).toBe(0);
+      expect(bookings.length).toBe(1);
     });
     it('excludes bookings with resourceId different than specified', async () => {
       const bookings = await api.findBookings({
@@ -864,7 +883,9 @@ describe('BookingAPI', () => {
       await api.addBooking(newBooking);
       await api.addBooking(oldBooking);
 
-      const latestBooking = await api.getLatestBooking();
+      const latestBooking = await api.getLatestBooking({
+        resourceIds: [dummyBookingInput.resourceId],
+      });
 
       expect(latestBooking).toEqual(expect.objectContaining(newBooking));
     });
@@ -893,7 +914,7 @@ describe('BookingAPI', () => {
       expect(latestBooking).toBe(undefined);
     });
   });
-  describe.skip('getBookedDuration', () => {
+  describe('getBookedDuration', () => {
     it('returns minutes booked, number of bookings, booking ids', async () => {
       const {
         numBookings,
