@@ -38,7 +38,6 @@ async function addBooking(
   if (addBookingInput.userId !== token.sub) {
     verifyPermission(token, permissions.ADD_ANY_BOOKING);
   }
-  // TODO: Remove customerId from MutationAddBookingArgs
   const { start, end, ...data } = addBookingInput;
   // TODO: Check that customer has credits
   // TODO: Reduce customer credits
