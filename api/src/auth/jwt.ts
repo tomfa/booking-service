@@ -156,7 +156,10 @@ export const cleanIssuer = (iss: string | undefined): string => {
 };
 
 function mapToTokenData(apiToken: string): TokenData {
-  const data = jwt.decode(apiToken) as APITokenData;
+  const data = (jwt.decode(apiToken) as APITokenData) || null;
+  if (!data) {
+    throw new NotAuthenticatedError(`Invalid authentication token`);
+  }
   validateTokenIssuer(data.iss);
   validateTokenAudience(data.aud);
   validateTokenPermissions(data.permissions);
