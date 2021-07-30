@@ -3,15 +3,11 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc -b",
-    "start": "npm run build && node local.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "schema:generate-document": "gqlg --schemaFilePath schema.graphql --destDirPath ./src/graphql/generated/documents --depthLimit 5",
     "schema:generate": "npm run schema:generate-document && graphql-codegen --config codegen.yml",
-    "deploy": "npm run build && gcloud functions deploy graphql --entry-point handler --runtime nodejs14 --trigger-http --region=europe-central2 --allow-unauthenticated"
-  },
-  "engines": {
-    "node": "14"
+    "predeploy": "npm run schema:generate && npm run build"
   },
   "main": "lib/index.js",
   "dependencies": {

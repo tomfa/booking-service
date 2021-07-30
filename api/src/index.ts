@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
+import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as fireorm from 'fireorm';
 import { ApolloServer } from 'apollo-server-cloud-functions';
@@ -36,6 +37,8 @@ const server = new ApolloServer({
   }),
 });
 
-export const handler = server.createHandler({
+const handler = server.createHandler({
   cors: { origin: true, credentials: true },
 });
+
+exports.graphql = functions.https.onRequest(handler);
