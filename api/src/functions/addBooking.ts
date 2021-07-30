@@ -21,7 +21,11 @@ import {
 } from '../utils/schedule.utils';
 import { Auth } from '../auth/types';
 import { minArray } from '../utils/array.utils';
-import { permissions, verifyPermission } from '../auth/permissions';
+import {
+  hasPermission,
+  permissions,
+  verifyPermission,
+} from '../auth/permissions';
 
 const getEndTime = (start: Date, resource: Resource): Date => {
   const openingHours = getOpeningHoursForDate(resource, start);
@@ -48,7 +52,10 @@ async function addBooking(
       ErrorCode.RESOURCE_DOES_NOT_EXIST
     );
   }
-  if (dbResource.customerId !== token.customerId) {
+  if (
+    dbResource.customerId !== token.customerId &&
+    !hasPermission(token, permissions.ALL)
+  ) {
     // TODO: Allow superuser to add bookings for any customer
     throw new BadRequestError(
       `Can not create booking on unknown resource ${data.resourceId}`,
