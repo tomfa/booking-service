@@ -47,11 +47,9 @@ import {
 } from './generated/types';
 
 function resolverWrapper<T>(fun: (args: T, token: Auth) => Promise<unknown>) {
-  return async (parent: unknown, args: T, context: RequestContext) => {
-    const token = await getVerifiedTokenData(
-      // @ts-ignore
-      context.headers['x-authorization']
-    );
+  return async (parent: unknown, args: T, { headers }: RequestContext) => {
+    const authHeader = headers.authorization || headers['x-authorization'];
+    const token = await getVerifiedTokenData(authHeader && String(authHeader));
     return fun(args as T, token);
   };
 }

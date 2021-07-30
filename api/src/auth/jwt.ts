@@ -20,7 +20,11 @@ export const getVerifiedTokenData = async (
   if (!authHeader) {
     throw new NotAuthenticatedError(`Authentication header missing`);
   }
-  const authToken = authHeader.split(' ').reverse()[0];
+  const authTokenParts = authHeader.split(' ');
+  const authToken = authTokenParts[authTokenParts.length - 1];
+  if (!authToken) {
+    throw new NotAuthenticatedError(`Invalid authentication header`);
+  }
   const token = await getAuthTokenData(authToken);
   const customer = await getCustomerByIssuer({ issuer: token.iss });
   if (!customer) {
