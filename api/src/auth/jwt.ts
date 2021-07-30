@@ -11,7 +11,7 @@ import {
 } from '../utils/errors';
 import { JSONObject } from '../types';
 import getCustomerByIssuer from '../functions/getCustomerByIssuer';
-import { APITokenData, TokenData, Auth, AuthTokenData } from './types';
+import { APITokenData, TokenData, Auth, AuthTokenData, Role } from './types';
 import { getPermissionsFromToken } from './permissions';
 
 export const getVerifiedTokenData = async (
@@ -155,6 +155,19 @@ export const cleanIssuer = (iss: string | undefined): string => {
   return !iss.startsWith('http') ? iss : iss.split('//').reverse()[0];
 };
 
+export const cleanRole = (role?: string): Role | null => {
+  if (role === 'user') {
+    return 'user';
+  }
+  if (role === 'admin') {
+    return 'admin';
+  }
+  if (role === 'superuser') {
+    return 'superuser';
+  }
+  return null;
+};
+
 function mapToTokenData(apiToken: string): TokenData {
   const data = (jwt.decode(apiToken) as APITokenData) || null;
   if (!data) {
@@ -167,7 +180,7 @@ function mapToTokenData(apiToken: string): TokenData {
   return {
     ...data,
     iss: cleanIssuer(data.iss),
-    role: 'user', // TODO: Clean data.role
+    role: cleanRole(data.role) || 'user',
     aud: data.aud || config.jwt.audience,
   };
 }

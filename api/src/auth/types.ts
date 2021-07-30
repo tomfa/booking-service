@@ -30,6 +30,7 @@ export interface APITokenData {
   aud?: string[];
   exp: number;
   iat?: number;
+  role?: Role;
   permissions: string[];
 }
 
