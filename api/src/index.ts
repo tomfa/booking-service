@@ -46,4 +46,4 @@ const handler = server.createHandler({
   cors: { origin: true, credentials: true },
 });
 
-exports.graphql = functions.region('europe-central2').https.onRequest(handler);
+exports.graphql = functions.region('europe-west3').https.onRequest(handler);
