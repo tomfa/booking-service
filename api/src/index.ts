@@ -11,7 +11,6 @@ dotenv.config({
 });
 
 import { Request, Response } from 'express';
-import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as fireorm from 'fireorm';
 import { ApolloServer } from 'apollo-server-cloud-functions';
@@ -42,8 +41,6 @@ const server = new ApolloServer({
   }),
 });
 
-const handler = server.createHandler({
+export const handler = server.createHandler({
   cors: { origin: true, credentials: true },
 });
-
-exports.graphql = functions.region('europe-west3').https.onRequest(handler);
