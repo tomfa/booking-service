@@ -41,7 +41,7 @@ export default class BookingAPI implements IBookingAPI {
 
   setToken(token: string): void {
     this.token = token;
-    this.graphQlClient.setHeader('x-authorization', `Bearer ${token}`);
+    this.graphQlClient.setHeader('Authorization', `Bearer ${token}`);
   }
 
   async getResource(resourceId: string): Promise<Resource> {
