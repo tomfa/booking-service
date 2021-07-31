@@ -21,27 +21,27 @@ import { toGQLDate } from './utils';
 export default class BookingAPI implements IBookingAPI {
   private token: string;
   private baseUrl: string;
+  private graphQlClient: GraphQLClient;
   public client: ReturnType<typeof getSdk>;
 
   constructor({
     token,
     baseUrl = 'https://api.vailable.eu/graphql',
-    serviceApiKey = 'da2-cmjgalw5rfdc3lqwe46hrqsi5m',
   }: {
-    token: string;
+    token?: string;
     baseUrl?: string;
-    serviceApiKey?: string;
   }) {
-    this.token = token;
     this.baseUrl = baseUrl;
-    this.client = getSdk(
-      new GraphQLClient(baseUrl, {
-        headers: {
-          'x-api-key': serviceApiKey,
-          'x-authorization': `Bearer ${token}`,
-        },
-      })
-    );
+    this.graphQlClient = new GraphQLClient(baseUrl);
+    this.client = getSdk(this.graphQlClient);
+    if (token) {
+      this.setToken(token);
+    }
+  }
+
+  setToken(token: string): void {
+    this.token = token;
+    this.graphQlClient.setHeader('x-authorization', `Bearer ${token}`);
   }
 
   async getResource(resourceId: string): Promise<Resource> {

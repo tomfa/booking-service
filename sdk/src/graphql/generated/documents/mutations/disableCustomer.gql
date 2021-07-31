@@ -7,5 +7,6 @@ mutation disableCustomer($id: String!){
         issuer
         credits
         enabled
+        publicKeys
     }
 }

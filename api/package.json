@@ -1,0 +1,46 @@
+{
+  "name": "@vailable/api",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc -b",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "schema:generate-document": "gqlg --schemaFilePath schema.graphql --destDirPath ./src/graphql/generated/documents --depthLimit 5",
+    "schema:generate": "npm run schema:generate-document && graphql-codegen --config codegen.yml",
+    "predeploy": "npm run schema:generate && npm run build"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "apollo-server-cloud-functions": "^2.25.2",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "firebase-admin": "^9.8.0",
+    "firebase-functions": "^3.14.1",
+    "fireorm": "^0.22.0",
+    "graphql": "^15.5.1",
+    "jsonwebtoken": "^8.5.1",
+    "node-fetch": "^2.6.1",
+    "node-jose": "^2.0.0",
+    "reflect-metadata": "^0.1.13",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.21.6",
+    "@graphql-codegen/introspection": "^1.18.2",
+    "@graphql-codegen/typescript": "^1.22.4",
+    "@graphql-codegen/typescript-graphql-request": "^3.2.4",
+    "@graphql-codegen/typescript-operations": "^1.18.3",
+    "@types/cors": "^2.8.10",
+    "@types/node": "^16.0.0",
+    "@types/node-jose": "^1.1.7",
+    "@types/uuid": "^8.3.1",
+    "body-parser": "^1.19.0",
+    "firebase-functions-test": "^0.2.0",
+    "gql-generator": "^1.0.12",
+    "graphql-request": "^3.4.0",
+    "nock": "^13.1.0",
+    "typescript": "^3.8.0"
+  },
+  "private": true
+}

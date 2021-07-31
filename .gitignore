@@ -18,3 +18,5 @@ yarn-error.log
 cdk-exports.json
 
 *.env.local
+
+.firebase

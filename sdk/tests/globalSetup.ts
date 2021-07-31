@@ -18,6 +18,7 @@ const hasAPIStarted = async () => {
 const sleep = async (time: number) =>
   new Promise(resolve => setTimeout(resolve, time));
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 const awaitUntilAPIStarts = async () => {
   const maxWaitMs = 15000;
   const started = Date.now();
@@ -38,6 +39,4 @@ const awaitUntilAPIStarts = async () => {
   }
 };
 
-module.exports = async () => {
-  await awaitUntilAPIStarts();
-};
+module.exports = async () => {};

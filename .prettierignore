@@ -8,6 +8,7 @@ coverage
 # Build folders
 dist
 build
+lib
 public
 out
 cdk.out

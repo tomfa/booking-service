@@ -8,10 +8,10 @@
       "web",
       "shared",
       "sdk",
-      "backend"
+      "api"
     ],
     "nohoist": [
-      "**/backend/**"
+      "**/api/**"
     ]
   },
   "devDependencies": {
@@ -43,21 +43,24 @@
   "scripts": {
     "web": "yarn workspace @booking-service/web",
     "sdk": "yarn workspace vailable",
-    "backend": "yarn workspace @booking-service/backend",
+    "api": "yarn workspace @vailable/api",
     "shared": "yarn workspace @booking-service/shared",
     "build": "yarn workspaces run build",
-    "start": "yarn backend start",
-    "start:test": "yarn backend start:test",
-    "test:ci": "yarn sdk test --ci --coverage && yarn backend test --ci --coverage && yarn shared test --ci --coverage && yarn web test --ci --coverage",
+    "start": "firebase emulators:start",
+    "start:test": "yarn api start:test",
+    "test:ci": "yarn sdk test --ci --coverage && yarn api test --ci --coverage && yarn shared test --ci --coverage && yarn web test --ci --coverage",
     "test:all": "start-server-and-test start:test http://localhost:4000 test:ci",
     "test:compile": "tsc -v && tsc --noEmit",
-    "schema:generate": "yarn backend schema:generate && yarn web schema:generate && yarn sdk schema:generate",
+    "schema:generate-all": "yarn api schema:generate && yarn web schema:generate && yarn sdk schema:generate",
     "lint": "eslint .",
     "lint:ignore-warnings": "eslint . --quiet",
     "lint:prettier-check": "prettier --check \"**/*.{js,jsx,ts,tsx,json}\"",
     "lint:prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,mdx,md}\"",
     "postinstall": "husky install",
-    "infrastructure:deploy": "cd infrastructure && terraform get --update && terraform apply && cd .."
+    "infrastructure:deploy": "cd infrastructure && terraform get --update && terraform apply && cd ..",
+    "predeploy": "yarn api predeploy && yarn sdk predeploy && yarn web predeploy",
+    "deploy": "firebase deploy",
+    "deploy:api": "firebase deploy --only functions"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css}": [
