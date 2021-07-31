@@ -93,7 +93,7 @@ input FindBookingInput {
 
 input AddBookingInput {
     id: String
-    userId: String!
+    userId: String
     resourceId: String!
     start: Int!
     end: Int

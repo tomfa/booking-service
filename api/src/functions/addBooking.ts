@@ -39,7 +39,8 @@ async function addBooking(
   token: Auth
 ): Promise<Booking> {
   verifyPermission(token, permissions.ADD_OWN_BOOKING);
-  if (addBookingInput.userId !== token.sub) {
+  const userId = addBookingInput.userId || token.sub;
+  if (userId !== token.sub) {
     verifyPermission(token, permissions.ADD_ANY_BOOKING);
   }
   const { start, end, ...data } = addBookingInput;
