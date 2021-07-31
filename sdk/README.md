@@ -23,7 +23,7 @@ import * as jwt from 'jsonwebtoken';
 
 // Get these from www.vailable.eu
 const secretKey = 'your-secret-key';
-const accountId = 'your-account-id';
+const accountId = 'www.mydomain.com';
 
 const adminToken = jwt.sign({
   iss: accountId,
@@ -38,7 +38,7 @@ const enduserToken = jwt.sign({
   iss: accountId,
   aud: ['api.vailable.eu'],
   role: 'user', 
-  sub: 'freely-selectable-id'
+  sub: 'external-user-id'
 }, secretKey, {
   algorithm: 'RS256',
   expiresIn: '1 hour',
@@ -66,15 +66,15 @@ const resource = await API.addResource({
   label: 'My first Spa',
   schedule,
   seats: 12,
-  enabled: true,
 });
 ```
 
 ### Add booking (from backend)
 
 ```ts
-const userId = 'freely-selectable-string'
+const userId = 'external-user-id'
 const newBooking = await API.addBooking({
+  userId,
   resourceId: resource.id,
   start: new Date('2021-05-17T13:30:00Z'),
 });
