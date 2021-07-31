@@ -4,48 +4,56 @@
 
 ### Prerequisite
 
-You'll need an account set up at [vailable.eu](https://vailable.eu)
+- An account at [vailable.eu](https://vailable.eu)
+- An API key pair added at [vailable.eu/profile](https://vailable.eu/profile)
 
 ## Install
 
 ```
 yarn add vailable
-
-# or with npm
-
-npm install vailable
 ```
 
-## Basic usage from Node
+## Example usage 
+
+### Create an token (backend)
 
 ```ts
 import Vailable from 'vailable';
+import * as jwt from 'jsonwebtoken';
 
-const API = new Vailable({
-  apiKey: 'your-secret-api-key',
-});
+// Get these from www.vailable.eu
+const secretKey = 'your-secret-key';
+const accountId = 'your-account-id';
 
-// See docs below on adding resources
-const resourceId = 'resource-id';
-const userId = 'freely-selectable-id';
-const newBooking = await API.addBooking({
-  userId,
-  resourceId,
-  start: new Date('2021-05-17T13:30:00Z'),
-});
+const adminToken = jwt.sign({
+  iss: accountId,
+  aud: ['api.vailable.eu'],
+  role: 'admin', 
+}, secretKey, {
+  algorithm: 'RS256',
+  expiresIn: '1 hour',
+})
 
-const bookings = await API.findBookings({
-  userId: 'my-user-id',
-});
+const enduserToken = jwt.sign({
+  iss: accountId,
+  aud: ['api.vailable.eu'],
+  role: 'user', 
+  sub: 'freely-selectable-id'
+}, secretKey, {
+  algorithm: 'RS256',
+  expiresIn: '1 hour',
+})
 
-// bookings.length === 1
-// bookings[0].id === newBooking.id
+const API = new Vailable({ token: adminToken });
+// Auth can also be set with API.setToken(token);
 ```
 
-### Add resource
+### Add a bookable resource
+A resource must be created before adding any bookings.
+This would typically be done only once, during initial setup, by an administrator.
 
 ```ts
-import { types, createSchedule } from 'vailable';
+import { createSchedule } from 'vailable';
 
 // 1 hour long sessions, bookable at 08:00, 08:30, 09:00, ..., 19:30
 const schedule = createSchedule({
@@ -61,3 +69,37 @@ const resource = await API.addResource({
   enabled: true,
 });
 ```
+
+### Add booking (from backend)
+
+```ts
+const userId = 'freely-selectable-string'
+const newBooking = await API.addBooking({
+  resourceId: resource.id,
+  start: new Date('2021-05-17T13:30:00Z'),
+});
+
+const bookings = await API.findBookings({ userId });
+
+// bookings.length === 1
+// bookings[0].id === newBooking.id
+```
+
+### Add booking (from frontend)
+
+```ts
+const API = new Vailable({ token: enduserToken });
+
+const newBooking = await API.addBooking({
+  // userId is automatically set from token "sub" field
+  resourceId: resource.id,
+  start: new Date('2021-05-17T13:30:00Z'),
+});
+
+// user role only has access to own bookings 
+const bookings = await API.findBookings();
+
+// bookings.length === 1
+// bookings[0].id === newBooking.id
+```
+
