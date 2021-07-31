@@ -1,0 +1,12 @@
+mutation addBooking($addBookingInput: AddBookingInput!){
+    addBooking(addBookingInput: $addBookingInput){
+        id
+        userId
+        resourceId
+        start
+        end
+        canceled
+        comment
+        seatNumber
+    }
+}

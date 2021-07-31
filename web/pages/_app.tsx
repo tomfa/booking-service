@@ -1,16 +1,20 @@
 import { AppProps } from 'next/app';
 import { ThemeProvider } from 'styled-components';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { AuthProvider } from '../providers/AuthProvider';
+import { MessageProvider } from '../providers/MessageProvider';
 
 import theme from '../styles/theme';
-import { MessageProvider } from '../providers/MessageProvider';
+
+const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps) => (
   <ThemeProvider theme={theme}>
     <MessageProvider>
       <AuthProvider>
-        <style>
-          {`
+        <QueryClientProvider client={queryClient}>
+          <style>
+            {`
         html,
         body {
           padding: 0;
@@ -26,8 +30,9 @@ const App = ({ Component, pageProps }: AppProps) => (
           box-sizing: border-box;
         }
       `}
-        </style>
-        <Component {...pageProps} />
+          </style>
+          <Component {...pageProps} />
+        </QueryClientProvider>
       </AuthProvider>
     </MessageProvider>
   </ThemeProvider>

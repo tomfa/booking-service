@@ -6,6 +6,7 @@ import { Layout } from '../components/Layout';
 export default function Home() {
   const { isLoggedIn } = useAuth();
   const router = useRouter();
+
   useEffect(() => {
     if (!isLoggedIn) {
       router.push('/login');

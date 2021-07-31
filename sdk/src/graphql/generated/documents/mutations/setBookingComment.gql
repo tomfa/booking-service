@@ -1,0 +1,12 @@
+mutation setBookingComment($id: String!, $comment: String){
+    setBookingComment(id: $id, comment: $comment){
+        id
+        userId
+        resourceId
+        start
+        end
+        canceled
+        comment
+        seatNumber
+    }
+}

@@ -3,16 +3,15 @@ name: Release SDK
 on:
   push:
     paths-ignore:
-      - 'api/**'
       - 'web/**'
       - 'infrastructure/**'
       - '.github/**'
       - '!.github/workflows/release-sdk.yml'
     branches:
       - master
+      - beta
 
 jobs:
-
   lint:
     name: Lint SDK
     runs-on: ubuntu-latest
@@ -36,33 +35,10 @@ jobs:
       - name: Check Prettier
         run: yarn lint:prettier-check
 
-  test:
-    name: Test SDK
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [12, 14, 16]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-      - name: Yarn Install
-        run: yarn install
-      - name: Test sdk
-        run: yarn sdk test
-
-
   release_sdk:
     name: Release SDK
     runs-on: ubuntu-latest
-    needs: [test, lint]
+    needs: [lint]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -79,9 +55,11 @@ jobs:
       - name: Yarn Install
         run: |
           yarn install
+      - name: Yarn build
+        run: |
+          yarn sdk build
       - name: npm deploy
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ".npmrc"
           yarn sdk release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}

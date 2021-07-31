@@ -1,7 +1,7 @@
-import * as errors from './errors';
-import BookingAPI from './BookingAPI.mock';
-import * as types from './types';
-import * as utils from './utils';
+import Vailable from './API';
 
-export { BookingAPI, errors, types, utils };
-export default BookingAPI;
+export * as errors from './errors';
+export * as types from './types';
+export * from './utils';
+
+export default Vailable;

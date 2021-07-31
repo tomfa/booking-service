@@ -1,13 +1,15 @@
-export type HourMinute = string; // e.g. "00:00"
+export type HourMinute = string; // e.g. "00:00".
 export type IsoDate = string; // e.g. 2020-03-01
 
-export type OpeningHour = {
+export type Closed = 'closed';
+export type HourSchedule = {
   start: HourMinute;
   end: HourMinute;
   slotIntervalMinutes: number;
   slotDurationMinutes: number;
 };
 
+export type OpeningHour = HourSchedule | Closed;
 export type Schedule = {
   mon: OpeningHour;
   tue: OpeningHour;
@@ -21,14 +23,18 @@ export type Schedule = {
 
 export type Resource = {
   id: string;
-  // TODO: Should we add category here?
-  //   So that we could add 14 x "desk" resource with different labels,
-  //   and ask for availability for any resource of category "desk"?
+  category?: string;
   label: string;
+  // Schedule is not broken wrt. timezones. Do not use.
   schedule: Schedule;
   // TODO: How to solve not available until/after
   seats: number;
   enabled: boolean;
+};
+
+export type CreateResourceArgs = Omit<Resource, 'id'> & {
+  id?: string;
+  schedule: Schedule;
 };
 
 export type Booking = {
@@ -36,9 +42,17 @@ export type Booking = {
   userId: string;
   resourceId: string;
   start: Date;
+  durationMinutes: number;
   end: Date;
   canceled: boolean;
+  comment: string;
+  seatNumber: number;
 };
+
+export type CreateBookingArgs = Omit<
+  Booking,
+  'id' | 'canceled' | 'durationMinutes' | 'seatNumber' | 'comment' | 'end'
+> & { comment?: string; end?: Date };
 
 export type TimeSlot = {
   availableSeats: number;
@@ -48,7 +62,10 @@ export type TimeSlot = {
 
 export interface IBookingAPI {
   getResource(resourceId: string): Promise<Resource | undefined>;
-  addResource(resource: Resource): Promise<Resource>;
+  addResource(
+    resource: CreateResourceArgs,
+    resourceId: string
+  ): Promise<Resource>;
   updateResource(
     resourceId: string,
     resource: Partial<Resource>
@@ -65,7 +82,8 @@ export interface IBookingAPI {
 
   getBooking(bookingId: string): Promise<Booking | undefined>;
   addBooking(booking: Omit<Booking, 'id'>): Promise<Booking>;
-  cancelBooking(bookingId: string): Promise<void>;
+  setBookingComment(bookingId: string, comment: string): Promise<Booking>;
+  cancelBooking(bookingId: string): Promise<Booking>;
   findBookings(props: {
     userId?: string;
     resourceIds?: string[];

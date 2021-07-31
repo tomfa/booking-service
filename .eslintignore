@@ -6,3 +6,5 @@
 **/android/*
 **/fastlane/*
 **/coverage/*
+**/generated/*
+**/cdk.out/*

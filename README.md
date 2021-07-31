@@ -20,11 +20,12 @@ yarn
 ```
 
 #### Infrastructure
+
 The infrastructure is set up initially using terraform.
 
 ```
 yarn infrastructure:deploy
- ```
+```
 
 _This assumes you have terraform >= 0.12 installed, and AWS credentials set on your machine._
 
@@ -59,14 +60,15 @@ yarn lint
 yarn lint:prettier-check
 ```
 
-
 ## Using this repo as a template
 
 ### Rename
+
 1. Search replace `booking-api` -> `new-project-name`
 2. Search replace `vailable.eu` -> `new-domain.com`
 
 ### Deploy infrastructure
+
 3. Set up Route53 DNS
    ```sh
    cd infrastructure
@@ -84,18 +86,18 @@ yarn lint:prettier-check
 Things are already setup with github CI, but you'll need to add the following secrets to the repository:
 
 ```
-# Used by deployment of api. 
-# You need to create and provide these keys yourself 
+# Used by deployment of api.
+# You need to create and provide these keys yourself
 AWS_MASTER_ACCESS_KEY_ID
 AWS_MASTER_SECRET_ACCESS_KEY
 
-# Used by deployment of web. 
+# Used by deployment of web.
 # The values are outputted from terraform apply in the previous step
 AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
 
 # Bucket for deployment of web.
-# The values are outputted from terraform apply in the previous step 
+# The values are outputted from terraform apply in the previous step
 AWS_WEB_BUCKET_NAME
 AWS_WEB_CLOUDFRONT_ID
 

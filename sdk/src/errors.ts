@@ -7,6 +7,7 @@ export enum ErrorCode {
   CONFLICTS_WITH_EXISTING_RESOURCE = 'conflicts_with_existing_resource',
   INVALID_BOOKING_ARGUMENTS = 'invalid_booking_arguments',
   BOOKING_SLOT_IS_NOT_AVAILABLE = 'booking_slot_is_not_available',
+  INVALID_TIMESTAMP = 'invalid_timestamp',
   UNKNOWN_ERROR = 'unknown_error',
 }
 

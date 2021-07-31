@@ -8,9 +8,25 @@ on:
       - '!.github/workflows/tests.yml'
     branches:
       - master
+      - beta
 jobs:
   test:
     runs-on: ubuntu-latest
+    container: node:14
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres_pass
+          POSTGRES_DB: vailable
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
@@ -34,4 +50,31 @@ jobs:
         yarn test:compile
     - name: Unit tests
       run: |
-        yarn test
+        yarn test:all
+      env:
+        DATABASE_URL: postgresql://postgres:postgres_pass@postgres:5432/vailable
+
+    - name: Upload web codecov
+      uses: codecov/codecov-action@v1
+      with:
+        flags: web
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./public/web/coverage/coverage-final.json
+    - name: Upload backend codecov
+      uses: codecov/codecov-action@v1
+      with:
+        flags: backend
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./public/backend/coverage/coverage-final.json
+    - name: Upload sdk codecov
+      uses: codecov/codecov-action@v1
+      with:
+        flags: sdk
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./public/sdk/coverage/coverage-final.json
+    - name: Upload shared codecov
+      uses: codecov/codecov-action@v1
+      with:
+        flags: shared
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./public/shared/coverage/coverage-final.json

@@ -11,6 +11,7 @@ on:
       - '!.github/workflows/deploy-web.yml'
     branches:
       - master
+      - beta
 
 jobs:
   deploy_web:
