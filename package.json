@@ -58,9 +58,8 @@
     "lint:prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,mdx,md}\"",
     "postinstall": "husky install",
     "infrastructure:deploy": "cd infrastructure && terraform get --update && terraform apply && cd ..",
-    "predeploy": "yarn api predeploy && yarn sdk predeploy && yarn web predeploy",
-    "deploy": "firebase deploy",
-    "deploy:api": "firebase deploy --only functions"
+    "predeploy": "yarn sdk predeploy && yarn web predeploy",
+    "deploy": "yarn api deploy && firebase deploy"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css}": [
