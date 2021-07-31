@@ -30,7 +30,7 @@ export default class BookingAPI implements IBookingAPI {
   }: {
     token?: string;
     baseUrl?: string;
-  }) {
+  } = {}) {
     this.baseUrl = baseUrl;
     this.graphQlClient = new GraphQLClient(baseUrl);
     this.client = getSdk(this.graphQlClient);
