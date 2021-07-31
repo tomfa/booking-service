@@ -58,13 +58,14 @@ export default class BookingAPI implements IBookingAPI {
   }
 
   async addResource(
-    { schedule, ...resource }: CreateResourceArgs,
+    { schedule, enabled = true, ...resource }: CreateResourceArgs,
     resourceId?: string
   ): Promise<Resource> {
     const result = await this.client.addResource({
       addResourceInput: {
         id: resourceId,
         schedule: toGQLSchedule(schedule),
+        enabled,
         ...resource,
       },
     });

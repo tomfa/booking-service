@@ -32,9 +32,10 @@ export type Resource = {
   enabled: boolean;
 };
 
-export type CreateResourceArgs = Omit<Resource, 'id'> & {
+export type CreateResourceArgs = Omit<Resource, 'id' | 'enabled'> & {
   id?: string;
   schedule: Schedule;
+  enabled?: boolean;
 };
 
 export type Booking = {
