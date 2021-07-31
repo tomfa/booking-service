@@ -1,3 +1,5 @@
+import { AddBookingInput } from './graphql/generated/types';
+
 export type HourMinute = string; // e.g. "00:00".
 export type IsoDate = string; // e.g. 2020-03-01
 
@@ -51,9 +53,9 @@ export type Booking = {
 };
 
 export type CreateBookingArgs = Omit<
-  Booking,
-  'id' | 'canceled' | 'durationMinutes' | 'seatNumber' | 'comment' | 'end'
-> & { comment?: string; end?: Date };
+  AddBookingInput,
+  'id' | 'start' | 'end'
+> & { start: Date; end?: Date };
 
 export type TimeSlot = {
   availableSeats: number;
