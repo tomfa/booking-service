@@ -2,12 +2,6 @@
   "hosting": {
     "predeploy": "yarn web build && yarn web export",
     "public": "web/out",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [{ "source": "/graphql", "function": "graphql" }]
-  },
-  "functions": {
-    "runtime": "nodejs14",
-    "predeploy": "yarn api build",
-    "source": "api"
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   }
 }
