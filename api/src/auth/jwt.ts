@@ -108,15 +108,19 @@ const validateTokenAudience = (val: unknown) => {
   throw new BadAuthenticationError(`Token claim 'aud' is of unknown type`);
 };
 
-const validateTokenPermissions = (permissions: unknown) => {
+const validateTokenPermissions = (token: APITokenData) => {
+  const { role, permissions } = token;
+  if (role === 'user' || role === 'admin') {
+    return;
+  }
   if (!Array.isArray(permissions)) {
     throw new BadAuthenticationError(
       `Token claim 'permissions' is missing or not an array`
     );
   }
-  if (!permissions.find(p => p.startsWith('vailable'))) {
+  if (!permissions.find(p => p.startsWith(config.jwt.permissionPrefix))) {
     throw new BadAuthenticationError(
-      `Claim 'permissions' does not contain any vailable* permissions.'`
+      `Claim 'permissions' does not contain any permissions starting with '${config.jwt.permissionPrefix}'`
     );
   }
 };
@@ -175,7 +179,7 @@ function mapToTokenData(apiToken: string): TokenData {
   }
   validateTokenIssuer(data.iss);
   validateTokenAudience(data.aud);
-  validateTokenPermissions(data.permissions);
+  validateTokenPermissions(data);
   validateExpiry(data.exp);
   return {
     ...data,
