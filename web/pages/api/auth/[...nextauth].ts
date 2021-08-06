@@ -21,7 +21,14 @@ export default NextAuth({
   },
   callbacks: {
     async session(session: Session, token) {
-      return token;
+      return {
+        ...token,
+        user: {
+          email: token.email,
+          name: token.name,
+          image: token.picture as string,
+        },
+      };
     },
     async jwt(
       token: JWT,

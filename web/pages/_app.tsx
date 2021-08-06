@@ -1,7 +1,8 @@
 import { AppProps } from 'next/app';
+import { Provider } from 'next-auth/client';
+
 import { ThemeProvider } from 'styled-components';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { AuthProvider } from '../providers/AuthProvider';
 import { MessageProvider } from '../providers/MessageProvider';
 
 import theme from '../styles/theme';
@@ -11,7 +12,7 @@ const queryClient = new QueryClient();
 const App = ({ Component, pageProps }: AppProps) => (
   <ThemeProvider theme={theme}>
     <MessageProvider>
-      <AuthProvider>
+      <Provider session={pageProps.session}>
         <QueryClientProvider client={queryClient}>
           <style>
             {`
@@ -33,7 +34,7 @@ const App = ({ Component, pageProps }: AppProps) => (
           </style>
           <Component {...pageProps} />
         </QueryClientProvider>
-      </AuthProvider>
+      </Provider>
     </MessageProvider>
   </ThemeProvider>
 );

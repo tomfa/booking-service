@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '../providers/AuthProvider';
+import { useSession } from 'next-auth/client';
 import { Logo } from '../components/Logo';
 import { IconButton, IconType } from '../components/Icon';
 import { Code } from '../components/Code.styles';
@@ -11,9 +11,9 @@ import {
 } from './ProfileDropdown.styles';
 
 export const ProfileDropdown = () => {
-  const auth = useAuth();
+  const [session] = useSession();
   const [isOpen, setOpen] = useState<boolean>(false);
-  if (!auth.isLoggedIn) {
+  if (!session) {
     return null;
   }
   return (
@@ -27,11 +27,7 @@ export const ProfileDropdown = () => {
         <ProfileDropdownMenu>
           <Code style={{ flexDirection: 'column', marginBottom: '1rem' }}>
             <span style={{ opacity: 0.5, flex: '1' }}>{`//`} username:</span>
-            {auth.username}
-            <span style={{ opacity: 0.5, flex: '1', paddingTop: '1rem' }}>
-              {`//`} JWT token:
-            </span>
-            {auth.jwtToken}
+            {session.user.email}
           </Code>
           <Link href={'/logout'}>Log out</Link>
         </ProfileDropdownMenu>
