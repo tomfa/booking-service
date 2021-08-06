@@ -8,7 +8,7 @@
   ],
   "description": "Shared types and utils for web and api",
   "dependencies": {
-    "graphql": "^15.5.0",
+    "graphql": "^15.5.1",
     "graphql-request": "^3.4.0",
     "graphql-tag": "^2.12.5",
     "tslib": "^2.3.0"
