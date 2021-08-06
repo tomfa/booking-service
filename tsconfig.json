@@ -2,7 +2,7 @@
   "references": [
     { "path": "./shared" },
     { "path": "./web" },
-    { "path": "./backend" },
+    { "path": "./api" },
     { "path": "./sdk" }
   ],
   "files": [],

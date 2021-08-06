@@ -5,6 +5,7 @@ on:
     paths-ignore:
       - 'web/**'
       - 'infrastructure/**'
+      - 'api/**'
       - '.github/**'
       - '!.github/workflows/release-sdk.yml'
     branches:
