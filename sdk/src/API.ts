@@ -73,6 +73,11 @@ export default class BookingAPI implements IBookingAPI {
     return fromGQLResource(result.addResource);
   }
 
+  async getProfile(): Promise<Customer | null> {
+    const result = await this.client.me({});
+    return result.me;
+  }
+
   async addSigningKey(key: SigningKey): Promise<Customer> {
     const result = await this.client.addSigningKey({
       key,
