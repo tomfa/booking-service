@@ -40,6 +40,8 @@ export type CreateResourceArgs = Omit<Resource, 'id' | 'enabled'> & {
   enabled?: boolean;
 };
 
+export type SigningKey = string;
+
 export type Booking = {
   id: string;
   userId: string;

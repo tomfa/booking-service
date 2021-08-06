@@ -5,11 +5,12 @@ import {
   CreateResourceArgs,
   IBookingAPI,
   Resource,
+  SigningKey,
   TimeSlot,
 } from './types';
 
 import { ErrorCode, ObjectDoesNotExist } from './errors';
-import { getSdk } from './graphql/generated/types';
+import { Customer, getSdk } from './graphql/generated/types';
 import {
   toGQLSchedule,
   fromGQLBooking,
@@ -70,6 +71,20 @@ export default class BookingAPI implements IBookingAPI {
       },
     });
     return fromGQLResource(result.addResource);
+  }
+
+  async addSigningKey(key: SigningKey): Promise<Customer> {
+    const result = await this.client.addSigningKey({
+      key,
+    });
+    return result.addSigningKey;
+  }
+
+  async deleteSigningKey(key: SigningKey): Promise<Customer> {
+    const result = await this.client.deleteSigningKey({
+      key,
+    });
+    return result.deleteSigningKey;
   }
 
   async updateResource(

@@ -1,0 +1,12 @@
+mutation addSigningKey($key: String!, $customerId: String){
+    addSigningKey(key: $key, customerId: $customerId){
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+        publicKeys
+    }
+}
