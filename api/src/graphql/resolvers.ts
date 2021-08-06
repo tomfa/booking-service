@@ -24,6 +24,7 @@ import { Auth } from '../auth/types';
 import { RequestContext } from '../types';
 import addSigningKey from '../functions/addSigningKey';
 import deleteSigningKey from '../functions/deleteSigningKey';
+import getCustomerFromToken from '../functions/getCustomerFromToken';
 import {
   MutationAddBookingArgs,
   MutationAddCustomerArgs,
@@ -60,6 +61,7 @@ function resolverWrapper<T>(fun: (args: T, token: Auth) => Promise<unknown>) {
 
 export const resolvers = {
   Query: {
+    me: resolverWrapper<undefined>(getCustomerFromToken),
     findAvailability: resolverWrapper<QueryFindAvailabilityArgs>(
       findAvailability
     ),

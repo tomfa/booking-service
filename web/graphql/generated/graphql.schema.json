@@ -1559,6 +1559,18 @@
         "description": null,
         "fields": [
           {
+            "name": "me",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Customer",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "getResourceById",
             "description": null,
             "args": [

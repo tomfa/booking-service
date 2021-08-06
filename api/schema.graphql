@@ -151,6 +151,7 @@ input UpdateCustomerInput {
 }
 
 type Query {
+    me: Customer
     getResourceById(id: String!): Resource
     getBookingById(id: String!): Booking
     getCustomerByIssuer(issuer: String!): Customer

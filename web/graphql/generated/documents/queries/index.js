@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
+module.exports.me = fs.readFileSync(path.join(__dirname, 'me.gql'), 'utf8');
 module.exports.getResourceById = fs.readFileSync(path.join(__dirname, 'getResourceById.gql'), 'utf8');
 module.exports.getBookingById = fs.readFileSync(path.join(__dirname, 'getBookingById.gql'), 'utf8');
 module.exports.getCustomerByIssuer = fs.readFileSync(path.join(__dirname, 'getCustomerByIssuer.gql'), 'utf8');

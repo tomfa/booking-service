@@ -1,0 +1,12 @@
+query me{
+    me{
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+        publicKeys
+    }
+}

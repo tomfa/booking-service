@@ -28,6 +28,7 @@ export const permissions = {
   ADD_ANY_BOOKING: 'booking:any:add',
   SET_ANY_BOOKING_COMMENT: 'booking:any:update-comment',
   CANCEL_ANY_BOOKING: 'booking:any:cancel',
+  GET_OWN_CUSTOMER: 'customer:own:get',
   UPDATE_OWN_CUSTOMER: 'customer:own:update',
 
   // End user

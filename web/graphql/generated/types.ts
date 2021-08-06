@@ -221,6 +221,7 @@ export type MutationDeleteSigningKeyArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  me?: Maybe<Customer>;
   getResourceById?: Maybe<Resource>;
   getBookingById?: Maybe<Booking>;
   getCustomerByIssuer?: Maybe<Customer>;
@@ -798,6 +799,17 @@ export type GetResourceByIdQuery = (
         ) }
       )>>> }
     ) }
+  )> }
+);
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me?: Maybe<(
+    { __typename?: 'Customer' }
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
   )> }
 );
 
@@ -1632,5 +1644,32 @@ export const useGetResourceByIdQuery = <
     useQuery<GetResourceByIdQuery, TError, TData>(
       ['getResourceById', variables],
       fetcher<GetResourceByIdQuery, GetResourceByIdQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetResourceByIdDocument, variables),
+      options
+    );
+export const MeDocument = `
+    query me {
+  me {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
+    publicKeys
+  }
+}
+    `;
+export const useMeQuery = <
+      TData = MeQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit }, 
+      variables?: MeQueryVariables, 
+      options?: UseQueryOptions<MeQuery, TError, TData>
+    ) => 
+    useQuery<MeQuery, TError, TData>(
+      ['me', variables],
+      fetcher<MeQuery, MeQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, MeDocument, variables),
       options
     );

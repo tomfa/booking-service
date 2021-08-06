@@ -203,6 +203,7 @@ export type MutationDeleteSigningKeyArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  me?: Maybe<Customer>;
   getResourceById?: Maybe<Resource>;
   getBookingById?: Maybe<Booking>;
   getCustomerByIssuer?: Maybe<Customer>;
@@ -783,6 +784,17 @@ export type GetResourceByIdQuery = (
   )> }
 );
 
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me?: Maybe<(
+    { __typename?: 'Customer' }
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
+  )> }
+);
+
 
 export const AddBookingDocument = gql`
     mutation addBooking($addBookingInput: AddBookingInput!) {
@@ -1341,6 +1353,20 @@ export const GetResourceByIdDocument = gql`
   }
 }
     `;
+export const MeDocument = gql`
+    query me {
+  me {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
+    publicKeys
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -1417,6 +1443,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getResourceById(variables: GetResourceByIdQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetResourceByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetResourceByIdQuery>(GetResourceByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getResourceById');
+    },
+    me(variables?: MeQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MeQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<MeQuery>(MeDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'me');
     }
   };
 }
