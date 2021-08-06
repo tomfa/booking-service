@@ -50,7 +50,7 @@
     "start:test": "yarn api start:test",
     "test:ci": "yarn sdk test --ci --coverage && yarn api test --ci --coverage && yarn shared test --ci --coverage && yarn web test --ci --coverage",
     "test:all": "start-server-and-test start:test http://localhost:4000 test:ci",
-    "test:compile": "tsc -v && tsc --noEmit",
+    "test:compile": "yarn shared build && yarn api build && yarn sdk build && yarn web build",
     "schema:generate-all": "yarn api schema:generate && yarn web schema:generate && yarn sdk schema:generate",
     "lint": "eslint .",
     "lint:ignore-warnings": "eslint . --quiet",
