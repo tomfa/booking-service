@@ -10,6 +10,7 @@
     "@booking-service/shared": "1.0.0",
     "graphql": "^15.5.1",
     "next": "^10.0.9",
+    "next-auth": "^3.27.3",
     "phosphor-react": "^1.2.1",
     "react": "^17.0.1",
     "react-alert": "^7.0.2",
