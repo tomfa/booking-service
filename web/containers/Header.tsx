@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/client';
+import { useRouter } from 'next/router';
 import { Logo } from '../components/Logo';
 import { IconButton, IconType } from '../components/Icon';
 import { Code } from '../components/Code.styles';
@@ -12,9 +13,18 @@ import {
 
 export const ProfileDropdown = () => {
   const [session] = useSession();
+  const router = useRouter();
   const [isOpen, setOpen] = useState<boolean>(false);
   if (!session) {
-    return null;
+    return (
+      <ProfileDropdownWrapper>
+        <IconButton
+          size={20}
+          icon={IconType.USER}
+          onClick={() => router.push('/login')}
+        />
+      </ProfileDropdownWrapper>
+    );
   }
   return (
     <ProfileDropdownWrapper>
