@@ -134,6 +134,8 @@ export type Mutation = {
   addCustomer?: Maybe<Customer>;
   disableCustomer?: Maybe<Customer>;
   deleteCustomer?: Maybe<Customer>;
+  addSigningKey?: Maybe<Customer>;
+  deleteSigningKey?: Maybe<Customer>;
 };
 
 
@@ -185,6 +187,18 @@ export type MutationDisableCustomerArgs = {
 
 export type MutationDeleteCustomerArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationAddSigningKeyArgs = {
+  key: Scalars['String'];
+  customerId?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationDeleteSigningKeyArgs = {
+  key: Scalars['String'];
+  customerId?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -377,6 +391,20 @@ export type AddResourceMutation = (
   )> }
 );
 
+export type AddSigningKeyMutationVariables = Exact<{
+  key: Scalars['String'];
+  customerId?: Maybe<Scalars['String']>;
+}>;
+
+
+export type AddSigningKeyMutation = (
+  { __typename?: 'Mutation' }
+  & { addSigningKey?: Maybe<(
+    { __typename?: 'Customer' }
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
+  )> }
+);
+
 export type CancelBookingMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -398,6 +426,20 @@ export type DeleteCustomerMutationVariables = Exact<{
 export type DeleteCustomerMutation = (
   { __typename?: 'Mutation' }
   & { deleteCustomer?: Maybe<(
+    { __typename?: 'Customer' }
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
+  )> }
+);
+
+export type DeleteSigningKeyMutationVariables = Exact<{
+  key: Scalars['String'];
+  customerId?: Maybe<Scalars['String']>;
+}>;
+
+
+export type DeleteSigningKeyMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteSigningKey?: Maybe<(
     { __typename?: 'Customer' }
     & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
   )> }
@@ -834,6 +876,20 @@ export const AddResourceDocument = gql`
   }
 }
     `;
+export const AddSigningKeyDocument = gql`
+    mutation addSigningKey($key: String!, $customerId: String) {
+  addSigningKey(key: $key, customerId: $customerId) {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
+    publicKeys
+  }
+}
+    `;
 export const CancelBookingDocument = gql`
     mutation cancelBooking($id: String!) {
   cancelBooking(id: $id) {
@@ -851,6 +907,20 @@ export const CancelBookingDocument = gql`
 export const DeleteCustomerDocument = gql`
     mutation deleteCustomer($id: String!) {
   deleteCustomer(id: $id) {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
+    publicKeys
+  }
+}
+    `;
+export const DeleteSigningKeyDocument = gql`
+    mutation deleteSigningKey($key: String!, $customerId: String) {
+  deleteSigningKey(key: $key, customerId: $customerId) {
     id
     name
     email
@@ -1288,11 +1358,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     addResource(variables: AddResourceMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AddResourceMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<AddResourceMutation>(AddResourceDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addResource');
     },
+    addSigningKey(variables: AddSigningKeyMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AddSigningKeyMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AddSigningKeyMutation>(AddSigningKeyDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addSigningKey');
+    },
     cancelBooking(variables: CancelBookingMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CancelBookingMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CancelBookingMutation>(CancelBookingDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'cancelBooking');
     },
     deleteCustomer(variables: DeleteCustomerMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeleteCustomerMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteCustomerMutation>(DeleteCustomerDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteCustomer');
+    },
+    deleteSigningKey(variables: DeleteSigningKeyMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeleteSigningKeyMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteSigningKeyMutation>(DeleteSigningKeyDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteSigningKey');
     },
     disableCustomer(variables: DisableCustomerMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DisableCustomerMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DisableCustomerMutation>(DisableCustomerDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'disableCustomer');

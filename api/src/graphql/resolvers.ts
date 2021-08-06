@@ -22,12 +22,16 @@ import updateResource from '../functions/updateResource';
 import { getVerifiedTokenData } from '../auth/jwt';
 import { Auth } from '../auth/types';
 import { RequestContext } from '../types';
+import addSigningKey from '../functions/addSigningKey';
+import deleteSigningKey from '../functions/deleteSigningKey';
 import {
   MutationAddBookingArgs,
   MutationAddCustomerArgs,
   MutationAddResourceArgs,
+  MutationAddSigningKeyArgs,
   MutationCancelBookingArgs,
   MutationDeleteCustomerArgs,
+  MutationDeleteSigningKeyArgs,
   MutationDisableCustomerArgs,
   MutationDisableResourceArgs,
   MutationSetBookingCommentArgs,
@@ -96,6 +100,10 @@ export const resolvers = {
     updateResource: resolverWrapper<MutationUpdateResourceArgs>(updateResource),
     disableCustomer: resolverWrapper<MutationDisableCustomerArgs>(
       disableCustomer
+    ),
+    addSigningKey: resolverWrapper<MutationAddSigningKeyArgs>(addSigningKey),
+    deleteSigningKey: resolverWrapper<MutationDeleteSigningKeyArgs>(
+      deleteSigningKey
     ),
   },
 };

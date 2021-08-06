@@ -11,3 +11,5 @@ module.exports.setBookingComment = fs.readFileSync(path.join(__dirname, 'setBook
 module.exports.addCustomer = fs.readFileSync(path.join(__dirname, 'addCustomer.gql'), 'utf8');
 module.exports.disableCustomer = fs.readFileSync(path.join(__dirname, 'disableCustomer.gql'), 'utf8');
 module.exports.deleteCustomer = fs.readFileSync(path.join(__dirname, 'deleteCustomer.gql'), 'utf8');
+module.exports.addSigningKey = fs.readFileSync(path.join(__dirname, 'addSigningKey.gql'), 'utf8');
+module.exports.deleteSigningKey = fs.readFileSync(path.join(__dirname, 'deleteSigningKey.gql'), 'utf8');

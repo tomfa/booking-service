@@ -152,6 +152,8 @@ export type Mutation = {
   addCustomer?: Maybe<Customer>;
   disableCustomer?: Maybe<Customer>;
   deleteCustomer?: Maybe<Customer>;
+  addSigningKey?: Maybe<Customer>;
+  deleteSigningKey?: Maybe<Customer>;
 };
 
 
@@ -203,6 +205,18 @@ export type MutationDisableCustomerArgs = {
 
 export type MutationDeleteCustomerArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationAddSigningKeyArgs = {
+  key: Scalars['String'];
+  customerId?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationDeleteSigningKeyArgs = {
+  key: Scalars['String'];
+  customerId?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -395,6 +409,20 @@ export type AddResourceMutation = (
   )> }
 );
 
+export type AddSigningKeyMutationVariables = Exact<{
+  key: Scalars['String'];
+  customerId?: Maybe<Scalars['String']>;
+}>;
+
+
+export type AddSigningKeyMutation = (
+  { __typename?: 'Mutation' }
+  & { addSigningKey?: Maybe<(
+    { __typename?: 'Customer' }
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
+  )> }
+);
+
 export type CancelBookingMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -416,6 +444,20 @@ export type DeleteCustomerMutationVariables = Exact<{
 export type DeleteCustomerMutation = (
   { __typename?: 'Mutation' }
   & { deleteCustomer?: Maybe<(
+    { __typename?: 'Customer' }
+    & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
+  )> }
+);
+
+export type DeleteSigningKeyMutationVariables = Exact<{
+  key: Scalars['String'];
+  customerId?: Maybe<Scalars['String']>;
+}>;
+
+
+export type DeleteSigningKeyMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteSigningKey?: Maybe<(
     { __typename?: 'Customer' }
     & Pick<Customer, 'id' | 'name' | 'email' | 'phoneNumber' | 'issuer' | 'credits' | 'enabled' | 'publicKeys'>
   )> }
@@ -885,6 +927,31 @@ export const useAddResourceMutation = <
       (variables?: AddResourceMutationVariables) => fetcher<AddResourceMutation, AddResourceMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, AddResourceDocument, variables)(),
       options
     );
+export const AddSigningKeyDocument = `
+    mutation addSigningKey($key: String!, $customerId: String) {
+  addSigningKey(key: $key, customerId: $customerId) {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
+    publicKeys
+  }
+}
+    `;
+export const useAddSigningKeyMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit }, 
+      options?: UseMutationOptions<AddSigningKeyMutation, TError, AddSigningKeyMutationVariables, TContext>
+    ) => 
+    useMutation<AddSigningKeyMutation, TError, AddSigningKeyMutationVariables, TContext>(
+      (variables?: AddSigningKeyMutationVariables) => fetcher<AddSigningKeyMutation, AddSigningKeyMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, AddSigningKeyDocument, variables)(),
+      options
+    );
 export const CancelBookingDocument = `
     mutation cancelBooking($id: String!) {
   cancelBooking(id: $id) {
@@ -933,6 +1000,31 @@ export const useDeleteCustomerMutation = <
     ) => 
     useMutation<DeleteCustomerMutation, TError, DeleteCustomerMutationVariables, TContext>(
       (variables?: DeleteCustomerMutationVariables) => fetcher<DeleteCustomerMutation, DeleteCustomerMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, DeleteCustomerDocument, variables)(),
+      options
+    );
+export const DeleteSigningKeyDocument = `
+    mutation deleteSigningKey($key: String!, $customerId: String) {
+  deleteSigningKey(key: $key, customerId: $customerId) {
+    id
+    name
+    email
+    phoneNumber
+    issuer
+    credits
+    enabled
+    publicKeys
+  }
+}
+    `;
+export const useDeleteSigningKeyMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit }, 
+      options?: UseMutationOptions<DeleteSigningKeyMutation, TError, DeleteSigningKeyMutationVariables, TContext>
+    ) => 
+    useMutation<DeleteSigningKeyMutation, TError, DeleteSigningKeyMutationVariables, TContext>(
+      (variables?: DeleteSigningKeyMutationVariables) => fetcher<DeleteSigningKeyMutation, DeleteSigningKeyMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, DeleteSigningKeyDocument, variables)(),
       options
     );
 export const DisableCustomerDocument = `

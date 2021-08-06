@@ -175,4 +175,6 @@ type Mutation {
     addCustomer(addCustomerInput: AddCustomerInput!): Customer
     disableCustomer(id: String!): Customer
     deleteCustomer(id: String!): Customer
+    addSigningKey(key: String!, customerId: String): Customer
+    deleteSigningKey(key: String!, customerId: String): Customer
 }
