@@ -34,17 +34,14 @@ export default function PrivacyPage() {
         </p>
         <h3>Analytics</h3>
         <p>
-          DocForest uses no analytics tools for marketing, nor user behavior.
+          Vailable uses no analytics tools for marketing, nor user behavior.
         </p>
         <h3>Storage</h3>
-        <p>
-          Data is stored on AWS S3 buckets and Aurora Serverless databases
-          located in Stockholm, Sweden.
-        </p>
+        <p>Data is stored in Googles Firebase, located in Europe.</p>
         <h3>Data processing</h3>
         <p>
-          Processing and generating documents happens in temporary AWS Lambda
-          functions, performed in Stockholm, Sweden.
+          Processing and generating documents happens in temporary Google Cloud
+          Functions, performed in Europe.
         </p>
         <p>
           During processing, logs are generated that can determine your usage of
