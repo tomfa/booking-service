@@ -2,18 +2,22 @@ import { AppProps } from 'next/app';
 import { Provider } from 'next-auth/client';
 
 import { ThemeProvider } from 'styled-components';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { MessageProvider } from '../providers/MessageProvider';
 
 import theme from '../styles/theme';
+import { config } from '../config';
 
-const queryClient = new QueryClient();
+const client = new ApolloClient({
+  uri: config.GRAPHQL_ENDPOINT,
+  cache: new InMemoryCache(),
+});
 
 const App = ({ Component, pageProps }: AppProps) => (
   <ThemeProvider theme={theme}>
     <MessageProvider>
       <Provider session={pageProps.session}>
-        <QueryClientProvider client={queryClient}>
+        <ApolloProvider client={client}>
           <style>
             {`
         html,
@@ -33,7 +37,7 @@ const App = ({ Component, pageProps }: AppProps) => (
       `}
           </style>
           <Component {...pageProps} />
-        </QueryClientProvider>
+        </ApolloProvider>
       </Provider>
     </MessageProvider>
   </ThemeProvider>
