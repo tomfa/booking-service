@@ -58,6 +58,8 @@ const adminPerms = [
   permissions.ADD_ANY_BOOKING,
   permissions.SET_ANY_BOOKING_COMMENT,
   permissions.CANCEL_ANY_BOOKING,
+  permissions.GET_OWN_CUSTOMER,
+  permissions.UPDATE_OWN_CUSTOMER,
 ];
 
 const superuserPerms = [
