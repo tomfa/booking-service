@@ -23,14 +23,20 @@ const getCustomerFromToken = async (
   const isIssuedByUs = token.iss === config.jwt.issuer;
   if (isIssuedByUs) {
     customer = await getCustomerByEmail({ email: token.sub });
+    if (!customer) {
+      throw new BadAuthenticationError(
+        `Unable to find customer with email: ${token.sub}`
+      );
+    }
   } else {
     customer = await getCustomerByIssuer({ issuer: token.iss });
+    if (!customer) {
+      throw new BadAuthenticationError(
+        `Unable to find customer with issuer: ${token.iss}`
+      );
+    }
   }
-  if (!customer) {
-    throw new BadAuthenticationError(
-      `Unable to find customer with issuer: ${token.iss}`
-    );
-  }
+
   const sub = isIssuedByUs ? null : token.sub;
   return [customer, sub];
 };
