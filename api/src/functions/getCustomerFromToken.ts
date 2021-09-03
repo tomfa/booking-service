@@ -20,7 +20,13 @@ async function getCustomerFromToken(
     .whereEqualTo('id', token.customerId)
     .findOne();
 
-  logger.debug(`getCustomerFromToken: found customer ${customer}`);
+  if (customer) {
+    logger.debug(`getCustomerFromToken: found customer ${customer}`);
+  } else {
+    logger.debug(
+      `getCustomerFromToken: Could not find customer with id ${token.customerId}`
+    );
+  }
 
   return customer && fromDBCustomer(customer);
 }
