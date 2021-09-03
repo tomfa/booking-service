@@ -1,25 +1,30 @@
 import { AppProps } from 'next/app';
-import { Provider } from 'next-auth/client';
+import { Provider as NextAuthProvider, useSession } from 'next-auth/client';
 
 import { ThemeProvider } from 'styled-components';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+
+import { useMemo } from 'react';
 import { MessageProvider } from '../providers/MessageProvider';
 
 import theme from '../styles/theme';
-import { config } from '../config';
 
-const client = new ApolloClient({
-  uri: config.GRAPHQL_ENDPOINT,
-  cache: new InMemoryCache(),
-});
+const getClient = (authorization?: string) => {
+  const headers = authorization ? { authorization } : undefined;
+  return new ApolloClient({
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
+    cache: new InMemoryCache(),
+    headers,
+  });
+};
 
-const App = ({ Component, pageProps }: AppProps) => (
-  <ThemeProvider theme={theme}>
-    <MessageProvider>
-      <Provider session={pageProps.session}>
-        <ApolloProvider client={client}>
-          <style>
-            {`
+const AuthedApp = ({ Component, pageProps }: AppProps) => {
+  const [session] = useSession();
+  const client = useMemo(() => getClient(session?.apiToken), [session]);
+  return (
+    <ApolloProvider client={client}>
+      <style>
+        {`
         html,
         body {
           padding: 0;
@@ -35,12 +40,22 @@ const App = ({ Component, pageProps }: AppProps) => (
           box-sizing: border-box;
         }
       `}
-          </style>
-          <Component {...pageProps} />
-        </ApolloProvider>
-      </Provider>
-    </MessageProvider>
-  </ThemeProvider>
-);
+      </style>
+      <Component {...pageProps} />
+    </ApolloProvider>
+  );
+};
+
+const App = ({ Component, pageProps }: AppProps) => {
+  return (
+    <ThemeProvider theme={theme}>
+      <MessageProvider>
+        <NextAuthProvider session={pageProps.session}>
+          <AuthedApp Component={Component} pageProps={pageProps} />
+        </NextAuthProvider>
+      </MessageProvider>
+    </ThemeProvider>
+  );
+};
 
 export default App;

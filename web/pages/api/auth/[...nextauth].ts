@@ -2,8 +2,40 @@
 import NextAuth, { Account, Profile, Session, User } from 'next-auth';
 import Providers from 'next-auth/providers';
 import { JWT } from 'next-auth/jwt';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { createJWTtoken } from '../../../auth/jwt';
+import { config } from '../../../config';
+import {
+  Customer,
+  GetCustomerByEmailDocument,
+  GetCustomerByEmailQuery,
+  GetCustomerByEmailQueryVariables,
+} from '../../../graphql/generated/types';
 
 // Example: https://github.com/nextauthjs/next-auth-example/blob/main/pages/api/auth/%5B...nextauth%5D.js
+
+function generateSuperUserToken() {
+  return createJWTtoken('hi@6040.work', ['*']);
+}
+
+async function queryCustomerByEmail(
+  email: string
+): Promise<GetCustomerByEmailQuery> {
+  const client = new ApolloClient({
+    uri: config.GRAPHQL_ENDPOINT,
+    cache: new InMemoryCache(),
+    headers: { Authorization: generateSuperUserToken() },
+  });
+  const user = await client.query<
+    GetCustomerByEmailQuery,
+    GetCustomerByEmailQueryVariables
+  >({ query: GetCustomerByEmailDocument, variables: { email } });
+  return user.data;
+}
+
+function generateCustomerToken(user: Customer) {
+  return createJWTtoken(user.email, ['role:admin']);
+}
 
 export default NextAuth({
   providers: [
@@ -20,9 +52,9 @@ export default NextAuth({
     maxAge: 30 * 24 * 60 * 60,
   },
   callbacks: {
-    async session(session: Session, token) {
+    async session(session: Session, token: JWT & { apiToken: string }) {
       return {
-        ...token,
+        apiToken: token.apiToken,
         user: {
           email: token.email,
           name: token.name,
@@ -32,18 +64,26 @@ export default NextAuth({
     },
     async jwt(
       token: JWT,
-      user: User | undefined,
+      authUser: User | undefined,
       account: Account | undefined,
       profile: Profile | undefined,
       isNewUser: boolean | undefined
     ) {
-      token.iss = 'api.vailable.eu';
-      token.aud = ['api.vailable.eu', 'https://vailable.eu'];
-      token.role = 'admin';
       if (!token.email) {
         throw new Error(`Unable to log in without email`);
       }
-      token.sub = token.email;
+
+      const result = await queryCustomerByEmail(token.email);
+      const user = result && result.getCustomerByEmail;
+      if (!user) {
+        // TODO: Consider automatically signing up here.
+        throw new Error(`Unknown user`);
+      }
+      const authToken = generateCustomerToken(user);
+
+      token.email = user.email;
+      token.apiToken = authToken;
+      token.name = user.name;
       return token;
     },
   },
