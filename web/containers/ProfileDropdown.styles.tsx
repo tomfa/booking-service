@@ -5,6 +5,8 @@ export const ProfileDropdownWrapper = styled.div`
 `;
 
 export const ProfileDropdownMenu = styled.div`
+  display: flex;
+  flex-direction: column;
   position: absolute;
   z-index: ${p => p.theme.z.top};
   right: -1rem;

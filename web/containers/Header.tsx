@@ -39,6 +39,8 @@ export const ProfileDropdown = () => {
             <span style={{ opacity: 0.5, flex: '1' }}>{`//`} username:</span>
             {session.user.email}
           </Code>
+          <Link href={'/resources'}>Resources</Link>
+          <Link href={'/profile'}>Profile</Link>
           <Link href={'/logout'}>Log out</Link>
         </ProfileDropdownMenu>
       )}
