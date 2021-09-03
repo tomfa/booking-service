@@ -12,7 +12,7 @@ export type AuthTokenData = {
   iss: string;
   sub: string;
   permissions: string[];
-  role: Role;
+  role?: Role;
 };
 
 export type User = {

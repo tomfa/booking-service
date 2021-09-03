@@ -72,7 +72,7 @@ export const removeSuperuserPermissions = (perms: Permission[]) => {
   return perms.filter(p => !superuserPerms.includes(p));
 };
 
-const getPermissionsForRole = (role: Role): Permission[] => {
+export const getPermissionsForRole = (role: Role): Permission[] => {
   if (role === 'user') {
     return userPerms.map(addPermissionPrefixIfNeeded);
   }
@@ -89,7 +89,20 @@ const getPermissionsForRole = (role: Role): Permission[] => {
 
 const getPermissionsStatedInToken = (token: AuthTokenData): Permission[] => {
   if (token.permissions && token.permissions.length) {
-    return token.permissions;
+    const permissionRoleBundles = token.permissions.filter(p =>
+      p.includes('role:')
+    );
+    const permissionRoles = permissionRoleBundles.map(
+      p => p.split('role:')[1]
+    ) as Role[];
+    const permissionsFromRoles: Permission[] = permissionRoles.reduce(
+      (perms, role) => perms.concat(getPermissionsForRole(role)),
+      [] as Permission[]
+    );
+    const allPermissions = permissionsFromRoles.concat(token.permissions);
+    return Array.from(new Set(allPermissions)).filter(
+      r => !permissionRoleBundles.includes(r)
+    );
   }
   if (token.role) {
     const perms = getPermissionsForRole(token.role);
@@ -101,6 +114,7 @@ const getPermissionsStatedInToken = (token: AuthTokenData): Permission[] => {
 };
 
 export const getPermissionsFromToken = (token: AuthTokenData): Permission[] => {
+  logger.debug(`getPermissionsFromToken, ${JSON.stringify(token)}`);
   const statedPermissions = getPermissionsStatedInToken(token);
   if (token.iss === config.jwt.issuer) {
     return statedPermissions;
@@ -140,7 +154,9 @@ const isPermissionGranted = ({
 };
 
 export function hasPermission(auth: Auth, permission: Permission): boolean {
-  logger.debug(`Running hasPermissions ${permission}`);
+  logger.debug(
+    `Running hasPermissions ${permission} on ${JSON.stringify(auth)}`
+  );
   return !!auth.permissions.find(p =>
     isPermissionGranted({
       allowedPermission: p,

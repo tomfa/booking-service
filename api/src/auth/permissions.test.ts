@@ -1,5 +1,10 @@
-import { Auth } from './types';
-import { hasPermission, permissions } from './permissions';
+import { Auth, AuthTokenData } from './types';
+import {
+  getPermissionsForRole,
+  getPermissionsFromToken,
+  hasPermission,
+  permissions,
+} from './permissions';
 
 describe('hasPermission', () => {
   it('returns true if having permission', async () => {
@@ -49,5 +54,26 @@ describe('hasPermission', () => {
     const isGranted = hasPermission(auth, permissions.UPDATE_RESOURCE);
 
     expect(isGranted).toBe(true);
+  });
+});
+
+describe('getPermissionsFromToken', () => {
+  test('maps role field to permissions', () => {
+    const adminToken: AuthTokenData = {
+      iss: 'string',
+      sub: 'string',
+      permissions: ['role:admin'],
+    };
+    const adminRoleToken: AuthTokenData = {
+      iss: 'string',
+      sub: 'string',
+      permissions: [],
+      role: 'admin',
+    };
+    const permissions1 = getPermissionsFromToken(adminToken);
+    const permissions2 = getPermissionsFromToken(adminRoleToken);
+    const expectedPermissions = getPermissionsForRole('admin');
+    expect(permissions1).toEqual(permissions2);
+    expect(permissions1).toEqual(expectedPermissions);
   });
 });
