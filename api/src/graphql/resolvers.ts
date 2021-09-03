@@ -21,7 +21,7 @@ import getResourceById from '../functions/getResourceById';
 import updateResource from '../functions/updateResource';
 import { getVerifiedTokenData } from '../auth/jwt';
 import { Auth } from '../auth/types';
-import { RequestContext } from '../types';
+import { EmptyResolverArgs, RequestContext } from '../types';
 import addSigningKey from '../functions/addSigningKey';
 import deleteSigningKey from '../functions/deleteSigningKey';
 import getCustomerFromToken from '../functions/getCustomerFromToken';
@@ -61,7 +61,7 @@ function resolverWrapper<T>(fun: (args: T, token: Auth) => Promise<unknown>) {
 
 export const resolvers = {
   Query: {
-    me: resolverWrapper<undefined>(getCustomerFromToken),
+    me: resolverWrapper<EmptyResolverArgs>(getCustomerFromToken),
     findAvailability: resolverWrapper<QueryFindAvailabilityArgs>(
       findAvailability
     ),
