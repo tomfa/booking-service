@@ -1,13 +1,19 @@
+import Link from 'next/link';
 import { Layout } from '../../components/Layout';
 import { Resource, useFindResourcesQuery } from '../../graphql/generated/types';
 
 const ResourceListItem = ({ resource }: { resource: Resource }) => {
   return (
     <tr>
-      <td>{resource.label}</td>
+      <td>
+        <Link href={`/resources/${resource.id}`}>{resource.label}</Link>
+      </td>
       <td>{resource.category || '-'}</td>
       <td>{resource.seats}</td>
       <td>{(resource.enabled && 'Yes') || 'No'}</td>
+      <td>
+        <Link href={`/resources/${resource.id}/book`}>Book</Link>
+      </td>
     </tr>
   );
 };
@@ -41,9 +47,6 @@ export default function ResourcePage() {
         </table>
       )}
       {data?.findResources.length === 0 && <>You have no resources</>}
-      <table>
-        <tr />
-      </table>
     </Layout>
   );
 }
