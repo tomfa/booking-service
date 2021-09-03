@@ -13,7 +13,7 @@ export default function LoginPage() {
     if (session) {
       router.push('/profile');
     } else {
-      auth.signIn();
+      auth.signIn('google');
     }
   }, [router, session, loading]);
 
