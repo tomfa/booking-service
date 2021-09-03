@@ -1,5 +1,6 @@
 import config from '../config';
 import { BadAuthenticationError } from '../utils/errors';
+import logger from '../utils/logger';
 import { Auth, AuthTokenData, Role, ValueOf } from './types';
 
 export const addPermissionPrefixIfNeeded = (permission: string) => {
@@ -139,6 +140,7 @@ const isPermissionGranted = ({
 };
 
 export function hasPermission(auth: Auth, permission: Permission): boolean {
+  logger.debug(`Running hasPermissions ${permission}`);
   return !!auth.permissions.find(p =>
     isPermissionGranted({
       allowedPermission: p,
@@ -148,6 +150,7 @@ export function hasPermission(auth: Auth, permission: Permission): boolean {
 }
 
 export function verifyPermission(auth: Auth, permission: Permission) {
+  logger.debug(`Running verifyPermission ${permission}`);
   if (!hasPermission(auth, permission)) {
     throw new BadAuthenticationError(
       `You do not have the required access '${permission}'`
