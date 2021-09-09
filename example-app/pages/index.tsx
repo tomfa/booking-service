@@ -120,11 +120,11 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h2>Når vil du reservere prosjektareal?</h2>
+        <h2 className={styles.header}>Når vil du reservere prosjektareal?</h2>
         <div>
           <Dropdown options={{ '5': 'a', '6': 'b' }} />
         </div>
-        <h2>Hvilke soner?</h2>
+        <h2 className={styles.header}>Hvilke soner?</h2>
         <MultiselectResource resources={resourceAvailability} />
         <Button
           onClick={() => {
