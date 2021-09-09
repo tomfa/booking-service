@@ -1,0 +1,15 @@
+.button {
+  background-color: #f7efa6;
+  color: #272727;
+
+  position: relative;
+  font-size: 1.3rem;
+  font-weight: 200;
+  cursor: pointer;
+  font-family: inherit;
+  overflow: hidden;
+  transition: color .2s ease;
+  border: 1px solid #272727;
+  box-shadow: .25em .25em 0 #000;
+  padding: 1rem 2rem;
+}
