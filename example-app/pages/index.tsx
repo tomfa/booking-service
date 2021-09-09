@@ -9,40 +9,34 @@ import { Spinner } from '../components/Spinner';
 import { DisplayError } from '../components/DisplayError';
 import { MultiselectResource } from '../components/MultiselectResource';
 import { Button } from '../components/Button';
-
-const getRouterValueList = (
-  queryValue: string | string[] | undefined
-): string[] => {
-  if (!queryValue) {
-    return [];
-  }
-  if (typeof queryValue === 'string') {
-    return [queryValue];
-  }
-  return queryValue;
-};
-
-const getRouterValueString = (
-  queryValue: string | string[] | undefined
-): string | undefined => {
-  if (!queryValue) {
-    return undefined;
-  }
-  if (typeof queryValue === 'string') {
-    return queryValue;
-  }
-  return queryValue[0];
-};
+import { getRouterValueList } from '../utils/router.utils';
+import {
+  useFindAvailabilityLazyQuery,
+  useFindResourcesLazyQuery,
+  useFindResourcesQuery,
+} from '../graphql/generated/types';
 
 const Home: NextPage = () => {
   const router = useRouter();
   const [selectableResourceIds, setSelectableResourceIds] = useState<string[]>(
     []
   );
-  const [authenticationKey, setAuthenticationKey] = useState<string>();
-  const [api, setAPI] = useState<Vailable>();
-  const [resources, setResources] = useState<types.Resource[]>();
-  const [loading, setLoading] = useState(true);
+  const [fromTime, setFromTime] = useState<Date>(new Date());
+  const [toTime, setToTime] = useState<Date>(
+    new Date(Date.now() + 30 * 24 * 3600 * 1000)
+  );
+  const [
+    fetchResources,
+    { data: resources, loading: resourcesLoading, error: resourcesError },
+  ] = useFindResourcesLazyQuery();
+  const [
+    fetchAvailability,
+    {
+      data: availability,
+      loading: availabilityLoading,
+      error: availabilityError,
+    },
+  ] = useFindAvailabilityLazyQuery();
 
   useEffect(() => {
     if (!router.isReady) {
@@ -50,58 +44,35 @@ const Home: NextPage = () => {
     }
 
     const routerResourceIds = getRouterValueList(router.query['resources']);
-    const authkey = getRouterValueString(router.query['auth']);
-
     setSelectableResourceIds(routerResourceIds);
-    setAuthenticationKey(authkey);
-
-    if (authkey) {
-      const API = new Vailable({ token: authkey });
-      setAPI(API);
-    }
   }, [router.query, router.isReady]);
 
   useEffect(() => {
-    const fetchResources = async () => {
-      if (!api) {
-        return;
-      }
-      const resources = await api.findResources();
-      setResources(resources);
-    };
-    fetchResources();
-  }, [api]);
+    console.log('Fetching resources!');
+    fetchResources({
+      variables: { filterResource: { resourceIds: selectableResourceIds } },
+    });
+  }, [selectableResourceIds, fetchResources]);
 
-  useEffect(() => {
-    const isLoading = !router.isReady;
-    setLoading(isLoading);
-  }, [router.isReady, resources]);
-
+  const loading = useMemo(
+    () => resourcesLoading || !router.isReady || availabilityLoading,
+    [router.isReady, availabilityLoading, resourcesLoading, resources]
+  );
   const error = useMemo(() => {
     if (loading) {
       return undefined;
     }
-    if (!authenticationKey) {
-      return 'Missing query variable "auth"';
-    }
     if (!selectableResourceIds?.length) {
       return 'Missing query variable "resource"';
     }
-    if (!api) {
-      return 'Error initializing API';
+    if (resourcesError) {
+      return resourcesError.message;
+    }
+    if (availabilityError) {
+      return availabilityError.message;
     }
     return undefined;
-  }, [authenticationKey, selectableResourceIds, loading, api]);
-
-  const resourceAvailability = useMemo(() => {
-    return (
-      resources?.map(r => ({
-        resource: r,
-        available: true,
-        checked: false,
-      })) || []
-    );
-  }, [resources]);
+  }, [selectableResourceIds, loading, resourcesError, availabilityError]);
 
   if (error) {
     return <DisplayError>{error}</DisplayError>;
@@ -110,6 +81,9 @@ const Home: NextPage = () => {
   if (loading) {
     return <Spinner />;
   }
+
+  console.log('resources');
+  console.log(resources);
 
   return (
     <div className={styles.container}>
@@ -125,7 +99,6 @@ const Home: NextPage = () => {
           <Dropdown options={{ '5': 'a', '6': 'b' }} />
         </div>
         <h2 className={styles.header}>Hvilke soner?</h2>
-        <MultiselectResource resources={resourceAvailability} />
         <Button
           onClick={() => {
             console.log('book!');
