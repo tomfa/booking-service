@@ -30,7 +30,13 @@ export const reduceAvailability = (
     updatedSlots = updatedSlots.map(slot => {
       const overlaps = slot.start < booking.end && slot.end > booking.start;
       if (overlaps) {
-        return { ...slot, availableSeats: slot.availableSeats - 1 };
+        return {
+          ...slot,
+          availableSeats: slot.availableSeats - 1,
+          seatsAvailable: slot.seatsAvailable.filter(
+            s => s !== booking.seatNumber
+          ),
+        };
       }
       return slot;
     });

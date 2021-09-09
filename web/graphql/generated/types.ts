@@ -298,6 +298,7 @@ export type Schedule = {
 export type TimeSlot = {
   __typename?: 'TimeSlot';
   availableSeats: Scalars['Int'];
+  seatsAvailable: Array<Scalars['Int']>;
   start: Scalars['Int'];
   end: Scalars['Int'];
 };
@@ -585,7 +586,7 @@ export type FindAvailabilityQuery = (
   { __typename?: 'Query' }
   & { findAvailability?: Maybe<Array<Maybe<(
     { __typename?: 'TimeSlot' }
-    & Pick<TimeSlot, 'availableSeats' | 'start' | 'end'>
+    & Pick<TimeSlot, 'availableSeats' | 'seatsAvailable' | 'start' | 'end'>
   )>>> }
 );
 
@@ -735,7 +736,7 @@ export type GetNextAvailableQuery = (
   { __typename?: 'Query' }
   & { getNextAvailable?: Maybe<(
     { __typename?: 'TimeSlot' }
-    & Pick<TimeSlot, 'availableSeats' | 'start' | 'end'>
+    & Pick<TimeSlot, 'availableSeats' | 'seatsAvailable' | 'start' | 'end'>
   )> }
 );
 
@@ -1433,6 +1434,7 @@ export const FindAvailabilityDocument = gql`
     query findAvailability($filterAvailability: FindAvailabilityInput!) {
   findAvailability(filterAvailability: $filterAvailability) {
     availableSeats
+    seatsAvailable
     start
     end
   }
@@ -1851,6 +1853,7 @@ export const GetNextAvailableDocument = gql`
     query getNextAvailable($id: String!, $afterDate: Int) {
   getNextAvailable(id: $id, afterDate: $afterDate) {
     availableSeats
+    seatsAvailable
     start
     end
   }

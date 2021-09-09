@@ -299,6 +299,7 @@ export type TimeSlot = {
   __typename?: 'TimeSlot';
   availableSeats: Scalars['Int'];
   end: Scalars['Int'];
+  seatsAvailable: Array<Scalars['Int']>;
   start: Scalars['Int'];
 };
 
@@ -413,7 +414,7 @@ export type FindAvailabilityQueryVariables = Exact<{
 }>;
 
 
-export type FindAvailabilityQuery = { __typename?: 'Query', findAvailability?: Maybe<Array<Maybe<{ __typename?: 'TimeSlot', availableSeats: number, start: number, end: number }>>> };
+export type FindAvailabilityQuery = { __typename?: 'Query', findAvailability?: Maybe<Array<Maybe<{ __typename?: 'TimeSlot', availableSeats: number, seatsAvailable: Array<number>, start: number, end: number }>>> };
 
 export type FindBookingsQueryVariables = Exact<{
   filterBookings: FindBookingInput;
@@ -477,7 +478,7 @@ export type GetNextAvailableQueryVariables = Exact<{
 }>;
 
 
-export type GetNextAvailableQuery = { __typename?: 'Query', getNextAvailable?: Maybe<{ __typename?: 'TimeSlot', availableSeats: number, start: number, end: number }> };
+export type GetNextAvailableQuery = { __typename?: 'Query', getNextAvailable?: Maybe<{ __typename?: 'TimeSlot', availableSeats: number, seatsAvailable: Array<number>, start: number, end: number }> };
 
 export type GetResourceByIdQueryVariables = Exact<{
   id: Scalars['String'];
@@ -1129,6 +1130,7 @@ export const FindAvailabilityDocument = gql`
     query findAvailability($filterAvailability: FindAvailabilityInput!) {
   findAvailability(filterAvailability: $filterAvailability) {
     availableSeats
+    seatsAvailable
     start
     end
   }
@@ -1547,6 +1549,7 @@ export const GetNextAvailableDocument = gql`
     query getNextAvailable($id: String!, $afterDate: Int) {
   getNextAvailable(id: $id, afterDate: $afterDate) {
     availableSeats
+    seatsAvailable
     start
     end
   }

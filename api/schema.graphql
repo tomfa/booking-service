@@ -102,6 +102,7 @@ input AddBookingInput {
 
 type TimeSlot {
     availableSeats: Int!
+    seatsAvailable: [Int!]!
     start: Int!
     end: Int!
 }

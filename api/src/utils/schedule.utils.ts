@@ -34,6 +34,10 @@ export const closedSchedule: Schedule = {
   sun: closed,
   overriddenDates: [],
 };
+
+const generateSeatNumbers = (numSeats: number): number[] =>
+  new Array(numSeats).fill(undefined).map((_, i) => i);
+
 export const convertDateToTimeSlot = (
   resource: Resource,
   time: Date
@@ -43,6 +47,7 @@ export const convertDateToTimeSlot = (
     availableSeats: resource.seats,
     start: toGQLDate(time),
     end: toGQLDate(time) + 60 * schedule.slotDurationMinutes,
+    seatsAvailable: generateSeatNumbers(resource.seats),
   };
 };
 export const splitHourMinute = (
