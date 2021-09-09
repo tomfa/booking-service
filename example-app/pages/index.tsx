@@ -12,6 +12,8 @@ import {
   useFindResourcesLazyQuery,
 } from '../graphql/generated/types';
 import { ResourceSelector } from '../container/ResourceSelector';
+import DateTimePicker from '../components/DateTimePicker/DateTimePicker';
+import { Spinner } from '../components/Spinner';
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -82,6 +84,10 @@ const Home: NextPage = () => {
     return undefined;
   }, [selectableResourceIds, loading, resourcesError, availabilityError]);
 
+  const schedule = useMemo(() => resources?.findResources?.[0]?.schedule, [
+    resources,
+  ]);
+
   if (error) {
     return <DisplayError>{error}</DisplayError>;
   }
@@ -97,7 +103,18 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <h2 className={styles.header}>Når vil du reservere prosjektareal?</h2>
         <div>
-          <Dropdown options={{ '5': 'a', '6': 'b' }} />
+          {resourcesLoading && <Spinner />}
+          {schedule && (
+            <>
+              <h3 className={styles.label}>Fra dato</h3>
+              <DateTimePicker
+                startDate={fromTime}
+                intervalMinutes={15}
+                schedule={schedule}
+                onChange={setFromTime}
+              />
+            </>
+          )}
         </div>
         <h2 className={styles.header}>Hvilke soner?</h2>
         <ResourceSelector isLoading={loading} availability={availability} />

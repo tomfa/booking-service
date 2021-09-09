@@ -41,6 +41,12 @@
   max-width: 25.6875rem;
 }
 
+.label {
+  margin-bottom: 0.4rem;
+  font-size: 1.1rem;
+  max-width: 25.6875rem;
+}
+
 .code {
   background: #fafafa;
   border-radius: 5px;

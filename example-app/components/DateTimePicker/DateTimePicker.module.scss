@@ -1,0 +1,10 @@
+.dateAndTimeWrapper {
+  display: flex;
+  flex-direction: row;
+}
+.datePicker {
+  border-right: none;
+}
+.timePicker {
+  min-width: 7rem;
+}
