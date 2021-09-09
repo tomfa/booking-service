@@ -2,19 +2,16 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import { Dropdown } from '../components/Dropdown';
-import { NextRouter, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
-import Vailable, { types } from 'vailable';
-import { Spinner } from '../components/Spinner';
 import { DisplayError } from '../components/DisplayError';
-import { MultiselectResource } from '../components/MultiselectResource';
 import { Button } from '../components/Button';
 import { getRouterValueList } from '../utils/router.utils';
 import {
   useFindAvailabilityLazyQuery,
   useFindResourcesLazyQuery,
-  useFindResourcesQuery,
 } from '../graphql/generated/types';
+import { ResourceSelector } from '../container/ResourceSelector';
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -89,13 +86,6 @@ const Home: NextPage = () => {
     return <DisplayError>{error}</DisplayError>;
   }
 
-  if (loading) {
-    return <Spinner />;
-  }
-
-  console.log('resources');
-  console.log(resources);
-
   return (
     <div className={styles.container}>
       <Head>
@@ -110,6 +100,8 @@ const Home: NextPage = () => {
           <Dropdown options={{ '5': 'a', '6': 'b' }} />
         </div>
         <h2 className={styles.header}>Hvilke soner?</h2>
+        <ResourceSelector isLoading={loading} availability={availability} />
+
         <Button
           onClick={() => {
             console.log('book!');
