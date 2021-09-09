@@ -113,7 +113,8 @@ const Home: NextPage = () => {
         <Button
           onClick={() => {
             console.log('book!');
-          }}>
+          }}
+          disabled={loading}>
           Reserver
         </Button>
       </main>
