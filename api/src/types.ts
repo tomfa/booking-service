@@ -3,6 +3,8 @@ import * as types from './graphql/generated/types';
 import { BookedDuration, Mutation, Query } from './graphql/generated/types';
 import { ErrorType } from './utils/types';
 
+export type EmptyResolverArgs = Record<never, never>;
+
 export type RequestContext = {
   headers: IncomingHttpHeaders;
   // eslint-disable-next-line no-undef

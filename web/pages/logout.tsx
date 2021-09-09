@@ -1,18 +1,23 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../providers/AuthProvider';
+import auth from 'next-auth/client';
 import { Icon, IconType } from '../components/Icon';
 import { Layout } from '../components/Layout';
 
-export default function LoginPage() {
-  const { isLoggedIn, logout } = useAuth();
+export default function LogoutPage() {
+  const [session, isLoading] = auth.useSession();
   const router = useRouter();
   useEffect(() => {
-    if (isLoggedIn) {
-      logout();
+    if (isLoading) {
+      return;
     }
-    router.push('/');
-  }, [router, isLoggedIn, logout]);
+    if (session) {
+      auth.signOut();
+    }
+    if (!session) {
+      router.push('/');
+    }
+  }, [router, session, isLoading]);
 
   return (
     <Layout social={{ title: 'Vailable | Logging out' }}>

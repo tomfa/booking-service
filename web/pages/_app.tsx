@@ -1,20 +1,31 @@
 import { AppProps } from 'next/app';
+import { Provider as NextAuthProvider, useSession } from 'next-auth/client';
+
 import { ThemeProvider } from 'styled-components';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { AuthProvider } from '../providers/AuthProvider';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+
+import { useMemo } from 'react';
 import { MessageProvider } from '../providers/MessageProvider';
 
 import theme from '../styles/theme';
 
-const queryClient = new QueryClient();
+const getClient = (authorization?: string) => {
+  const headers = authorization ? { authorization } : undefined;
+  return new ApolloClient({
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
+    cache: new InMemoryCache(),
+    connectToDevTools: process.env.NODE_ENV === 'development' && !!headers,
+    headers,
+  });
+};
 
-const App = ({ Component, pageProps }: AppProps) => (
-  <ThemeProvider theme={theme}>
-    <MessageProvider>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <style>
-            {`
+const AuthedApp = ({ Component, pageProps }: AppProps) => {
+  const [session] = useSession();
+  const client = useMemo(() => getClient(session?.apiToken), [session]);
+  return (
+    <ApolloProvider client={client}>
+      <style>
+        {`
         html,
         body {
           padding: 0;
@@ -30,12 +41,22 @@ const App = ({ Component, pageProps }: AppProps) => (
           box-sizing: border-box;
         }
       `}
-          </style>
-          <Component {...pageProps} />
-        </QueryClientProvider>
-      </AuthProvider>
-    </MessageProvider>
-  </ThemeProvider>
-);
+      </style>
+      <Component {...pageProps} />
+    </ApolloProvider>
+  );
+};
+
+const App = ({ Component, pageProps }: AppProps) => {
+  return (
+    <ThemeProvider theme={theme}>
+      <MessageProvider>
+        <NextAuthProvider session={pageProps.session}>
+          <AuthedApp Component={Component} pageProps={pageProps} />
+        </NextAuthProvider>
+      </MessageProvider>
+    </ThemeProvider>
+  );
+};
 
 export default App;

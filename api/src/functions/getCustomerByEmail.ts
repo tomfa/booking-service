@@ -9,9 +9,11 @@ import { permissions, verifyPermission } from '../auth/permissions';
 
 async function getCustomerByEmail(
   { email }: QueryGetCustomerByEmailArgs,
-  token: Auth
+  token?: Auth
 ): Promise<Customer | null> {
-  verifyPermission(token, permissions.GET_CUSTOMER);
+  if (token) {
+    verifyPermission(token, permissions.GET_CUSTOMER);
+  }
   const customer = await db.customer
     .getRepository()
     .whereEqualTo('email', email)

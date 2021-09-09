@@ -11,8 +11,35 @@ import {
 } from '../utils/errors';
 import { JSONObject } from '../types';
 import getCustomerByIssuer from '../functions/getCustomerByIssuer';
+import { Customer } from '../graphql/generated/types';
+import getCustomerByEmail from '../functions/getCustomerByEmail';
 import { APITokenData, TokenData, Auth, AuthTokenData, Role } from './types';
 import { getPermissionsFromToken } from './permissions';
+
+const getCustomerFromToken = async (
+  token: AuthTokenData
+): Promise<[Customer, string | null]> => {
+  let customer;
+  const isIssuedByUs = token.iss === config.jwt.issuer;
+  if (isIssuedByUs) {
+    customer = await getCustomerByEmail({ email: token.sub });
+    if (!customer) {
+      throw new BadAuthenticationError(
+        `Unable to find customer with email: ${token.sub}`
+      );
+    }
+  } else {
+    customer = await getCustomerByIssuer({ issuer: token.iss });
+    if (!customer) {
+      throw new BadAuthenticationError(
+        `Unable to find customer with issuer: ${token.iss}`
+      );
+    }
+  }
+
+  const sub = isIssuedByUs ? null : token.sub;
+  return [customer, sub];
+};
 
 export const getVerifiedTokenData = async (
   authHeader: string | undefined
@@ -26,17 +53,12 @@ export const getVerifiedTokenData = async (
     throw new NotAuthenticatedError(`Invalid authentication header`);
   }
   const token = await getAuthTokenData(authToken);
-  const customer = await getCustomerByIssuer({ issuer: token.iss });
-  if (!customer) {
-    throw new BadAuthenticationError(
-      `Unable to find customer with issuer: ${token.iss}`
-    );
-  }
+  const [customer, sub] = await getCustomerFromToken(token);
   if (!customer.enabled) {
     throw new BadAuthenticationError(`Customer ${customer.id} is disabled`);
   }
   return {
-    sub: token.sub || null,
+    sub,
     customerId: customer.id,
     permissions: getPermissionsFromToken(token),
   };
