@@ -1,6 +1,6 @@
 .dateAndTimeWrapper {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
 }
 .datePicker {
   border-right: none;

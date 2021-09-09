@@ -1,10 +1,15 @@
 .dropdownCard {
-  border: 1px solid black;
+  display: flex;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
   position: relative;
   flex-direction: row;
   justify-content: space-between;
   padding: 0.75rem;
   align-items: center;
+  padding-right: 1rem;
 }
 
 .dropdownText {
