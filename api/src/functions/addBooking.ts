@@ -102,6 +102,18 @@ async function addBooking(
   if (seatNumbers.length === 0) {
     throw new GenericBookingError(`Unable to find available seat number`);
   }
+  const hasSpecifiedSeatNumber = typeof addBookingInput.seatNumber === 'number';
+  if (
+    hasSpecifiedSeatNumber &&
+    !seatNumbers.includes(addBookingInput.seatNumber)
+  ) {
+    throw new GenericBookingError(
+      `Seat number ${addBookingInput.seatNumber} is not available`
+    );
+  }
+  const seatNumber =
+    (hasSpecifiedSeatNumber && addBookingInput.seatNumber) ||
+    minArray(seatNumbers);
 
   const args = {
     id: booking.id,
@@ -112,7 +124,7 @@ async function addBooking(
     userId: data.userId || null,
     start: startTime,
     end: endTime,
-    seatNumber: minArray(seatNumbers),
+    seatNumber,
   };
   const dbBooking = await db.booking.create(args);
   return fromDBBooking(dbBooking);

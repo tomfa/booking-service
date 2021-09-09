@@ -48,15 +48,26 @@ const Home: NextPage = () => {
   }, [router.query, router.isReady]);
 
   useEffect(() => {
-    console.log('Fetching resources!');
+    if (!selectableResourceIds) {
+      return;
+    }
     fetchResources({
       variables: { filterResource: { resourceIds: selectableResourceIds } },
     });
   }, [selectableResourceIds, fetchResources]);
 
+  useEffect(() => {
+    if (!selectableResourceIds) {
+      return;
+    }
+    fetchAvailability({
+      variables: { filterAvailability: { resourceIds: selectableResourceIds } },
+    });
+  }, [selectableResourceIds, fetchAvailability]);
+
   const loading = useMemo(
     () => resourcesLoading || !router.isReady || availabilityLoading,
-    [router.isReady, availabilityLoading, resourcesLoading, resources]
+    [router.isReady, availabilityLoading, resourcesLoading]
   );
   const error = useMemo(() => {
     if (loading) {
