@@ -121,18 +121,39 @@ const Home: NextPage = () => {
       if (!formValid || !urlResourceId) {
         return;
       }
-      await addBooking({
+      addBooking({
         variables: {
           addBookingInput: {
             resourceId: urlResourceId,
-            start: toGQLDate(toTime),
-            end: toGQLDate(fromTime),
+            start: toGQLDate(fromTime),
+            end: toGQLDate(toTime),
             seatNumbers: selectedSeats,
           },
         },
-      });
+      })
+        .catch(err => {
+          // errors will be displayed from addBookingError
+        })
+        .finally(() => {
+          const variables = {
+            filterAvailability: {
+              resourceIds: [urlResourceId],
+              from: toGQLDate(fromTime),
+              to: toGQLDate(toTime),
+            },
+          };
+          fetchAvailability({ variables });
+        });
     },
-    [formValid, urlResourceId, toTime, fromTime, addBooking]
+    [
+      formValid,
+      urlResourceId,
+      addBooking,
+      fromTime,
+      toTime,
+      selectedSeats,
+      fetchAvailability,
+    ]
   );
 
   if (error) {
