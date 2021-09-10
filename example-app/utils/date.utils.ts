@@ -25,6 +25,31 @@ export enum Weekday {
   SATURDAY = 'sat',
 }
 
+export const getWeekDayString = (day: Weekday): string => {
+  if (day === Weekday.SUNDAY) {
+    return `Søndag`;
+  }
+  if (day === Weekday.MONDAY) {
+    return `Mandag`;
+  }
+  if (day === Weekday.TUESDAY) {
+    return `Tirsdag`;
+  }
+  if (day === Weekday.WEDNESDAY) {
+    return `Onsdag`;
+  }
+  if (day === Weekday.THURSDAY) {
+    return `Torsdag`;
+  }
+  if (day === Weekday.FRIDAY) {
+    return `Fredag`;
+  }
+  if (day === Weekday.SATURDAY) {
+    return `Lørdag`;
+  }
+  throw new Error(`Unsupported day of week: ${day}`);
+};
+
 export interface TimeStamp {
   hour: number;
   minute: number;
