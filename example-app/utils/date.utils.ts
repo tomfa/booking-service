@@ -35,6 +35,9 @@ interface getTimeOptionProps {
   toTime: TimeStamp;
   intervalMinutes: number;
 }
+export const fromGQLDate = (seconds: number): Date => new Date(seconds * 1000);
+export const toGQLDate = (date: Date): number =>
+  Math.floor(date.getTime() / 1000);
 export const getTimeOption = ({
   fromTime,
   toTime,

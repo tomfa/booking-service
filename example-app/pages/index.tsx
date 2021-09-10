@@ -14,6 +14,7 @@ import {
 import { ResourceSelector } from '../container/ResourceSelector';
 import DateTimePicker from '../components/DateTimePicker/DateTimePicker';
 import { Spinner } from '../components/Spinner';
+import { toGQLDate } from '../utils/date.utils';
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -63,13 +64,19 @@ const Home: NextPage = () => {
   }, [selectableResourceIds, fetchResources]);
 
   useEffect(() => {
-    if (!selectableResourceIds) {
+    if (!selectableResourceIds && toTime > fromTime) {
       return;
     }
     fetchAvailability({
-      variables: { filterAvailability: { resourceIds: selectableResourceIds } },
+      variables: {
+        filterAvailability: {
+          resourceIds: selectableResourceIds,
+          from: toGQLDate(fromTime),
+          to: toGQLDate(toTime),
+        },
+      },
     });
-  }, [selectableResourceIds, fetchAvailability]);
+  }, [selectableResourceIds, fetchAvailability, fromTime, toTime]);
 
   const loading = useMemo(
     () => resourcesLoading || !router.isReady || availabilityLoading,
