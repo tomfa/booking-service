@@ -26,6 +26,7 @@ const Home: NextPage = () => {
   const [toTime, setToTime] = useState<Date>(
     new Date(Date.now() + 30 * 24 * 3600 * 1000)
   );
+  const isValidDateFilter = fromTime < toTime;
   const [
     fetchResources,
     { data: resources, loading: resourcesLoading, error: resourcesError },
@@ -64,7 +65,7 @@ const Home: NextPage = () => {
   }, [selectableResourceIds, fetchResources]);
 
   useEffect(() => {
-    if (!selectableResourceIds && toTime > fromTime) {
+    if (!selectableResourceIds || !isValidDateFilter) {
       return;
     }
     fetchAvailability({
@@ -76,7 +77,7 @@ const Home: NextPage = () => {
         },
       },
     });
-  }, [selectableResourceIds, fetchAvailability, fromTime, toTime]);
+  }, [selectableResourceIds, fetchAvailability, isValidDateFilter]);
 
   const loading = useMemo(
     () => resourcesLoading || !router.isReady || availabilityLoading,
@@ -142,7 +143,10 @@ const Home: NextPage = () => {
           )}
         </div>
         <h2 className={styles.header}>Hvilke soner?</h2>
-        <ResourceSelector isLoading={loading} availability={availability} />
+        <ResourceSelector
+          isLoading={loading}
+          slots={(isValidDateFilter && availability?.findAvailability) || []}
+        />
 
         <Button
           onClick={() => {
