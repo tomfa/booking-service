@@ -20,6 +20,7 @@ const Home: NextPage = () => {
   const [selectableResourceIds, setSelectableResourceIds] = useState<string[]>(
     []
   );
+  const today = useMemo(() => new Date(), []);
   const [fromTime, setFromTime] = useState<Date>(new Date());
   const [toTime, setToTime] = useState<Date>(
     new Date(Date.now() + 30 * 24 * 3600 * 1000)
@@ -45,6 +46,12 @@ const Home: NextPage = () => {
     const routerResourceIds = getRouterValueList(router.query['resources']);
     setSelectableResourceIds(routerResourceIds);
   }, [router.query, router.isReady]);
+
+  useEffect(() => {
+    if (toTime < fromTime) {
+      setToTime(fromTime);
+    }
+  }, [toTime, fromTime, setToTime]);
 
   useEffect(() => {
     if (!selectableResourceIds) {
@@ -108,10 +115,21 @@ const Home: NextPage = () => {
             <>
               <h3 className={styles.label}>Fra dato</h3>
               <DateTimePicker
-                startDate={fromTime}
+                startDate={today}
                 intervalMinutes={15}
                 schedule={schedule}
                 onChange={setFromTime}
+              />
+            </>
+          )}
+          {schedule && fromTime && (
+            <>
+              <h3 className={styles.label}>Til dato</h3>
+              <DateTimePicker
+                startDate={fromTime}
+                intervalMinutes={15}
+                schedule={schedule}
+                onChange={setToTime}
               />
             </>
           )}
