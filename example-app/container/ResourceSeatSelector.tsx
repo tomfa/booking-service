@@ -1,6 +1,6 @@
 import { Spinner } from '../components/Spinner';
 import { Resource, TimeSlot } from '../graphql/generated/types';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { SeatSelectInput } from '../components/SeatSelectInput';
 import { findContinouslyAvailableSeats } from '../utils/availability.utils';
 
@@ -30,6 +30,12 @@ export const ResourceSeatSelector = (props: ResourceSelectorProps) => {
     (seat: number) => availableSeats.includes(seat),
     [availableSeats]
   );
+  useEffect(() => {
+    const allowedSeatsToSelect = props.selectedSeats.filter(isAvailable);
+    if (allowedSeatsToSelect.length !== props.selectedSeats.length) {
+      props.setSelectedSeats(allowedSeatsToSelect);
+    }
+  }, [isAvailable, props, props.selectedSeats]);
 
   const onChangeChecked = useCallback(
     (checked: boolean, seat: number) => {
