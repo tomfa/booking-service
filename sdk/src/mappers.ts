@@ -38,7 +38,7 @@ export const fromGQLBooking = (booking: GQLBooking): Booking => {
     durationMinutes,
     userId: booking.userId || '',
     comment: booking.comment || '',
-    seatNumber: booking.seatNumber,
+    seatNumbers: booking.seatNumbers,
   };
 };
 

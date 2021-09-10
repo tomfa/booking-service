@@ -10,5 +10,5 @@ export class Booking {
   end: Date;
   canceled: boolean;
   comment?: string;
-  seatNumber?: number;
+  seatNumbers: number[];
 }

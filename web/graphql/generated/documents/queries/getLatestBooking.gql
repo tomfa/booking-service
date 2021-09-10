@@ -7,6 +7,6 @@ query getLatestBooking($filterBookings: FindBookingInput!){
         end
         canceled
         comment
-        seatNumber
+        seatNumbers
     }
 }

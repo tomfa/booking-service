@@ -25,7 +25,9 @@ export const getAvailableSeatNumbers = async (
       ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
     );
   }
-  const reservedSeatNumbers = overLappingBookings.map(b => b.seatNumber);
+  const reservedSeatNumbers = overLappingBookings
+    .map(b => b.seatNumbers)
+    .reduce((all, bookingSeats) => all.concat(bookingSeats), []);
   const allSeatNumbers = generateSeatNumbersForResource(resource);
   return allSeatNumbers.filter(num => !reservedSeatNumbers.includes(num));
 };

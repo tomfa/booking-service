@@ -140,25 +140,19 @@ async function addBooking(
   }
   const seatNumbers = seatNumbersToBook || [minArray(availableSeatNumbers)];
 
-  const bookings = await Promise.all(
-    seatNumbers.map(async seatNumber => {
-      const args = {
-        id: booking.id,
-        customerId: dbResource.customerId,
-        canceled: false,
-        comment: data.comment || null,
-        resourceId: data.resourceId,
-        userId: data.userId || null,
-        start: startTime,
-        end: endTime,
-        seatNumber,
-      };
-      const dbBooking = await db.booking.create(args);
-      return fromDBBooking(dbBooking);
-    })
-  );
-
-  return bookings[0]; // TODO: Hehe
+  const args = {
+    id: booking.id,
+    customerId: dbResource.customerId,
+    canceled: false,
+    comment: data.comment || null,
+    resourceId: data.resourceId,
+    userId: data.userId || null,
+    start: startTime,
+    end: endTime,
+    seatNumbers,
+  };
+  const dbBooking = await db.booking.create(args);
+  return fromDBBooking(dbBooking);
 }
 
 export default addBooking;

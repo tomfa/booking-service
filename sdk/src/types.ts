@@ -51,7 +51,7 @@ export type Booking = {
   end: Date;
   canceled: boolean;
   comment: string;
-  seatNumber: number;
+  seatNumbers: number[];
 };
 
 export type CreateBookingArgs = Omit<

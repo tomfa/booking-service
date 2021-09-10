@@ -34,7 +34,7 @@ export const reduceAvailability = (
           ...slot,
           availableSeats: slot.availableSeats - 1,
           seatsAvailable: slot.seatsAvailable.filter(
-            s => s !== booking.seatNumber
+            s => !booking.seatNumbers.includes(s)
           ),
         };
       }

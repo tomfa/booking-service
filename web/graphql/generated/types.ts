@@ -62,7 +62,7 @@ export type Booking = {
   end: Scalars['Int'];
   canceled: Scalars['Boolean'];
   comment?: Maybe<Scalars['String']>;
-  seatNumber?: Maybe<Scalars['Int']>;
+  seatNumbers?: Maybe<Array<Scalars['Int']>>;
 };
 
 export type Customer = {
@@ -333,7 +333,7 @@ export type AddBookingMutation = (
   { __typename?: 'Mutation' }
   & { addBooking?: Maybe<(
     { __typename?: 'Booking' }
-    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
   )> }
 );
 
@@ -418,7 +418,7 @@ export type CancelBookingMutation = (
   { __typename?: 'Mutation' }
   & { cancelBooking?: Maybe<(
     { __typename?: 'Booking' }
-    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
   )> }
 );
 
@@ -517,7 +517,7 @@ export type SetBookingCommentMutation = (
   { __typename?: 'Mutation' }
   & { setBookingComment?: Maybe<(
     { __typename?: 'Booking' }
-    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
   )> }
 );
 
@@ -601,7 +601,7 @@ export type FindBookingsQuery = (
   { __typename?: 'Query' }
   & { findBookings?: Maybe<Array<(
     { __typename?: 'Booking' }
-    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
   )>> }
 );
 
@@ -672,7 +672,7 @@ export type GetBookingByIdQuery = (
   { __typename?: 'Query' }
   & { getBookingById?: Maybe<(
     { __typename?: 'Booking' }
-    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
   )> }
 );
 
@@ -724,7 +724,7 @@ export type GetLatestBookingQuery = (
   { __typename?: 'Query' }
   & { getLatestBooking?: Maybe<(
     { __typename?: 'Booking' }
-    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
   )> }
 );
 
@@ -809,7 +809,7 @@ export const AddBookingDocument = gql`
     end
     canceled
     comment
-    seatNumber
+    seatNumbers
   }
 }
     `;
@@ -1020,7 +1020,7 @@ export const CancelBookingDocument = gql`
     end
     canceled
     comment
-    seatNumber
+    seatNumbers
   }
 }
     `;
@@ -1271,7 +1271,7 @@ export const SetBookingCommentDocument = gql`
     end
     canceled
     comment
-    seatNumber
+    seatNumbers
   }
 }
     `;
@@ -1480,7 +1480,7 @@ export const FindBookingsDocument = gql`
     end
     canceled
     comment
-    seatNumber
+    seatNumbers
   }
 }
     `;
@@ -1651,7 +1651,7 @@ export const GetBookingByIdDocument = gql`
     end
     canceled
     comment
-    seatNumber
+    seatNumbers
   }
 }
     `;
@@ -1819,7 +1819,7 @@ export const GetLatestBookingDocument = gql`
     end
     canceled
     comment
-    seatNumber
+    seatNumbers
   }
 }
     `;

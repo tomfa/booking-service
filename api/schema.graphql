@@ -77,7 +77,7 @@ type Booking {
     end: Int!
     canceled: Boolean!
     comment: String
-    seatNumber: Int
+    seatNumbers: [Int!]
 }
 
 input FindBookingInput {

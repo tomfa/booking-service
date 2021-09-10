@@ -7,6 +7,6 @@ mutation addBooking($addBookingInput: AddBookingInput!){
         end
         canceled
         comment
-        seatNumber
+        seatNumbers
     }
 }

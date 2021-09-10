@@ -42,12 +42,13 @@ const dummyBookingInput: CreateBookingArgs = {
   start: new Date('2021-05-08T13:30:00Z'),
 };
 
-const dummyBooking: Omit<Booking, 'id' | 'seatNumber'> = {
+const dummyBooking: Omit<Booking, 'id' | 'seatNumbers'> = {
   ...dummyBookingInput,
   end: new Date('2021-05-08T14:30:00Z'),
   durationMinutes: 60,
   canceled: false,
   comment: '',
+  userId: '',
 };
 const dummyResourceWithSchedule = dummyResource;
 
@@ -599,16 +600,16 @@ describe('BookingAPI', () => {
       expect(response).toEqual({
         ...booking,
         id: response.id,
-        seatNumber: booking.seatNumber + 1,
+        seatNumbers: [booking.seatNumbers[0] + 1],
       });
       expect(response.id).not.toEqual(booking.id);
     });
     it('increments seatNumber from 0 to Resource.seats', async () => {
-      expect(booking.seatNumber).toBe(0);
+      expect(booking.seatNumbers).toEqual([0]);
       const secondBooking = await api.addBooking(dummyBookingInput);
       const thirdBooking = await api.addBooking(dummyBookingInput);
-      expect(secondBooking.seatNumber).toBe(1);
-      expect(thirdBooking.seatNumber).toBe(2);
+      expect(secondBooking.seatNumbers).toEqual([1]);
+      expect(thirdBooking.seatNumbers).toEqual([2]);
     });
     it('sets duration to equal resource.slotDuration', async () => {
       const response = await api.addBooking(dummyBookingInput);

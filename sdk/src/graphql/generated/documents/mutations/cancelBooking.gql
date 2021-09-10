@@ -7,6 +7,6 @@ mutation cancelBooking($id: String!){
         end
         canceled
         comment
-        seatNumber
+        seatNumbers
     }
 }
