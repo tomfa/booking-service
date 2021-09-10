@@ -1,13 +1,17 @@
 import React from 'react';
 import styles from './Button.module.scss';
 
-export const Button: React.FC<{ onClick: () => void; disabled?: boolean }> = ({
-  onClick,
-  disabled = false,
-  children,
-}) => {
+export const Button: React.FC<{
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
+  type?: 'button' | 'submit';
+}> = ({ onClick, disabled = false, children, type = 'button' }) => {
   return (
-    <button className={styles.button} onClick={onClick} disabled={disabled}>
+    <button
+      className={styles.button}
+      onClick={onClick}
+      disabled={disabled}
+      type={type}>
       {children}
     </button>
   );

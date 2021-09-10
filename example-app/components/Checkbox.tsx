@@ -16,7 +16,12 @@ export const Checkbox: React.FC<CheckboxProps> = (props: CheckboxProps) => {
         props.setChecked(!props.checked);
       }}>
       <CheckBoxIcon checked={props.checked} />
-      <input type="checkbox" {...props} className={styles.hiddenInput} />
+      <input
+        type="checkbox"
+        {...props}
+        className={styles.hiddenInput}
+        readOnly
+      />
     </button>
   );
 };

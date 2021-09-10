@@ -3,11 +3,12 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import { Dropdown } from '../components/Dropdown';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DisplayError } from '../components/DisplayError';
 import { Button } from '../components/Button';
 import { getRouterValueList } from '../utils/router.utils';
 import {
+  useAddBookingMutation,
   useFindAvailabilityLazyQuery,
   useFindResourcesLazyQuery,
 } from '../graphql/generated/types';
@@ -38,7 +39,8 @@ const Home: NextPage = () => {
       loading: availabilityLoading,
       error: availabilityError,
     },
-  ] = useFindAvailabilityLazyQuery();
+  ] = useFindAvailabilityLazyQuery({ fetchPolicy: 'network-only' });
+  const [addBooking, newBookingResult] = useAddBookingMutation();
 
   useEffect(() => {
     if (!router.isReady) {
@@ -66,18 +68,25 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (!selectableResourceIds || !isValidDateFilter) {
+      console.log('isValidDateFilter', isValidDateFilter);
       return;
     }
-    fetchAvailability({
-      variables: {
-        filterAvailability: {
-          resourceIds: selectableResourceIds,
-          from: toGQLDate(fromTime),
-          to: toGQLDate(toTime),
-        },
+    console.log('Gonna fetch availability!');
+    const variables = {
+      filterAvailability: {
+        resourceIds: selectableResourceIds,
+        from: toGQLDate(fromTime),
+        to: toGQLDate(toTime),
       },
-    });
-  }, [selectableResourceIds, fetchAvailability, isValidDateFilter]);
+    };
+    fetchAvailability({ variables });
+  }, [
+    selectableResourceIds,
+    fetchAvailability,
+    isValidDateFilter,
+    fromTime,
+    toTime,
+  ]);
 
   const loading = useMemo(
     () => resourcesLoading || !router.isReady || availabilityLoading,
@@ -102,6 +111,27 @@ const Home: NextPage = () => {
   const schedule = useMemo(() => resources?.findResources?.[0]?.schedule, [
     resources,
   ]);
+
+  const onSubmit = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      if (selectableResourceIds.length < 1 || !isValidDateFilter) {
+        return;
+      }
+      const addBookingInput = {
+        resourceId: selectableResourceIds[0],
+        start: toGQLDate(toTime),
+        end: toGQLDate(fromTime),
+        seatNumber: 0, // TODO
+      };
+      await addBooking({
+        variables: {
+          addBookingInput,
+        },
+      });
+    },
+    [selectableResourceIds, isValidDateFilter, toTime, fromTime, addBooking]
+  );
 
   if (error) {
     return <DisplayError>{error}</DisplayError>;
@@ -152,10 +182,9 @@ const Home: NextPage = () => {
         />
 
         <Button
-          onClick={() => {
-            console.log('book!');
-          }}
-          disabled={loading}>
+          type={'submit'}
+          onClick={onSubmit}
+          disabled={loading || !isValidDateFilter || availabilityLoading}>
           Reserver
         </Button>
       </main>
