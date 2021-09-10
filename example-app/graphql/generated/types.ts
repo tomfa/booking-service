@@ -204,9 +204,9 @@ export type MutationUpdateResourceArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  findAvailability?: Maybe<Array<Maybe<TimeSlot>>>;
-  findBookings?: Maybe<Array<Maybe<Booking>>>;
-  findResources?: Maybe<Array<Maybe<Resource>>>;
+  findAvailability?: Maybe<Array<TimeSlot>>;
+  findBookings?: Maybe<Array<Booking>>;
+  findResources?: Maybe<Array<Resource>>;
   getBookedDuration?: Maybe<BookedDuration>;
   getBookingById?: Maybe<Booking>;
   getCustomerByEmail?: Maybe<Customer>;
@@ -415,21 +415,21 @@ export type FindAvailabilityQueryVariables = Exact<{
 }>;
 
 
-export type FindAvailabilityQuery = { __typename?: 'Query', findAvailability?: Maybe<Array<Maybe<{ __typename?: 'TimeSlot', availableSeats: number, seatsAvailable: Array<number>, start: number, end: number }>>> };
+export type FindAvailabilityQuery = { __typename?: 'Query', findAvailability?: Maybe<Array<{ __typename?: 'TimeSlot', availableSeats: number, seatsAvailable: Array<number>, start: number, end: number }>> };
 
 export type FindBookingsQueryVariables = Exact<{
   filterBookings: FindBookingInput;
 }>;
 
 
-export type FindBookingsQuery = { __typename?: 'Query', findBookings?: Maybe<Array<Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumber?: Maybe<number> }>>> };
+export type FindBookingsQuery = { __typename?: 'Query', findBookings?: Maybe<Array<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumber?: Maybe<number> }>> };
 
 export type FindResourcesQueryVariables = Exact<{
   filterResource: FindResourceInput;
 }>;
 
 
-export type FindResourcesQuery = { __typename?: 'Query', findResources?: Maybe<Array<Maybe<{ __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } }>>> };
+export type FindResourcesQuery = { __typename?: 'Query', findResources?: Maybe<Array<{ __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } }>> };
 
 export type GetBookedDurationQueryVariables = Exact<{
   filterBookings: FindBookingInput;

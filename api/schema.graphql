@@ -159,9 +159,9 @@ type Query {
     getCustomerByIssuer(issuer: String!): Customer
     getCustomerByEmail(email: String!): Customer
     getCustomerById(id: String!): Customer
-    findResources(filterResource: FindResourceInput!): [Resource]
-    findBookings(filterBookings: FindBookingInput!): [Booking]
-    findAvailability(filterAvailability: FindAvailabilityInput!): [TimeSlot]
+    findResources(filterResource: FindResourceInput!): [Resource!]
+    findBookings(filterBookings: FindBookingInput!): [Booking!]
+    findAvailability(filterAvailability: FindAvailabilityInput!): [TimeSlot!]
     getNextAvailable(id: String!, afterDate: Int): TimeSlot
     getLatestBooking(filterBookings: FindBookingInput!): Booking
     getBookedDuration(filterBookings: FindBookingInput!): BookedDuration

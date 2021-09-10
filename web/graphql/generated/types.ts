@@ -210,9 +210,9 @@ export type Query = {
   getCustomerByIssuer?: Maybe<Customer>;
   getCustomerByEmail?: Maybe<Customer>;
   getCustomerById?: Maybe<Customer>;
-  findResources?: Maybe<Array<Maybe<Resource>>>;
-  findBookings?: Maybe<Array<Maybe<Booking>>>;
-  findAvailability?: Maybe<Array<Maybe<TimeSlot>>>;
+  findResources?: Maybe<Array<Resource>>;
+  findBookings?: Maybe<Array<Booking>>;
+  findAvailability?: Maybe<Array<TimeSlot>>;
   getNextAvailable?: Maybe<TimeSlot>;
   getLatestBooking?: Maybe<Booking>;
   getBookedDuration?: Maybe<BookedDuration>;
@@ -585,10 +585,10 @@ export type FindAvailabilityQueryVariables = Exact<{
 
 export type FindAvailabilityQuery = (
   { __typename?: 'Query' }
-  & { findAvailability?: Maybe<Array<Maybe<(
+  & { findAvailability?: Maybe<Array<(
     { __typename?: 'TimeSlot' }
     & Pick<TimeSlot, 'availableSeats' | 'seatsAvailable' | 'start' | 'end'>
-  )>>> }
+  )>> }
 );
 
 export type FindBookingsQueryVariables = Exact<{
@@ -598,10 +598,10 @@ export type FindBookingsQueryVariables = Exact<{
 
 export type FindBookingsQuery = (
   { __typename?: 'Query' }
-  & { findBookings?: Maybe<Array<Maybe<(
+  & { findBookings?: Maybe<Array<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
-  )>>> }
+  )>> }
 );
 
 export type FindResourcesQueryVariables = Exact<{
@@ -611,7 +611,7 @@ export type FindResourcesQueryVariables = Exact<{
 
 export type FindResourcesQuery = (
   { __typename?: 'Query' }
-  & { findResources?: Maybe<Array<Maybe<(
+  & { findResources?: Maybe<Array<(
     { __typename?: 'Resource' }
     & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
     & { schedule: (
@@ -646,7 +646,7 @@ export type FindResourcesQuery = (
         ) }
       )>> }
     ) }
-  )>>> }
+  )>> }
 );
 
 export type GetBookedDurationQueryVariables = Exact<{
