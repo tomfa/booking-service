@@ -185,6 +185,9 @@ const Home: NextPage = () => {
           slots={(isValidDateFilter && availability?.findAvailability) || []}
         />
 
+        {!!addBookingError && (
+          <DisplayError>{addBookingError.message}</DisplayError>
+        )}
         {!!addBookingData?.addBooking && (
           <BookingConfirmation booking={addBookingData.addBooking} />
         )}
