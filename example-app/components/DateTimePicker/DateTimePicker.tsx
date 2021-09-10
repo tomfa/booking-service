@@ -52,7 +52,7 @@ const DateTimePicker = ({
   };
   const updateExcludedDays = () => {
     const closedDays = Object.values(Weekday).filter(
-      w => !Object.keys(schedule).includes(w)
+      w => !Object.keys(schedule).includes(w) || !schedule[w].start
     );
     setExcludeDays(closedDays);
   };
