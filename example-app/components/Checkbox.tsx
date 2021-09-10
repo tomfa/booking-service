@@ -8,12 +8,15 @@ type CheckboxProps = {
   checked: boolean;
   className?: string;
 };
-export const Checkbox: React.FC<CheckboxProps> = (props: CheckboxProps) => {
+export const Checkbox: React.FC<CheckboxProps> = ({
+  setChecked,
+  ...props
+}: CheckboxProps) => {
   return (
     <button
       className={[styles.container, props.className || ''].join(' ')}
       onClick={() => {
-        props.setChecked(!props.checked);
+        setChecked(!props.checked);
       }}>
       <CheckBoxIcon checked={props.checked} />
       <input

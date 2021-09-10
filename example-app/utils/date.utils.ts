@@ -169,3 +169,21 @@ export const toTimeStamp = (dayMinutes: number | string): TimeStamp => {
     minute,
   };
 };
+
+export const addMinutes = (time: TimeStamp, minutes: number): TimeStamp => {
+  let hoursToAdd = Math.floor(minutes / 60);
+  let minutsToAdd = minutes % 60;
+  if (minutes + time.minute >= 60) {
+    hoursToAdd += 1;
+    minutsToAdd -= 60;
+  }
+
+  if (hoursToAdd + time.hour >= 24) {
+    // What to do?
+    return { hour: 23, minute: 59 };
+  }
+  return {
+    hour: time.hour + hoursToAdd,
+    minute: time.minute + minutsToAdd,
+  };
+};

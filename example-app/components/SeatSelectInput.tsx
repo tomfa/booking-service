@@ -1,13 +1,17 @@
-import { useState } from 'react';
 import { Checkbox } from './Checkbox';
 import styles from './SeatSelectInput.module.scss';
 
-export const SeatSelectInput = (props: {
+type SeatSelectInputProps = {
   seatNumber: number;
   available: boolean;
   checked: boolean;
   setChecked: (checked: boolean) => void;
-}) => {
+};
+export const SeatSelectInput = ({
+  setChecked,
+  available,
+  ...props
+}: SeatSelectInputProps) => {
   const inputId = String(props.seatNumber);
   return (
     <div className={styles.container}>
@@ -15,15 +19,15 @@ export const SeatSelectInput = (props: {
         Sone {props.seatNumber}
       </label>
       <div className={styles.rowLine} />
-      {props.available && (
+      {available && (
         <Checkbox
           className={styles.checkbox}
           id={inputId}
           checked={props.checked}
-          setChecked={props.setChecked}
+          setChecked={setChecked}
         />
       )}
-      {!props.available && <p className={styles.checkbox}>Ikke ledig</p>}
+      {!available && <p className={styles.checkbox}>Ikke ledig</p>}
     </div>
   );
 };

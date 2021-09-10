@@ -15,6 +15,7 @@ import { ResourceSeatSelector } from '../container/ResourceSeatSelector';
 import DateTimePicker from '../components/DateTimePicker/DateTimePicker';
 import { Spinner } from '../components/Spinner';
 import { toGQLDate } from '../utils/date.utils';
+import { ScheduleCalendar } from '../components/ScheduleCalendar';
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -64,10 +65,8 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (!urlResourceId || !isValidDateFilter) {
-      console.log('isValidDateFilter', isValidDateFilter);
       return;
     }
-    console.log('Gonna fetch availability!');
     const variables = {
       filterAvailability: {
         resourceIds: [urlResourceId],
@@ -141,6 +140,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
+        <ScheduleCalendar schedule={resource?.getResourceById?.schedule} />
         <h2 className={styles.header}>Når vil du reservere prosjektareal?</h2>
         <div>
           {resourceLoading && <Spinner />}
@@ -149,7 +149,6 @@ const Home: NextPage = () => {
               <h3 className={styles.label}>Fra dato</h3>
               <DateTimePicker
                 startDate={today}
-                intervalMinutes={15}
                 schedule={schedule}
                 onChange={setFromTime}
               />
@@ -160,9 +159,9 @@ const Home: NextPage = () => {
               <h3 className={styles.label}>Til dato</h3>
               <DateTimePicker
                 startDate={fromTime}
-                intervalMinutes={15}
                 schedule={schedule}
                 onChange={setToTime}
+                isEndTime
               />
             </>
           )}

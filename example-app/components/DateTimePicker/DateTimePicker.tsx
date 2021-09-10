@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { getDayOfWeek, Weekday, TimeStamp } from '../../utils/date.utils';
+import {
+  getDayOfWeek,
+  Weekday,
+  TimeStamp,
+  addMinutes,
+} from '../../utils/date.utils';
 
 import styles from './DateTimePicker.module.scss';
 import DatePicker from './DatePicker';
@@ -12,10 +17,10 @@ type OpeningHours = HourSchedule;
 interface Props {
   startDate?: Date;
   endDate?: Date;
-  intervalMinutes?: number;
   schedule: Schedule;
   onChange: (selectedDateTime: Date) => void;
   className?: string;
+  isEndTime?: boolean;
 }
 
 const DateTimePicker = ({
@@ -24,7 +29,7 @@ const DateTimePicker = ({
   className = '',
   startDate,
   endDate,
-  intervalMinutes,
+  isEndTime,
 }: Props) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<TimeStamp | undefined>();
@@ -62,14 +67,24 @@ const DateTimePicker = ({
   useEffect(updateExcludedDays, [schedule]);
 
   const fromTime: TimeStamp = useMemo(() => {
-    const [hour, minute] = '00:00'.split(':');
-    return { hour: parseInt(hour), minute: parseInt(minute) };
-  }, [dayOpeningHours]);
+    const start = dayOpeningHours?.start || '00:00';
+    const [hour, minute] = start.split(':');
+    const timeStamp = { hour: parseInt(hour), minute: parseInt(minute) };
+    if (isEndTime) {
+      return addMinutes(timeStamp, dayOpeningHours?.slotIntervalMinutes || 0);
+    }
+    return timeStamp;
+  }, [dayOpeningHours?.slotIntervalMinutes, dayOpeningHours?.start, isEndTime]);
 
   const toTime: TimeStamp = useMemo(() => {
-    const [hour, minute] = '23:50'.split(':');
-    return { hour: parseInt(hour), minute: parseInt(minute) };
-  }, [dayOpeningHours]);
+    const end = dayOpeningHours?.end || '23:00';
+    const [hour, minute] = end.split(':');
+    const timeStamp = { hour: parseInt(hour), minute: parseInt(minute) };
+    if (isEndTime) {
+      return addMinutes(timeStamp, dayOpeningHours?.slotIntervalMinutes || 0);
+    }
+    return timeStamp;
+  }, [dayOpeningHours?.end, dayOpeningHours?.slotIntervalMinutes, isEndTime]);
 
   return (
     <div className={[styles.dateAndTimeWrapper, className].join(' ')}>
@@ -86,7 +101,7 @@ const DateTimePicker = ({
           fromTime={fromTime}
           toTime={toTime}
           selectedTime={selectedTime}
-          intervalMinutes={intervalMinutes}
+          intervalMinutes={dayOpeningHours.slotIntervalMinutes}
           onValueChange={setSelectedTime}
           className={styles.timePicker}
         />
