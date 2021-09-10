@@ -2,6 +2,7 @@ import { Spinner } from '../components/Spinner';
 import { Resource, TimeSlot } from '../graphql/generated/types';
 import { useCallback, useMemo } from 'react';
 import { SeatSelectInput } from '../components/SeatSelectInput';
+import { findContinouslyAvailableSeats } from '../utils/availability.utils';
 
 type ResourceSelectorProps = {
   start: Date;
@@ -23,8 +24,9 @@ export const ResourceSelector = (props: ResourceSelectorProps) => {
   const availableSeats = useMemo(() => findContinouslyAvailableSeats(props), [
     props,
   ]);
+  console.log('availableSeats', availableSeats);
   const isAvailable = useCallback(
-    (seat: number) => availableSeats.includes(seat) || seat % 2 === 0,
+    (seat: number) => availableSeats.includes(seat),
     [availableSeats]
   );
 
@@ -43,13 +45,4 @@ export const ResourceSelector = (props: ResourceSelectorProps) => {
       ))}
     </div>
   );
-};
-
-const findContinouslyAvailableSeats = ({
-  resource,
-  slots,
-  start,
-  end,
-}: ResourceSelectorProps): number[] => {
-  return [];
 };
