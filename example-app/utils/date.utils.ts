@@ -88,6 +88,8 @@ interface getDateOptionProps {
   excludeDays?: Array<Weekday>;
 }
 const DATE_FORMAT = 'dddd D. MMM';
+
+export const displayDate = (date: Date) => dayjs(date).format(DATE_FORMAT);
 export const getDateOptions = ({
   startDate,
   endDate,
@@ -148,6 +150,12 @@ export const asOption = (date: Date, format = DATE_FORMAT): Option => ({
   value: asStringValue(date),
   label: upperCaseFirstLetter(toDayJs(date).format(format)),
 });
+
+export const displayTime = (date: Date): string => {
+  const hour = dayjs(date).hour();
+  const minute = dayjs(date).minute();
+  return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+};
 
 export const timeStampAsOption = ({ hour, minute }: TimeStamp): Option => {
   const hourString = String(hour).padStart(2, '0');

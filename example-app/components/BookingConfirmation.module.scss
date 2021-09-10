@@ -1,0 +1,14 @@
+.container {
+  border: 1px solid black;
+  padding: 1.2rem;
+  margin-bottom: 1.2rem;
+
+  > p {
+    margin-top: 0;
+  }
+}
+
+.reference {
+  font-weight: normal;
+  font-size: 0.6em;
+}

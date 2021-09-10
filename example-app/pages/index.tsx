@@ -16,6 +16,7 @@ import DateTimePicker from '../components/DateTimePicker/DateTimePicker';
 import { Spinner } from '../components/Spinner';
 import { toGQLDate } from '../utils/date.utils';
 import { ScheduleCalendar } from '../components/ScheduleCalendar';
+import { BookingConfirmation } from '../components/BookingConfirmation';
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -37,7 +38,14 @@ const Home: NextPage = () => {
       error: availabilityError,
     },
   ] = useFindAvailabilityLazyQuery({ fetchPolicy: 'network-only' });
-  const [addBooking, newBookingResult] = useAddBookingMutation();
+  const [
+    addBooking,
+    {
+      data: addBookingData,
+      loading: addBookingLoading,
+      error: addBookingError,
+    },
+  ] = useAddBookingMutation();
 
   useEffect(() => {
     if (!router.isReady) {
@@ -177,8 +185,16 @@ const Home: NextPage = () => {
           slots={(isValidDateFilter && availability?.findAvailability) || []}
         />
 
-        <Button type={'submit'} onClick={onSubmit} disabled={!formValid}>
-          Reserver
+        {!!addBookingData?.addBooking && (
+          <BookingConfirmation booking={addBookingData.addBooking} />
+        )}
+
+        <Button
+          type={'submit'}
+          onClick={onSubmit}
+          disabled={!formValid || addBookingLoading}>
+          {addBookingLoading && <Spinner />}
+          {!addBookingLoading && 'Reserver'}
         </Button>
       </main>
     </div>
