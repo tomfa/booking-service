@@ -1,0 +1,43 @@
+.checkbox {
+  background-color: #f7efa6;
+  color: #272727;
+
+  position: relative;
+  font-size: 1.3rem;
+  font-weight: 200;
+  cursor: pointer;
+  font-family: inherit;
+  overflow: hidden;
+  transition: color .2s ease;
+  border: 1px solid #272727;
+  box-shadow: .25em .25em 0 #000;
+  padding: 1.1rem 2rem 1.2rem;
+  align-self: flex-start;
+}
+
+.hiddenInput {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.container {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  outline: inherit;
+
+  position: relative;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  user-select: none;
+}
+
+.hidden {
+  display: none;
+}
