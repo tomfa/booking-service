@@ -144,6 +144,9 @@ const Home: NextPage = () => {
         </div>
         <h2 className={styles.header}>Hvilke soner?</h2>
         <ResourceSelector
+          start={fromTime}
+          end={toTime}
+          resource={resources?.findResources?.[0]}
           isLoading={loading}
           slots={(isValidDateFilter && availability?.findAvailability) || []}
         />
