@@ -1,37 +1,32 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
-import { Dropdown } from '../components/Dropdown';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DisplayError } from '../components/DisplayError';
 import { Button } from '../components/Button';
-import { getRouterValueList } from '../utils/router.utils';
+import { getRouterValueString } from '../utils/router.utils';
 import {
   useAddBookingMutation,
   useFindAvailabilityLazyQuery,
-  useFindResourcesLazyQuery,
+  useGetResourceByIdLazyQuery,
 } from '../graphql/generated/types';
-import { ResourceSelector } from '../container/ResourceSelector';
+import { ResourceSeatSelector } from '../container/ResourceSeatSelector';
 import DateTimePicker from '../components/DateTimePicker/DateTimePicker';
 import { Spinner } from '../components/Spinner';
 import { toGQLDate } from '../utils/date.utils';
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const [selectableResourceIds, setSelectableResourceIds] = useState<string[]>(
-    []
-  );
+  const [urlResourceId, setUrlResourceId] = useState<string>();
   const today = useMemo(() => new Date(), []);
   const [fromTime, setFromTime] = useState<Date>(new Date());
-  const [toTime, setToTime] = useState<Date>(
-    new Date(Date.now() + 30 * 24 * 3600 * 1000)
-  );
+  const [toTime, setToTime] = useState<Date>(new Date());
   const isValidDateFilter = fromTime < toTime;
   const [
-    fetchResources,
-    { data: resources, loading: resourcesLoading, error: resourcesError },
-  ] = useFindResourcesLazyQuery();
+    fetchResource,
+    { data: resource, loading: resourceLoading, error: resourceError },
+  ] = useGetResourceByIdLazyQuery();
   const [
     fetchAvailability,
     {
@@ -47,8 +42,8 @@ const Home: NextPage = () => {
       return;
     }
 
-    const routerResourceIds = getRouterValueList(router.query['resources']);
-    setSelectableResourceIds(routerResourceIds);
+    const routerResourceIds = getRouterValueString(router.query['resource']);
+    setUrlResourceId(routerResourceIds);
   }, [router.query, router.isReady]);
 
   useEffect(() => {
@@ -58,68 +53,62 @@ const Home: NextPage = () => {
   }, [toTime, fromTime, setToTime]);
 
   useEffect(() => {
-    if (!selectableResourceIds) {
+    if (!urlResourceId) {
       return;
     }
-    fetchResources({
-      variables: { filterResource: { resourceIds: selectableResourceIds } },
+    fetchResource({
+      variables: { id: urlResourceId },
     });
-  }, [selectableResourceIds, fetchResources]);
+  }, [urlResourceId, fetchResource]);
 
   useEffect(() => {
-    if (!selectableResourceIds || !isValidDateFilter) {
+    if (!urlResourceId || !isValidDateFilter) {
       console.log('isValidDateFilter', isValidDateFilter);
       return;
     }
     console.log('Gonna fetch availability!');
     const variables = {
       filterAvailability: {
-        resourceIds: selectableResourceIds,
+        resourceIds: [urlResourceId],
         from: toGQLDate(fromTime),
         to: toGQLDate(toTime),
       },
     };
     fetchAvailability({ variables });
-  }, [
-    selectableResourceIds,
-    fetchAvailability,
-    isValidDateFilter,
-    fromTime,
-    toTime,
-  ]);
+  }, [urlResourceId, fetchAvailability, isValidDateFilter, fromTime, toTime]);
 
   const loading = useMemo(
-    () => resourcesLoading || !router.isReady || availabilityLoading,
-    [router.isReady, availabilityLoading, resourcesLoading]
+    () => resourceLoading || !router.isReady || availabilityLoading,
+    [router.isReady, availabilityLoading, resourceLoading]
   );
   const error = useMemo(() => {
     if (loading) {
       return undefined;
     }
-    if (!selectableResourceIds?.length) {
+    if (!urlResourceId?.length) {
       return 'Missing query variable "resource"';
     }
-    if (resourcesError) {
-      return resourcesError.message;
+    if (resourceError) {
+      return resourceError.message;
     }
     if (availabilityError) {
       return availabilityError.message;
     }
     return undefined;
-  }, [selectableResourceIds, loading, resourcesError, availabilityError]);
+  }, [urlResourceId, loading, resourceError, availabilityError]);
 
-  const schedule = useMemo(() => resources?.findResources?.[0]?.schedule, [
-    resources,
+  const schedule = useMemo(() => resource?.getResourceById?.schedule, [
+    resource,
   ]);
 
   const onSubmit = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (selectableResourceIds.length < 1 || !isValidDateFilter) {
+      if (!urlResourceId || !isValidDateFilter) {
         return;
       }
       const addBookingInput = {
-        resourceId: selectableResourceIds[0],
+        resourceId: urlResourceId,
         start: toGQLDate(toTime),
         end: toGQLDate(fromTime),
         seatNumber: 0, // TODO
@@ -130,7 +119,7 @@ const Home: NextPage = () => {
         },
       });
     },
-    [selectableResourceIds, isValidDateFilter, toTime, fromTime, addBooking]
+    [urlResourceId, isValidDateFilter, toTime, fromTime, addBooking]
   );
 
   if (error) {
@@ -148,7 +137,7 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <h2 className={styles.header}>Når vil du reservere prosjektareal?</h2>
         <div>
-          {resourcesLoading && <Spinner />}
+          {resourceLoading && <Spinner />}
           {schedule && (
             <>
               <h3 className={styles.label}>Fra dato</h3>
@@ -173,10 +162,10 @@ const Home: NextPage = () => {
           )}
         </div>
         <h2 className={styles.header}>Hvilke soner?</h2>
-        <ResourceSelector
+        <ResourceSeatSelector
           start={fromTime}
           end={toTime}
-          resource={resources?.findResources?.[0]}
+          resource={resource?.getResourceById}
           isLoading={loading}
           slots={(isValidDateFilter && availability?.findAvailability) || []}
         />

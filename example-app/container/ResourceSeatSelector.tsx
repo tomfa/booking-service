@@ -7,12 +7,12 @@ import { findContinouslyAvailableSeats } from '../utils/availability.utils';
 type ResourceSelectorProps = {
   start: Date;
   end: Date;
-  resource?: Resource;
+  resource?: Resource | null;
   isLoading: boolean;
   slots?: TimeSlot[];
 };
 
-export const ResourceSelector = (props: ResourceSelectorProps) => {
+export const ResourceSeatSelector = (props: ResourceSelectorProps) => {
   const numSeats = props.resource?.seats || 0;
   const seats = useMemo(
     () =>
@@ -24,7 +24,6 @@ export const ResourceSelector = (props: ResourceSelectorProps) => {
   const availableSeats = useMemo(() => findContinouslyAvailableSeats(props), [
     props,
   ]);
-  console.log('availableSeats', availableSeats);
   const isAvailable = useCallback(
     (seat: number) => availableSeats.includes(seat),
     [availableSeats]
