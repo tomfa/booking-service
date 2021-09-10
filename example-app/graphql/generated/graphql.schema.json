@@ -2069,9 +2069,13 @@
               "kind": "LIST",
               "name": null,
               "ofType": {
-                "kind": "OBJECT",
-                "name": "DateSchedule",
-                "ofType": null
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "DateSchedule",
+                  "ofType": null
+                }
               }
             },
             "isDeprecated": false,

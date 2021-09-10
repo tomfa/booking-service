@@ -293,7 +293,7 @@ export type Schedule = {
   fri: HourSchedule;
   sat: HourSchedule;
   sun: HourSchedule;
-  overriddenDates?: Maybe<Array<Maybe<DateSchedule>>>;
+  overriddenDates?: Maybe<Array<DateSchedule>>;
 };
 
 export type TimeSlot = {
@@ -382,14 +382,14 @@ export type AddResourceMutation = (
       ), sun: (
         { __typename?: 'HourSchedule' }
         & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
-      ), overriddenDates?: Maybe<Array<Maybe<(
+      ), overriddenDates?: Maybe<Array<(
         { __typename?: 'DateSchedule' }
         & Pick<DateSchedule, 'isoDate'>
         & { schedule: (
           { __typename?: 'HourSchedule' }
           & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
         ) }
-      )>>> }
+      )>> }
     ) }
   )> }
 );
@@ -494,14 +494,14 @@ export type DisableResourceMutation = (
       ), sun: (
         { __typename?: 'HourSchedule' }
         & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
-      ), overriddenDates?: Maybe<Array<Maybe<(
+      ), overriddenDates?: Maybe<Array<(
         { __typename?: 'DateSchedule' }
         & Pick<DateSchedule, 'isoDate'>
         & { schedule: (
           { __typename?: 'HourSchedule' }
           & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
         ) }
-      )>>> }
+      )>> }
     ) }
   )> }
 );
@@ -566,14 +566,14 @@ export type UpdateResourceMutation = (
       ), sun: (
         { __typename?: 'HourSchedule' }
         & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
-      ), overriddenDates?: Maybe<Array<Maybe<(
+      ), overriddenDates?: Maybe<Array<(
         { __typename?: 'DateSchedule' }
         & Pick<DateSchedule, 'isoDate'>
         & { schedule: (
           { __typename?: 'HourSchedule' }
           & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
         ) }
-      )>>> }
+      )>> }
     ) }
   )> }
 );
@@ -637,14 +637,14 @@ export type FindResourcesQuery = (
       ), sun: (
         { __typename?: 'HourSchedule' }
         & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
-      ), overriddenDates?: Maybe<Array<Maybe<(
+      ), overriddenDates?: Maybe<Array<(
         { __typename?: 'DateSchedule' }
         & Pick<DateSchedule, 'isoDate'>
         & { schedule: (
           { __typename?: 'HourSchedule' }
           & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
         ) }
-      )>>> }
+      )>> }
     ) }
   )>>> }
 );
@@ -774,14 +774,14 @@ export type GetResourceByIdQuery = (
       ), sun: (
         { __typename?: 'HourSchedule' }
         & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
-      ), overriddenDates?: Maybe<Array<Maybe<(
+      ), overriddenDates?: Maybe<Array<(
         { __typename?: 'DateSchedule' }
         & Pick<DateSchedule, 'isoDate'>
         & { schedule: (
           { __typename?: 'HourSchedule' }
           & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
         ) }
-      )>>> }
+      )>> }
     ) }
   )> }
 );

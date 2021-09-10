@@ -27,7 +27,7 @@ type Schedule {
     fri: HourSchedule!
     sat: HourSchedule!
     sun: HourSchedule!
-    overriddenDates: [DateSchedule]
+    overriddenDates: [DateSchedule!]
 }
 
 type Customer {
