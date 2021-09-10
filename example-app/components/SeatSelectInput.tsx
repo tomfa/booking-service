@@ -12,11 +12,11 @@ export const SeatSelectInput = ({
   available,
   ...props
 }: SeatSelectInputProps) => {
-  const inputId = String(props.seatNumber);
+  const inputId = `seatnumber-${props.seatNumber}`;
   return (
     <div className={styles.container}>
       <label htmlFor={inputId} className={styles.label}>
-        Sone {props.seatNumber}
+        Sone {props.seatNumber + 1}
       </label>
       <div className={styles.rowLine} />
       {available && (
