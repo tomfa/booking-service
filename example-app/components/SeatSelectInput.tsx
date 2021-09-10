@@ -5,9 +5,10 @@ import styles from './SeatSelectInput.module.scss';
 export const SeatSelectInput = (props: {
   seatNumber: number;
   available: boolean;
+  checked: boolean;
+  setChecked: (checked: boolean) => void;
 }) => {
   const inputId = String(props.seatNumber);
-  const [checked, setChecked] = useState(false);
   return (
     <div className={styles.container}>
       <label htmlFor={inputId} className={styles.label}>
@@ -18,8 +19,8 @@ export const SeatSelectInput = (props: {
         <Checkbox
           className={styles.checkbox}
           id={inputId}
-          checked={checked}
-          setChecked={setChecked}
+          checked={props.checked}
+          setChecked={props.setChecked}
         />
       )}
       {!props.available && <p className={styles.checkbox}>Ikke ledig</p>}

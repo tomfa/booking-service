@@ -10,6 +10,8 @@ type ResourceSelectorProps = {
   resource?: Resource | null;
   isLoading: boolean;
   slots?: TimeSlot[];
+  selectedSeats: number[];
+  setSelectedSeats: (seats: number[]) => void;
 };
 
 export const ResourceSeatSelector = (props: ResourceSelectorProps) => {
@@ -29,6 +31,17 @@ export const ResourceSeatSelector = (props: ResourceSelectorProps) => {
     [availableSeats]
   );
 
+  const onChangeChecked = useCallback(
+    (checked: boolean, seat: number) => {
+      if (!checked && props.selectedSeats.includes(seat)) {
+        props.setSelectedSeats(props.selectedSeats.filter(s => s !== seat));
+      } else if (checked && !props.selectedSeats.includes(seat)) {
+        props.setSelectedSeats(props.selectedSeats.concat([seat]));
+      }
+    },
+    [props]
+  );
+
   if (props.isLoading || !props.resource) {
     return <Spinner />;
   }
@@ -40,6 +53,8 @@ export const ResourceSeatSelector = (props: ResourceSelectorProps) => {
           key={seatNumber}
           seatNumber={seatNumber}
           available={isAvailable(seatNumber)}
+          checked={props.selectedSeats.includes(seatNumber)}
+          setChecked={checked => onChangeChecked(checked, seatNumber)}
         />
       ))}
     </div>

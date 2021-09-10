@@ -22,6 +22,7 @@ const Home: NextPage = () => {
   const today = useMemo(() => new Date(), []);
   const [fromTime, setFromTime] = useState<Date>(new Date());
   const [toTime, setToTime] = useState<Date>(new Date());
+  const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
   const isValidDateFilter = fromTime < toTime;
   const [
     fetchResource,
@@ -100,26 +101,31 @@ const Home: NextPage = () => {
   const schedule = useMemo(() => resource?.getResourceById?.schedule, [
     resource,
   ]);
+  const formValid =
+    urlResourceId &&
+    !loading &&
+    isValidDateFilter &&
+    !availabilityLoading &&
+    !!selectedSeats.length;
 
   const onSubmit = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (!urlResourceId || !isValidDateFilter) {
+      if (!formValid || !urlResourceId) {
         return;
       }
-      const addBookingInput = {
-        resourceId: urlResourceId,
-        start: toGQLDate(toTime),
-        end: toGQLDate(fromTime),
-        seatNumber: 0, // TODO
-      };
       await addBooking({
         variables: {
-          addBookingInput,
+          addBookingInput: {
+            resourceId: urlResourceId,
+            start: toGQLDate(toTime),
+            end: toGQLDate(fromTime),
+            seatNumbers: selectedSeats,
+          },
         },
       });
     },
-    [urlResourceId, isValidDateFilter, toTime, fromTime, addBooking]
+    [formValid, urlResourceId, toTime, fromTime, addBooking]
   );
 
   if (error) {
@@ -167,13 +173,12 @@ const Home: NextPage = () => {
           end={toTime}
           resource={resource?.getResourceById}
           isLoading={loading}
+          selectedSeats={selectedSeats}
+          setSelectedSeats={setSelectedSeats}
           slots={(isValidDateFilter && availability?.findAvailability) || []}
         />
 
-        <Button
-          type={'submit'}
-          onClick={onSubmit}
-          disabled={loading || !isValidDateFilter || availabilityLoading}>
+        <Button type={'submit'} onClick={onSubmit} disabled={!formValid}>
           Reserver
         </Button>
       </main>
