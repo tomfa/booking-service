@@ -62,7 +62,7 @@ export type Booking = {
   end: Scalars['Int'];
   canceled: Scalars['Boolean'];
   comment?: Maybe<Scalars['String']>;
-  seatNumbers?: Maybe<Array<Scalars['Int']>>;
+  seatNumbers: Array<Scalars['Int']>;
 };
 
 export type Customer = {

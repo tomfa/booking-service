@@ -60,7 +60,7 @@ export type Booking = {
   end: Scalars['Int'];
   id: Scalars['String'];
   resourceId: Scalars['String'];
-  seatNumbers?: Maybe<Array<Scalars['Int']>>;
+  seatNumbers: Array<Scalars['Int']>;
   start: Scalars['Int'];
   userId?: Maybe<Scalars['String']>;
 };
@@ -329,7 +329,7 @@ export type AddBookingMutationVariables = Exact<{
 }>;
 
 
-export type AddBookingMutation = { __typename?: 'Mutation', addBooking?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers?: Maybe<Array<number>> }> };
+export type AddBookingMutation = { __typename?: 'Mutation', addBooking?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number> }> };
 
 export type AddCustomerMutationVariables = Exact<{
   addCustomerInput: AddCustomerInput;
@@ -358,7 +358,7 @@ export type CancelBookingMutationVariables = Exact<{
 }>;
 
 
-export type CancelBookingMutation = { __typename?: 'Mutation', cancelBooking?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers?: Maybe<Array<number>> }> };
+export type CancelBookingMutation = { __typename?: 'Mutation', cancelBooking?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number> }> };
 
 export type DeleteCustomerMutationVariables = Exact<{
   id: Scalars['String'];
@@ -395,7 +395,7 @@ export type SetBookingCommentMutationVariables = Exact<{
 }>;
 
 
-export type SetBookingCommentMutation = { __typename?: 'Mutation', setBookingComment?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers?: Maybe<Array<number>> }> };
+export type SetBookingCommentMutation = { __typename?: 'Mutation', setBookingComment?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number> }> };
 
 export type UpdateCustomerMutationVariables = Exact<{
   updateCustomerInput: UpdateCustomerInput;
@@ -423,7 +423,7 @@ export type FindBookingsQueryVariables = Exact<{
 }>;
 
 
-export type FindBookingsQuery = { __typename?: 'Query', findBookings?: Maybe<Array<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers?: Maybe<Array<number>> }>> };
+export type FindBookingsQuery = { __typename?: 'Query', findBookings?: Maybe<Array<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number> }>> };
 
 export type FindResourcesQueryVariables = Exact<{
   filterResource: FindResourceInput;
@@ -444,7 +444,7 @@ export type GetBookingByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetBookingByIdQuery = { __typename?: 'Query', getBookingById?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers?: Maybe<Array<number>> }> };
+export type GetBookingByIdQuery = { __typename?: 'Query', getBookingById?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number> }> };
 
 export type GetCustomerByEmailQueryVariables = Exact<{
   email: Scalars['String'];
@@ -472,7 +472,7 @@ export type GetLatestBookingQueryVariables = Exact<{
 }>;
 
 
-export type GetLatestBookingQuery = { __typename?: 'Query', getLatestBooking?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers?: Maybe<Array<number>> }> };
+export type GetLatestBookingQuery = { __typename?: 'Query', getLatestBooking?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number> }> };
 
 export type GetNextAvailableQueryVariables = Exact<{
   id: Scalars['String'];
