@@ -1,6 +1,7 @@
 import { db } from '../db/client';
 
 import {
+  AddBookingInput,
   Booking,
   MutationAddBookingArgs,
   Resource,
@@ -32,6 +33,23 @@ const getEndTime = (start: Date, resource: Resource): Date => {
   return new Date(
     start.getTime() + openingHours.slotDurationMinutes * 60 * 1000
   );
+};
+
+const getDesiredSeatNumbers = (
+  input: AddBookingInput
+): undefined | number[] => {
+  if (input.seatNumber !== undefined) {
+    if (input.seatNumbers?.length) {
+      throw new GenericBookingError(
+        `You cannot specify both a specific seatNumber and list of seatNumbers`
+      );
+    }
+    return [input.seatNumber];
+  }
+  if (input.seatNumbers?.length) {
+    return input.seatNumbers;
+  }
+  return undefined;
 };
 
 async function addBooking(
@@ -98,36 +116,49 @@ async function addBooking(
     );
   }
 
-  const seatNumbers = await getAvailableSeatNumbers(db, resource, booking);
-  if (seatNumbers.length === 0) {
+  const availableSeatNumbers = await getAvailableSeatNumbers(
+    db,
+    resource,
+    booking
+  );
+  if (availableSeatNumbers.length === 0) {
     throw new GenericBookingError(`Unable to find available seat number`);
   }
-  const hasSpecifiedSeatNumber = typeof addBookingInput.seatNumber === 'number';
+  const seatNumbersToBook: undefined | number[] = getDesiredSeatNumbers(
+    addBookingInput
+  );
   if (
-    hasSpecifiedSeatNumber &&
-    !seatNumbers.includes(addBookingInput.seatNumber)
+    seatNumbersToBook &&
+    seatNumbersToBook.find(seat => !availableSeatNumbers.includes(seat))
   ) {
+    const unavailableSeat = seatNumbersToBook.find(
+      seat => !availableSeatNumbers.includes(seat)
+    );
     throw new GenericBookingError(
-      `Seat number ${addBookingInput.seatNumber} is not available`
+      `Seat number ${unavailableSeat} is not available`
     );
   }
-  const seatNumber =
-    (hasSpecifiedSeatNumber && addBookingInput.seatNumber) ||
-    minArray(seatNumbers);
+  const seatNumbers = seatNumbersToBook || [minArray(availableSeatNumbers)];
 
-  const args = {
-    id: booking.id,
-    customerId: dbResource.customerId,
-    canceled: false,
-    comment: data.comment || null,
-    resourceId: data.resourceId,
-    userId: data.userId || null,
-    start: startTime,
-    end: endTime,
-    seatNumber,
-  };
-  const dbBooking = await db.booking.create(args);
-  return fromDBBooking(dbBooking);
+  const bookings = await Promise.all(
+    seatNumbers.map(async seatNumber => {
+      const args = {
+        id: booking.id,
+        customerId: dbResource.customerId,
+        canceled: false,
+        comment: data.comment || null,
+        resourceId: data.resourceId,
+        userId: data.userId || null,
+        start: startTime,
+        end: endTime,
+        seatNumber,
+      };
+      const dbBooking = await db.booking.create(args);
+      return fromDBBooking(dbBooking);
+    })
+  );
+
+  return bookings[0]; // TODO: Hehe
 }
 
 export default addBooking;

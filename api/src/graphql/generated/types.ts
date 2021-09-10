@@ -19,6 +19,7 @@ export type AddBookingInput = {
   userId?: Maybe<Scalars['String']>;
   resourceId: Scalars['String'];
   seatNumber?: Maybe<Scalars['Int']>;
+  seatNumbers?: Maybe<Array<Scalars['Int']>>;
   start: Scalars['Int'];
   end?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
