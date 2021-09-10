@@ -1,10 +1,10 @@
-import { AppProps } from 'next/app';
 import { Provider as NextAuthProvider, useSession } from 'next-auth/client';
 
 import { ThemeProvider } from 'styled-components';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 
 import { useMemo } from 'react';
+import { AppProps } from 'next/app';
 import { MessageProvider } from '../providers/MessageProvider';
 
 import theme from '../styles/theme';
@@ -19,7 +19,7 @@ const getClient = (authorization?: string) => {
   });
 };
 
-const AuthedApp = ({ Component, pageProps }: AppProps) => {
+const AuthedApp = (props: AppProps) => {
   const [session] = useSession();
   const client = useMemo(() => getClient(session?.apiToken), [session]);
   return (
@@ -42,17 +42,17 @@ const AuthedApp = ({ Component, pageProps }: AppProps) => {
         }
       `}
       </style>
-      <Component {...pageProps} />
+      <props.Component {...props.pageProps} />
     </ApolloProvider>
   );
 };
 
-const App = ({ Component, pageProps }: AppProps) => {
+const App = (props: AppProps) => {
   return (
     <ThemeProvider theme={theme}>
       <MessageProvider>
-        <NextAuthProvider session={pageProps.session}>
-          <AuthedApp Component={Component} pageProps={pageProps} />
+        <NextAuthProvider session={props.pageProps.session}>
+          <AuthedApp {...props} />
         </NextAuthProvider>
       </MessageProvider>
     </ThemeProvider>
