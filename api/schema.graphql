@@ -45,6 +45,7 @@ type Resource {
     id: String!
     category: String
     label: String!
+    timezone: String!
     schedule: Schedule!
     seats: Int!
     enabled: Boolean!
@@ -58,6 +59,7 @@ input AddResourceInput {
     seats: Int!
     enabled: Boolean!
     schedule: [DateScheduleInput!]!
+    timezone: String
 }
 
 input FindResourceInput {

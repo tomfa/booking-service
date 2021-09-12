@@ -3,6 +3,7 @@ query getResourceById($id: String!){
         id
         category
         label
+        timezone
         schedule{
             mon{
                 start

@@ -75,7 +75,6 @@ async function addBooking(
     dbResource.customerId !== token.customerId &&
     !hasPermission(token, permissions.ALL)
   ) {
-    // TODO: Allow superuser to add bookings for any customer
     throw new BadRequestError(
       `Can not create booking on unknown resource ${data.resourceId}`,
       ErrorCode.RESOURCE_DOES_NOT_EXIST

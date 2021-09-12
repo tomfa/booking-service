@@ -3,6 +3,7 @@ mutation disableResource($id: String!){
         id
         category
         label
+        timezone
         schedule{
             mon{
                 start

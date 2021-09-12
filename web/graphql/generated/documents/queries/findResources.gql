@@ -3,6 +3,7 @@ query findResources($filterResource: FindResourceInput!){
         id
         category
         label
+        timezone
         schedule{
             mon{
                 start

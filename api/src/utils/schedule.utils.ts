@@ -8,13 +8,15 @@ import {
 import { getOpeningHoursForDate } from './resource.utils';
 import {
   fromGQLDate,
-  getIsoDate,
   isValidDate,
   msOfDay,
+  msUntilClosed,
+  setTimeOfDay,
   splitHourMinuteOfDay,
+  startOfNextDay,
   toGQLDate,
 } from './date.utils';
-import { HourMinuteString, IsoDate } from './types';
+import { HourMinuteString } from './types';
 import { validateHourMinute } from './validation.utils';
 import { GenericBookingError } from './errors';
 
@@ -61,48 +63,38 @@ export const splitHourMinute = (
 };
 const firstSlotOfDay = (
   openingHours: HourSchedule,
-  day: IsoDate
+  day: Date,
+  tz: string
 ): Date | undefined => {
   if (!isOpen(openingHours)) {
     return undefined;
   }
-  return new Date(`${day}T${openingHours.start}:00Z`);
+  return setTimeOfDay(day, tz, splitHourMinute(openingHours.start));
 };
 export const isBeforeOpeningHours = (
   openingHours: HourSchedule,
-  date: Date
+  date: Date,
+  tz: string
 ): boolean => {
   const { hour: startHour, minute: startMinute } = splitHourMinute(
     openingHours.start
   );
-  const { hour, minute } = splitHourMinuteOfDay(date);
+  const { hour, minute } = splitHourMinuteOfDay(date, tz);
   const bookingDiffFromOpeningMinutes =
     hour * 60 + minute - (startHour * 60 + startMinute);
   return bookingDiffFromOpeningMinutes < 0;
 };
-export const msUntilClosing = (
-  openingHours: HourSchedule,
-  date: Date
-): number => {
-  const { hour: endHour, minute: endMinute } = splitHourMinute(
-    openingHours.end
-  );
-  let closingTimeMs = endHour * 3600 * 1000 + endMinute * 60 * 1000;
-  const isMidnight = closingTimeMs === 0;
-  if (isMidnight) {
-    closingTimeMs = 24 * 3600 * 1000;
-  }
-  return closingTimeMs - msOfDay(date);
-};
+
 const diffMsUntilSlotStart = (
   openingHours: HourSchedule,
-  date: Date
+  date: Date,
+  tz: string
 ): number => {
   const { hour: startHour, minute: startMinute } = splitHourMinute(
     openingHours.start
   );
   const slotIntervalMs = openingHours.slotIntervalMinutes * 60 * 1000;
-  const dayMS = msOfDay(date);
+  const dayMS = msOfDay(date, tz);
   const bookingStartAsMsOfDay =
     startHour * 3600 * 1000 - startMinute * 60 * 1000;
   const diffFromStartOfBookingDay = dayMS - bookingStartAsMsOfDay;
@@ -112,15 +104,11 @@ const diffMsUntilSlotStart = (
   }
   return slotIntervalMs - offsetFromSlotStart;
 };
-const startOfNextDay = (date: Date): Date => {
-  const isoDay = getIsoDate(date);
-  const thisDay = new Date(`${isoDay}T00:00:00Z`);
-  return new Date(thisDay.getTime() + 24 * 3600 * 1000);
-};
+
 export const isOpen = (scheudle: HourSchedule): scheudle is HourSchedule => {
   return scheudle.start !== '';
 };
-const findNextValidTimeSlot = (
+export const findNextValidTimeSlotStart = (
   resource: Resource,
   date: Date,
   max: Date
@@ -136,22 +124,30 @@ const findNextValidTimeSlot = (
   }
   const openingHours = getOpeningHoursForDate(resource, date);
   if (!isOpen(openingHours)) {
-    return findNextValidTimeSlot(resource, startOfNextDay(date), max);
+    return findNextValidTimeSlotStart(
+      resource,
+      startOfNextDay(date, resource.timezone),
+      max
+    );
   }
-  if (isBeforeOpeningHours(openingHours, date)) {
-    return firstSlotOfDay(openingHours, getIsoDate(date));
+  if (isBeforeOpeningHours(openingHours, date, resource.timezone)) {
+    return firstSlotOfDay(openingHours, date, resource.timezone);
   }
-  const diffMsUntilSlot = diffMsUntilSlotStart(openingHours, date);
+  const diffMsUntilSlot = diffMsUntilSlotStart(
+    openingHours,
+    date,
+    resource.timezone
+  );
   if (diffMsUntilSlot > 0) {
-    return findNextValidTimeSlot(
+    return findNextValidTimeSlotStart(
       resource,
       new Date(date.getTime() + diffMsUntilSlot),
       max
     );
   }
-  if (msUntilClosing(openingHours, date) <= 0) {
-    const nextDay = startOfNextDay(date);
-    return findNextValidTimeSlot(resource, nextDay, max);
+  if (msUntilClosed(openingHours, date, resource.timezone) <= 0) {
+    const nextDay = startOfNextDay(date, resource.timezone);
+    return findNextValidTimeSlotStart(resource, nextDay, max);
   }
   return date;
 };
@@ -159,7 +155,6 @@ export const bookingSlotFitsInResourceSlots = (
   resource: Resource,
   booking: Booking
 ): boolean => {
-  const bookingDurationMinutes = (booking.end - booking.start) / 60;
   const openingHours = getOpeningHoursForDate(
     resource,
     fromGQLDate(booking.start)
@@ -172,7 +167,8 @@ export const bookingSlotFitsInResourceSlots = (
     openingHours.start
   );
   const { hour: bookHour, minute: bookMinute } = splitHourMinuteOfDay(
-    fromGQLDate(booking.start)
+    fromGQLDate(booking.start),
+    resource.timezone
   );
   const bookingDiffFromOpeningMinutes =
     bookHour * 60 + bookMinute - (startHour * 60 + startMinute);
@@ -212,11 +208,11 @@ export const constructAllSlots = ({
     return [];
   }
   const timeslots: TimeSlot[] = [];
-  let cursor = findNextValidTimeSlot(resource, from, to);
+  let cursor = findNextValidTimeSlotStart(resource, from, to);
   while (cursor && cursor < to) {
     const currentTimeSlot = convertDateToTimeSlot(resource, cursor);
     timeslots.push(currentTimeSlot);
-    cursor = findNextValidTimeSlot(
+    cursor = findNextValidTimeSlotStart(
       resource,
       new Date(cursor.getTime() + 1),
       to

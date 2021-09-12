@@ -44,6 +44,7 @@ export type AddResourceInput = {
   label: Scalars['String'];
   schedule: Array<DateScheduleInput>;
   seats: Scalars['Int'];
+  timezone?: Maybe<Scalars['String']>;
 };
 
 export type BookedDuration = {
@@ -283,6 +284,7 @@ export type Resource = {
   label: Scalars['String'];
   schedule: Schedule;
   seats: Scalars['Int'];
+  timezone: Scalars['String'];
 };
 
 export type Schedule = {
@@ -343,7 +345,7 @@ export type AddResourceMutationVariables = Exact<{
 }>;
 
 
-export type AddResourceMutation = { __typename?: 'Mutation', addResource?: Maybe<{ __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } }> };
+export type AddResourceMutation = { __typename?: 'Mutation', addResource?: Maybe<{ __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, timezone: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } }> };
 
 export type AddSigningKeyMutationVariables = Exact<{
   key: Scalars['String'];
@@ -387,7 +389,7 @@ export type DisableResourceMutationVariables = Exact<{
 }>;
 
 
-export type DisableResourceMutation = { __typename?: 'Mutation', disableResource?: Maybe<{ __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } }> };
+export type DisableResourceMutation = { __typename?: 'Mutation', disableResource?: Maybe<{ __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, timezone: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } }> };
 
 export type SetBookingCommentMutationVariables = Exact<{
   id: Scalars['String'];
@@ -409,7 +411,7 @@ export type UpdateResourceMutationVariables = Exact<{
 }>;
 
 
-export type UpdateResourceMutation = { __typename?: 'Mutation', updateResource?: Maybe<{ __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } }> };
+export type UpdateResourceMutation = { __typename?: 'Mutation', updateResource?: Maybe<{ __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, timezone: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } }> };
 
 export type FindAvailabilityQueryVariables = Exact<{
   filterAvailability: FindAvailabilityInput;
@@ -430,7 +432,7 @@ export type FindResourcesQueryVariables = Exact<{
 }>;
 
 
-export type FindResourcesQuery = { __typename?: 'Query', findResources?: Maybe<Array<{ __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } }>> };
+export type FindResourcesQuery = { __typename?: 'Query', findResources?: Maybe<Array<{ __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, timezone: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } }>> };
 
 export type GetBookedDurationQueryVariables = Exact<{
   filterBookings: FindBookingInput;
@@ -487,7 +489,7 @@ export type GetResourceByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetResourceByIdQuery = { __typename?: 'Query', getResourceById?: Maybe<{ __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } }> };
+export type GetResourceByIdQuery = { __typename?: 'Query', getResourceById?: Maybe<{ __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, timezone: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -581,6 +583,7 @@ export const AddResourceDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start
@@ -873,6 +876,7 @@ export const DisableResourceDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start
@@ -1044,6 +1048,7 @@ export const UpdateResourceDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start
@@ -1214,6 +1219,7 @@ export const FindResourcesDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start
@@ -1592,6 +1598,7 @@ export const GetResourceByIdDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start

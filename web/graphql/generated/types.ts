@@ -44,6 +44,7 @@ export type AddResourceInput = {
   seats: Scalars['Int'];
   enabled: Scalars['Boolean'];
   schedule: Array<DateScheduleInput>;
+  timezone?: Maybe<Scalars['String']>;
 };
 
 export type BookedDuration = {
@@ -280,6 +281,7 @@ export type Resource = {
   id: Scalars['String'];
   category?: Maybe<Scalars['String']>;
   label: Scalars['String'];
+  timezone: Scalars['String'];
   schedule: Schedule;
   seats: Scalars['Int'];
   enabled: Scalars['Boolean'];
@@ -359,7 +361,7 @@ export type AddResourceMutation = (
   { __typename?: 'Mutation' }
   & { addResource?: Maybe<(
     { __typename?: 'Resource' }
-    & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
+    & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
     & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
@@ -471,7 +473,7 @@ export type DisableResourceMutation = (
   { __typename?: 'Mutation' }
   & { disableResource?: Maybe<(
     { __typename?: 'Resource' }
-    & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
+    & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
     & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
@@ -543,7 +545,7 @@ export type UpdateResourceMutation = (
   { __typename?: 'Mutation' }
   & { updateResource?: Maybe<(
     { __typename?: 'Resource' }
-    & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
+    & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
     & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
@@ -614,7 +616,7 @@ export type FindResourcesQuery = (
   { __typename?: 'Query' }
   & { findResources?: Maybe<Array<(
     { __typename?: 'Resource' }
-    & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
+    & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
     & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
@@ -751,7 +753,7 @@ export type GetResourceByIdQuery = (
   { __typename?: 'Query' }
   & { getResourceById?: Maybe<(
     { __typename?: 'Resource' }
-    & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
+    & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
     & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
@@ -885,6 +887,7 @@ export const AddResourceDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start
@@ -1177,6 +1180,7 @@ export const DisableResourceDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start
@@ -1348,6 +1352,7 @@ export const UpdateResourceDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start
@@ -1518,6 +1523,7 @@ export const FindResourcesDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start
@@ -1896,6 +1902,7 @@ export const GetResourceByIdDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start

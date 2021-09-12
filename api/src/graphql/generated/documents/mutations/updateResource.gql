@@ -3,6 +3,7 @@ mutation updateResource($updateResourceInput: UpdateResourceInput!){
         id
         category
         label
+        timezone
         schedule{
             mon{
                 start

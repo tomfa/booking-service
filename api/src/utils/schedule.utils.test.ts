@@ -1,10 +1,14 @@
 import { Resource } from '../graphql/generated/types';
-import { constructAllSlots } from './schedule.utils';
+import {
+  constructAllSlots,
+  findNextValidTimeSlotStart,
+} from './schedule.utils';
 import { fromGQLDate } from './date.utils';
 
 const mondayResource: Resource = {
   id: 'alwaysopen',
   label: 'Chermics',
+  timezone: 'Africa/Accra',
   schedule: {
     fri: {
       end: '',
@@ -68,5 +72,17 @@ describe('constructAllSlots', () => {
     expect(slotStarts.length).toBe(
       (24 * 60) / mondayResource.schedule.mon.slotIntervalMinutes
     );
+  });
+});
+describe('findNextValidTimeSlot', () => {
+  test('constructs stuff', () => {
+    const from = new Date('2021-06-20T22:00:00.000Z'); // Sunday
+    const to = new Date('2021-06-23T01:00:00.000Z');
+    const nextTimeSlotStart = findNextValidTimeSlotStart(
+      mondayResource,
+      from,
+      to
+    );
+    expect(nextTimeSlotStart.toISOString()).toBe('2021-06-21T00:00:00.000Z');
   });
 });
