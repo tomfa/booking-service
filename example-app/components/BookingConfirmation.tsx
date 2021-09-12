@@ -17,7 +17,8 @@ export const BookingConfirmation = ({ booking }: BookingConfirmationProps) => {
     <div className={styles.container}>
       <p>
         Booking for sone {booking.seatNumbers.map(s => s + 1).join(', ')}{' '}
-        bekreftet{' '}
+        bekreftet
+        <br />
         <span>
           {displayDate(start)} kl. {displayTime(start)}
         </span>{' '}

@@ -20,12 +20,16 @@ import { BookingConfirmation } from '../components/BookingConfirmation';
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const [urlResourceId, setUrlResourceId] = useState<string>();
   const today = useMemo(() => new Date(), []);
   const [fromTime, setFromTime] = useState<Date>(new Date());
   const [toTime, setToTime] = useState<Date>(new Date());
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
   const isValidDateFilter = fromTime < toTime;
+  const urlResourceId = useMemo(
+    () => router.isReady && getRouterValueString(router.query['resource']),
+    [router]
+  );
+
   const [
     fetchResource,
     { data: resource, loading: resourceLoading, error: resourceError },
@@ -46,15 +50,6 @@ const Home: NextPage = () => {
       error: addBookingError,
     },
   ] = useAddBookingMutation();
-
-  useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
-
-    const routerResourceIds = getRouterValueString(router.query['resource']);
-    setUrlResourceId(routerResourceIds);
-  }, [router.query, router.isReady]);
 
   useEffect(() => {
     if (toTime < fromTime) {
@@ -96,7 +91,7 @@ const Home: NextPage = () => {
     if (resource?.getResourceById === null) {
       return `Unable to find resource ${urlResourceId}`;
     }
-    if (!urlResourceId?.length) {
+    if (!urlResourceId) {
       return 'Missing query variable "resource"';
     }
     if (resourceError) {
@@ -106,7 +101,7 @@ const Home: NextPage = () => {
       return availabilityError.message;
     }
     return undefined;
-  }, [urlResourceId, loading, resourceError, availabilityError]);
+  }, [resource, urlResourceId, loading, resourceError, availabilityError]);
 
   const schedule = useMemo(() => resource?.getResourceById?.schedule, [
     resource,
@@ -172,8 +167,8 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <ScheduleCalendar schedule={resource?.getResourceById?.schedule} />
         <h2 className={styles.header}>Når vil du reservere prosjektareal?</h2>
+        <ScheduleCalendar schedule={resource?.getResourceById?.schedule} />
         <div>
           {resourceLoading && <Spinner />}
           {schedule && (
