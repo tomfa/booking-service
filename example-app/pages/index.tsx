@@ -17,6 +17,7 @@ import { Spinner } from '../components/Spinner';
 import { toGQLDate } from '../utils/date.utils';
 import { ScheduleCalendar } from '../components/ScheduleCalendar';
 import { BookingConfirmation } from '../components/BookingConfirmation';
+import { FormError } from '@vailable/web/components/FormError';
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -50,12 +51,6 @@ const Home: NextPage = () => {
       error: addBookingError,
     },
   ] = useAddBookingMutation();
-
-  useEffect(() => {
-    if (toTime < fromTime) {
-      setToTime(fromTime);
-    }
-  }, [toTime, fromTime, setToTime]);
 
   useEffect(() => {
     if (!urlResourceId) {
@@ -193,6 +188,11 @@ const Home: NextPage = () => {
             </>
           )}
         </div>
+        {toTime < fromTime && (
+          <p>
+            <DisplayError>Til dato må være etter fra dato</DisplayError>
+          </p>
+        )}
         <h2 className={styles.header}>Hvilke soner?</h2>
         <ResourceSeatSelector
           start={fromTime}
