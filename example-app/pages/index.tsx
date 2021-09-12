@@ -93,6 +93,9 @@ const Home: NextPage = () => {
     if (loading) {
       return undefined;
     }
+    if (resource?.getResourceById === null) {
+      return `Unable to find resource ${urlResourceId}`;
+    }
     if (!urlResourceId?.length) {
       return 'Missing query variable "resource"';
     }
