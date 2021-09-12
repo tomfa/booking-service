@@ -162,7 +162,10 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h2 className={styles.header}>Når vil du reservere prosjektareal?</h2>
+        <h2 className={styles.header}>
+          Når vil du reservere{' '}
+          {resource?.getResourceById?.label?.toLowerCase() || 'prosjektareal'}?
+        </h2>
         <ScheduleCalendar schedule={resource?.getResourceById?.schedule} />
         <div>
           {resourceLoading && <Spinner />}
