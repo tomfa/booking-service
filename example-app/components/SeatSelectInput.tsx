@@ -6,6 +6,7 @@ type SeatSelectInputProps = {
   available: boolean;
   checked: boolean;
   setChecked: (checked: boolean) => void;
+  isLoading: boolean;
 };
 export const SeatSelectInput = ({
   setChecked,
@@ -13,21 +14,25 @@ export const SeatSelectInput = ({
   ...props
 }: SeatSelectInputProps) => {
   const inputId = `seatnumber-${props.seatNumber}`;
+  const displayCheckbox = props.isLoading || available;
   return (
     <div className={styles.container}>
       <label htmlFor={inputId} className={styles.label}>
         Sone {props.seatNumber + 1}
       </label>
       <div className={styles.rowLine} />
-      {available && (
+      {displayCheckbox && (
         <Checkbox
           className={styles.checkbox}
           id={inputId}
           checked={props.checked}
           setChecked={setChecked}
+          disabled={props.isLoading}
         />
       )}
-      {!available && <p className={styles.checkbox}>Ikke ledig</p>}
+      {!available && !props.isLoading && (
+        <p className={styles.checkbox}>Ikke ledig</p>
+      )}
     </div>
   );
 };

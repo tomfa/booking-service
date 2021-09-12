@@ -48,7 +48,7 @@ export const ResourceSeatSelector = (props: ResourceSelectorProps) => {
     [props]
   );
 
-  if (props.isLoading || !props.resource) {
+  if (!props.resource) {
     return <Spinner />;
   }
 
@@ -61,6 +61,7 @@ export const ResourceSeatSelector = (props: ResourceSelectorProps) => {
           available={isAvailable(seatNumber)}
           checked={props.selectedSeats.includes(seatNumber)}
           setChecked={checked => onChangeChecked(checked, seatNumber)}
+          isLoading={props.isLoading}
         />
       ))}
     </div>

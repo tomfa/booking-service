@@ -14,9 +14,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 }: CheckboxProps) => {
   return (
     <button
-      className={[styles.container, props.className || ''].join(' ')}
+      className={[
+        styles.container,
+        (props.disabled && styles.disabled) || '',
+        props.className || '',
+      ].join(' ')}
       onClick={() => {
-        setChecked(!props.checked);
+        !props.disabled && setChecked(!props.checked);
       }}>
       <CheckBoxIcon checked={props.checked} className={styles.checkbox} />
       <input
