@@ -105,6 +105,7 @@ async function addBooking(
     id: getId(data.id),
     start: toGQLDate(startTime),
     end: toGQLDate(endTime),
+    seatNumbers: [], // Irrelevant, will be overridden
   };
 
   if (!bookingSlotFitsInResourceSlots(resource, booking)) {
