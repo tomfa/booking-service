@@ -1,7 +1,7 @@
 import { db } from '../db/client';
 import { MutationAddResourceArgs, Resource } from '../graphql/generated/types';
 import { fromDBResource } from '../utils/db.mappers';
-import { getId, mapSchedule } from '../utils/input.mappers';
+import { getId, mapSchedule, mapTimezone } from '../utils/input.mappers';
 import {
   BadAuthenticationError,
   BadRequestError,
@@ -40,6 +40,7 @@ async function addResource(
   }
 
   const mappedSchedule = mapSchedule(schedule);
+  const timezone = mapTimezone(addResourceInput.timezone);
 
   const result = await db.resource.create({
     enabled,
@@ -48,6 +49,7 @@ async function addResource(
     schedule: mappedSchedule,
     ...resource,
     customerId,
+    timezone,
   });
   return fromDBResource(result);
 }

@@ -19,8 +19,8 @@ const gQLTimeToDateString = (time: number) =>
 const BookingConfirmation = ({ booking }: { booking: Booking }) => {
   return (
     <p>
-      Seat {booking.seatNumber} booked {gQLTimeToDateString(booking.start)} at{' '}
-      {formatGQLTime(booking.start)}
+      Seats {booking.seatNumbers.join(', ')} booked{' '}
+      {gQLTimeToDateString(booking.start)} at {formatGQLTime(booking.start)}
     </p>
   );
 };

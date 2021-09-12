@@ -1,6 +1,7 @@
 query findAvailability($filterAvailability: FindAvailabilityInput!){
     findAvailability(filterAvailability: $filterAvailability){
         availableSeats
+        seatsAvailable
         start
         end
     }

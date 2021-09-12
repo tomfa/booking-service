@@ -10,7 +10,7 @@
     "@typescript-eslint/no-shadow": 2
   },
   "settings": {
-    "import/ignore": ["@booking-service/shared"],
+    "import/ignore": ["@vailabel/shared"],
     "import/resolver": {
       "node": {
         "extensions": [".js", ".jsx", ".ts", ".tsx"]

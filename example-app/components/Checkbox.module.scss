@@ -1,0 +1,39 @@
+.checkbox {
+  box-shadow: 0.25em 0.25em 0 #000;
+
+  &:hover:not(:disabled) {
+    box-shadow: 0.35em 0.35em 0 #000;
+  }
+}
+
+.hiddenInput {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.container {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  outline: inherit;
+  padding-left: 2rem;
+
+  position: relative;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  user-select: none;
+}
+
+.disabled {
+  opacity: 0.4;
+}
+
+.hidden {
+  display: none;
+}

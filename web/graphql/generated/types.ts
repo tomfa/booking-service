@@ -18,6 +18,7 @@ export type AddBookingInput = {
   id?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
   resourceId: Scalars['String'];
+  seatNumbers?: Maybe<Array<Scalars['Int']>>;
   start: Scalars['Int'];
   end?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
@@ -42,6 +43,7 @@ export type AddResourceInput = {
   seats: Scalars['Int'];
   enabled: Scalars['Boolean'];
   schedule: Array<DateScheduleInput>;
+  timezone?: Maybe<Scalars['String']>;
 };
 
 export type BookedDuration = {
@@ -60,7 +62,7 @@ export type Booking = {
   end: Scalars['Int'];
   canceled: Scalars['Boolean'];
   comment?: Maybe<Scalars['String']>;
-  seatNumber?: Maybe<Scalars['Int']>;
+  seatNumbers: Array<Scalars['Int']>;
 };
 
 export type Customer = {
@@ -209,9 +211,9 @@ export type Query = {
   getCustomerByIssuer?: Maybe<Customer>;
   getCustomerByEmail?: Maybe<Customer>;
   getCustomerById?: Maybe<Customer>;
-  findResources?: Maybe<Array<Maybe<Resource>>>;
-  findBookings?: Maybe<Array<Maybe<Booking>>>;
-  findAvailability?: Maybe<Array<Maybe<TimeSlot>>>;
+  findResources?: Maybe<Array<Resource>>;
+  findBookings?: Maybe<Array<Booking>>;
+  findAvailability?: Maybe<Array<TimeSlot>>;
   getNextAvailable?: Maybe<TimeSlot>;
   getLatestBooking?: Maybe<Booking>;
   getBookedDuration?: Maybe<BookedDuration>;
@@ -278,6 +280,7 @@ export type Resource = {
   id: Scalars['String'];
   category?: Maybe<Scalars['String']>;
   label: Scalars['String'];
+  timezone: Scalars['String'];
   schedule: Schedule;
   seats: Scalars['Int'];
   enabled: Scalars['Boolean'];
@@ -292,12 +295,13 @@ export type Schedule = {
   fri: HourSchedule;
   sat: HourSchedule;
   sun: HourSchedule;
-  overriddenDates?: Maybe<Array<Maybe<DateSchedule>>>;
+  overriddenDates?: Maybe<Array<DateSchedule>>;
 };
 
 export type TimeSlot = {
   __typename?: 'TimeSlot';
   availableSeats: Scalars['Int'];
+  seatsAvailable: Array<Scalars['Int']>;
   start: Scalars['Int'];
   end: Scalars['Int'];
 };
@@ -330,7 +334,7 @@ export type AddBookingMutation = (
   { __typename?: 'Mutation' }
   & { addBooking?: Maybe<(
     { __typename?: 'Booking' }
-    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
   )> }
 );
 
@@ -356,7 +360,7 @@ export type AddResourceMutation = (
   { __typename?: 'Mutation' }
   & { addResource?: Maybe<(
     { __typename?: 'Resource' }
-    & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
+    & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
     & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
@@ -380,14 +384,14 @@ export type AddResourceMutation = (
       ), sun: (
         { __typename?: 'HourSchedule' }
         & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
-      ), overriddenDates?: Maybe<Array<Maybe<(
+      ), overriddenDates?: Maybe<Array<(
         { __typename?: 'DateSchedule' }
         & Pick<DateSchedule, 'isoDate'>
         & { schedule: (
           { __typename?: 'HourSchedule' }
           & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
         ) }
-      )>>> }
+      )>> }
     ) }
   )> }
 );
@@ -415,7 +419,7 @@ export type CancelBookingMutation = (
   { __typename?: 'Mutation' }
   & { cancelBooking?: Maybe<(
     { __typename?: 'Booking' }
-    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
   )> }
 );
 
@@ -468,7 +472,7 @@ export type DisableResourceMutation = (
   { __typename?: 'Mutation' }
   & { disableResource?: Maybe<(
     { __typename?: 'Resource' }
-    & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
+    & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
     & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
@@ -492,14 +496,14 @@ export type DisableResourceMutation = (
       ), sun: (
         { __typename?: 'HourSchedule' }
         & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
-      ), overriddenDates?: Maybe<Array<Maybe<(
+      ), overriddenDates?: Maybe<Array<(
         { __typename?: 'DateSchedule' }
         & Pick<DateSchedule, 'isoDate'>
         & { schedule: (
           { __typename?: 'HourSchedule' }
           & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
         ) }
-      )>>> }
+      )>> }
     ) }
   )> }
 );
@@ -514,7 +518,7 @@ export type SetBookingCommentMutation = (
   { __typename?: 'Mutation' }
   & { setBookingComment?: Maybe<(
     { __typename?: 'Booking' }
-    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
   )> }
 );
 
@@ -540,7 +544,7 @@ export type UpdateResourceMutation = (
   { __typename?: 'Mutation' }
   & { updateResource?: Maybe<(
     { __typename?: 'Resource' }
-    & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
+    & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
     & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
@@ -564,14 +568,14 @@ export type UpdateResourceMutation = (
       ), sun: (
         { __typename?: 'HourSchedule' }
         & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
-      ), overriddenDates?: Maybe<Array<Maybe<(
+      ), overriddenDates?: Maybe<Array<(
         { __typename?: 'DateSchedule' }
         & Pick<DateSchedule, 'isoDate'>
         & { schedule: (
           { __typename?: 'HourSchedule' }
           & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
         ) }
-      )>>> }
+      )>> }
     ) }
   )> }
 );
@@ -583,10 +587,10 @@ export type FindAvailabilityQueryVariables = Exact<{
 
 export type FindAvailabilityQuery = (
   { __typename?: 'Query' }
-  & { findAvailability?: Maybe<Array<Maybe<(
+  & { findAvailability?: Maybe<Array<(
     { __typename?: 'TimeSlot' }
-    & Pick<TimeSlot, 'availableSeats' | 'start' | 'end'>
-  )>>> }
+    & Pick<TimeSlot, 'availableSeats' | 'seatsAvailable' | 'start' | 'end'>
+  )>> }
 );
 
 export type FindBookingsQueryVariables = Exact<{
@@ -596,10 +600,10 @@ export type FindBookingsQueryVariables = Exact<{
 
 export type FindBookingsQuery = (
   { __typename?: 'Query' }
-  & { findBookings?: Maybe<Array<Maybe<(
+  & { findBookings?: Maybe<Array<(
     { __typename?: 'Booking' }
-    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
-  )>>> }
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
+  )>> }
 );
 
 export type FindResourcesQueryVariables = Exact<{
@@ -609,9 +613,9 @@ export type FindResourcesQueryVariables = Exact<{
 
 export type FindResourcesQuery = (
   { __typename?: 'Query' }
-  & { findResources?: Maybe<Array<Maybe<(
+  & { findResources?: Maybe<Array<(
     { __typename?: 'Resource' }
-    & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
+    & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
     & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
@@ -635,16 +639,16 @@ export type FindResourcesQuery = (
       ), sun: (
         { __typename?: 'HourSchedule' }
         & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
-      ), overriddenDates?: Maybe<Array<Maybe<(
+      ), overriddenDates?: Maybe<Array<(
         { __typename?: 'DateSchedule' }
         & Pick<DateSchedule, 'isoDate'>
         & { schedule: (
           { __typename?: 'HourSchedule' }
           & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
         ) }
-      )>>> }
+      )>> }
     ) }
-  )>>> }
+  )>> }
 );
 
 export type GetBookedDurationQueryVariables = Exact<{
@@ -669,7 +673,7 @@ export type GetBookingByIdQuery = (
   { __typename?: 'Query' }
   & { getBookingById?: Maybe<(
     { __typename?: 'Booking' }
-    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
   )> }
 );
 
@@ -721,7 +725,7 @@ export type GetLatestBookingQuery = (
   { __typename?: 'Query' }
   & { getLatestBooking?: Maybe<(
     { __typename?: 'Booking' }
-    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumber'>
+    & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
   )> }
 );
 
@@ -735,7 +739,7 @@ export type GetNextAvailableQuery = (
   { __typename?: 'Query' }
   & { getNextAvailable?: Maybe<(
     { __typename?: 'TimeSlot' }
-    & Pick<TimeSlot, 'availableSeats' | 'start' | 'end'>
+    & Pick<TimeSlot, 'availableSeats' | 'seatsAvailable' | 'start' | 'end'>
   )> }
 );
 
@@ -748,7 +752,7 @@ export type GetResourceByIdQuery = (
   { __typename?: 'Query' }
   & { getResourceById?: Maybe<(
     { __typename?: 'Resource' }
-    & Pick<Resource, 'id' | 'category' | 'label' | 'seats' | 'enabled'>
+    & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
     & { schedule: (
       { __typename?: 'Schedule' }
       & { mon: (
@@ -772,14 +776,14 @@ export type GetResourceByIdQuery = (
       ), sun: (
         { __typename?: 'HourSchedule' }
         & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
-      ), overriddenDates?: Maybe<Array<Maybe<(
+      ), overriddenDates?: Maybe<Array<(
         { __typename?: 'DateSchedule' }
         & Pick<DateSchedule, 'isoDate'>
         & { schedule: (
           { __typename?: 'HourSchedule' }
           & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
         ) }
-      )>>> }
+      )>> }
     ) }
   )> }
 );
@@ -806,7 +810,7 @@ export const AddBookingDocument = gql`
     end
     canceled
     comment
-    seatNumber
+    seatNumbers
   }
 }
     `;
@@ -882,6 +886,7 @@ export const AddResourceDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start
@@ -1017,7 +1022,7 @@ export const CancelBookingDocument = gql`
     end
     canceled
     comment
-    seatNumber
+    seatNumbers
   }
 }
     `;
@@ -1174,6 +1179,7 @@ export const DisableResourceDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start
@@ -1268,7 +1274,7 @@ export const SetBookingCommentDocument = gql`
     end
     canceled
     comment
-    seatNumber
+    seatNumbers
   }
 }
     `;
@@ -1345,6 +1351,7 @@ export const UpdateResourceDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start
@@ -1433,6 +1440,7 @@ export const FindAvailabilityDocument = gql`
     query findAvailability($filterAvailability: FindAvailabilityInput!) {
   findAvailability(filterAvailability: $filterAvailability) {
     availableSeats
+    seatsAvailable
     start
     end
   }
@@ -1476,7 +1484,7 @@ export const FindBookingsDocument = gql`
     end
     canceled
     comment
-    seatNumber
+    seatNumbers
   }
 }
     `;
@@ -1514,6 +1522,7 @@ export const FindResourcesDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start
@@ -1647,7 +1656,7 @@ export const GetBookingByIdDocument = gql`
     end
     canceled
     comment
-    seatNumber
+    seatNumbers
   }
 }
     `;
@@ -1815,7 +1824,7 @@ export const GetLatestBookingDocument = gql`
     end
     canceled
     comment
-    seatNumber
+    seatNumbers
   }
 }
     `;
@@ -1851,6 +1860,7 @@ export const GetNextAvailableDocument = gql`
     query getNextAvailable($id: String!, $afterDate: Int) {
   getNextAvailable(id: $id, afterDate: $afterDate) {
     availableSeats
+    seatsAvailable
     start
     end
   }
@@ -1891,6 +1901,7 @@ export const GetResourceByIdDocument = gql`
     id
     category
     label
+    timezone
     schedule {
       mon {
         start

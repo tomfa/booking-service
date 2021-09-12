@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'GT Flexa';
+  src: url('/GT-Flexa-Extended-Medium.85d71bc.woff2');
+  font-weight: 900;
+  font-style: normal;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #f7efa6;
+  color: #272727;
+  font-family: 'GT Flexa', Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}

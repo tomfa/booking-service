@@ -1,6 +1,6 @@
-# booking-service
+# Vailable 
 
-> Generate PDFs from HTML with S3 + Serverless.
+> A simple booking service
 
 ![Unit tests status](https://github.com/tomfa/booking-service-api/actions/workflows/tests.yml/badge.svg)
 ![ESLint status](https://github.com/tomfa/booking-service-api/actions/workflows/lint.yml/badge.svg)
@@ -8,10 +8,11 @@
 
 Mono repo containing 3 packages:
 
-- [@booking-service/api](https://github.com/tomfa/booking-service-api/tree/master/api): Serverless API
-- [@booking-service/web](https://github.com/tomfa/booking-service-api/tree/master/web): NextJS application
-- [@booking-service/shared](https://github.com/tomfa/booking-service-api/tree/master/shared): Shared utils and types
+- [@vailable/api](https://github.com/tomfa/booking-service-api/tree/master/api): Firebase GraphQL app
+- [@vailable/web](https://github.com/tomfa/booking-service-api/tree/master/web): NextJS application
+- [@vailable/shared](https://github.com/tomfa/booking-service-api/tree/master/shared): Shared utils and types
 - [@vailable](https://github.com/tomfa/booking-service-api/tree/master/sdk): SDK for integration
+- [@vailable/example](https://github.com/tomfa/booking-service-api/tree/master/example-app): Example using Apollo client
 
 ### Initial setup
 

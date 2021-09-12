@@ -1,0 +1,46 @@
+.button {
+  background-color: #f7efa6;
+  color: #272727;
+
+  position: relative;
+  font-size: 1.3rem;
+  font-weight: 200;
+  cursor: pointer;
+  font-family: inherit;
+  overflow: hidden;
+  transition: color .2s ease;
+  border: 1px solid #272727;
+  box-shadow: .25em .25em 0 #000;
+  padding: 1.1rem 2rem 1.2rem;
+  align-self: flex-start;
+
+  &:disabled {
+    opacity: 0.4;
+  }
+
+  &:hover:not(:disabled) {
+    box-shadow: .35em .35em 0 #000;
+  }
+}
+
+.buttonSmall {
+  background-color: #f7efa6;
+  color: #272727;
+
+  position: relative;
+  cursor: pointer;
+  font-family: inherit;
+  overflow: hidden;
+  transition: color .2s ease;
+  border: 1px solid #272727;
+  padding: 0.55rem 1rem 0.6rem;
+  align-self: flex-start;
+
+  &:disabled {
+    opacity: 0.4;
+  }
+
+  &:hover {
+    box-shadow: .15em .15em 0 #000;
+  }
+}

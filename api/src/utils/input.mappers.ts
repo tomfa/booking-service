@@ -8,6 +8,7 @@ import {
 } from '../graphql/generated/types';
 import { closed } from './schedule.utils';
 import { isISODay, validateDaySchedule } from './validation.utils';
+import { isValidTimeZone } from './date.utils';
 
 export function removeNull<T extends Record<string, unknown>>(
   args: Record<string, unknown>
@@ -46,6 +47,20 @@ function mapDateSchedule(daySchedule: DateScheduleInput): DateSchedule {
       slotDurationMinutes: daySchedule.slotDurationMinutes,
     },
   };
+}
+
+export function mapTimezone(timezone?: string): string {
+  if (!timezone) {
+    return 'Europe/Oslo';
+  }
+
+  if (isValidTimeZone(timezone)) {
+    throw new Error(
+      `Invalid timezone ${timezone}. See list of valid TZ database names at ` +
+        `https://en.wikipedia.org/wiki/List_of_tz_database_time_zones`
+    );
+  }
+  return timezone;
 }
 
 export function mapSchedule(scheduleList: DateScheduleInput[]): Schedule {

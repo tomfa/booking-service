@@ -29,6 +29,7 @@ export class Resource {
   customerId: string;
   category?: string;
   label: string;
+  timezone: string;
   schedule: Schedule;
   seats: number;
   enabled: boolean;

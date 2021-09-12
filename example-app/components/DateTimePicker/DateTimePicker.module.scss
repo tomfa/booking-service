@@ -1,0 +1,10 @@
+.dateAndTimeWrapper {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+.datePicker {
+  border-right: none;
+}
+.timePicker {
+  min-width: 7rem;
+}

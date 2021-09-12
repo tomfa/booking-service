@@ -1,0 +1,12 @@
+query getCustomerByIssuer($issuer: String!){
+    getCustomerByIssuer(issuer: $issuer){
+        id
+        name
+        email
+        phoneNumber
+        issuer
+        credits
+        enabled
+        publicKeys
+    }
+}

@@ -1,6 +1,7 @@
 import { db } from '../db/client';
 
 import {
+  AddBookingInput,
   Booking,
   MutationAddBookingArgs,
   Resource,
@@ -17,7 +18,7 @@ import { fromGQLDate, toGQLDate } from '../utils/date.utils';
 import { getAvailableSeatNumbers } from '../utils/seating.utils';
 import {
   bookingSlotFitsInResourceSlots,
-  isOpen,
+  isClosedAllDay,
 } from '../utils/schedule.utils';
 import { Auth } from '../auth/types';
 import { minArray } from '../utils/array.utils';
@@ -32,6 +33,15 @@ const getEndTime = (start: Date, resource: Resource): Date => {
   return new Date(
     start.getTime() + openingHours.slotDurationMinutes * 60 * 1000
   );
+};
+
+const getDesiredSeatNumbers = (
+  input: AddBookingInput
+): undefined | number[] => {
+  if (input.seatNumbers?.length) {
+    return input.seatNumbers;
+  }
+  return undefined;
 };
 
 async function addBooking(
@@ -57,7 +67,6 @@ async function addBooking(
     dbResource.customerId !== token.customerId &&
     !hasPermission(token, permissions.ALL)
   ) {
-    // TODO: Allow superuser to add bookings for any customer
     throw new BadRequestError(
       `Can not create booking on unknown resource ${data.resourceId}`,
       ErrorCode.RESOURCE_DOES_NOT_EXIST
@@ -72,7 +81,7 @@ async function addBooking(
   }
 
   const openingHours = getOpeningHoursForDate(resource, fromGQLDate(start));
-  if (!isOpen(openingHours)) {
+  if (isClosedAllDay(openingHours)) {
     throw new BadRequestError(
       `Unable to add booking: resource ${resource.id} is closed`,
       ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
@@ -87,6 +96,7 @@ async function addBooking(
     id: getId(data.id),
     start: toGQLDate(startTime),
     end: toGQLDate(endTime),
+    seatNumbers: [], // Irrelevant, will be overridden
   };
 
   if (!bookingSlotFitsInResourceSlots(resource, booking)) {
@@ -98,9 +108,24 @@ async function addBooking(
     );
   }
 
-  const seatNumbers = await getAvailableSeatNumbers(db, resource, booking);
-  if (seatNumbers.length === 0) {
+  const availableSeatNumbers = await getAvailableSeatNumbers(
+    db,
+    resource,
+    booking
+  );
+  if (availableSeatNumbers.length === 0) {
     throw new GenericBookingError(`Unable to find available seat number`);
+  }
+  const seatNumbers: number[] = getDesiredSeatNumbers(addBookingInput) || [
+    minArray(availableSeatNumbers),
+  ];
+  if (seatNumbers.find(seat => !availableSeatNumbers.includes(seat))) {
+    const unavailableSeat = seatNumbers.find(
+      seat => !availableSeatNumbers.includes(seat)
+    );
+    throw new GenericBookingError(
+      `Seat number ${unavailableSeat} is not available`
+    );
   }
 
   const args = {
@@ -112,7 +137,7 @@ async function addBooking(
     userId: data.userId || null,
     start: startTime,
     end: endTime,
-    seatNumber: minArray(seatNumbers),
+    seatNumbers,
   };
   const dbBooking = await db.booking.create(args);
   return fromDBBooking(dbBooking);

@@ -1,19 +1,19 @@
 import { HourSchedule, Resource } from '../graphql/generated/types';
 import { GenericBookingError } from './errors';
-import { getIsoDate } from './date.utils';
+import { getDayOfWeek, getIsoDate } from './date.utils';
 
 export const getOpeningHoursForDate = (
   resource: Resource,
   date: Date
 ): HourSchedule => {
-  const isoDate = getIsoDate(date);
+  const isoDate = getIsoDate(date, resource.timezone);
   const overridenTime = resource.schedule.overriddenDates?.find(
     r => r?.isoDate === isoDate
   );
   if (overridenTime) {
     return overridenTime.schedule;
   }
-  const dayOfWeek = date.getUTCDay();
+  const dayOfWeek = getDayOfWeek(date, resource.timezone);
   if (dayOfWeek === 0) {
     return resource.schedule.sun;
   }
