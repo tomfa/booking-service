@@ -72,7 +72,7 @@ export const reduceAvailability = (
       if (overlaps) {
         return {
           ...slot,
-          availableSeats: slot.availableSeats - 1,
+          availableSeats: slot.availableSeats - booking.seatNumbers.length,
           seatsAvailable: slot.seatsAvailable.filter(
             s => !booking.seatNumbers.includes(s)
           ),

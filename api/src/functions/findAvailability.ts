@@ -20,20 +20,20 @@ import { constructAllSlots } from '../utils/schedule.utils';
 import { Auth } from '../auth/types';
 import { permissions, verifyPermission } from '../auth/permissions';
 
-const findAvailabilityForSingleResource = (
+export const findAvailabilityForSingleResource = (
   resource: Resource,
   from: Date,
   to: Date,
   bookings: Booking[]
 ): TimeSlot[] => {
-  const availabileResourceTimeSlots = constructAllSlots({
+  const availableResourceTimeSlots = constructAllSlots({
     resource,
     from,
     to,
   });
 
   const slotsWithCorrectAvailability: TimeSlot[] = reduceAvailability(
-    availabileResourceTimeSlots,
+    availableResourceTimeSlots,
     bookings
   );
   return slotsWithCorrectAvailability;
