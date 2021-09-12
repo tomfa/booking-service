@@ -5,6 +5,7 @@ import {
   msOfDay,
   msUntilClosed,
   setTimeOfDay,
+  splitHourMinuteOfDay,
 } from './date.utils';
 
 describe('date.utils', () => {
@@ -87,6 +88,19 @@ describe('date.utils', () => {
       );
       expect(isoDateOslo).toBe('2021-09-12');
       expect(isoDateNewYork).toBe('2021-09-11');
+    });
+  });
+  describe('splitHourMinuteOfDay', () => {
+    test('returns hour and minute in local time', () => {
+      const date = new Date('2021-09-13T00:00:00Z');
+      expect(splitHourMinuteOfDay(date, 'Europe/Oslo')).toEqual({
+        hour: 2,
+        minute: 0,
+      });
+      expect(splitHourMinuteOfDay(date, 'America/New_York')).toEqual({
+        hour: 20,
+        minute: 0,
+      });
     });
   });
 });

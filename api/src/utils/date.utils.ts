@@ -22,7 +22,7 @@ export const splitHourMinuteOfDay = (
   date: Date,
   tz: string
 ): { hour: number; minute: number } => {
-  const d = dayjs(date, tz);
+  const d = dayjs.tz(date, tz);
   return { hour: d.hour(), minute: d.minute() };
 };
 
