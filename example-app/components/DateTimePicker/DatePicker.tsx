@@ -13,6 +13,7 @@ interface Props {
   onChange: (selectedDate?: Date) => void;
   value?: Date;
   className?: string;
+  numDaysAheadAvailable?: number;
 }
 
 const DEFAULT_MAX_DATES_AHEAD = 30;
@@ -24,6 +25,7 @@ const DatePicker = ({
   endDate,
   value,
   excludeDays = [],
+  numDaysAheadAvailable = DEFAULT_MAX_DATES_AHEAD,
 }: Props) => {
   const [dateOptions, setDateOptions] = useState<Array<Option>>([]);
 
@@ -36,7 +38,7 @@ const DatePicker = ({
     if (endDate) {
       eDate = endDate;
     } else {
-      eDate = dateUtils.plusTime(sDate, DEFAULT_MAX_DATES_AHEAD, 'day');
+      eDate = dateUtils.plusTime(sDate, numDaysAheadAvailable, 'day');
     }
     const dateOptions = dateUtils.getDateOptions({
       startDate: sDate,

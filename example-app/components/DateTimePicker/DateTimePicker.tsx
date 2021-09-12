@@ -21,6 +21,7 @@ interface Props {
   onChange: (selectedDateTime: Date) => void;
   className?: string;
   isEndTime?: boolean;
+  numDaysAheadAvailable?: number;
 }
 
 const DateTimePicker = ({
@@ -29,6 +30,7 @@ const DateTimePicker = ({
   className = '',
   startDate,
   endDate,
+  numDaysAheadAvailable,
   isEndTime,
 }: Props) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -95,6 +97,7 @@ const DateTimePicker = ({
         onChange={setSelectedDate}
         excludeDays={excludeDays}
         className={styles.datePicker}
+        numDaysAheadAvailable={numDaysAheadAvailable}
       />
       {dayOpeningHours && (
         <TimePicker

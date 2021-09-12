@@ -176,6 +176,7 @@ const Home: NextPage = () => {
                 startDate={today}
                 schedule={schedule}
                 onChange={setFromTime}
+                numDaysAheadAvailable={180}
               />
             </>
           )}
@@ -187,6 +188,7 @@ const Home: NextPage = () => {
                 schedule={schedule}
                 onChange={setToTime}
                 isEndTime
+                numDaysAheadAvailable={31}
               />
             </>
           )}
