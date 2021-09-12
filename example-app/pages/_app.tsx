@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getRouterValueString } from '../utils/router.utils';
 import { Spinner } from '../components/Spinner';
+import { DisplayError } from '../components/DisplayError';
 
 const getClient = (authorization?: string) => {
   const headers = authorization ? { authorization } : undefined;
@@ -19,19 +20,30 @@ const getClient = (authorization?: string) => {
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const [authenticationKey, setAuthenticationKey] = useState<string>();
+  const authKey = useMemo(() => getRouterValueString(router.query['auth']), [
+    router.query,
+  ]);
+  const error = useMemo(() => {
+    if (router.isReady && !authKey) {
+      return 'query parameter "auth" missing"';
+    }
+  }, [router.isReady, authKey]);
 
   useEffect(() => {
-    if (!router.isReady) {
+    if (!authKey) {
       return;
     }
-    const authkey = getRouterValueString(router.query['auth']);
-    setAuthenticationKey(authkey);
-  }, [router.query, router.isReady]);
+    setAuthenticationKey(authKey);
+  }, [authKey]);
 
   const client = useMemo(
     () => authenticationKey && getClient(authenticationKey),
     [authenticationKey]
   );
+
+  if (error) {
+    return <DisplayError>{error}</DisplayError>;
+  }
 
   if (!client) {
     return <Spinner />;
