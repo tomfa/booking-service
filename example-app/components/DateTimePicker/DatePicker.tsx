@@ -15,7 +15,7 @@ interface Props {
   className?: string;
 }
 
-const DEFAULT_MAX_DATES_AHEAD = 120;
+const DEFAULT_MAX_DATES_AHEAD = 30;
 
 const DatePicker = ({
   onChange,
