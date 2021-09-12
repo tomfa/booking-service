@@ -97,7 +97,6 @@ input AddBookingInput {
     id: String
     userId: String
     resourceId: String!
-    seatNumber: Int
     seatNumbers: [Int!]
     start: Int!
     end: Int

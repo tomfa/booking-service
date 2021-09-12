@@ -38,14 +38,6 @@ const getEndTime = (start: Date, resource: Resource): Date => {
 const getDesiredSeatNumbers = (
   input: AddBookingInput
 ): undefined | number[] => {
-  if (input.seatNumber !== undefined) {
-    if (input.seatNumbers?.length) {
-      throw new GenericBookingError(
-        `You cannot specify both a specific seatNumber and list of seatNumbers`
-      );
-    }
-    return [input.seatNumber];
-  }
   if (input.seatNumbers?.length) {
     return input.seatNumbers;
   }
@@ -124,21 +116,17 @@ async function addBooking(
   if (availableSeatNumbers.length === 0) {
     throw new GenericBookingError(`Unable to find available seat number`);
   }
-  const seatNumbersToBook: undefined | number[] = getDesiredSeatNumbers(
-    addBookingInput
-  );
-  if (
-    seatNumbersToBook &&
-    seatNumbersToBook.find(seat => !availableSeatNumbers.includes(seat))
-  ) {
-    const unavailableSeat = seatNumbersToBook.find(
+  const seatNumbers: number[] = getDesiredSeatNumbers(addBookingInput) || [
+    minArray(availableSeatNumbers),
+  ];
+  if (seatNumbers.find(seat => !availableSeatNumbers.includes(seat))) {
+    const unavailableSeat = seatNumbers.find(
       seat => !availableSeatNumbers.includes(seat)
     );
     throw new GenericBookingError(
       `Seat number ${unavailableSeat} is not available`
     );
   }
-  const seatNumbers = seatNumbersToBook || [minArray(availableSeatNumbers)];
 
   const args = {
     id: booking.id,
