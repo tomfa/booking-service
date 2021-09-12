@@ -66,7 +66,7 @@ const firstSlotOfDay = (
   day: Date,
   tz: string
 ): Date | undefined => {
-  if (!isOpen(openingHours)) {
+  if (isClosedAllDay(openingHours)) {
     return undefined;
   }
   return setTimeOfDay(day, tz, splitHourMinute(openingHours.start));
@@ -105,8 +105,8 @@ const diffMsUntilSlotStart = (
   return slotIntervalMs - offsetFromSlotStart;
 };
 
-export const isOpen = (scheudle: HourSchedule): scheudle is HourSchedule => {
-  return scheudle.start !== '';
+export const isClosedAllDay = (schedule: HourSchedule) => {
+  return schedule.start === '';
 };
 export const findNextValidTimeSlotStart = (
   resource: Resource,
@@ -123,7 +123,7 @@ export const findNextValidTimeSlotStart = (
     return undefined;
   }
   const openingHours = getOpeningHoursForDate(resource, date);
-  if (!isOpen(openingHours)) {
+  if (isClosedAllDay(openingHours)) {
     return findNextValidTimeSlotStart(
       resource,
       startOfNextDay(date, resource.timezone),
@@ -159,7 +159,7 @@ export const bookingSlotFitsInResourceSlots = (
     resource,
     fromGQLDate(booking.start)
   );
-  if (!isOpen(openingHours)) {
+  if (isClosedAllDay(openingHours)) {
     return false;
   }
 

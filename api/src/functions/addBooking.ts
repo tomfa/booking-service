@@ -18,7 +18,7 @@ import { fromGQLDate, toGQLDate } from '../utils/date.utils';
 import { getAvailableSeatNumbers } from '../utils/seating.utils';
 import {
   bookingSlotFitsInResourceSlots,
-  isOpen,
+  isClosedAllDay,
 } from '../utils/schedule.utils';
 import { Auth } from '../auth/types';
 import { minArray } from '../utils/array.utils';
@@ -89,7 +89,7 @@ async function addBooking(
   }
 
   const openingHours = getOpeningHoursForDate(resource, fromGQLDate(start));
-  if (!isOpen(openingHours)) {
+  if (isClosedAllDay(openingHours)) {
     throw new BadRequestError(
       `Unable to add booking: resource ${resource.id} is closed`,
       ErrorCode.BOOKING_SLOT_IS_NOT_AVAILABLE
