@@ -5,10 +5,11 @@ export const Button: React.FC<{
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   type?: 'button' | 'submit';
-}> = ({ onClick, disabled = false, children, type = 'button' }) => {
+  small?: boolean;
+}> = ({ onClick, disabled = false, children, type = 'button', small }) => {
   return (
     <button
-      className={styles.button}
+      className={(small && styles.buttonSmall) || styles.button}
       onClick={onClick}
       disabled={disabled}
       type={type}>
