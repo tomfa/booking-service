@@ -17,15 +17,14 @@ import { Spinner } from '../components/Spinner';
 import { toGQLDate } from '../utils/date.utils';
 import { ScheduleCalendar } from '../components/ScheduleCalendar';
 import { BookingConfirmation } from '../components/BookingConfirmation';
-import { FormError } from '@vailable/web/components/FormError';
 
 const Home: NextPage = () => {
   const router = useRouter();
   const today = useMemo(() => new Date(), []);
   const [fromTime, setFromTime] = useState<Date>(new Date());
-  const [toTime, setToTime] = useState<Date>(new Date());
+  const [toTime, setToTime] = useState<Date>();
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
-  const isValidDateFilter = fromTime < toTime;
+  const isValidDateFilter = toTime && fromTime < toTime;
   const urlResourceId = useMemo(
     () => router.isReady && getRouterValueString(router.query['resource']),
     [router]
@@ -62,7 +61,7 @@ const Home: NextPage = () => {
   }, [urlResourceId, fetchResource]);
 
   useEffect(() => {
-    if (!urlResourceId || !isValidDateFilter) {
+    if (!urlResourceId || !isValidDateFilter || !toTime) {
       return;
     }
     const variables = {
@@ -106,12 +105,13 @@ const Home: NextPage = () => {
     !loading &&
     isValidDateFilter &&
     !availabilityLoading &&
+    !!toTime &&
     !!selectedSeats.length;
 
   const onSubmit = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (!formValid || !urlResourceId) {
+      if (!formValid || !urlResourceId || !toTime) {
         return;
       }
       addBooking({
@@ -193,7 +193,7 @@ const Home: NextPage = () => {
             </>
           )}
         </div>
-        {toTime < fromTime && (
+        {toTime && toTime < fromTime && (
           <p>
             <DisplayError>Til dato må være etter fra dato</DisplayError>
           </p>

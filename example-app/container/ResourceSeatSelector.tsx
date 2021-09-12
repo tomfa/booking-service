@@ -6,7 +6,7 @@ import { findContinouslyAvailableSeats } from '../utils/availability.utils';
 
 type ResourceSelectorProps = {
   start: Date;
-  end: Date;
+  end?: Date;
   resource?: Resource | null;
   isLoading: boolean;
   slots?: TimeSlot[];
