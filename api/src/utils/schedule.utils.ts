@@ -199,6 +199,7 @@ export const constructAllSlots = ({
   from: Date;
   to: Date;
 }): TimeSlot[] => {
+  // TODO: This becomes horribly slow for long from/to dates
   if (!isValidDate(from) || !isValidDate(to)) {
     throw new GenericBookingError(
       `Received invalid date range to construct slots form`

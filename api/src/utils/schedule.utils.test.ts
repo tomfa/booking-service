@@ -3,7 +3,7 @@ import {
   constructAllSlots,
   findNextValidTimeSlotStart,
 } from './schedule.utils';
-import { fromGQLDate } from './date.utils';
+import { fromGQLDate, reduceAvailability } from './date.utils';
 
 const mondayResource: Resource = {
   id: 'alwaysopen',
@@ -71,6 +71,18 @@ describe('constructAllSlots', () => {
     expect(slotStarts.length).toBe(
       (24 * 60) / mondayResource.schedule.mon.slotIntervalMinutes
     );
+  });
+  test.skip('performs OK', () => {
+    const start = Date.now();
+    const slots = constructAllSlots({
+      resource: mondayResource,
+      from: new Date(`2021-06-20T22:00:00Z`),
+      to: new Date(`2021-12-23T01:00:00Z`), // 6 months
+    });
+    // TODO: Test with a selection of relevant bookings
+    reduceAvailability(slots, []);
+    const end = Date.now();
+    expect(end - start).toBeLessThan(2 * 1000);
   });
 });
 describe('findNextValidTimeSlot', () => {
