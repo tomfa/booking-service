@@ -72,7 +72,7 @@ async function findAvailability(
   const from = (args.from && fromGQLDate(args.from)) || new Date();
   const to =
     (args.to && fromGQLDate(args.to)) ||
-    new Date(from.getTime() + 31 * 24 * 3600 * 1000);
+    new Date(from.getTime() + 7 * 24 * 3600 * 1000);
 
   // TODO: Support multiple resources
   if (resources.length > 1) {
