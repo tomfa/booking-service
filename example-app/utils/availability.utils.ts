@@ -7,17 +7,17 @@ export const findContinouslyAvailableSeats = ({
   end,
 }: {
   start: Date;
-  end: Date;
+  end?: Date;
   slots?: TimeSlot[];
 }): number[] => {
+  if (!slots?.length || !end) {
+    return [];
+  }
+
   // TODO: Assuming that TimeSlots array spans at least the entire period,
   //  and includes all relevant slots with availableSlots = 0 if taken
   const startTime = toGQLDate(start);
   const endTime = toGQLDate(end);
-
-  if (!slots?.length) {
-    return [];
-  }
 
   const applicableSlots = slots
     .filter(s => s.start >= startTime && s.end <= endTime)

@@ -1,16 +1,7 @@
 import dayjs from 'dayjs';
 
-export const formatToDateDisplay = (date: Date) => {
-  return dayjs(date).format('DD. MMM').toLowerCase();
-};
-
-export const toDateValue = (date: Date): string => {
-  return dayjs(date).format('YYYY-MM-DD');
-};
-
 import { Option } from '../components/DateTimePicker/types';
 import 'dayjs/locale/nb';
-
 import { upperCaseFirstLetter } from './string.utils';
 
 dayjs.locale('nb');
@@ -68,10 +59,22 @@ export const getTimeOption = ({
   toTime,
   intervalMinutes,
 }: getTimeOptionProps): Array<Option> => {
-  let time = dayjs().hour(fromTime.hour).minute(fromTime.minute);
-  const endTime = dayjs().hour(toTime.hour).minute(toTime.minute);
+  let time = dayjs()
+    .hour(fromTime.hour)
+    .minute(fromTime.minute)
+    .second(0)
+    .millisecond(0);
+  let endTime = dayjs()
+    .hour(toTime.hour)
+    .minute(toTime.minute)
+    .second(0)
+    .millisecond(0);
+  const isEndTimeBeforeStartTime = endTime < time;
+  if (isEndTimeBeforeStartTime) {
+    endTime = endTime.add(1, 'days');
+  }
   const timeOptions: Array<Option> = [];
-  while (time < endTime) {
+  while (time <= endTime) {
     timeOptions.push({
       value: time.hour() * 60 + time.minute(),
       label: time.format('HH:mm'),
@@ -180,18 +183,31 @@ export const toTimeStamp = (dayMinutes: number | string): TimeStamp => {
 
 export const addMinutes = (time: TimeStamp, minutes: number): TimeStamp => {
   let hoursToAdd = Math.floor(minutes / 60);
-  let minutsToAdd = minutes % 60;
-  if (minutes + time.minute >= 60) {
+  let minutesToAdd = minutes % 60;
+  if (minutesToAdd + time.minute >= 60) {
     hoursToAdd += 1;
-    minutsToAdd -= 60;
+    minutesToAdd -= 60;
   }
 
-  if (hoursToAdd + time.hour >= 24) {
-    // What to do?
-    return { hour: 23, minute: 59 };
-  }
   return {
-    hour: time.hour + hoursToAdd,
-    minute: time.minute + minutsToAdd,
+    hour: (time.hour + hoursToAdd) % 24,
+    minute: time.minute + minutesToAdd,
+  };
+};
+
+export const subtractMinutes = (
+  time: TimeStamp,
+  minutes: number
+): TimeStamp => {
+  let hours = Math.floor(minutes / 60);
+  let minutesToSubtract = minutes % 60;
+  if (time.minute - minutesToSubtract < 0) {
+    hours -= 1;
+    minutesToSubtract -= 60;
+  }
+
+  return {
+    hour: (time.hour - hours) % 24,
+    minute: time.minute - minutesToSubtract,
   };
 };

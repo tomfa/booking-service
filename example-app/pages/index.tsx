@@ -17,15 +17,14 @@ import { Spinner } from '../components/Spinner';
 import { toGQLDate } from '../utils/date.utils';
 import { ScheduleCalendar } from '../components/ScheduleCalendar';
 import { BookingConfirmation } from '../components/BookingConfirmation';
-import { FormError } from '@vailable/web/components/FormError';
 
 const Home: NextPage = () => {
   const router = useRouter();
   const today = useMemo(() => new Date(), []);
   const [fromTime, setFromTime] = useState<Date>(new Date());
-  const [toTime, setToTime] = useState<Date>(new Date());
+  const [toTime, setToTime] = useState<Date>();
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
-  const isValidDateFilter = fromTime < toTime;
+  const isValidDateFilter = toTime && fromTime < toTime;
   const urlResourceId = useMemo(
     () => router.isReady && getRouterValueString(router.query['resource']),
     [router]
@@ -51,6 +50,19 @@ const Home: NextPage = () => {
       error: addBookingError,
     },
   ] = useAddBookingMutation();
+  const reloadAvailability = useCallback(() => {
+    if (!fromTime || !toTime || !urlResourceId || !isValidDateFilter) {
+      return;
+    }
+    const variables = {
+      filterAvailability: {
+        resourceIds: [urlResourceId],
+        from: toGQLDate(fromTime),
+        to: toGQLDate(toTime),
+      },
+    };
+    fetchAvailability({ variables });
+  }, [urlResourceId, fromTime, toTime, isValidDateFilter, fetchAvailability]);
 
   useEffect(() => {
     if (!urlResourceId) {
@@ -62,18 +74,8 @@ const Home: NextPage = () => {
   }, [urlResourceId, fetchResource]);
 
   useEffect(() => {
-    if (!urlResourceId || !isValidDateFilter) {
-      return;
-    }
-    const variables = {
-      filterAvailability: {
-        resourceIds: [urlResourceId],
-        from: toGQLDate(fromTime),
-        to: toGQLDate(toTime),
-      },
-    };
-    fetchAvailability({ variables });
-  }, [urlResourceId, fetchAvailability, isValidDateFilter, fromTime, toTime]);
+    reloadAvailability();
+  }, [urlResourceId, reloadAvailability, isValidDateFilter, fromTime, toTime]);
 
   const loading = useMemo(
     () => resourceLoading || !router.isReady || availabilityLoading,
@@ -106,12 +108,13 @@ const Home: NextPage = () => {
     !loading &&
     isValidDateFilter &&
     !availabilityLoading &&
+    !!toTime &&
     !!selectedSeats.length;
 
   const onSubmit = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (!formValid || !urlResourceId) {
+      if (!formValid || !urlResourceId || !toTime) {
         return;
       }
       addBooking({
@@ -127,25 +130,16 @@ const Home: NextPage = () => {
         .catch(err => {
           // errors will be displayed from addBookingError
         })
-        .finally(() => {
-          const variables = {
-            filterAvailability: {
-              resourceIds: [urlResourceId],
-              from: toGQLDate(fromTime),
-              to: toGQLDate(toTime),
-            },
-          };
-          fetchAvailability({ variables });
-        });
+        .finally(reloadAvailability);
     },
     [
+      reloadAvailability,
       formValid,
       urlResourceId,
       addBooking,
       fromTime,
       toTime,
       selectedSeats,
-      fetchAvailability,
     ]
   );
 
@@ -176,6 +170,7 @@ const Home: NextPage = () => {
                 startDate={today}
                 schedule={schedule}
                 onChange={setFromTime}
+                numDaysAheadAvailable={180}
               />
             </>
           )}
@@ -186,12 +181,13 @@ const Home: NextPage = () => {
                 startDate={fromTime}
                 schedule={schedule}
                 onChange={setToTime}
+                numDaysAheadAvailable={31}
                 isEndTime
               />
             </>
           )}
         </div>
-        {toTime < fromTime && (
+        {toTime && toTime < fromTime && (
           <p>
             <DisplayError>Til dato må være etter fra dato</DisplayError>
           </p>
@@ -211,7 +207,10 @@ const Home: NextPage = () => {
           <DisplayError>{addBookingError.message}</DisplayError>
         )}
         {!!addBookingData?.addBooking && (
-          <BookingConfirmation booking={addBookingData.addBooking} />
+          <BookingConfirmation
+            booking={addBookingData.addBooking}
+            updateAvailability={reloadAvailability}
+          />
         )}
 
         <Button

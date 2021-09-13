@@ -24,10 +24,10 @@ describe('findAvailabilityForSingleResource', () => {
         __typename: 'HourSchedule',
       },
       wed: {
-        start: '08:00',
-        end: '20:00',
-        slotIntervalMinutes: 30,
-        slotDurationMinutes: 60,
+        start: '00:00',
+        end: '00:00',
+        slotIntervalMinutes: 480,
+        slotDurationMinutes: 1440,
         __typename: 'HourSchedule',
       },
       thu: {
@@ -128,5 +128,16 @@ describe('findAvailabilityForSingleResource', () => {
         seatsAvailable: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
       },
     ]);
-  }, 10000);
+  });
+  test('handles 24 hour booking', () => {
+    const from = new Date('2021-09-14T21:00:00Z');
+    const to = new Date('2021-09-15T21:00:00Z');
+    const availableSlots = findAvailabilityForSingleResource(
+      resource,
+      from,
+      to,
+      bookings
+    );
+    expect(availableSlots.length).toEqual(3);
+  });
 });

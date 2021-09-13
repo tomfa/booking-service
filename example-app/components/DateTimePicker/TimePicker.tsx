@@ -50,7 +50,12 @@ const TimePicker = ({
   };
 
   useEffect(updateOptions, [fromTime, toTime, intervalMinutes]);
-  useEffect(setDefaultTime, [timeOptions]);
+  useEffect(setDefaultTime, [
+    matchingOption,
+    onValueChange,
+    selectedTime,
+    timeOptions,
+  ]);
 
   return (
     <Dropdown

@@ -72,12 +72,24 @@ async function findAvailability(
   const from = (args.from && fromGQLDate(args.from)) || new Date();
   const to =
     (args.to && fromGQLDate(args.to)) ||
-    new Date(from.getTime() + 31 * 24 * 3600 * 1000);
+    new Date(from.getTime() + 7 * 24 * 3600 * 1000);
 
   // TODO: Support multiple resources
   if (resources.length > 1) {
     throw new BadRequestError(
       `findAvailability is not yet supported with multiple resources`,
+      ErrorCode.UNKNOWN_ERROR
+    );
+  }
+
+  // TODO: Improve performance
+  const numDays = Math.floor(
+    to.getTime() - from.getTime() / (24 * 3600 * 1000)
+  );
+  const maxDaysAllowed = 32;
+  if (numDays > maxDaysAllowed) {
+    throw new BadRequestError(
+      `findAvailability can not yet be used for periods longer than ${maxDaysAllowed} days`,
       ErrorCode.UNKNOWN_ERROR
     );
   }
