@@ -10,7 +10,6 @@ export const toDateValue = (date: Date): string => {
 
 import { Option } from '../components/DateTimePicker/types';
 import 'dayjs/locale/nb';
-
 import { upperCaseFirstLetter } from './string.utils';
 
 dayjs.locale('nb');
@@ -78,8 +77,8 @@ export const getTimeOption = ({
     .minute(toTime.minute)
     .second(0)
     .millisecond(0);
-  const isToMidnight = toTime.hour === 0 && toTime.minute === 0;
-  if (isToMidnight) {
+  const isEndTimeBeforeStartTime = endTime < time;
+  if (isEndTimeBeforeStartTime) {
     endTime = endTime.add(1, 'days');
   }
   const timeOptions: Array<Option> = [];
