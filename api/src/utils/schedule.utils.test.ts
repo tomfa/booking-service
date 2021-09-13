@@ -1,6 +1,7 @@
 import { Resource } from '../graphql/generated/types';
 import {
   constructAllSlots,
+  constructSlotsForDay,
   findNextValidTimeSlotStart,
 } from './schedule.utils';
 import { fromGQLDate, reduceAvailability } from './date.utils';
@@ -17,7 +18,7 @@ const mondayResource: Resource = {
       slotIntervalMinutes: 0,
     },
     mon: {
-      end: '23:59',
+      end: '00:00',
       start: '00:00',
       slotDurationMinutes: 30,
       slotIntervalMinutes: 15,
@@ -58,6 +59,24 @@ const mondayResource: Resource = {
   enabled: true,
 };
 
+describe('constructSlotsForDay', () => {
+  test('returns slots for 24-hour open day', () => {
+    const openMonday = new Date(`2021-09-13T20:00:00Z`);
+    const slots = constructSlotsForDay({
+      resource: mondayResource,
+      date: openMonday,
+    });
+    expect(slots.length).toBe(95);
+  });
+  test('returns empty array for closed day', () => {
+    const closedSundayDay = new Date(`2021-09-12T20:00:00Z`);
+    const slots = constructSlotsForDay({
+      resource: mondayResource,
+      date: closedSundayDay,
+    });
+    expect(slots.length).toBe(0);
+  });
+});
 describe('constructAllSlots', () => {
   test('it handles 24-hour open days', () => {
     const slots = constructAllSlots({
@@ -67,12 +86,24 @@ describe('constructAllSlots', () => {
     });
     const slotStarts = slots.map(s => fromGQLDate(s.start).toISOString());
     expect(slotStarts[0]).toBe('2021-06-21T00:00:00.000Z'); // Opens mondays
-    expect(slotStarts[slotStarts.length - 1]).toBe('2021-06-21T23:45:00.000Z');
+    expect(slotStarts[slotStarts.length - 1]).toBe('2021-06-21T23:30:00.000Z');
+    const minuteDiffBetweenDurationAndInterval = 15;
     expect(slotStarts.length).toBe(
-      (24 * 60) / mondayResource.schedule.mon.slotIntervalMinutes
+      (24 * 60 - minuteDiffBetweenDurationAndInterval) /
+        mondayResource.schedule.mon.slotIntervalMinutes
     );
   });
-  test.skip('performs OK', () => {
+  test('does not return slots after end in last date', () => {
+    const slots = constructAllSlots({
+      resource: mondayResource,
+      from: new Date(`2021-06-20T22:00:00Z`), // Sunday, closed
+      to: new Date(`2021-06-21T12:00:00Z`), // Halfway in monday
+    });
+    const slotStarts = slots.map(s => fromGQLDate(s.start).toISOString());
+    expect(slotStarts[0]).toBe('2021-06-21T00:00:00.000Z'); // Opens mondays
+    expect(slotStarts[slotStarts.length - 1]).toBe('2021-06-21T11:30:00.000Z');
+  });
+  test('performs OK', () => {
     const start = Date.now();
     const slots = constructAllSlots({
       resource: mondayResource,
@@ -82,7 +113,7 @@ describe('constructAllSlots', () => {
     // TODO: Test with a selection of relevant bookings
     reduceAvailability(slots, []);
     const end = Date.now();
-    expect(end - start).toBeLessThan(2 * 1000);
+    expect(end - start).toBeLessThan(1000);
   });
 });
 describe('findNextValidTimeSlot', () => {

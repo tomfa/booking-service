@@ -190,6 +190,64 @@ export const bookingSlotFitsInResourceSlots = (
   // }
   return true;
 };
+const slotCache: Record<
+  string,
+  { slots: TimeSlot[]; startSeconds: number }
+> = {};
+export const constructSlotsForDay = ({
+  resource,
+  date,
+}: {
+  resource: Resource;
+  date: Date;
+}): TimeSlot[] => {
+  const openingHours = getOpeningHoursForDate(resource, date);
+  if (isClosedAllDay(openingHours) || !resource.enabled) {
+    return [];
+  }
+  const startSeconds =
+    setTimeOfDay(
+      date,
+      resource.timezone,
+      splitHourMinute(openingHours.start)
+    ).getTime() / 1000;
+
+  const cacheKey = `${openingHours.start}-${openingHours.end}-${openingHours.slotIntervalMinutes}-${openingHours.slotDurationMinutes}`;
+  if (slotCache[cacheKey]) {
+    const startDiff = startSeconds - slotCache[cacheKey].startSeconds;
+    return slotCache[cacheKey].slots.map(s => ({
+      ...s,
+      availableSeats: resource.seats,
+      start: s.start + startDiff,
+      end: s.end + startDiff,
+    }));
+  }
+
+  let endSeconds =
+    setTimeOfDay(
+      date,
+      resource.timezone,
+      splitHourMinute(openingHours.end)
+    ).getTime() / 1000;
+  if (openingHours.end === '00:00') {
+    endSeconds += 24 * 3600;
+  }
+  const slots: TimeSlot[] = [];
+  const slotDurationSeconds = openingHours.slotDurationMinutes * 60;
+  const slotIntervalSeconds = openingHours.slotIntervalMinutes * 60;
+  let cursor = startSeconds;
+  while (cursor + slotDurationSeconds <= endSeconds) {
+    slots.push({
+      start: cursor,
+      end: cursor + slotDurationSeconds,
+      availableSeats: resource.seats,
+      seatsAvailable: [],
+    });
+    cursor += slotIntervalSeconds;
+  }
+  slotCache[cacheKey] = { startSeconds, slots };
+  return slots;
+};
 export const constructAllSlots = ({
   resource,
   from,
@@ -199,7 +257,6 @@ export const constructAllSlots = ({
   from: Date;
   to: Date;
 }): TimeSlot[] => {
-  // TODO: This becomes horribly slow for long from/to dates
   if (!isValidDate(from) || !isValidDate(to)) {
     throw new GenericBookingError(
       `Received invalid date range to construct slots form`
@@ -208,16 +265,19 @@ export const constructAllSlots = ({
   if (!resource.enabled) {
     return [];
   }
-  const timeslots: TimeSlot[] = [];
-  let cursor = findNextValidTimeSlotStart(resource, from, to);
-  while (cursor && cursor < to) {
-    const currentTimeSlot = convertDateToTimeSlot(resource, cursor);
-    timeslots.push(currentTimeSlot);
-    cursor = findNextValidTimeSlotStart(
-      resource,
-      new Date(cursor.getTime() + 1),
-      to
+  let timeslots: TimeSlot[] = [];
+  let cursor = from;
+  const dateAfterToDate = startOfNextDay(to, resource.timezone);
+  while (cursor < dateAfterToDate) {
+    timeslots = timeslots.concat(
+      constructSlotsForDay({ resource, date: cursor })
     );
+    cursor = new Date(cursor.getTime() + 24 * 3600 * 1000);
   }
-  return timeslots;
+  const startSeconds = Math.floor(from.getTime() / 1000);
+  const endSeconds = Math.floor(to.getTime() / 1000);
+  const filtered = timeslots.filter(
+    t => t.start >= startSeconds && t.end <= endSeconds
+  );
+  return filtered;
 };
