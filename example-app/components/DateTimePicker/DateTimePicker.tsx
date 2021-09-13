@@ -5,6 +5,7 @@ import {
   Weekday,
   TimeStamp,
   addMinutes,
+  subtractMinutes,
 } from '../../utils/date.utils';
 
 import styles from './DateTimePicker.module.scss';
@@ -54,7 +55,18 @@ const DateTimePicker = ({
       return;
     }
     let newDate = new Date(selectedDate);
-    newDate.setMinutes(selectedTime.hour * 60 + selectedTime.minute);
+    const minuteOfDay = selectedTime.hour * 60 + selectedTime.minute;
+    newDate.setMinutes(minuteOfDay);
+    if (isEndTime) {
+      // End time might be in next day...
+      const earliestEndTimeSelectionMinuteOfDate =
+        fromTime.hour * 60 + fromTime.minute;
+      const isNextDay = earliestEndTimeSelectionMinuteOfDate > minuteOfDay;
+      if (isNextDay) {
+        newDate = new Date(newDate.getTime() + 24 * 3600 * 1000);
+      }
+    }
+
     onChange(newDate);
   };
   const updateExcludedDays = () => {
@@ -73,20 +85,23 @@ const DateTimePicker = ({
     const [hour, minute] = start.split(':');
     const timeStamp = { hour: parseInt(hour), minute: parseInt(minute) };
     if (isEndTime) {
-      return addMinutes(timeStamp, dayOpeningHours?.slotIntervalMinutes || 0);
+      return addMinutes(timeStamp, dayOpeningHours?.slotDurationMinutes || 0);
     }
     return timeStamp;
-  }, [dayOpeningHours?.slotIntervalMinutes, dayOpeningHours?.start, isEndTime]);
+  }, [dayOpeningHours?.slotDurationMinutes, dayOpeningHours?.start, isEndTime]);
 
   const toTime: TimeStamp = useMemo(() => {
     const end = dayOpeningHours?.end || '23:00';
     const [hour, minute] = end.split(':');
     const timeStamp = { hour: parseInt(hour), minute: parseInt(minute) };
-    if (isEndTime) {
-      return addMinutes(timeStamp, dayOpeningHours?.slotIntervalMinutes || 0);
+    if (!isEndTime) {
+      return subtractMinutes(
+        timeStamp,
+        dayOpeningHours?.slotDurationMinutes || 0
+      );
     }
     return timeStamp;
-  }, [dayOpeningHours?.end, dayOpeningHours?.slotIntervalMinutes, isEndTime]);
+  }, [dayOpeningHours?.end, dayOpeningHours?.slotDurationMinutes, isEndTime]);
 
   return (
     <div className={[styles.dateAndTimeWrapper, className].join(' ')}>

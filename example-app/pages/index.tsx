@@ -187,8 +187,8 @@ const Home: NextPage = () => {
                 startDate={fromTime}
                 schedule={schedule}
                 onChange={setToTime}
-                isEndTime
                 numDaysAheadAvailable={31}
+                isEndTime
               />
             </>
           )}
