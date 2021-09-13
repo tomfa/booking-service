@@ -50,6 +50,19 @@ const Home: NextPage = () => {
       error: addBookingError,
     },
   ] = useAddBookingMutation();
+  const reloadAvailability = useCallback(() => {
+    if (!fromTime || !toTime || !urlResourceId || !isValidDateFilter) {
+      return;
+    }
+    const variables = {
+      filterAvailability: {
+        resourceIds: [urlResourceId],
+        from: toGQLDate(fromTime),
+        to: toGQLDate(toTime),
+      },
+    };
+    fetchAvailability({ variables });
+  }, [urlResourceId, fromTime, toTime, isValidDateFilter, fetchAvailability]);
 
   useEffect(() => {
     if (!urlResourceId) {
@@ -61,18 +74,8 @@ const Home: NextPage = () => {
   }, [urlResourceId, fetchResource]);
 
   useEffect(() => {
-    if (!urlResourceId || !isValidDateFilter || !toTime) {
-      return;
-    }
-    const variables = {
-      filterAvailability: {
-        resourceIds: [urlResourceId],
-        from: toGQLDate(fromTime),
-        to: toGQLDate(toTime),
-      },
-    };
-    fetchAvailability({ variables });
-  }, [urlResourceId, fetchAvailability, isValidDateFilter, fromTime, toTime]);
+    reloadAvailability();
+  }, [urlResourceId, reloadAvailability, isValidDateFilter, fromTime, toTime]);
 
   const loading = useMemo(
     () => resourceLoading || !router.isReady || availabilityLoading,
@@ -127,25 +130,16 @@ const Home: NextPage = () => {
         .catch(err => {
           // errors will be displayed from addBookingError
         })
-        .finally(() => {
-          const variables = {
-            filterAvailability: {
-              resourceIds: [urlResourceId],
-              from: toGQLDate(fromTime),
-              to: toGQLDate(toTime),
-            },
-          };
-          fetchAvailability({ variables });
-        });
+        .finally(reloadAvailability);
     },
     [
+      reloadAvailability,
       formValid,
       urlResourceId,
       addBooking,
       fromTime,
       toTime,
       selectedSeats,
-      fetchAvailability,
     ]
   );
 
@@ -213,7 +207,10 @@ const Home: NextPage = () => {
           <DisplayError>{addBookingError.message}</DisplayError>
         )}
         {!!addBookingData?.addBooking && (
-          <BookingConfirmation booking={addBookingData.addBooking} />
+          <BookingConfirmation
+            booking={addBookingData.addBooking}
+            updateAvailability={reloadAvailability}
+          />
         )}
 
         <Button

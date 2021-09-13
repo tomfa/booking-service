@@ -10,8 +10,12 @@ import { DisplayError } from './DisplayError';
 
 type BookingConfirmationProps = {
   booking?: AddBookingMutation['addBooking'];
+  updateAvailability: () => void;
 };
-export const BookingConfirmation = ({ booking }: BookingConfirmationProps) => {
+export const BookingConfirmation = ({
+  booking,
+  updateAvailability,
+}: BookingConfirmationProps) => {
   const [
     cancelBooking,
     {
@@ -25,10 +29,12 @@ export const BookingConfirmation = ({ booking }: BookingConfirmationProps) => {
     if (cancelBookingLoading || !booking) {
       return;
     }
-    cancelBooking({ variables: { id: booking.id } }).catch(() => {
-      // Handled by errorhandler
-    });
-  }, [cancelBookingLoading, cancelBooking, booking]);
+    cancelBooking({ variables: { id: booking.id } })
+      .catch(() => {
+        // Handled by errorhandler
+      })
+      .then(updateAvailability);
+  }, [cancelBookingLoading, cancelBooking, booking, updateAvailability]);
 
   if (!booking) {
     return null;
