@@ -19,6 +19,7 @@ import {
 import { HourMinuteString } from './types';
 import { validateHourMinute } from './validation.utils';
 import { GenericBookingError } from './errors';
+import { generateSeatNumbersForResource } from './seating.utils';
 
 export const closed: HourSchedule = {
   start: '',
@@ -211,15 +212,18 @@ export const constructSlotsForDay = ({
       resource.timezone,
       splitHourMinute(openingHours.start)
     ).getTime() / 1000;
+  const allSeats = generateSeatNumbersForResource(resource);
 
   const cacheKey = `${openingHours.start}-${openingHours.end}-${openingHours.slotIntervalMinutes}-${openingHours.slotDurationMinutes}`;
   if (slotCache[cacheKey]) {
     const startDiff = startSeconds - slotCache[cacheKey].startSeconds;
+
     return slotCache[cacheKey].slots.map(s => ({
       ...s,
       availableSeats: resource.seats,
       start: s.start + startDiff,
       end: s.end + startDiff,
+      seatsAvailable: allSeats,
     }));
   }
 
@@ -241,7 +245,7 @@ export const constructSlotsForDay = ({
       start: cursor,
       end: cursor + slotDurationSeconds,
       availableSeats: resource.seats,
-      seatsAvailable: [],
+      seatsAvailable: allSeats,
     });
     cursor += slotIntervalSeconds;
   }

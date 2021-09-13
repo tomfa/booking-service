@@ -4,7 +4,9 @@ import { BadRequestError, ErrorCode } from './errors';
 import { getConflictingBookings } from './db.mappers';
 import { fromGQLDate } from './date.utils';
 
-const generateSeatNumbersForResource = (resource: Resource): number[] => {
+export const generateSeatNumbersForResource = (
+  resource: Resource
+): number[] => {
   return Array(resource.seats)
     .fill('')
     .map((x, i) => i);
