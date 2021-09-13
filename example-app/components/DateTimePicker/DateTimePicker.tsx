@@ -39,6 +39,16 @@ const DateTimePicker = ({
   const [dayOpeningHours, setDayOpening] = useState<OpeningHours | undefined>();
   const [excludeDays, setExcludeDays] = useState<Array<Weekday>>([]);
 
+  const fromTime: TimeStamp = useMemo(() => {
+    const start = dayOpeningHours?.start || '00:00';
+    const [hour, minute] = start.split(':');
+    const timeStamp = { hour: parseInt(hour), minute: parseInt(minute) };
+    if (isEndTime) {
+      return addMinutes(timeStamp, dayOpeningHours?.slotDurationMinutes || 0);
+    }
+    return timeStamp;
+  }, [dayOpeningHours?.slotDurationMinutes, dayOpeningHours?.start, isEndTime]);
+
   const updateDayOpeningHours = () => {
     const dayOfWeek = selectedDate
       ? getDayOfWeek(selectedDate)
@@ -77,18 +87,15 @@ const DateTimePicker = ({
   };
 
   useEffect(updateDayOpeningHours, [selectedDate, schedule]);
-  useEffect(callOnChange, [selectedDate, selectedTime, onChange]);
+  useEffect(callOnChange, [
+    selectedDate,
+    selectedTime,
+    onChange,
+    isEndTime,
+    fromTime.hour,
+    fromTime.minute,
+  ]);
   useEffect(updateExcludedDays, [schedule]);
-
-  const fromTime: TimeStamp = useMemo(() => {
-    const start = dayOpeningHours?.start || '00:00';
-    const [hour, minute] = start.split(':');
-    const timeStamp = { hour: parseInt(hour), minute: parseInt(minute) };
-    if (isEndTime) {
-      return addMinutes(timeStamp, dayOpeningHours?.slotDurationMinutes || 0);
-    }
-    return timeStamp;
-  }, [dayOpeningHours?.slotDurationMinutes, dayOpeningHours?.start, isEndTime]);
 
   const toTime: TimeStamp = useMemo(() => {
     const end = dayOpeningHours?.end || '23:00';

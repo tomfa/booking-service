@@ -59,7 +59,12 @@ const DatePicker = ({
     }
   };
 
-  useEffect(populateDateOptions, [startDate, endDate, excludeDays]);
+  useEffect(populateDateOptions, [
+    startDate,
+    endDate,
+    excludeDays,
+    numDaysAheadAvailable,
+  ]);
   useEffect(setDefaultDate, [dateOptions, onChange, value]);
 
   return (
