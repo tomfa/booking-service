@@ -82,11 +82,10 @@ async function findAvailability(
     );
   }
 
-  // TODO: Improve performance
   const numDays = Math.floor(
-    to.getTime() - from.getTime() / (24 * 3600 * 1000)
+    (to.getTime() - from.getTime()) / (24 * 3600 * 1000)
   );
-  const maxDaysAllowed = 32;
+  const maxDaysAllowed = 120;
   if (numDays > maxDaysAllowed) {
     throw new BadRequestError(
       `findAvailability can not yet be used for periods longer than ${maxDaysAllowed} days`,
