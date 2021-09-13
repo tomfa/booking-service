@@ -33,7 +33,12 @@ export const msUntilClosed = (
 ): number => {
   const closingTime = setTimeOfDay(date, tz, splitHourMinute(openingHours.end));
   const closesMs = msOfDay(closingTime, tz);
+  const openUntilMidnight = closesMs === 0;
   const currentMS = msOfDay(date, tz);
+  if (openUntilMidnight) {
+    const msInOneDay = 24 * 3600 * 1000;
+    return msInOneDay - currentMS;
+  }
   return closesMs - currentMS;
 };
 

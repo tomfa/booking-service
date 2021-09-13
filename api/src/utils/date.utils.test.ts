@@ -61,6 +61,19 @@ describe('date.utils', () => {
       const expected = (6 - 2) * 3600 * 1000; // 2 hour timezone offset
       expect(result).toBe(expected);
     });
+    test('handles ending at midnight', () => {
+      const timezone = 'Europe/Oslo';
+      const openAllDay: HourSchedule = {
+        start: '00:00',
+        end: '00:00',
+        slotIntervalMinutes: 30,
+        slotDurationMinutes: 60,
+      };
+      const now = new Date('2021-07-01T10:00:00Z');
+      const result = msUntilClosed(openAllDay, now, timezone);
+      const expected = (14 - 2) * 3600 * 1000; // 2 hour timezone offset
+      expect(result).toBe(expected);
+    });
   });
   describe('getDayOfWeek', () => {
     it('returns day of week, 0 indexed from sunday', () => {
