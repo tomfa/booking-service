@@ -1,9 +1,9 @@
 {
   "name": "@vailable/web",
   "version": "1.0.0",
-  "description": "NextJS app demonstrating use of PDF API",
+  "description": "Homepage of Vailable",
   "engines": {
-    "node": ">=12.18.0"
+    "node": ">=14"
   },
   "dependencies": {
     "@apollo/client": "^3.3.20",

@@ -4,9 +4,6 @@
   "main": "dist/index",
   "types": "dist/index",
   "description": "Shared types and utils for web and api",
-  "engines": {
-    "node": ">=12.18.0"
-  },
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^26.0.20",
