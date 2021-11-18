@@ -2,10 +2,7 @@
 import 'tailwindcss/tailwind.css';
 
 import { Provider as NextAuthProvider, useSession } from 'next-auth/client';
-
-import { ThemeProvider } from 'styled-components';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-
 import { useMemo } from 'react';
 import { AppProps } from 'next/app';
 import { MessageProvider } from '../providers/MessageProvider';
@@ -52,13 +49,11 @@ const AuthedApp = (props: AppProps) => {
 
 const App = (props: AppProps) => {
   return (
-    <ThemeProvider theme={theme}>
-      <MessageProvider>
-        <NextAuthProvider session={props.pageProps.session}>
-          <AuthedApp {...props} />
-        </NextAuthProvider>
-      </MessageProvider>
-    </ThemeProvider>
+    <MessageProvider>
+      <NextAuthProvider session={props.pageProps.session}>
+        <AuthedApp {...props} />
+      </NextAuthProvider>
+    </MessageProvider>
   );
 };
 

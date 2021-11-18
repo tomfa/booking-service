@@ -1,4 +1,4 @@
-import { CSSProperties, MouseEventHandler } from 'react';
+import { MouseEventHandler } from 'react';
 import {
   Link as LinkIcon,
   IconProps as PhoshopProps,
@@ -20,10 +20,7 @@ import {
   LockSimple as Lock,
 } from 'phosphor-react';
 
-import NextLink from 'next/link';
-import { IconWrapper } from './Icon.styles';
-import { BlankButton } from './Button.style';
-import { Link } from './Link.styles';
+import Link from 'next/link';
 
 export enum IconType {
   LINK,
@@ -105,46 +102,22 @@ const IconSVG = ({ icon, ...props }: ComponentProps) => {
 
 type IconProps = {
   icon: IconType;
-  color?: string;
-  hoverColor?: string;
-  secondary?: boolean;
-  hoverable?: boolean;
-  withPadding?: boolean;
   size?: number;
-  style?: CSSProperties;
   className?: string;
 };
 type IconLinkProps = Omit<IconProps, 'hoverable'> & { href: string };
 
-export const Icon = ({
-  color,
-  hoverColor,
-  icon,
-  secondary = false,
-  hoverable = false,
-  withPadding = false,
-  size = 11,
-  style,
-  className,
-}: IconProps) => {
+export const Icon = ({ icon, size = 11, className }: IconProps) => {
   return (
-    <IconWrapper
-      $secondary={secondary}
-      $hoverable={hoverable}
-      $color={color}
-      $hoverColor={hoverColor}
-      $withPadding={withPadding}
-      style={style}
-      className={className}>
+    <span className={className}>
       <IconSVG icon={icon} weight={'bold'} size={size} />
-    </IconWrapper>
+    </span>
   );
 };
 export const IconLink = ({ href, ...props }: IconLinkProps) => {
-  const useNextLink = !href.startsWith('http');
   return (
-    <Link href={href} as={useNextLink ? NextLink : 'a'}>
-      <Icon {...props} hoverable withPadding />
+    <Link href={href}>
+      <Icon {...props} />
     </Link>
   );
 };
@@ -153,17 +126,7 @@ export type IconButtonProps = Omit<IconProps, 'hoverable'> & {
   onClick: MouseEventHandler<HTMLButtonElement>;
 };
 export const IconButton = ({ onClick, ...props }: IconButtonProps) => (
-  <BlankButton
-    onClick={onClick}
-    hoverColor={props.hoverColor}
-    color={props.color}
-    $noPadding>
-    <Icon
-      hoverable
-      withPadding
-      color={props.color}
-      hoverColor={props.hoverColor}
-      {...props}
-    />
-  </BlankButton>
+  <button onClick={onClick}>
+    <Icon {...props} />
+  </button>
 );

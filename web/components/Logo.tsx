@@ -1,13 +1,11 @@
 import Link from 'next/link';
-import { LogoIcon, AWrapper, LogoText } from './Logo.styles';
+import { SimpleLogoIcon } from './SimpleLogoIcon';
 
 export const Logo = () => {
   return (
-    <Link href="/" passHref>
-      <AWrapper>
-        <LogoIcon />
-        <LogoText>Vailable</LogoText>
-      </AWrapper>
+    <Link href="/">
+      <SimpleLogoIcon />
+      <span>Vailable</span>
     </Link>
   );
 };

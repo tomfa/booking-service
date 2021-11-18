@@ -2,14 +2,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
-import { Logo } from '../components/Logo';
 import { IconButton, IconType } from '../components/Icon';
-import { Code } from '../components/Code.styles';
-import { Nav, Wrapper } from './Header.styles';
-import {
-  ProfileDropdownMenu,
-  ProfileDropdownWrapper,
-} from './ProfileDropdown.styles';
+import { Logo } from '../components/Logo';
 
 export const ProfileDropdown = () => {
   const [session] = useSession();
@@ -17,44 +11,44 @@ export const ProfileDropdown = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
   if (!session) {
     return (
-      <ProfileDropdownWrapper>
+      <div>
         <IconButton
           size={20}
           icon={IconType.USER}
           onClick={() => router.push('/login')}
         />
-      </ProfileDropdownWrapper>
+      </div>
     );
   }
   return (
-    <ProfileDropdownWrapper>
+    <div>
       <IconButton
         size={20}
         icon={IconType.USER}
         onClick={() => setOpen(o => !o)}
       />
       {isOpen && (
-        <ProfileDropdownMenu>
-          <Code style={{ flexDirection: 'column', marginBottom: '1rem' }}>
+        <div>
+          <code style={{ flexDirection: 'column', marginBottom: '1rem' }}>
             <span style={{ opacity: 0.5, flex: '1' }}>{`//`} username:</span>
             {session.user.email}
-          </Code>
+          </code>
           <Link href={'/resources'}>Resources</Link>
           <Link href={'/profile'}>Profile</Link>
           <Link href={'/logout'}>Log out</Link>
-        </ProfileDropdownMenu>
+        </div>
       )}
-    </ProfileDropdownWrapper>
+    </div>
   );
 };
 
 export const Header = () => {
   return (
-    <Wrapper>
-      <Nav>
+    <div>
+      <nav>
         <Logo />
         <ProfileDropdown />
-      </Nav>
-    </Wrapper>
+      </nav>
+    </div>
   );
 };

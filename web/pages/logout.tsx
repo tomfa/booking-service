@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import auth from 'next-auth/client';
-import { Icon, IconType } from '../components/Icon';
 import { Layout } from '../components/Layout';
 
 export default function LogoutPage() {
@@ -22,7 +21,7 @@ export default function LogoutPage() {
   return (
     <Layout social={{ title: 'Vailable | Logging out' }}>
       <h1 style={{ paddingTop: '3rem' }}>Logging out...</h1>
-      <Icon icon={IconType.LOADING} size={100} />
+      <p>Loading</p>
     </Layout>
   );
 }

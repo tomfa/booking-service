@@ -1,12 +1,5 @@
 import { AlertComponentPropsWithStyle } from 'react-alert';
 import { Icon, IconType } from '../Icon';
-import {
-  AlertWrapper,
-  CloseButton,
-  ContentWrapper,
-  MessageIconWrapper,
-  MessageText,
-} from './MessageTemplate.styles';
 
 export const MessageTemplate = ({
   message,
@@ -15,17 +8,17 @@ export const MessageTemplate = ({
   style,
 }: AlertComponentPropsWithStyle) => {
   return (
-    <AlertWrapper style={style} $type={options.type}>
-      <ContentWrapper>
-        <MessageIconWrapper>
+    <div style={style}>
+      <div>
+        <div>
           <Icon icon={mapMessageType(options.type)} size={18} />
-        </MessageIconWrapper>
-        <MessageText>{message}</MessageText>
-      </ContentWrapper>
-      <CloseButton onClick={close}>
+        </div>
+        <div>{message}</div>
+      </div>
+      <button onClick={close}>
         <Icon icon={IconType.CLOSE} size={18} />
-      </CloseButton>
-    </AlertWrapper>
+      </button>
+    </div>
   );
 };
 
