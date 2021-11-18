@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import 'tailwindcss/tailwind.css';
+
 import { Provider as NextAuthProvider, useSession } from 'next-auth/client';
 
 import { ThemeProvider } from 'styled-components';
