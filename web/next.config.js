@@ -6,7 +6,6 @@ const PRODUCTION_DOMAIN_ROOT = undefined;
 const DEVELOPMENT_DOMAIN_ROOT = undefined; // = root of domain
 
 module.exports = phase => ({
-  distDir: 'build',
   trailingSlash: true,
 
   basePath:
