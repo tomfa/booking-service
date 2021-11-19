@@ -36,7 +36,7 @@ const Footer = (props: Props) => {
     []
   );
   return (
-    <footer className={`bg-white dark:bg-gray-800 w-full py-8 bg-sloth-dark`}>
+    <footer className={`dark:bg-gray-800 w-full py-8 bg-sloth-dark`}>
       <div className="max-w-screen-xl mx-auto px-4">
         <ul className="max-w-screen-md mx-auto text-lg font-light flex flex-wrap justify-between">
           {links.map(link => {
