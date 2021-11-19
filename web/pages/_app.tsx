@@ -7,8 +7,6 @@ import { useMemo } from 'react';
 import { AppProps } from 'next/app';
 import { MessageProvider } from '../providers/MessageProvider';
 
-import theme from '../styles/theme';
-
 const getClient = (authorization?: string) => {
   const headers = authorization ? { authorization } : undefined;
   return new ApolloClient({
@@ -24,24 +22,6 @@ const AuthedApp = (props: AppProps) => {
   const client = useMemo(() => getClient(session?.apiToken), [session]);
   return (
     <ApolloProvider client={client}>
-      <style>
-        {`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: ${theme.fonts.primary};
-          background-color: ${theme.colors.bgPrimary};
-          color: ${theme.colors.textPrimary};
-        }
-        a {
-          color: ${theme.colors.textPrimary};
-        }
-        * {
-          box-sizing: border-box;
-        }
-      `}
-      </style>
       <props.Component {...props.pageProps} />
     </ApolloProvider>
   );
