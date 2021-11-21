@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'tailwindcss/tailwind.css';
 
+import { IdProvider } from '@radix-ui/react-id';
 import { Provider as NextAuthProvider, useSession } from 'next-auth/client';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { useMemo } from 'react';
@@ -39,9 +40,11 @@ const AuthedApp = (props: AppProps) => {
 
 const App = (props: AppProps) => {
   return (
-    <NextAuthProvider session={props.pageProps.session}>
-      <AuthedApp {...props} />
-    </NextAuthProvider>
+    <IdProvider>
+      <NextAuthProvider session={props.pageProps.session}>
+        <AuthedApp {...props} />
+      </NextAuthProvider>
+    </IdProvider>
   );
 };
 
