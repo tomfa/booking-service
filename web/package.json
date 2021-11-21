@@ -19,6 +19,7 @@
     "classnames": "^2.3.1",
     "graphql": "^15.5.1",
     "jsonwebtoken": "^8.5.1",
+    "match-sorter": "^6.3.1",
     "next": "^11.1.2",
     "next-auth": "^3.27.3",
     "phosphor-react": "^1.2.1",

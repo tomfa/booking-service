@@ -1,22 +1,6 @@
-import Link from 'next/link';
 import { Layout } from '../../components/Layout';
-import { Resource, useFindResourcesQuery } from '../../graphql/generated/types';
-
-const ResourceListItem = ({ resource }: { resource: Resource }) => {
-  return (
-    <tr>
-      <td>
-        <Link href={`/resources/${resource.id}`}>{resource.label}</Link>
-      </td>
-      <td>{resource.category || '-'}</td>
-      <td>{resource.seats}</td>
-      <td>{(resource.enabled && 'Yes') || 'No'}</td>
-      <td>
-        <Link href={`/resources/${resource.id}/book`}>Book</Link>
-      </td>
-    </tr>
-  );
-};
+import { useFindResourcesQuery } from '../../graphql/generated/types';
+import ResourceTable from '../../kit/Table';
 
 export default function ResourcePage() {
   const { data, loading, error } = useFindResourcesQuery({
@@ -25,28 +9,21 @@ export default function ResourcePage() {
 
   return (
     <Layout social={{ title: 'Vailable | Resources' }}>
-      <h3>Ressurser</h3>
+      <ResourceTable
+        withHeader
+        rows={data?.findResources || []}
+        title={'Resources'}
+      />
       {loading && <>Loading...</>}
       {!loading && error && <>Error: {String(error)}</>}
 
-      {data?.findResources.length && (
-        <table>
-          <thead>
-            <tr>
-              <td>label</td>
-              <td>category</td>
-              <td>seats</td>
-              <td>enabled</td>
-            </tr>
-          </thead>
-          <tbody>
-            {data.findResources.map(r => (
-              <ResourceListItem key={r.id} resource={r} />
-            ))}
-          </tbody>
-        </table>
+      {!loading && data?.findResources?.length === 0 && (
+        <button
+          type="submit"
+          className="bg-green-600 text-white px-10 py-3 hover:bg-green-700 shadow-lg ml-auto">
+          Add your first resource
+        </button>
       )}
-      {data?.findResources.length === 0 && <>You have no resources</>}
     </Layout>
   );
 }

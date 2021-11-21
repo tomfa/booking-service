@@ -14,6 +14,7 @@ interface Props {
   square?: boolean;
   withForceIndications?: boolean;
   id?: string;
+  onChange?: (val: string) => void;
 }
 
 const InputText = (props: Props) => {
@@ -53,6 +54,7 @@ const InputText = (props: Props) => {
         type={props.type || 'text'}
         name={props.name}
         placeholder={props.placeholder}
+        onChange={e => !!props.onChange && props.onChange(e.target.value)}
       />
       {props.withForceIndications && (
         <>
