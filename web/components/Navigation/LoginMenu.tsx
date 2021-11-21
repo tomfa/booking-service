@@ -11,6 +11,7 @@ export const LoginMenu = () => {
     }
     return [
       { link: '/resources', label: 'Resources' },
+      { link: '/resources/add', label: 'Add resource' },
       { link: '/profile', label: 'Profile' },
       { link: '/logout', label: 'Log out' },
     ];

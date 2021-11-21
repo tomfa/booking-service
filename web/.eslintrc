@@ -8,6 +8,9 @@
     // Next handles React in scope for us
     "react/react-in-jsx-scope": 0,
 
+    // We use spreading
+    "react/jsx-props-no-spreading": 0,
+
     // Use Typescript version to handle enums
     "no-shadow": 0,
     "@typescript-eslint/no-shadow": 2
