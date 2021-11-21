@@ -3,6 +3,11 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { Layout } from '../../components/Layout';
 import { useAddResourceMutation } from '../../graphql/generated/types';
+import Checkbox from '../../components/form/Checkbox';
+import Label from '../../components/form/Label';
+import InputWrapper from '../../components/form/InputWrapper';
+import Input from '../../components/form/Input';
+import H2 from '../../components/typography/H2';
 
 type Inputs = {
   label: string;
@@ -45,18 +50,44 @@ export default function ResourcePage() {
 
   return (
     <Layout social={{ title: 'Vailable | Add Resource' }}>
-      <h3>New resource</h3>
+      <H2>New resource</H2>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input defaultValue="My resource" {...register('label')} />
-        <input defaultValue="" {...register('category')} />
-        <input
-          defaultValue={1}
-          type={'number'}
-          {...register('seats', { min: 1, valueAsNumber: true })}
-        />
-        <input type="checkbox" {...register('enabled')} />
+        <InputWrapper>
+          <Label htmlFor={'input-label'}>Resource label</Label>
+          <Input
+            id={'input-label'}
+            defaultValue="My resource"
+            {...register('label', { required: true })}
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <Label htmlFor={'category'}>Category</Label>
+          <Input id={'category'} defaultValue="" {...register('category')} />
+        </InputWrapper>
+        <InputWrapper>
+          <Label htmlFor={'num-seats'}>Number of seats</Label>
+          <Input
+            id={'num-seats'}
+            defaultValue={1}
+            type={'number'}
+            {...register('seats', {
+              min: 1,
+              valueAsNumber: true,
+              required: true,
+            })}
+          />
+        </InputWrapper>
 
-        <input type="submit" />
+        <InputWrapper>
+          <Label htmlFor={'input-enabled'}>Enabled</Label>
+          <Checkbox id={'input-enabled'} {...register('enabled')}>
+            ost
+          </Checkbox>
+        </InputWrapper>
+
+        <button type="submit" className="bg-white px-10 py-3 hover:bg-gray-100">
+          Add resource
+        </button>
       </form>
       {loading && <>Loading...</>}
       {!loading && error && <>Error: {String(error)}</>}
