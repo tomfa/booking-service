@@ -9,7 +9,7 @@ export default function Label({
 }: LabelProps & React.RefAttributes<HTMLSpanElement>) {
   return (
     <RLabel.Root
-      className={classNames('py-2 font-bold text-gray-700', className)}
+      className={classNames('font-bold text-gray-700', className)}
       {...props}
     />
   );

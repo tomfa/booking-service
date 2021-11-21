@@ -48,43 +48,47 @@ export const ResourceForm = (props: Props) => {
         className={'flex flex-col max-w-xl mx-auto'}>
         {props.title && <H2>{props.title}</H2>}
         <InputWrapper>
-          <Label htmlFor={'input-label'}>
-            Resource label
+          <div className={'flex items-center mb-2'}>
+            <Label htmlFor={'input-label'}>Resource label</Label>
             <Tooltip className={'ml-2'}>
               <strong>Required.</strong> Label of the resource. Can be changed
               later.
             </Tooltip>
-          </Label>
+          </div>
 
-          <Input {...register('label')} placeholder={'My resource'} />
+          <Input
+            id={'input-label'}
+            {...register('label')}
+            placeholder={'My resource'}
+          />
           <InputError>{errors.label && errors.label.message}</InputError>
         </InputWrapper>
         <InputWrapper>
-          <Label htmlFor={'category'}>
-            Category{' '}
+          <div className={'flex items-center mb-2'}>
+            <Label htmlFor={'input-category'}>Category </Label>
             <Tooltip className={'ml-2 color'}>
               <strong>Optional.</strong> Category can be used to create groups
               of resources that a user has access to, or when filter resources
               for availablility.
             </Tooltip>
-          </Label>
+          </div>
           <Input
-            id={'category'}
+            id={'input-category'}
             placeholder={'Office space'}
             {...register('category')}
           />
           <InputError>{errors.category && errors.category.message}</InputError>
         </InputWrapper>
         <InputWrapper>
-          <Label htmlFor={'seats'}>
-            Number of seats
+          <div className={'flex items-center mb-2'}>
+            <Label htmlFor={'input-seats'}>Number of seats</Label>
             <Tooltip className={'ml-2 color'}>
               <strong>Required.</strong> Number of bookings this resource can
               have at a time, before fully booked.
             </Tooltip>
-          </Label>
+          </div>
           <Input
-            defaultValue={1}
+            id={'input-seats'}
             type={'number'}
             {...register('seats', { valueAsNumber: true })}
           />
@@ -92,18 +96,19 @@ export const ResourceForm = (props: Props) => {
         </InputWrapper>
 
         <InputWrapper>
-          <Label htmlFor={'enabled'}>
-            Enabled
+          <div className={'flex items-center mb-2'}>
+            <Label htmlFor={'input-enabled'}>Enabled</Label>
             <Tooltip className={'ml-2'}>
               Whether users may add new bookings to this resource.
             </Tooltip>
-          </Label>
+          </div>
           <Controller
             control={control}
             name={'enabled'}
             render={({ field }) => (
               <Checkbox
                 {...field}
+                id={'input-enabled'}
                 value={undefined}
                 checked={field.value}
                 onCheckedChange={field.onChange}
