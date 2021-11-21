@@ -5,7 +5,8 @@ import { Provider as NextAuthProvider, useSession } from 'next-auth/client';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { useMemo } from 'react';
 import { AppProps } from 'next/app';
-import { MessageProvider } from '../providers/MessageProvider';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const getClient = (authorization?: string) => {
   const headers = authorization ? { authorization } : undefined;
@@ -23,17 +24,24 @@ const AuthedApp = (props: AppProps) => {
   return (
     <ApolloProvider client={client}>
       <props.Component {...props.pageProps} />
+      <ToastContainer
+        position="top-right"
+        autoClose={8000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        draggable={false}
+        closeOnClick
+        pauseOnHover
+      />
     </ApolloProvider>
   );
 };
 
 const App = (props: AppProps) => {
   return (
-    <MessageProvider>
-      <NextAuthProvider session={props.pageProps.session}>
-        <AuthedApp {...props} />
-      </NextAuthProvider>
-    </MessageProvider>
+    <NextAuthProvider session={props.pageProps.session}>
+      <AuthedApp {...props} />
+    </NextAuthProvider>
   );
 };
 

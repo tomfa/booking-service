@@ -17,7 +17,7 @@ export const Layout = ({
       <div className="flex flex-col min-h-screen justify-between" style={style}>
         <Meta {...social} />
         <Header />
-        <div className="leading-normal tracking-normal gradient w-full max-w-7xl mx-auto px-8 py-8 mb-auto">
+        <div className="leading-normal tracking-normal gradient w-full max-w-7xl mx-auto px-8 py-20 mb-auto">
           {children}
         </div>
         <Footer />

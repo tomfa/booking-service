@@ -12,6 +12,7 @@ import Input from '../../components/form/Input';
 import H2 from '../../components/typography/H2';
 import Tooltip from '../../components/Tooltip';
 import InputError from '../../components/form/InputError';
+import toast from '../../components/utils/toast.utils';
 
 const schema = z.object({
   label: z.string().min(1),
@@ -55,6 +56,7 @@ export default function ResourcePage() {
           },
         },
       });
+      toast({ message: `Added new resource ${label}.`, type: 'success' });
       await router.push('/resources/');
     },
     [addResource, router]
@@ -62,8 +64,10 @@ export default function ResourcePage() {
 
   return (
     <Layout social={{ title: 'Vailable | Add Resource' }}>
-      <H2>New resource</H2>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className={'flex flex-col max-w-xl mx-auto'}>
+        <H2>New resource</H2>
         <InputWrapper>
           <Label htmlFor={'input-label'}>
             Resource label
@@ -133,7 +137,7 @@ export default function ResourcePage() {
 
         <button
           type="submit"
-          className="bg-white px-10 py-3 hover:bg-gray-100"
+          className="bg-green-600 text-white px-10 py-3 hover:bg-green-700 shadow-lg ml-auto"
           disabled={loading}>
           {(!loading && 'Add resource') || 'Submitting...'}
         </button>
