@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useRouter } from 'next/router';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Layout } from '../../components/Layout';
 import { useAddResourceMutation } from '../../graphql/generated/types';
 import Checkbox from '../../components/form/Checkbox';
@@ -8,21 +10,32 @@ import Label from '../../components/form/Label';
 import InputWrapper from '../../components/form/InputWrapper';
 import Input from '../../components/form/Input';
 import H2 from '../../components/typography/H2';
+import Tooltip from '../../components/Tooltip';
+import InputError from '../../components/form/InputError';
 
-type Inputs = {
-  label: string;
-  seats: number;
-  category: string;
-  enabled: boolean;
-};
+const schema = z.object({
+  label: z.string().min(1),
+  category: z.string().optional(),
+  seats: z.number().min(1),
+  enabled: z.boolean().default(true),
+});
+type SchemaType = z.infer<typeof schema>;
 
 export default function ResourcePage() {
   const router = useRouter();
   const [addResource, { loading, error }] = useAddResourceMutation();
-  const { register, handleSubmit } = useForm<Inputs>();
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<SchemaType>({
+    resolver: zodResolver(schema),
+    defaultValues: { enabled: true },
+  });
 
-  const onSubmit: SubmitHandler<Inputs> = useCallback(
-    async ({ label, enabled, seats, category }) => {
+  const onSubmit: SubmitHandler<SchemaType> = useCallback(
+    async ({ label, seats, enabled, category }) => {
       await addResource({
         variables: {
           addResourceInput: {
@@ -42,7 +55,6 @@ export default function ResourcePage() {
           },
         },
       });
-      // Add message
       await router.push('/resources/');
     },
     [addResource, router]
@@ -53,44 +65,86 @@ export default function ResourcePage() {
       <H2>New resource</H2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputWrapper>
-          <Label htmlFor={'input-label'}>Resource label</Label>
+          <Label htmlFor={'input-label'}>
+            Resource label
+            <Tooltip className={'ml-2'}>
+              <strong>Required.</strong> Label of the resource. Can be changed
+              later.
+            </Tooltip>
+          </Label>
+
+          <Input {...register('label')} placeholder={'My resource'} />
+          <InputError>{errors.label && errors.label.message}</InputError>
+        </InputWrapper>
+        <InputWrapper>
+          <Label htmlFor={'category'}>
+            Category{' '}
+            <Tooltip className={'ml-2 color'}>
+              <strong>Optional.</strong> Category can be used to create groups
+              of resources that a user has access to, or when filter resources
+              for availablility.
+            </Tooltip>
+          </Label>
           <Input
-            id={'input-label'}
-            defaultValue="My resource"
-            {...register('label', { required: true })}
+            id={'category'}
+            placeholder={'Office space'}
+            {...register('category')}
           />
+          <InputError>{errors.category && errors.category.message}</InputError>
         </InputWrapper>
         <InputWrapper>
-          <Label htmlFor={'category'}>Category</Label>
-          <Input id={'category'} defaultValue="" {...register('category')} />
-        </InputWrapper>
-        <InputWrapper>
-          <Label htmlFor={'num-seats'}>Number of seats</Label>
+          <Label htmlFor={'seats'}>
+            Number of seats
+            <Tooltip className={'ml-2 color'}>
+              <strong>Required.</strong> Number of bookings this resource can
+              have at a time, before fully booked.
+            </Tooltip>
+          </Label>
           <Input
-            id={'num-seats'}
             defaultValue={1}
             type={'number'}
-            {...register('seats', {
-              min: 1,
-              valueAsNumber: true,
-              required: true,
-            })}
+            {...register('seats', { valueAsNumber: true })}
           />
+          <InputError>{errors.seats && errors.seats.message}</InputError>
         </InputWrapper>
 
         <InputWrapper>
-          <Label htmlFor={'input-enabled'}>Enabled</Label>
-          <Checkbox id={'input-enabled'} {...register('enabled')}>
-            ost
-          </Checkbox>
+          <Label htmlFor={'enabled'}>
+            Enabled
+            <Tooltip className={'ml-2'}>
+              Whether users may add new bookings to this resource.
+            </Tooltip>
+          </Label>
+          <Controller
+            control={control}
+            name={'enabled'}
+            render={({ field }) => (
+              <Checkbox
+                {...field}
+                value={undefined}
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            )}
+          />
+
+          <InputError>{errors.enabled && errors.enabled.message}</InputError>
         </InputWrapper>
 
-        <button type="submit" className="bg-white px-10 py-3 hover:bg-gray-100">
-          Add resource
+        <button
+          type="submit"
+          className="bg-white px-10 py-3 hover:bg-gray-100"
+          disabled={loading}>
+          {(!loading && 'Add resource') || 'Submitting...'}
         </button>
       </form>
       {loading && <>Loading...</>}
-      {!loading && error && <>Error: {String(error)}</>}
+      {!loading && error && (
+        <InputError>
+          Received the following error when attempting to add resource:{' '}
+          {String(error)}
+        </InputError>
+      )}
     </Layout>
   );
 }
