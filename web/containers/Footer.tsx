@@ -10,7 +10,7 @@ interface Props {
 
 interface FooterLinks {
   label: string;
-  link?: string;
+  link: string;
 }
 
 const Footer = (props: Props) => {

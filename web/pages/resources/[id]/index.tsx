@@ -43,7 +43,7 @@ export default function ResourcePage() {
     variables: { filterResource: {} },
   });
   const resource: Resource | undefined = useMemo(
-    () => data?.findResources.find(r => r.id === router.query.id),
+    () => data?.findResources?.find(r => r.id === router.query.id),
     [router.query, data]
   );
 

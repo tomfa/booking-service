@@ -118,7 +118,8 @@ export default function BookingPage() {
     variables: { filterResource: {} },
   });
   const resource: Resource | undefined = useMemo(
-    () => findResources.data?.findResources.find(r => r.id === router.query.id),
+    () =>
+      findResources.data?.findResources?.find(r => r.id === router.query.id),
     [router.query, findResources.data]
   );
   const [fetchAvailability, { data }] = useFindAvailabilityLazyQuery();
@@ -148,7 +149,7 @@ export default function BookingPage() {
           </ul>
         </div>
       )}
-      {data?.findAvailability && (
+      {data?.findAvailability && resource && (
         <BookingCalendar
           resource={resource}
           availability={data?.findAvailability}

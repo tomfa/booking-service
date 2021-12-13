@@ -34,6 +34,9 @@ async function queryCustomerByEmail(
 }
 
 function generateCustomerToken(user: Customer) {
+  if (!user.email) {
+    throw new Error(`User ${user.id} has no email!`);
+  }
   return createJWTtoken(user.email, ['role:admin']);
 }
 

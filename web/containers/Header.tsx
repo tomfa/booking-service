@@ -75,7 +75,7 @@ export const Header = () => {
             {session && (
               <>
                 <small className={'px-3 text-gray-400'}>
-                  {session.user.email}
+                  {session.user?.email}
                 </small>
                 <NavLink href="/profile">Profile</NavLink>
                 <NavLink href="/resources">Resources</NavLink>
