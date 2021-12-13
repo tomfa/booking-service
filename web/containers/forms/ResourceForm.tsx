@@ -10,6 +10,7 @@ import InputError from '../../components/form/InputError';
 import Checkbox from '../../components/form/Checkbox';
 import { Resource } from '../../graphql/generated/types';
 import { validateHourMinute } from '../../utils/validation.utils';
+import { OpeningHourInput } from './OpeningHourInput';
 
 const validateHourStringInput = z.string().refine(val => {
   if (!val) {
@@ -212,187 +213,55 @@ export const ResourceForm = (props: Props) => {
           </InputError>
         </InputWrapper>
 
-        <InputWrapper>
-          <div className={'flex items-center mb-2'}>
-            <Label htmlFor={'input-monFrom'}>Monday</Label>
-            <Tooltip className={'ml-2 color'}>
-              Format: <code>08:00</code>. Leave empty if closed.
-            </Tooltip>
-          </div>
-          <div className={'flex flex-row'}>
-            <Input
-              id={'input-monFrom'}
-              placeholder={'08:00'}
-              {...register('monFrom')}
-            />
-            <Input
-              id={'input-monTo'}
-              placeholder={'16:00'}
-              className={'ml-1 px-3 py-2 shadow-md'}
-              {...register('monTo')}
-            />
-          </div>
-          <InputError>
-            {(errors.monFrom && errors.monFrom.message) ||
-              (errors.monTo && errors.monTo.message)}
-          </InputError>
-        </InputWrapper>
-
-        <InputWrapper>
-          <div className={'flex items-center mb-2'}>
-            <Label htmlFor={'input-tueFrom'}>Tuesday</Label>
-            <Tooltip className={'ml-2 color'}>
-              Format: <code>08:00</code>. Leave empty if closed.
-            </Tooltip>
-          </div>
-          <div className={'flex flex-row'}>
-            <Input
-              id={'input-tueFrom'}
-              placeholder={'08:00'}
-              {...register('tueFrom')}
-            />
-            <Input
-              id={'input-tueTo'}
-              placeholder={'16:00'}
-              className={'ml-1 px-3 py-2 shadow-md'}
-              {...register('tueTo')}
-            />
-          </div>
-          <InputError>
-            {(errors.tueFrom && errors.tueFrom.message) ||
-              (errors.tueTo && errors.tueTo.message)}
-          </InputError>
-        </InputWrapper>
-
-        <InputWrapper>
-          <div className={'flex items-center mb-2'}>
-            <Label htmlFor={'input-wedFrom'}>Wednesday</Label>
-            <Tooltip className={'ml-2 color'}>
-              Format: <code>08:00</code>. Leave empty if closed.
-            </Tooltip>
-          </div>
-          <div className={'flex flex-row'}>
-            <Input
-              id={'input-wedFrom'}
-              placeholder={'08:00'}
-              {...register('wedFrom')}
-            />
-            <Input
-              id={'input-wedTo'}
-              placeholder={'16:00'}
-              className={'ml-1 px-3 py-2 shadow-md'}
-              {...register('wedTo')}
-            />
-          </div>
-          <InputError>
-            {(errors.wedFrom && errors.wedFrom.message) ||
-              (errors.wedTo && errors.wedTo.message)}
-          </InputError>
-        </InputWrapper>
-
-        <InputWrapper>
-          <div className={'flex items-center mb-2'}>
-            <Label htmlFor={'input-thuFrom'}>Thursday</Label>
-            <Tooltip className={'ml-2 color'}>
-              Format: <code>08:00</code>. Leave empty if closed.
-            </Tooltip>
-          </div>
-          <div className={'flex flex-row'}>
-            <Input
-              id={'input-thuFrom'}
-              placeholder={'08:00'}
-              {...register('thuFrom')}
-            />
-            <Input
-              id={'input-thuTo'}
-              placeholder={'16:00'}
-              className={'ml-1 px-3 py-2 shadow-md'}
-              {...register('thuTo')}
-            />
-          </div>
-          <InputError>
-            {(errors.thuFrom && errors.thuFrom.message) ||
-              (errors.thuTo && errors.thuTo.message)}
-          </InputError>
-        </InputWrapper>
-
-        <InputWrapper>
-          <div className={'flex items-center mb-2'}>
-            <Label htmlFor={'input-friFrom'}>Friday</Label>
-            <Tooltip className={'ml-2 color'}>
-              Format: <code>08:00</code>. Leave empty if closed.
-            </Tooltip>
-          </div>
-          <div className={'flex flex-row'}>
-            <Input
-              id={'input-friFrom'}
-              placeholder={'08:00'}
-              {...register('friFrom')}
-            />
-            <Input
-              id={'input-friTo'}
-              placeholder={'16:00'}
-              className={'ml-1 px-3 py-2 shadow-md'}
-              {...register('friTo')}
-            />
-          </div>
-          <InputError>
-            {(errors.friFrom && errors.friFrom.message) ||
-              (errors.friTo && errors.friTo.message)}
-          </InputError>
-        </InputWrapper>
-
-        <InputWrapper>
-          <div className={'flex items-center mb-2'}>
-            <Label htmlFor={'input-satFrom'}>Saturday</Label>
-            <Tooltip className={'ml-2 color'}>
-              Format: <code>08:00</code>. Leave empty if closed.
-            </Tooltip>
-          </div>
-          <div className={'flex flex-row'}>
-            <Input
-              id={'input-satFrom'}
-              placeholder={'08:00'}
-              {...register('satFrom')}
-            />
-            <Input
-              id={'input-satTo'}
-              placeholder={'16:00'}
-              className={'ml-1 px-3 py-2 shadow-md'}
-              {...register('satTo')}
-            />
-          </div>
-          <InputError>
-            {(errors.satFrom && errors.satFrom.message) ||
-              (errors.satTo && errors.satTo.message)}
-          </InputError>
-        </InputWrapper>
-
-        <InputWrapper>
-          <div className={'flex items-center mb-2'}>
-            <Label htmlFor={'input-sunFrom'}>Sunday</Label>
-            <Tooltip className={'ml-2 color'}>
-              Format: <code>08:00</code>. Leave empty if closed.
-            </Tooltip>
-          </div>
-          <div className={'flex flex-row'}>
-            <Input
-              id={'input-sunFrom'}
-              placeholder={'08:00'}
-              {...register('sunFrom')}
-            />
-            <Input
-              id={'input-sunTo'}
-              placeholder={'16:00'}
-              className={'ml-1 px-3 py-2 shadow-md'}
-              {...register('sunTo')}
-            />
-          </div>
-          <InputError>
-            {(errors.sunFrom && errors.sunFrom.message) ||
-              (errors.sunTo && errors.sunTo.message)}
-          </InputError>
-        </InputWrapper>
+        <OpeningHourInput<ResourceFormType>
+          toId={'monTo'}
+          fromId={'monFrom'}
+          title={'Monday'}
+          errors={errors}
+          register={register}
+        />
+        <OpeningHourInput<ResourceFormType>
+          toId={'tueTo'}
+          fromId={'tueFrom'}
+          title={'Tuesday'}
+          errors={errors}
+          register={register}
+        />
+        <OpeningHourInput<ResourceFormType>
+          toId={'wedTo'}
+          fromId={'wedFrom'}
+          title={'Wednesday'}
+          errors={errors}
+          register={register}
+        />
+        <OpeningHourInput<ResourceFormType>
+          toId={'thuTo'}
+          fromId={'thuFrom'}
+          title={'Thursday'}
+          errors={errors}
+          register={register}
+        />
+        <OpeningHourInput<ResourceFormType>
+          toId={'friTo'}
+          fromId={'friFrom'}
+          title={'Friday'}
+          errors={errors}
+          register={register}
+        />
+        <OpeningHourInput<ResourceFormType>
+          toId={'satTo'}
+          fromId={'satFrom'}
+          title={'Saturday'}
+          errors={errors}
+          register={register}
+        />
+        <OpeningHourInput<ResourceFormType>
+          toId={'sunTo'}
+          fromId={'sunFrom'}
+          title={'Sunday'}
+          errors={errors}
+          register={register}
+        />
 
         <button
           type="submit"
