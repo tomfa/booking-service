@@ -12,6 +12,7 @@ interface Props {
   rows: Resource[];
   withHeader?: boolean;
   withPager?: boolean;
+  onToggleDisabled?: () => void;
 }
 
 const ResourceTable = (props: Props) => {
@@ -51,10 +52,17 @@ const ResourceTable = (props: Props) => {
               <Link href={'/resources/add'} passHref>
                 <a
                   href={'/'}
-                  className="inline-block py-2 px-3 bg-gray-100 text-sm hover:bg-green-100 shadow-lg ml-auto">
+                  className="inline-block py-2 px-3 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto">
                   Add new
                 </a>
               </Link>
+              {props.onToggleDisabled && (
+                <button
+                  onClick={props.onToggleDisabled}
+                  className="inline-block py-2 px-3 ml-1 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto">
+                  Toggle disabled
+                </button>
+              )}
             </div>
           </div>
         )}

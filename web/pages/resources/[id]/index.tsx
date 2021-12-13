@@ -5,7 +5,7 @@ import {
   HourSchedule,
   Resource,
   Schedule,
-  useFindResourcesQuery,
+  useGetResourceByIdQuery,
 } from '../../../graphql/generated/types';
 import { Layout } from '../../../components/Layout';
 
@@ -39,12 +39,12 @@ const WeekSchedule = ({ schedule }: { schedule: Schedule }) => (
 export default function ResourcePage() {
   const router = useRouter();
 
-  const { data } = useFindResourcesQuery({
-    variables: { filterResource: {} },
+  const { data } = useGetResourceByIdQuery({
+    variables: { id: String(router.query.id) },
   });
   const resource: Resource | undefined = useMemo(
-    () => data?.findResources?.find(r => r.id === router.query.id),
-    [router.query, data]
+    () => data?.getResourceById || undefined,
+    [data]
   );
 
   return (

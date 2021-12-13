@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { Layout } from '../../components/Layout';
 import { useFindResourcesQuery } from '../../graphql/generated/types';
 import ResourceTable from '../../kit/Table';
 
 export default function ResourcePage() {
+  const [showDisabledResources, setShowDisabledResources] = useState(false);
   const { data, loading, error } = useFindResourcesQuery({
-    variables: { filterResource: {} },
+    variables: { filterResource: { enabled: !showDisabledResources } },
   });
 
   return (
@@ -13,6 +15,7 @@ export default function ResourcePage() {
         withHeader
         rows={data?.findResources || []}
         title={'Resources'}
+        onToggleDisabled={() => setShowDisabledResources(t => !t)}
       />
       {loading && <>Loading...</>}
       {!loading && error && <>Error: {String(error)}</>}
