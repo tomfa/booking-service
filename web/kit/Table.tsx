@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { matchSorter } from 'match-sorter';
 import classNames from 'classnames';
 import { Resource } from '../graphql/generated/types';
-import FormSubscribe from './FormSubscribe';
 import PagerButton from './PagerButton';
+import { PageTitle } from './PageTitle';
 
 interface Props {
   title?: string;
@@ -31,40 +31,14 @@ const ResourceTable = (props: Props) => {
     <div className="container">
       <div className="py-8">
         {props.withHeader && (
-          <div className="flex flex-col md:flex-row mb-1 sm:mb-0 justify-between w-full">
-            <div
-              className={
-                'flex flex-col md:flex-row mb-3 space-between md:items-center'
-              }>
-              {props.title && (
-                <h2 className="text-2xl md:mr-5 leading-tight mb-2 md:mb-0 ">
-                  {props.title}
-                </h2>
-              )}
-              <FormSubscribe
-                placeholder="Filter"
-                label="Filter"
-                onChange={setFilter}
-              />
-            </div>
-
-            <div>
-              <Link href={'/resources/add'} passHref>
-                <a
-                  href={'/'}
-                  className="inline-block py-2 px-3 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto">
-                  Add new
-                </a>
-              </Link>
-              {props.onToggleDisabled && (
-                <button
-                  onClick={props.onToggleDisabled}
-                  className="inline-block py-2 px-3 ml-1 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto">
-                  Toggle disabled
-                </button>
-              )}
-            </div>
-          </div>
+          <PageTitle
+            title={props.title}
+            onFilter={setFilter}
+            buttons={[
+              { href: '/resources/add', label: 'Add new' },
+              { label: 'Toggle disabled', onClick: props.onToggleDisabled },
+            ]}
+          />
         )}
 
         <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
