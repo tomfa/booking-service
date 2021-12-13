@@ -2,7 +2,10 @@ import { useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { Layout } from '../../../components/Layout';
 import toast from '../../../components/utils/toast.utils';
-import { ResourceForm } from '../../../containers/forms/ResourceForm';
+import {
+  ResourceForm,
+  ResourceFormType,
+} from '../../../containers/forms/ResourceForm';
 import {
   Resource,
   useGetResourceByIdQuery,
@@ -28,7 +31,15 @@ export default function EditResourcePage() {
   );
 
   const onSubmit = useCallback(
-    async ({ label, seats, enabled, category }) => {
+    async ({
+      label,
+      seats,
+      enabled,
+      category,
+      defaultSlotDuration,
+      defaultSlotInterval,
+      ...rest
+    }: ResourceFormType) => {
       await updateResource({
         variables: {
           updateResourceInput: {
@@ -40,10 +51,52 @@ export default function EditResourcePage() {
             schedule: [
               {
                 day: 'mon',
-                start: '08:00',
-                end: '16:00',
-                slotIntervalMinutes: 15,
-                slotDurationMinutes: 30,
+                start: rest.monFrom,
+                end: rest.monTo,
+                slotIntervalMinutes: defaultSlotInterval,
+                slotDurationMinutes: defaultSlotDuration,
+              },
+              {
+                day: 'tue',
+                start: rest.monFrom,
+                end: rest.monTo,
+                slotIntervalMinutes: defaultSlotInterval,
+                slotDurationMinutes: defaultSlotDuration,
+              },
+              {
+                day: 'wed',
+                start: rest.wedFrom,
+                end: rest.wedTo,
+                slotIntervalMinutes: defaultSlotInterval,
+                slotDurationMinutes: defaultSlotDuration,
+              },
+              {
+                day: 'thu',
+                start: rest.thuFrom,
+                end: rest.thuTo,
+                slotIntervalMinutes: defaultSlotInterval,
+                slotDurationMinutes: defaultSlotDuration,
+              },
+              {
+                day: 'fri',
+                start: rest.friFrom,
+                end: rest.friTo,
+                slotIntervalMinutes: defaultSlotInterval,
+                slotDurationMinutes: defaultSlotDuration,
+              },
+              {
+                day: 'sat',
+                start: rest.satFrom,
+                end: rest.satTo,
+                slotIntervalMinutes: defaultSlotInterval,
+                slotDurationMinutes: defaultSlotDuration,
+              },
+              {
+                day: 'sun',
+                start: rest.sunFrom,
+                end: rest.sunTo,
+                slotIntervalMinutes: defaultSlotInterval,
+                slotDurationMinutes: defaultSlotDuration,
               },
             ],
           },
