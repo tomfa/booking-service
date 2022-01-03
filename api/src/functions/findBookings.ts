@@ -29,6 +29,9 @@ async function findBookings(
     customerId,
   });
   const dbBookings = await bookingsQuery.find();
+  if (!dbBookings.length) {
+    return [];
+  }
   const resourceIds = dbBookings.map(b => b.resourceId);
   const resources = await db.resource
     .getRepository()
