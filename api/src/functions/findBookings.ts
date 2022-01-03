@@ -6,6 +6,7 @@ import {
   permissions,
   verifyPermission,
 } from '../auth/permissions';
+import { db } from '../db/client';
 
 async function findBookings(
   { filterBookings: args }: QueryFindBookingsArgs,
@@ -27,8 +28,20 @@ async function findBookings(
     userId,
     customerId,
   });
-  const bookings = await bookingsQuery.find();
-  return bookings.map(fromDBBooking);
+  const dbBookings = await bookingsQuery.find();
+  const resourceIds = dbBookings.map(b => b.resourceId);
+  const resources = await db.resource
+    .getRepository()
+    .whereIn('id', resourceIds)
+    .find();
+  return Promise.all(
+    dbBookings.map(b =>
+      fromDBBooking(
+        b,
+        resources.find(r => r.id === b.resourceId)
+      )
+    )
+  );
 }
 
 export default findBookings;

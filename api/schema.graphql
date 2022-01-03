@@ -75,6 +75,7 @@ type Booking {
     id: String!
     userId: String
     resourceId: String!
+    resource: Resource!
     start: Int!
     end: Int!
     canceled: Boolean!

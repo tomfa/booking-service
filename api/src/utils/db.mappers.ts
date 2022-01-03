@@ -12,13 +12,18 @@ import { db } from '../db/client';
 import { closedSchedule } from './schedule.utils';
 import { fromGQLDate, toGQLDate } from './date.utils';
 
-export function fromDBBooking({
-  start,
-  end,
-  ...booking
-}: DBBooking): GQLBooking {
+export async function fromDBBooking(
+  { start, end, ...booking }: DBBooking,
+  gqlResource?: Resource
+): Promise<GQLBooking> {
+  let resource = gqlResource;
+  if (!resource) {
+    const dbResource = await db.resource.findById(booking.resourceId);
+    resource = fromDBResource(dbResource);
+  }
   return {
     ...booking,
+    resource,
     start: toGQLDate(start),
     end: toGQLDate(end),
   };
@@ -94,7 +99,7 @@ export async function getConflictingBookings({
   resourceId: string;
   from: Date;
   to: Date;
-}) {
+}): Promise<DBBooking[]> {
   const bookings = await db.booking
     .getRepository()
     .whereEqualTo('resourceId', resourceId)

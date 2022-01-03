@@ -152,10 +152,8 @@ export const findNextValidTimeSlotStart = (
   }
   return date;
 };
-export const bookingSlotFitsInResourceSlots = (
-  resource: Resource,
-  booking: Booking
-): boolean => {
+export const bookingSlotFitsInResourceSlots = (booking: Booking): boolean => {
+  const resource = booking.resource;
   const openingHours = getOpeningHoursForDate(
     resource,
     fromGQLDate(booking.start)

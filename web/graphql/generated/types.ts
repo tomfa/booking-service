@@ -58,6 +58,7 @@ export type Booking = {
   id: Scalars['String'];
   userId?: Maybe<Scalars['String']>;
   resourceId: Scalars['String'];
+  resource: Resource;
   start: Scalars['Int'];
   end: Scalars['Int'];
   canceled: Scalars['Boolean'];
@@ -335,6 +336,42 @@ export type AddBookingMutation = (
   & { addBooking?: Maybe<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
+    & { resource: (
+      { __typename?: 'Resource' }
+      & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
+      & { schedule: (
+        { __typename?: 'Schedule' }
+        & { mon: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), tue: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), wed: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), thu: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), fri: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), sat: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), sun: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), overriddenDates?: Maybe<Array<(
+          { __typename?: 'DateSchedule' }
+          & Pick<DateSchedule, 'isoDate'>
+          & { schedule: (
+            { __typename?: 'HourSchedule' }
+            & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+          ) }
+        )>> }
+      ) }
+    ) }
   )> }
 );
 
@@ -420,6 +457,42 @@ export type CancelBookingMutation = (
   & { cancelBooking?: Maybe<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
+    & { resource: (
+      { __typename?: 'Resource' }
+      & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
+      & { schedule: (
+        { __typename?: 'Schedule' }
+        & { mon: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), tue: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), wed: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), thu: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), fri: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), sat: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), sun: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), overriddenDates?: Maybe<Array<(
+          { __typename?: 'DateSchedule' }
+          & Pick<DateSchedule, 'isoDate'>
+          & { schedule: (
+            { __typename?: 'HourSchedule' }
+            & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+          ) }
+        )>> }
+      ) }
+    ) }
   )> }
 );
 
@@ -519,6 +592,42 @@ export type SetBookingCommentMutation = (
   & { setBookingComment?: Maybe<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
+    & { resource: (
+      { __typename?: 'Resource' }
+      & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
+      & { schedule: (
+        { __typename?: 'Schedule' }
+        & { mon: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), tue: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), wed: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), thu: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), fri: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), sat: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), sun: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), overriddenDates?: Maybe<Array<(
+          { __typename?: 'DateSchedule' }
+          & Pick<DateSchedule, 'isoDate'>
+          & { schedule: (
+            { __typename?: 'HourSchedule' }
+            & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+          ) }
+        )>> }
+      ) }
+    ) }
   )> }
 );
 
@@ -603,6 +712,42 @@ export type FindBookingsQuery = (
   & { findBookings?: Maybe<Array<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
+    & { resource: (
+      { __typename?: 'Resource' }
+      & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
+      & { schedule: (
+        { __typename?: 'Schedule' }
+        & { mon: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), tue: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), wed: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), thu: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), fri: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), sat: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), sun: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), overriddenDates?: Maybe<Array<(
+          { __typename?: 'DateSchedule' }
+          & Pick<DateSchedule, 'isoDate'>
+          & { schedule: (
+            { __typename?: 'HourSchedule' }
+            & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+          ) }
+        )>> }
+      ) }
+    ) }
   )>> }
 );
 
@@ -674,6 +819,42 @@ export type GetBookingByIdQuery = (
   & { getBookingById?: Maybe<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
+    & { resource: (
+      { __typename?: 'Resource' }
+      & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
+      & { schedule: (
+        { __typename?: 'Schedule' }
+        & { mon: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), tue: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), wed: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), thu: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), fri: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), sat: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), sun: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), overriddenDates?: Maybe<Array<(
+          { __typename?: 'DateSchedule' }
+          & Pick<DateSchedule, 'isoDate'>
+          & { schedule: (
+            { __typename?: 'HourSchedule' }
+            & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+          ) }
+        )>> }
+      ) }
+    ) }
   )> }
 );
 
@@ -726,6 +907,42 @@ export type GetLatestBookingQuery = (
   & { getLatestBooking?: Maybe<(
     { __typename?: 'Booking' }
     & Pick<Booking, 'id' | 'userId' | 'resourceId' | 'start' | 'end' | 'canceled' | 'comment' | 'seatNumbers'>
+    & { resource: (
+      { __typename?: 'Resource' }
+      & Pick<Resource, 'id' | 'category' | 'label' | 'timezone' | 'seats' | 'enabled'>
+      & { schedule: (
+        { __typename?: 'Schedule' }
+        & { mon: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), tue: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), wed: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), thu: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), fri: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), sat: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), sun: (
+          { __typename?: 'HourSchedule' }
+          & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+        ), overriddenDates?: Maybe<Array<(
+          { __typename?: 'DateSchedule' }
+          & Pick<DateSchedule, 'isoDate'>
+          & { schedule: (
+            { __typename?: 'HourSchedule' }
+            & Pick<HourSchedule, 'start' | 'end' | 'slotIntervalMinutes' | 'slotDurationMinutes'>
+          ) }
+        )>> }
+      ) }
+    ) }
   )> }
 );
 
@@ -806,6 +1023,67 @@ export const AddBookingDocument = gql`
     id
     userId
     resourceId
+    resource {
+      id
+      category
+      label
+      timezone
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
     start
     end
     canceled
@@ -1018,6 +1296,67 @@ export const CancelBookingDocument = gql`
     id
     userId
     resourceId
+    resource {
+      id
+      category
+      label
+      timezone
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
     start
     end
     canceled
@@ -1270,6 +1609,67 @@ export const SetBookingCommentDocument = gql`
     id
     userId
     resourceId
+    resource {
+      id
+      category
+      label
+      timezone
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
     start
     end
     canceled
@@ -1480,6 +1880,67 @@ export const FindBookingsDocument = gql`
     id
     userId
     resourceId
+    resource {
+      id
+      category
+      label
+      timezone
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
     start
     end
     canceled
@@ -1652,6 +2113,67 @@ export const GetBookingByIdDocument = gql`
     id
     userId
     resourceId
+    resource {
+      id
+      category
+      label
+      timezone
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
     start
     end
     canceled
@@ -1820,6 +2342,67 @@ export const GetLatestBookingDocument = gql`
     id
     userId
     resourceId
+    resource {
+      id
+      category
+      label
+      timezone
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
     start
     end
     canceled

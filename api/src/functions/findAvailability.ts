@@ -93,18 +93,18 @@ async function findAvailability(
     );
   }
 
-  const bookings = await getConflictingBookings({
+  const dbBookings = await getConflictingBookings({
     resourceId: resources[0].id,
     from,
     to,
   });
 
-  return findAvailabilityForSingleResource(
-    fromDBResource(resources[0]),
-    from,
-    to,
-    bookings.map(fromDBBooking)
+  const resource = fromDBResource(resources[0]);
+  const bookings = await Promise.all(
+    dbBookings.map(b => fromDBBooking(b, resource))
   );
+
+  return findAvailabilityForSingleResource(resource, from, to, bookings);
 }
 
 export default findAvailability;

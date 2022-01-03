@@ -93,13 +93,14 @@ async function addBooking(
   const booking: Booking = {
     ...data,
     canceled: false,
+    resource,
     id: getId(data.id),
     start: toGQLDate(startTime),
     end: toGQLDate(endTime),
     seatNumbers: [], // Irrelevant, will be overridden
   };
 
-  if (!bookingSlotFitsInResourceSlots(resource, booking)) {
+  if (!bookingSlotFitsInResourceSlots(booking)) {
     throw new BadRequestError(
       `Booked time ${startTime.toISOString()} does not fit into resource ${
         resource.id

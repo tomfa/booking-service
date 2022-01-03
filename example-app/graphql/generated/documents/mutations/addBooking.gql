@@ -3,6 +3,67 @@ mutation addBooking($addBookingInput: AddBookingInput!){
         id
         userId
         resourceId
+        resource{
+            id
+            category
+            label
+            timezone
+            schedule{
+                mon{
+                    start
+                    end
+                    slotIntervalMinutes
+                    slotDurationMinutes
+                }
+                tue{
+                    start
+                    end
+                    slotIntervalMinutes
+                    slotDurationMinutes
+                }
+                wed{
+                    start
+                    end
+                    slotIntervalMinutes
+                    slotDurationMinutes
+                }
+                thu{
+                    start
+                    end
+                    slotIntervalMinutes
+                    slotDurationMinutes
+                }
+                fri{
+                    start
+                    end
+                    slotIntervalMinutes
+                    slotDurationMinutes
+                }
+                sat{
+                    start
+                    end
+                    slotIntervalMinutes
+                    slotDurationMinutes
+                }
+                sun{
+                    start
+                    end
+                    slotIntervalMinutes
+                    slotDurationMinutes
+                }
+                overriddenDates{
+                    isoDate
+                    schedule{
+                        start
+                        end
+                        slotIntervalMinutes
+                        slotDurationMinutes
+                    }
+                }
+            }
+            seats
+            enabled
+        }
         start
         end
         canceled

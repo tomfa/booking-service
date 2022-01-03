@@ -59,6 +59,7 @@ export type Booking = {
   comment?: Maybe<Scalars['String']>;
   end: Scalars['Int'];
   id: Scalars['String'];
+  resource: Resource;
   resourceId: Scalars['String'];
   seatNumbers: Array<Scalars['Int']>;
   start: Scalars['Int'];
@@ -330,7 +331,7 @@ export type AddBookingMutationVariables = Exact<{
 }>;
 
 
-export type AddBookingMutation = { __typename?: 'Mutation', addBooking?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number> }> };
+export type AddBookingMutation = { __typename?: 'Mutation', addBooking?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number>, resource: { __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, timezone: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } } }> };
 
 export type AddCustomerMutationVariables = Exact<{
   addCustomerInput: AddCustomerInput;
@@ -359,7 +360,7 @@ export type CancelBookingMutationVariables = Exact<{
 }>;
 
 
-export type CancelBookingMutation = { __typename?: 'Mutation', cancelBooking?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number> }> };
+export type CancelBookingMutation = { __typename?: 'Mutation', cancelBooking?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number>, resource: { __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, timezone: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } } }> };
 
 export type DeleteCustomerMutationVariables = Exact<{
   id: Scalars['String'];
@@ -396,7 +397,7 @@ export type SetBookingCommentMutationVariables = Exact<{
 }>;
 
 
-export type SetBookingCommentMutation = { __typename?: 'Mutation', setBookingComment?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number> }> };
+export type SetBookingCommentMutation = { __typename?: 'Mutation', setBookingComment?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number>, resource: { __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, timezone: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } } }> };
 
 export type UpdateCustomerMutationVariables = Exact<{
   updateCustomerInput: UpdateCustomerInput;
@@ -424,7 +425,7 @@ export type FindBookingsQueryVariables = Exact<{
 }>;
 
 
-export type FindBookingsQuery = { __typename?: 'Query', findBookings?: Maybe<Array<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number> }>> };
+export type FindBookingsQuery = { __typename?: 'Query', findBookings?: Maybe<Array<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number>, resource: { __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, timezone: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } } }>> };
 
 export type FindResourcesQueryVariables = Exact<{
   filterResource: FindResourceInput;
@@ -445,7 +446,7 @@ export type GetBookingByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetBookingByIdQuery = { __typename?: 'Query', getBookingById?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number> }> };
+export type GetBookingByIdQuery = { __typename?: 'Query', getBookingById?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number>, resource: { __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, timezone: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } } }> };
 
 export type GetCustomerByEmailQueryVariables = Exact<{
   email: Scalars['String'];
@@ -473,7 +474,7 @@ export type GetLatestBookingQueryVariables = Exact<{
 }>;
 
 
-export type GetLatestBookingQuery = { __typename?: 'Query', getLatestBooking?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number> }> };
+export type GetLatestBookingQuery = { __typename?: 'Query', getLatestBooking?: Maybe<{ __typename?: 'Booking', id: string, userId?: Maybe<string>, resourceId: string, start: number, end: number, canceled: boolean, comment?: Maybe<string>, seatNumbers: Array<number>, resource: { __typename?: 'Resource', id: string, category?: Maybe<string>, label: string, timezone: string, seats: number, enabled: boolean, schedule: { __typename?: 'Schedule', mon: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, tue: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, wed: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, thu: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, fri: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sat: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, sun: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number }, overriddenDates?: Maybe<Array<{ __typename?: 'DateSchedule', isoDate: string, schedule: { __typename?: 'HourSchedule', start: string, end: string, slotIntervalMinutes: number, slotDurationMinutes: number } }>> } } }> };
 
 export type GetNextAvailableQueryVariables = Exact<{
   id: Scalars['String'];
@@ -502,6 +503,67 @@ export const AddBookingDocument = gql`
     id
     userId
     resourceId
+    resource {
+      id
+      category
+      label
+      timezone
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
     start
     end
     canceled
@@ -714,6 +776,67 @@ export const CancelBookingDocument = gql`
     id
     userId
     resourceId
+    resource {
+      id
+      category
+      label
+      timezone
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
     start
     end
     canceled
@@ -966,6 +1089,67 @@ export const SetBookingCommentDocument = gql`
     id
     userId
     resourceId
+    resource {
+      id
+      category
+      label
+      timezone
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
     start
     end
     canceled
@@ -1176,6 +1360,67 @@ export const FindBookingsDocument = gql`
     id
     userId
     resourceId
+    resource {
+      id
+      category
+      label
+      timezone
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
     start
     end
     canceled
@@ -1348,6 +1593,67 @@ export const GetBookingByIdDocument = gql`
     id
     userId
     resourceId
+    resource {
+      id
+      category
+      label
+      timezone
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
     start
     end
     canceled
@@ -1516,6 +1822,67 @@ export const GetLatestBookingDocument = gql`
     id
     userId
     resourceId
+    resource {
+      id
+      category
+      label
+      timezone
+      schedule {
+        mon {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        tue {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        wed {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        thu {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        fri {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sat {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        sun {
+          start
+          end
+          slotIntervalMinutes
+          slotDurationMinutes
+        }
+        overriddenDates {
+          isoDate
+          schedule {
+            start
+            end
+            slotIntervalMinutes
+            slotDurationMinutes
+          }
+        }
+      }
+      seats
+      enabled
+    }
     start
     end
     canceled
