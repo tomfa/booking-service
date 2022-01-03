@@ -3,26 +3,29 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { matchSorter } from 'match-sorter';
 import classNames from 'classnames';
-import { Resource } from '../graphql/generated/types';
-import PagerButton from './PagerButton';
-import { PageTitle } from './PageTitle';
+import { Booking } from '../graphql/generated/types';
+import { PageTitle } from '../kit/PageTitle';
+import PagerButton from '../kit/PagerButton';
+import { displayDate, fromGQLDate } from '../utils/date.utils';
 
 interface Props {
   title?: string;
-  rows: Resource[];
+  rows: Booking[];
   withHeader?: boolean;
   withPager?: boolean;
   onToggleDisabled?: () => void;
 }
 
-const ResourceTable = (props: Props) => {
+const BookingTable = (props: Props) => {
   // TODO: Generalize to be a generic table
-  const headers = ['Label', 'Category', 'Seats', 'Enabled', 'Actions'];
+  const headers = ['', 'Resource', 'userId', 'Start', 'End'];
   const [filter, setFilter] = useState('');
   const rows = useMemo(
     () =>
       filter
-        ? matchSorter(props.rows, filter, { keys: ['id', 'label', 'category'] })
+        ? matchSorter(props.rows, filter, {
+            keys: ['resource.label', 'userId'],
+          })
         : props.rows,
     [props.rows, filter]
   );
@@ -31,14 +34,7 @@ const ResourceTable = (props: Props) => {
     <div className="container">
       <div className="py-8">
         {props.withHeader && (
-          <PageTitle
-            title={props.title}
-            onFilter={setFilter}
-            buttons={[
-              { href: '/resources/add', label: 'Add new' },
-              { label: 'Toggle disabled', onClick: props.onToggleDisabled },
-            ]}
-          />
+          <PageTitle title={props.title} onFilter={setFilter} buttons={[]} />
         )}
 
         <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
@@ -65,11 +61,26 @@ const ResourceTable = (props: Props) => {
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <div className="flex items-center">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            <Link href={`/resources/${row.id}`} passHref>
+                            <Link href={`/bookings/${row.id}`} passHref>
                               <a
                                 className="underline hover:no-underline"
-                                href="/">
-                                {row.label}
+                                href={`/bookings/${row.id}`}>
+                                Booking {row.id.split('-')[0]}
+                              </a>
+                            </Link>
+                          </p>
+                        </div>
+                      </td>
+                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <div className="flex items-center">
+                          <p className="text-gray-900 whitespace-no-wrap">
+                            <Link
+                              href={`/resources/${row.resourceId}`}
+                              passHref>
+                              <a
+                                className="underline hover:no-underline"
+                                href={`/`}>
+                                {row.resource.label}
                               </a>
                             </Link>
                           </p>
@@ -77,12 +88,15 @@ const ResourceTable = (props: Props) => {
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <p className="text-gray-900 whitespace-no-wrap">
-                          {row.category || ''}
+                          {row.userId || '-'}
                         </p>
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <p className="text-gray-900 whitespace-no-wrap">
-                          {row.seats}
+                          {displayDate(
+                            fromGQLDate(row.start),
+                            row.resource.timezone
+                          )}
                         </p>
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -92,46 +106,18 @@ const ResourceTable = (props: Props) => {
                             className={classNames(
                               'absolute inset-0 opacity-50 rounded-full',
                               {
-                                'bg-green-200': row.enabled,
-                                'bg-red-200': !row.enabled,
+                                'bg-green-200': !row.canceled,
+                                'bg-red-200': row.canceled,
                               }
                             )}
                           />
                           <span className="relative">
-                            {(row.enabled && 'Yes') || 'No'}
+                            {displayDate(
+                              fromGQLDate(row.end),
+                              row.resource.timezone
+                            )}
                           </span>
                         </span>
-                      </td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <Link href={`/resources/${row.id}/edit`} passHref>
-                          <a
-                            href={`/`}
-                            className={
-                              'bg-blue-200 px-3 py-1 ml-2 rounded-full hover:opacity-70'
-                            }>
-                            Edit
-                          </a>
-                        </Link>
-                        <Link href={`/resources/${row.id}/bookings`} passHref>
-                          <a
-                            href="/"
-                            className={
-                              'bg-blue-200 px-3 py-1 ml-2 rounded-full hover:opacity-70'
-                            }>
-                            Show bookings
-                          </a>
-                        </Link>
-                        <Link
-                          href={`/resources/${row.id}/bookings/add`}
-                          passHref>
-                          <a
-                            href="/"
-                            className={
-                              'bg-blue-200 px-3 py-1 ml-2 rounded-full hover:opacity-70'
-                            }>
-                            Add booking
-                          </a>
-                        </Link>
                       </td>
                     </tr>
                   );
@@ -150,4 +136,4 @@ const ResourceTable = (props: Props) => {
   );
 };
 
-export default ResourceTable;
+export default BookingTable;

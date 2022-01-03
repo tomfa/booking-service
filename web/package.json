@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.20",
+    "@heroicons/react": "^1.0.5",
     "@hookform/resolvers": "^2.8.3",
     "@radix-ui/colors": "^0.1.7",
     "@radix-ui/react-checkbox": "^0.1.1",

@@ -14,6 +14,9 @@ export const toGQLDate = (date: Date): number =>
 export const getIsoDate = (date: Date, tz: string): IsoDate => {
   return dayjs(date).tz(tz).format('YYYY-MM-DD');
 };
+export const displayDate = (date: Date, tz: string): IsoDate => {
+  return dayjs(date).tz(tz).format('YYYY-MM-DD HH:mm:ss') + ` (${tz})`;
+};
 export const startOfNextDay = (date: Date, tz: string): Date => {
   const thisDay = dayjs.tz(getIsoDate(date, tz), tz);
   return thisDay.add(1, 'day').toDate();

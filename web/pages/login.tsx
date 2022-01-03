@@ -11,7 +11,7 @@ export default function LoginPage() {
       return;
     }
     if (session) {
-      router.push('/profile');
+      router.push('/resources');
     } else {
       auth.signIn('google');
     }
