@@ -56,7 +56,7 @@
     "schema:generate": "npm run schema:generate-document && graphql-codegen --config codegen.yml",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
-    "predeploy": "npm run schema:generate && npm run build && npm run export"
+    "predeploy": "npm run schema:generate && npm run build"
   },
   "author": "",
   "license": "ISC"
