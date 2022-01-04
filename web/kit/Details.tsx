@@ -40,7 +40,7 @@ const ResourceDetails = ({ resource }: Props) => {
           </p>
         </div>
         <div>
-          <Link href={`/resources/${resource.id}/book`} passHref>
+          <Link href={`/resources/${resource.id}/bookings/add`} passHref>
             <a
               href={'/'}
               className="inline-block py-2 px-3 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto">

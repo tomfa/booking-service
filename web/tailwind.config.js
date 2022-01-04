@@ -30,7 +30,10 @@ module.exports = {
       zIndex: ['hover', 'active'],
     },
   },
-  plugins: [],
+  plugins: [
+    // eslint-disable-next-line global-require
+    require('@tailwindcss/forms'),
+  ],
   future: {
     purgeLayersByDefault: true,
   },

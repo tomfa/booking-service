@@ -28,7 +28,7 @@ const BookingDetails = ({ booking }: Props) => {
             id: {booking.id}
           </p>
         </div>
-        {!isInPast && (
+        {/* {!isInPast && (
           <div>
             <Link href={`/resources/${resource.id}/edit`} passHref>
               <a
@@ -38,7 +38,7 @@ const BookingDetails = ({ booking }: Props) => {
               </a>
             </Link>
           </div>
-        )}
+        )} */}
       </div>
       <div className="border-t border-gray-200">
         <dl>

@@ -104,11 +104,7 @@ const BookingTable = (props: Props) => {
                           <span
                             aria-hidden
                             className={classNames(
-                              'absolute inset-0 opacity-50 rounded-full',
-                              {
-                                'bg-green-200': !row.canceled,
-                                'bg-red-200': row.canceled,
-                              }
+                              'absolute inset-0 opacity-50 rounded-full'
                             )}
                           />
                           <span className="relative">

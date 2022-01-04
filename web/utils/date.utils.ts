@@ -15,7 +15,7 @@ export const getIsoDate = (date: Date, tz: string): IsoDate => {
   return dayjs(date).tz(tz).format('YYYY-MM-DD');
 };
 export const displayDate = (date: Date, tz: string): IsoDate => {
-  return dayjs(date).tz(tz).format('YYYY-MM-DD HH:mm:ss') + ` (${tz})`;
+  return dayjs(date).tz(tz).format('YYYY-MM-DD HH:mm') + ` (${tz})`;
 };
 export const startOfNextDay = (date: Date, tz: string): Date => {
   const thisDay = dayjs.tz(getIsoDate(date, tz), tz);
