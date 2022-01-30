@@ -11,7 +11,7 @@ export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
     <nav
-      className="dark:bg-gray-800  shadow sticky top-0"
+      className="dark:bg-gray-800 shadow sticky top-0 z-10"
       style={{ backgroundColor: '#ece7e2' }}>
       <div className="max-w-7xl mx-auto px-8">
         <div className="flex items-center justify-between h-16">

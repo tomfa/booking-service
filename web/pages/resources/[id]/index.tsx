@@ -20,7 +20,7 @@ export default function ResourcePage() {
   );
 
   return (
-    <Layout social={{ title: 'Vailable | Resource' }}>
+    <Layout social={{ title: 'Vailable | Resource' }} crumbs>
       {resource && <ResourceDetails resource={resource} />}
       {error && <InputError>{error.message}</InputError>}
     </Layout>

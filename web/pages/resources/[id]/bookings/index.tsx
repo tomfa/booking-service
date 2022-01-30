@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Layout } from '../../../../components/Layout';
-import {
-  useFindBookingsLazyQuery,
-} from '../../../../graphql/generated/types';
+import { useFindBookingsLazyQuery } from '../../../../graphql/generated/types';
 import BookingTable from '../../../../components/BookingTable';
 
 export default function BookingList() {
@@ -34,16 +32,16 @@ export default function BookingList() {
   const tableLabel = resource ? `Bookings for ${resource.label}` : `Bookings`;
 
   return (
-    <Layout social={{ title: `Vailable | Bookings` }}>
+    <Layout social={{ title: `Vailable | Bookings` }} crumbs>
       <BookingTable
         withHeader
         rows={data?.findBookings || []}
         resourceId={String(router.query.id)}
         title={tableLabel}
         onToggleDisabled={() => setShowCanceledBookings(t => !t)}
+        error={error?.message}
       />
       {loading && <>Loading...</>}
-      {!loading && error && <>Error: {String(error)}</>}
     </Layout>
   );
 }

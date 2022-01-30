@@ -90,7 +90,7 @@ export default function AddResourcePage() {
   );
 
   return (
-    <Layout social={{ title: 'Vailable | Add Resource' }}>
+    <Layout social={{ title: 'Vailable | Add Resource' }} crumbs>
       <ResourceForm
         title={'Add new resource'}
         loading={loading}

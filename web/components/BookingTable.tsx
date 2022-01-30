@@ -11,6 +11,7 @@ import { displaySeats } from '../utils/booking.utils';
 import { IconButton, IconType } from './Icon';
 import { DisplayError } from './DisplayError';
 import { Link } from './Link';
+import { Route } from './utils/navigation.utils';
 
 interface Props {
   title?: string;
@@ -19,6 +20,7 @@ interface Props {
   withHeader?: boolean;
   withPager?: boolean;
   onToggleDisabled?: () => void;
+  error?: string;
 }
 
 const BookingTable = (props: Props) => {
@@ -45,6 +47,10 @@ const BookingTable = (props: Props) => {
     [props.rows, filter]
   );
 
+  const errorMessage = cancelBookingError
+    ? cancelBookingError.message
+    : props.error;
+
   return (
     <div className="container">
       <div className="py-8">
@@ -55,15 +61,13 @@ const BookingTable = (props: Props) => {
             buttons={[
               {
                 label: 'Add booking',
-                href: `/resources/${props.resourceId}/bookings/add`,
+                href: Route.addBooking({ resourceId: props.resourceId }),
               },
               { label: 'Toggle canceled', onClick: props.onToggleDisabled },
             ]}
           />
         )}
-        {cancelBookingError && (
-          <DisplayError>{cancelBookingError.message}</DisplayError>
-        )}
+        {errorMessage && <DisplayError>{errorMessage}</DisplayError>}
 
         <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
           <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
@@ -96,7 +100,10 @@ const BookingTable = (props: Props) => {
                         <div className="flex items-center">
                           <p className="text-gray-900 whitespace-no-wrap">
                             <Link
-                              href={`/bookings/${row.id}`}
+                              href={Route.booking({
+                                bookingId: row.id,
+                                resourceId: row.resourceId,
+                              })}
                               className="underline hover:no-underline font-bold">
                               {row.userId || '[no userId]'}
                             </Link>
@@ -106,7 +113,10 @@ const BookingTable = (props: Props) => {
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <div className="flex items-center">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            <Link href={`/resources/${row.resourceId}`}>
+                            <Link
+                              href={Route.resources(
+                                `/resources/${row.resourceId}`
+                              )}>
                               {row.resource.label}
                             </Link>
                           </p>
@@ -157,7 +167,9 @@ const BookingTable = (props: Props) => {
                       }>
                       No bookings found.{' '}
                       <Link
-                        href={`/resources/${props.resourceId}/bookings/add`}
+                        href={Route.addBooking({
+                          resourceId: props.resourceId,
+                        })}
                         className={'underline hover:no-underline'}>
                         Add a booking
                       </Link>

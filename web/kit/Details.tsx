@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { Resource } from '../graphql/generated/types';
 import { Icon, IconType } from '../components/Icon';
 import { Link } from '../components/Link';
+import { Route } from '../components/utils/navigation.utils';
 
 interface Props {
   resource: Resource;
@@ -53,7 +54,7 @@ const ResourceDetails = ({ resource }: Props) => {
             Add booking
           </Link>
           <Link
-            href={`/resources/${resource.id}/edit`}
+            href={Route.editResource(resource.id)}
             className="inline-block py-2 px-3 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto ml-1">
             Edit
           </Link>
@@ -65,7 +66,7 @@ const ResourceDetails = ({ resource }: Props) => {
             <dt className="text-sm font-medium text-gray-500">Bookings</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-3">
               <Link
-                href={`/resources/${resource.id}/bookings`}
+                href={Route.listBookings({ resourceId: resource.id })}
                 className="text-sm text-blue-700 hover:underline">
                 Display bookings
               </Link>

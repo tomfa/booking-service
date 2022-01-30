@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
-import Link from 'next/link';
 import classNames from 'classnames';
 import { Booking, useCancelBookingMutation } from '../graphql/generated/types';
 import { displayDate, fromGQLDate } from '../utils/date.utils';
+import { Link } from './Link';
 import { DisplayError } from './DisplayError';
 
 interface Props {
@@ -31,11 +31,11 @@ const BookingDetails = ({ booking }: Props) => {
         <div>
           <h3 className="text-lg leading-6 font-medium text-gray-900 flex">
             <span>
-              Booking for {resource.label} by {booking.userId || 'unknown'}
+              Booking for user &apos;{booking.userId || 'unknown'}&apos;
             </span>
           </h3>
           <p className="mt-1 max-w-2xl text-sm text-gray-500">
-            id: {booking.id}
+            {displayDate(start, resource.timezone)}
           </p>
         </div>
         {!isInPast && !booking.canceled && (
@@ -62,10 +62,10 @@ const BookingDetails = ({ booking }: Props) => {
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Resource</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-3">
-              <Link href={`/resources/${resource.id}`} passHref>
-                <a href={'/'} className="text-sm text-blue-700 hover:underline">
-                  {resource.label} {resource.enabled ? '' : ' (disabled)'}
-                </a>
+              <Link
+                href={`/resources/${resource.id}`}
+                className="text-sm text-blue-700 hover:underline">
+                {resource.label} {resource.enabled ? '' : ' (disabled)'}
               </Link>
             </dd>
           </div>

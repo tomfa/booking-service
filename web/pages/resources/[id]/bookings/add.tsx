@@ -61,7 +61,7 @@ export default function BookingPage() {
   }
 
   return (
-    <Layout social={{ title: 'Vailable | Add booking' }}>
+    <Layout social={{ title: 'Vailable | Add booking' }} crumbs>
       <AddBookingForm
         resource={resource}
         availableSlots={data?.findAvailability}

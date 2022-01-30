@@ -10,7 +10,7 @@ export default function ResourcePage() {
   });
 
   return (
-    <Layout social={{ title: 'Vailable | Resources' }}>
+    <Layout social={{ title: 'Vailable | Resources' }} crumbs>
       <ResourceTable
         withHeader
         rows={data?.findResources || []}

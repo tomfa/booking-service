@@ -3,6 +3,7 @@ import { Resource, TimeSlot } from '../graphql/generated/types';
 import BookingCalendar from './BookingCalendar';
 import { DisplayError } from './DisplayError';
 import { Link } from './Link';
+import { Route } from './utils/navigation.utils';
 
 type Props = { resource: Resource; availableSlots?: TimeSlot[] | null };
 export default function AddBookingForm({ resource, availableSlots }: Props) {
@@ -11,7 +12,7 @@ export default function AddBookingForm({ resource, availableSlots }: Props) {
       <DisplayError>
         <>
           This resource is not enabled for booking. Update it{' '}
-          <Link href={`/resource/${resource.id}/edit`}>here</Link>
+          <Link href={Route.editResource(resource.id)}>here</Link>
         </>
       </DisplayError>
     );
@@ -25,7 +26,7 @@ export default function AddBookingForm({ resource, availableSlots }: Props) {
               <span>Add booking </span>
             </h3>
             <p className="mt-1 max-w-2xl text-sm text-gray-500">
-              <Link href={`/resources/${resource.id}`}>
+              <Link href={Route.resources(resource.id)}>
                 Resource: {resource.label}
               </Link>
               <span> – {resource.seats} seats</span>

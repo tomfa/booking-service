@@ -11,6 +11,7 @@ import {
 import { displaySeats } from '../utils/booking.utils';
 import { DisplayError } from './DisplayError';
 import { SuccessMessage } from './SuccessMessage';
+import { Route } from './utils/navigation.utils';
 
 const formatGQLTime = (time: number, tz: string) =>
   dayjs(time * 1000, tz).format('HH:mm');
@@ -120,8 +121,12 @@ const BookingCalendar = ({
           </span>
           <ul className={'mt-4'}>
             <li>
-              {' '}
-              <Link href={`/bookings/${booking.id}`} passHref>
+              <Link
+                href={Route.booking({
+                  bookingId: booking.id,
+                  resourceId: booking.resourceId,
+                })}
+                passHref>
                 <a className={'underline hover:no-underline db'} href={'/'}>
                   View booking
                 </a>

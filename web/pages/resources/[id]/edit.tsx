@@ -109,7 +109,7 @@ export default function EditResourcePage() {
   );
 
   return (
-    <Layout social={{ title: 'Vailable | Add Resource' }}>
+    <Layout social={{ title: 'Vailable | Add Resource' }} crumbs>
       {resource && (
         <ResourceForm
           title={`Update resource`}
