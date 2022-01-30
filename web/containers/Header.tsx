@@ -38,6 +38,7 @@ export const Header = () => {
                 <NavLink href="/docs">Docs</NavLink>
                 <NavLink href="/pricing">Pricing</NavLink>
                 <NavLink href="/contact">Contact</NavLink>
+                {!!session && <NavLink href="/resources">Resources</NavLink>}
               </div>
             </div>
           </div>
