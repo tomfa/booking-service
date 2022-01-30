@@ -92,7 +92,7 @@ const BookingCalendar = ({
         start: timeSlot.start,
         userId,
         comment,
-        seatNumbers,
+        seatNumbers: seatNumbers?.map(s => s - 1),
       },
     };
     addBookingMutation({
