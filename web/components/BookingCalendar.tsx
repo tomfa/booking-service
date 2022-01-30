@@ -8,6 +8,8 @@ import {
 } from '../graphql/generated/types';
 import { DisplayError } from './DisplayError';
 import { SuccessMessage } from './SuccessMessage';
+import { displaySeats } from '../utils/booking.utils';
+import { CheckCircleIcon } from '@heroicons/react/solid';
 
 const formatGQLTime = (time: number) =>
   new Date(time * 1000).toISOString().substring(10, 16).replace('T', ' ');
@@ -92,7 +94,11 @@ const BookingCalendar = ({
     });
   }, [timeSlot, resource.id, userId, comment, seatNumbers, bookingMutation]);
   if (bookingResult.loading) {
-    return <div>laster</div>;
+    return (
+      <div className="rounded-md p-4">
+        <p className="flex ml-3 text-sm">Laster...</p>
+      </div>
+    );
   }
 
   if (bookingResult.data?.addBooking) {
@@ -100,10 +106,10 @@ const BookingCalendar = ({
     return (
       <div>
         <SuccessMessage>
-          <span>
-            Seats {booking.seatNumbers.join(', ')} booked{' '}
+          <span className={'db'}>
+            {displaySeats(booking.seatNumbers)} booked{' '}
             {gQLTimeToDateString(booking.start)} at{' '}
-            {formatGQLTime(booking.start)} for {booking.userId}
+            {formatGQLTime(booking.start)} for {booking.userId}{' '}
           </span>
           <Link href={`/bookings/${booking.id}`} passHref>
             <a className={'underline hover:no-underline'} href={'/'}>

@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import { useRouter } from 'next/router';
 import { Layout } from '../../../../components/Layout';
 import {
+  Resource,
   useFindBookingsLazyQuery,
 } from '../../../../graphql/generated/types';
 import BookingTable from '../../../../components/BookingTable';
@@ -12,7 +13,7 @@ export default function BookingList() {
   const [findBookings, { data, loading, error }] = useFindBookingsLazyQuery();
 
   useEffect(() => {
-    if (!router.query.id || data) {
+    if (!router.query.id) {
       return;
     }
     findBookings({
@@ -23,24 +24,29 @@ export default function BookingList() {
         },
       },
     });
-  }, [router.query.id]);
+  }, [router.query.id, showCanceledBookings]);
+
+  const resource = useMemo(() => {
+    if (data?.findBookings?.length) {
+      return data?.findBookings[0].resource
+    }
+    return  undefined
+  }, [data])
+  const tableLabel = resource ? `Bookings for ${resource.label}` : `Bookings`
+
 
   return (
     <Layout social={{ title: `Vailable | Bookings` }}>
       <BookingTable
         withHeader
         rows={data?.findBookings || []}
-        title={'Bookings'}
+        resourceId={String(router.query.id)}
+        title={tableLabel}
         onToggleDisabled={() => setShowCanceledBookings(t => !t)}
       />
       {loading && <>Loading...</>}
       {!loading && error && <>Error: {String(error)}</>}
 
-      {!loading && data?.findBookings?.length === 0 && (
-        <span className="bg-gray-600 text-white px-10 py-3 shadow-lg ml-auto">
-          No bookings found
-        </span>
-      )}
     </Layout>
   );
 }

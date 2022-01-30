@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import Link from 'next/link';
-import { Booking } from '../graphql/generated/types';
+import {Booking, useCancelBookingMutation} from '../graphql/generated/types';
 import { displayDate, fromGQLDate } from '../utils/date.utils';
+import {DisplayError} from "./DisplayError";
+import {IconButton, IconType} from "./Icon";
 
 interface Props {
   booking: Booking;
@@ -14,6 +16,16 @@ const BookingDetails = ({ booking }: Props) => {
   const isInPast = start < new Date();
   const secondsDiff = booking.end - booking.start;
   const durationMinutes = Math.floor(secondsDiff / 60);
+  const [
+    cancelBooking,
+    {
+      error: cancelBookingError,
+    },
+  ] = useCancelBookingMutation();
+  const removeBooking = useCallback(
+    () => cancelBooking({ variables: { id: booking.id } }),
+    [cancelBooking]
+  );
 
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -28,20 +40,29 @@ const BookingDetails = ({ booking }: Props) => {
             id: {booking.id}
           </p>
         </div>
-        {/* {!isInPast && (
+        {!isInPast && (
           <div>
             <Link href={`/resources/${resource.id}/edit`} passHref>
-              <a
-                href={'/'}
-                className="inline-block py-2 px-3 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto ml-1">
+              <button
+                onClick={removeBooking}
+                className="inline-block py-2 px-3 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto ml-1 text-red-600">
                 Cancel booking
-              </a>
+              </button>
             </Link>
           </div>
-        )} */}
+        )}
       </div>
+      {cancelBookingError && (
+        <DisplayError>{cancelBookingError.message}</DisplayError>
+      )}
       <div className="border-t border-gray-200">
         <dl>
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">User</dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-3">
+              {booking.userId || '-'}
+            </dd>
+          </div>
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Resource</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-3">
@@ -91,12 +112,7 @@ const BookingDetails = ({ booking }: Props) => {
             </dd>
           </div>
 
-          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">User</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-3">
-              {booking.userId || '-'}
-            </dd>
-          </div>
+
         </dl>
       </div>
     </div>

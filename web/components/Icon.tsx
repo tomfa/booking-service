@@ -125,8 +125,8 @@ export const IconLink = ({ href, ...props }: IconLinkProps) => {
 export type IconButtonProps = Omit<IconProps, 'hoverable'> & {
   onClick: MouseEventHandler<HTMLButtonElement>;
 };
-export const IconButton = ({ onClick, ...props }: IconButtonProps) => (
-  <button onClick={onClick}>
+export const IconButton = ({ onClick, className, ...props }: IconButtonProps) => (
+  <button onClick={onClick} className={className}>
     <Icon {...props} />
   </button>
 );
