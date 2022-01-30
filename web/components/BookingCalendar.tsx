@@ -1,15 +1,15 @@
 import Link from 'next/link';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useRouter } from 'next/router';
 import {
   Resource,
   TimeSlot,
   useAddBookingMutation,
 } from '../graphql/generated/types';
+import { displaySeats } from '../utils/booking.utils';
 import { DisplayError } from './DisplayError';
 import { SuccessMessage } from './SuccessMessage';
-import { displaySeats } from '../utils/booking.utils';
-import { CheckCircleIcon } from '@heroicons/react/solid';
 
 const formatGQLTime = (time: number) =>
   new Date(time * 1000).toISOString().substring(10, 16).replace('T', ' ');
@@ -46,7 +46,8 @@ const BookingCalendar = ({
   availability: TimeSlot[];
   resource: Resource;
 }) => {
-  const [bookingMutation, bookingResult] = useAddBookingMutation();
+  const router = useRouter();
+  const [addBookingMutation, bookingResult] = useAddBookingMutation();
   const [userId, setUserId] = useState<string>();
   const [timeSlot, setTimeSlot] = useState<TimeSlot>();
   const [comment, setComment] = useState<string>();
@@ -89,10 +90,10 @@ const BookingCalendar = ({
         seatNumbers,
       },
     };
-    bookingMutation({
+    addBookingMutation({
       variables,
     });
-  }, [timeSlot, resource.id, userId, comment, seatNumbers, bookingMutation]);
+  }, [timeSlot, resource.id, userId, comment, seatNumbers, addBookingMutation]);
   if (bookingResult.loading) {
     return (
       <div className="rounded-md p-4">
@@ -111,11 +112,26 @@ const BookingCalendar = ({
             {gQLTimeToDateString(booking.start)} at{' '}
             {formatGQLTime(booking.start)} for {booking.userId}{' '}
           </span>
-          <Link href={`/bookings/${booking.id}`} passHref>
-            <a className={'underline hover:no-underline'} href={'/'}>
-              View booking
-            </a>
-          </Link>
+          <ul className={'mt-4'}>
+            <li>
+              {' '}
+              <Link href={`/bookings/${booking.id}`} passHref>
+                <a className={'underline hover:no-underline db'} href={'/'}>
+                  View booking
+                </a>
+              </Link>
+            </li>
+            <li>
+              {' '}
+              <button
+                onClick={() => {
+                  router.reload();
+                }}
+                className={'underline hover:no-underline'}>
+                Add another booking
+              </button>
+            </li>
+          </ul>
         </SuccessMessage>
       </div>
     );

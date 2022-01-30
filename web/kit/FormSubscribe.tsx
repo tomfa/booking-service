@@ -15,7 +15,7 @@ const FormSubscribe = ({
   displayButton,
 }: Props) => {
   return (
-    <form className="flex flex-col md:flex-row w-3/4 md:w-full max-w-sm md:space-x-3 space-y-3 md:space-y-0 justify-center">
+    <form className="flex flex-col w-3/4 md:w-full max-w-sm md:space-x-3 space-y-3 md:space-y-0 justify-center">
       <InputText
         placeholder={placeholder}
         id={`"form-subscribe-${label}`}

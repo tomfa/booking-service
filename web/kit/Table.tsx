@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 
-import Link from 'next/link';
 import { matchSorter } from 'match-sorter';
 import classNames from 'classnames';
 import { Resource } from '../graphql/generated/types';
+import { Link } from '../components/Link';
 import PagerButton from './PagerButton';
 import { PageTitle } from './PageTitle';
 
@@ -61,16 +61,14 @@ const ResourceTable = (props: Props) => {
               <tbody>
                 {rows.map(row => {
                   return (
-                    <tr key={row.id}>
+                    <tr
+                      key={row.id}
+                      className={(!row.enabled && `opacity-50`) || ''}>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <div className="flex items-center">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            <Link href={`/resources/${row.id}`} passHref>
-                              <a
-                                className="underline hover:no-underline"
-                                href="/">
-                                {row.label}
-                              </a>
+                            <Link href={`/resources/${row.id}`}>
+                              {row.label}
                             </Link>
                           </p>
                         </div>
@@ -86,14 +84,14 @@ const ResourceTable = (props: Props) => {
                         </p>
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                        <span className="relative inline-block px-3 py-1 font-semibold leading-tight">
                           <span
                             aria-hidden
                             className={classNames(
                               'absolute inset-0 opacity-50 rounded-full',
                               {
-                                'bg-green-200': row.enabled,
-                                'bg-red-200': !row.enabled,
+                                'bg-green-200 text-green-900 ': row.enabled,
+                                'bg-red-200 text-red-900': !row.enabled,
                               }
                             )}
                           />
@@ -103,35 +101,29 @@ const ResourceTable = (props: Props) => {
                         </span>
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <Link href={`/resources/${row.id}/edit`} passHref>
-                          <a
-                            href={`/`}
-                            className={
-                              'bg-blue-200 px-3 py-1 ml-2 rounded-full hover:opacity-70'
-                            }>
-                            Edit
-                          </a>
-                        </Link>
-                        <Link href={`/resources/${row.id}/bookings`} passHref>
-                          <a
-                            href="/"
-                            className={
-                              'bg-blue-200 px-3 py-1 ml-2 rounded-full hover:opacity-70'
-                            }>
-                            Show bookings
-                          </a>
+                        <Link
+                          className={
+                            'underline hover:no-underline text-blue-800 mr-4'
+                          }
+                          href={`/resources/${row.id}/edit`}>
+                          Edit
                         </Link>
                         <Link
-                          href={`/resources/${row.id}/bookings/add`}
-                          passHref>
-                          <a
-                            href="/"
-                            className={
-                              'bg-blue-200 px-3 py-1 ml-2 rounded-full hover:opacity-70'
-                            }>
-                            Add booking
-                          </a>
+                          className={
+                            'underline hover:no-underline text-blue-800 mr-4'
+                          }
+                          href={`/resources/${row.id}/bookings`}>
+                          Show bookings
                         </Link>
+                        {row.enabled && (
+                          <Link
+                            className={
+                              'underline hover:no-underline text-blue-800'
+                            }
+                            href={`/resources/${row.id}/bookings/add`}>
+                            Add booking
+                          </Link>
+                        )}
                       </td>
                     </tr>
                   );

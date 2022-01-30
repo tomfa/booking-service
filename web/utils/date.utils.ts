@@ -15,7 +15,15 @@ export const getIsoDate = (date: Date, tz: string): IsoDate => {
   return dayjs(date).tz(tz).format('YYYY-MM-DD');
 };
 export const displayDate = (date: Date, tz: string): IsoDate => {
-  return dayjs(date).tz(tz).format('YYYY-MM-DD HH:mm') + ` (${tz})`;
+  const isSameOffset =
+    -dayjs().tz(tz).utcOffset() === new Date().getTimezoneOffset();
+  const formattedDate = dayjs(date).tz(tz).format('YYYY-MM-DD HH:mm');
+
+  if (isSameOffset) {
+    return formattedDate;
+  }
+
+  return formattedDate + ` (${tz})`;
 };
 export const startOfNextDay = (date: Date, tz: string): Date => {
   const thisDay = dayjs.tz(getIsoDate(date, tz), tz);

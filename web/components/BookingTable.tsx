@@ -1,18 +1,16 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
-import Link from 'next/link';
 import { matchSorter } from 'match-sorter';
 import classNames from 'classnames';
-import {
-  Booking,
-  useCancelBookingMutation,
-  useGetResourceByIdQuery,
-} from '../graphql/generated/types';
+import dayjs from 'dayjs';
+import { Booking, useCancelBookingMutation } from '../graphql/generated/types';
 import { PageTitle } from '../kit/PageTitle';
 import PagerButton from '../kit/PagerButton';
-import { displayDate, fromGQLDate } from '../utils/date.utils';
+import { fromGQLDate } from '../utils/date.utils';
+import { displaySeats } from '../utils/booking.utils';
 import { IconButton, IconType } from './Icon';
 import { DisplayError } from './DisplayError';
+import { Link } from './Link';
 
 interface Props {
   title?: string;
@@ -25,25 +23,18 @@ interface Props {
 
 const BookingTable = (props: Props) => {
   // TODO: Generalize to be a generic table
-  const headers = ['userId', 'Resource', 'Start', 'End', ''];
+  const headers = ['userId', 'Resource', 'Start', 'End', 'Seat', ''];
   const [filter, setFilter] = useState('');
   const [
     deleteBooking,
-    {
-      data: cancelBookingData,
-      loading: cancelBookingLoading,
-      error: cancelBookingError,
-    },
+    { error: cancelBookingError },
   ] = useCancelBookingMutation();
-
-  const { data: resource, error: getResourceError } = useGetResourceByIdQuery({
-    variables: { id: props.resourceId },
-  });
 
   const cancelBooking = useCallback(
     (id: string) => deleteBooking({ variables: { id } }),
     [deleteBooking]
   );
+
   const rows = useMemo(
     () =>
       filter
@@ -104,12 +95,10 @@ const BookingTable = (props: Props) => {
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <div className="flex items-center">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            <Link href={`/bookings/${row.id}`} passHref>
-                              <a
-                                className="underline hover:no-underline font-bold"
-                                href={`/bookings/${row.id}`}>
-                                {row.userId || '[no userId]'}
-                              </a>
+                            <Link
+                              href={`/bookings/${row.id}`}
+                              className="underline hover:no-underline font-bold">
+                              {row.userId || '[no userId]'}
                             </Link>
                           </p>
                         </div>
@@ -117,41 +106,26 @@ const BookingTable = (props: Props) => {
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <div className="flex items-center">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            <Link
-                              href={`/resources/${row.resourceId}`}
-                              passHref>
-                              <a
-                                className="underline hover:no-underline"
-                                href={`/`}>
-                                {row.resource.label}
-                              </a>
+                            <Link href={`/resources/${row.resourceId}`}>
+                              {row.resource.label}
                             </Link>
                           </p>
                         </div>
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <p className="text-gray-900 whitespace-no-wrap">
-                          {displayDate(
-                            fromGQLDate(row.start),
-                            row.resource.timezone
-                          )}
-                        </p>
+                        <DateCell
+                          gqlDate={row.start}
+                          tz={row.resource.timezone}
+                        />
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <span className="relative inline-block px-3 py-1 text-green-900 leading-tight">
-                          <span
-                            aria-hidden
-                            className={classNames(
-                              'absolute inset-0 opacity-50 rounded-full'
-                            )}
-                          />
-                          <span className="relative">
-                            {displayDate(
-                              fromGQLDate(row.end),
-                              row.resource.timezone
-                            )}
-                          </span>
-                        </span>
+                        <DateCell
+                          gqlDate={row.end}
+                          tz={row.resource.timezone}
+                        />
+                      </td>
+                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        {displaySeats(row.seatNumbers)}
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         {!row.canceled && (
@@ -167,6 +141,7 @@ const BookingTable = (props: Props) => {
                             className={'p-2'}
                             size={14}
                             icon={IconType.ARCHIVE}
+                            onClick={() => {}}
                           />
                         )}
                       </td>
@@ -183,10 +158,8 @@ const BookingTable = (props: Props) => {
                       No bookings found.{' '}
                       <Link
                         href={`/resources/${props.resourceId}/bookings/add`}
-                        passHref>
-                        <a className={'underline hover:no-underline'} href="/">
-                          Add a booking
-                        </a>
+                        className={'underline hover:no-underline'}>
+                        Add a booking
                       </Link>
                     </td>
                   </tr>
@@ -202,6 +175,17 @@ const BookingTable = (props: Props) => {
         </div>
       </div>
     </div>
+  );
+};
+
+const DateCell = ({ gqlDate, tz }: { gqlDate: number; tz: string }) => {
+  const date = dayjs(fromGQLDate(gqlDate), tz);
+
+  return (
+    <>
+      <span className="block">{date.format('YYYY-MM-DD')}</span>
+      <span className="block">{date.format('HH:mm')}</span>
+    </>
   );
 };
 

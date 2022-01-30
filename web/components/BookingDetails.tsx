@@ -1,9 +1,9 @@
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import Link from 'next/link';
-import {Booking, useCancelBookingMutation} from '../graphql/generated/types';
+import classNames from 'classnames';
+import { Booking, useCancelBookingMutation } from '../graphql/generated/types';
 import { displayDate, fromGQLDate } from '../utils/date.utils';
-import {DisplayError} from "./DisplayError";
-import {IconButton, IconType} from "./Icon";
+import { DisplayError } from './DisplayError';
 
 interface Props {
   booking: Booking;
@@ -18,9 +18,7 @@ const BookingDetails = ({ booking }: Props) => {
   const durationMinutes = Math.floor(secondsDiff / 60);
   const [
     cancelBooking,
-    {
-      error: cancelBookingError,
-    },
+    { error: cancelBookingError },
   ] = useCancelBookingMutation();
   const removeBooking = useCallback(
     () => cancelBooking({ variables: { id: booking.id } }),
@@ -40,15 +38,13 @@ const BookingDetails = ({ booking }: Props) => {
             id: {booking.id}
           </p>
         </div>
-        {!isInPast && (
+        {!isInPast && !booking.canceled && (
           <div>
-            <Link href={`/resources/${resource.id}/edit`} passHref>
-              <button
-                onClick={removeBooking}
-                className="inline-block py-2 px-3 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto ml-1 text-red-600">
-                Cancel booking
-              </button>
-            </Link>
+            <button
+              onClick={removeBooking}
+              className="inline-block py-2 px-3 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto ml-1 text-red-600">
+              Cancel booking
+            </button>
           </div>
         )}
       </div>
@@ -85,7 +81,11 @@ const BookingDetails = ({ booking }: Props) => {
             <dt className="text-sm font-medium text-gray-500">
               Booking status
             </dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-3">
+            <dd
+              className={classNames(
+                'mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-3',
+                { 'text-red-500': booking.canceled }
+              )}>
               {booking.canceled && 'Canceled'}
               {!booking.canceled && isInPast && 'Completed'}
               {!booking.canceled && !isInPast && 'Upcoming'}
@@ -111,8 +111,6 @@ const BookingDetails = ({ booking }: Props) => {
               {booking.comment || '-'}
             </dd>
           </div>
-
-
         </dl>
       </div>
     </div>

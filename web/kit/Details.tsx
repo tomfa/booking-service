@@ -1,7 +1,8 @@
 import React from 'react';
-import Link from 'next/link';
+import classNames from 'classnames';
 import { Resource } from '../graphql/generated/types';
 import { Icon, IconType } from '../components/Icon';
+import { Link } from '../components/Link';
 
 interface Props {
   resource: Resource;
@@ -40,19 +41,21 @@ const ResourceDetails = ({ resource }: Props) => {
           </p>
         </div>
         <div>
-          <Link href={`/resources/${resource.id}/bookings/add`} passHref>
-            <a
-              href={'/'}
-              className="inline-block py-2 px-3 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto">
-              Add booking
-            </a>
+          <Link
+            href={`/resources/${resource.id}/bookings/add`}
+            className={classNames(
+              'inline-block py-2 px-3 bg-gray-100 text-sm shadow-lg ml-auto',
+              {
+                'opacity-50': !resource.enabled,
+                'hover:bg-gray-200': resource.enabled,
+              }
+            )}>
+            Add booking
           </Link>
-          <Link href={`/resources/${resource.id}/edit`} passHref>
-            <a
-              href={'/'}
-              className="inline-block py-2 px-3 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto ml-1">
-              Edit
-            </a>
+          <Link
+            href={`/resources/${resource.id}/edit`}
+            className="inline-block py-2 px-3 bg-gray-100 text-sm hover:bg-gray-200 shadow-lg ml-auto ml-1">
+            Edit
           </Link>
         </div>
       </div>
@@ -61,10 +64,10 @@ const ResourceDetails = ({ resource }: Props) => {
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Bookings</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-3">
-              <Link href={`/resources/${resource.id}/bookings`} passHref>
-                <a href={'/'} className="text-sm text-blue-700 hover:underline">
-                  Display bookings
-                </a>
+              <Link
+                href={`/resources/${resource.id}/bookings`}
+                className="text-sm text-blue-700 hover:underline">
+                Display bookings
               </Link>
             </dd>
           </div>
@@ -84,7 +87,13 @@ const ResourceDetails = ({ resource }: Props) => {
           </div>
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Status</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-3">
+            <dd
+              className={classNames(
+                'mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-3',
+                {
+                  'text-red-700': !resource.enabled,
+                }
+              )}>
               {resource.enabled ? 'Enabled' : 'disabled'}
             </dd>
           </div>
