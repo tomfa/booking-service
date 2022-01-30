@@ -2,6 +2,7 @@ import Link from 'next/link';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useRouter } from 'next/router';
+import dayjs from 'dayjs';
 import {
   Resource,
   TimeSlot,
@@ -11,20 +12,22 @@ import { displaySeats } from '../utils/booking.utils';
 import { DisplayError } from './DisplayError';
 import { SuccessMessage } from './SuccessMessage';
 
-const formatGQLTime = (time: number) =>
-  new Date(time * 1000).toISOString().substring(10, 16).replace('T', ' ');
-const gQLTimeToDateString = (time: number) =>
-  new Date(time * 1000).toISOString().substring(0, 10);
+const formatGQLTime = (time: number, tz: string) =>
+  dayjs(time * 1000, tz).format('HH:mm');
+const gQLTimeToDateString = (time: number, tz: string) =>
+  dayjs(time * 1000, tz).format('YYYY-MM-DD');
 
 const BookableTimeSlot = ({
   timeslot,
   onSelect,
+  tz,
 }: {
   timeslot: TimeSlot;
   onSelect: () => void;
+  tz: string;
 }) => {
-  const startTime = formatGQLTime(timeslot.start);
-  const endTime = formatGQLTime(timeslot.end);
+  const startTime = formatGQLTime(timeslot.start, tz);
+  const endTime = formatGQLTime(timeslot.end, tz);
   if (timeslot.availableSeats <= 0) {
     return (
       <option disabled>
@@ -53,19 +56,21 @@ const BookingCalendar = ({
   const [comment, setComment] = useState<string>();
   const [seatNumbers, setSeatNumbers] = useState<number[]>();
   const [selectedDay, setSelectedDay] = useState<string | undefined>(() =>
-    availability.length ? gQLTimeToDateString(availability[0].start) : undefined
+    availability.length
+      ? gQLTimeToDateString(availability[0].start, resource.timezone)
+      : undefined
   );
   const days = useMemo(() => {
     const d: Record<string, TimeSlot[]> = {};
     availability.forEach(t => {
-      const dateStr = gQLTimeToDateString(t.start);
+      const dateStr = gQLTimeToDateString(t.start, resource.timezone);
       if (!d[dateStr]) {
         d[dateStr] = [];
       }
       d[dateStr].push(t);
     });
     return d;
-  }, [availability]);
+  }, [availability, resource.timezone]);
   const selectableDays = useMemo(() => Object.keys(days), [days]);
   const slots = useMemo(() => (selectedDay && days[selectedDay]) || [], [
     selectedDay,
@@ -109,8 +114,9 @@ const BookingCalendar = ({
         <SuccessMessage>
           <span className={'db'}>
             {displaySeats(booking.seatNumbers)} booked{' '}
-            {gQLTimeToDateString(booking.start)} at{' '}
-            {formatGQLTime(booking.start)} for {booking.userId}{' '}
+            {gQLTimeToDateString(booking.start, resource.timezone)} at{' '}
+            {formatGQLTime(booking.start, resource.timezone)} for{' '}
+            {booking.userId}{' '}
           </span>
           <ul className={'mt-4'}>
             <li>
@@ -230,6 +236,7 @@ const BookingCalendar = ({
                       timeslot={s}
                       key={s.start}
                       onSelect={() => setTimeSlot(s)}
+                      tz={resource.timezone}
                     />
                   ))}
                 </select>
